@@ -15,13 +15,34 @@
  */
 #include "screen.h"
 
+#define DISPLAY_CONTROL *((vu16 *) 0x04000000)
+#define VCOUNT          *((vu16 *) 0x04000006)
+
 #define VIDEOMODE_0 (0)
 
+#define BG0_ENABLE (0x0100)
+#define BG1_ENABLE (0x0200)
+
+#define BG0_CONTROL *((vu16 *) 0x04000008)
+#define BG1_CONTROL *((vu16 *) 0x0400000a)
+
+#define BG0_XOFFSET *((vu16 *) 0x04000010)
+#define BG1_YOFFSET *((vu16 *) 0x04000012)
+
 void screen_init(void) {
-    REG_DISPCNT = VIDEOMODE_0;
+    // bg0 -> tiles
+    // bg1 -> GUI
+    DISPLAY_CONTROL = VIDEOMODE_0 | BG0_ENABLE | BG1_ENABLE;
+
+    BG0_CONTROL = (3)      | // BG Priority (3 is lowest)
+                  (0 << 2) | // Tileset character block
+                  (0 << 6) | // Mosaic flag
+                  (1 << 7) | // Color mode (1 is 256 palette)
+                  (8 << 8) | // Tilemap screen block
+                  (0 << 14); // BG size (0 is 256x256)
 }
 
 void vsync(void) {
-    while(REG_VCOUNT >= SCREEN_H);
-    while(REG_VCOUNT < SCREEN_H);
+    while(VCOUNT >= SCREEN_H);
+    while(VCOUNT < SCREEN_H);
 }

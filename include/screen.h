@@ -18,9 +18,6 @@
 
 #include "minicraft.h"
 
-#define REG_DISPCNT *((vu16 *)(0x04000000))
-#define REG_VCOUNT  *((vu16 *)(0x04000006))
-
 #define SCREEN_W (240)
 #define SCREEN_H (160)
 

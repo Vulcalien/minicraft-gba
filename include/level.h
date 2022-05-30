@@ -13,29 +13,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#ifndef MINICRAFT_LEVEL
+#define MINICRAFT_LEVEL
+
 #include "minicraft.h"
 
-#include "screen.h"
-#include "menu.h"
+#define LEVEL_W (128)
+#define LEVEL_H (128)
 
-struct Menu *menu = NULL;
+struct Level {
+    u8 tiles[LEVEL_W * LEVEL_H];
+    u8  data[LEVEL_W * LEVEL_H];
+};
 
-void tick(void) {
-    if(menu)
-        menu->tick();
-    else
-        /*level_tick(level);*/
-        ; // TODO level tick
-}
+extern void level_tick(struct Level *level);
 
-int main(void) {
-    screen_init();
-
-    while(true) {
-        tick();
-
-        vsync();
-        // TODO screen update here
-    }
-    return 0;
-}
+#endif // MINICRAFT_LEVEL

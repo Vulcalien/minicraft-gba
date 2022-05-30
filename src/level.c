@@ -13,29 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "minicraft.h"
+#include "level.h"
 
-#include "screen.h"
-#include "menu.h"
-
-struct Menu *menu = NULL;
-
-void tick(void) {
-    if(menu)
-        menu->tick();
-    else
-        /*level_tick(level);*/
-        ; // TODO level tick
-}
-
-int main(void) {
-    screen_init();
-
-    while(true) {
-        tick();
-
-        vsync();
-        // TODO screen update here
-    }
-    return 0;
+void level_tick(struct Level *level) {
 }
