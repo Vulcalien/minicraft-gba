@@ -13,8 +13,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "minicraft.h"
+#include "screen.h"
 
-int main(void) {
-    return 0;
+#define VIDEOMODE_0 (0)
+
+void screen_init(void) {
+    REG_DISPCNT = VIDEOMODE_0;
+}
+
+void vsync(void) {
+    while(REG_VCOUNT >= SCREEN_H);
+    while(REG_VCOUNT < SCREEN_H);
 }

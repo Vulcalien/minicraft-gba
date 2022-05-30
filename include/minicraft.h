@@ -13,8 +13,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "minicraft.h"
+#ifndef MINICRAFT_CORE
+#define MINICRAFT_CORE
 
-int main(void) {
-    return 0;
-}
+#include "types.h"
+
+#endif // MINICRAFT_CORE

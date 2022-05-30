@@ -13,8 +13,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#ifndef MINICRAFT_SCREEN
+#define MINICRAFT_SCREEN
+
 #include "minicraft.h"
 
-int main(void) {
-    return 0;
-}
+#define REG_DISPCNT *((vu16 *)(0x04000000))
+#define REG_VCOUNT  *((vu16 *)(0x04000006))
+
+#define SCREEN_W (240)
+#define SCREEN_H (160)
+
+extern void screen_init(void);
+
+extern void vsync(void);
+
+#endif // MINICRAFT_SCREEN
