@@ -21,12 +21,6 @@
 void level_tick(struct Level *level) {
 }
 
-// DEBUG
-extern void grass_draw(struct Level *level, u32 xt, u32 yt,
-                       vu16 *t0, vu16 *t1, vu16 *t2, vu16 *t3);
-
-
-
 // TODO this function has to be very efficient,
 // since VBlank does not last long
 void level_draw(struct Level *level) {
@@ -42,12 +36,9 @@ void level_draw(struct Level *level) {
             u32 xt = x + x0;
             u32 yt = y + y0;
 
-            struct Tile *tile = &tiles[LEVEL_GET_TILE(level, xt, yt)];
+            const struct Tile *tile = &tiles[LEVEL_GET_TILE(level, xt, yt)];
 
             vu16 *vram_tile_0 = &CHAR_BLOCK_1[x * 2 + y * 2 * 32];
-
-            // FIXME
-            tile->draw = grass_draw;
 
             tile->draw(
                 level, xt, yt,

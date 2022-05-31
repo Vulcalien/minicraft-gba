@@ -27,6 +27,6 @@ struct Tile {
 };
 
 #define TILES_COUNT (23)
-extern struct Tile tiles[TILES_COUNT];
+extern const struct Tile tiles[TILES_COUNT];
 
 #endif // MINICRAFT_TILE

@@ -19,7 +19,7 @@
 #include "level.h"
 #include "menu.h"
 
-struct Menu *menu   = NULL;
+struct Menu  *menu  = NULL;
 struct Level *level = NULL;
 
 // DEBUG
