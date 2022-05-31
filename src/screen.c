@@ -30,16 +30,23 @@
 #define BG1_YOFFSET *((vu16 *) 0x04000012)
 
 void screen_init(void) {
-    // bg0 -> tiles
-    // bg1 -> GUI
     DISPLAY_CONTROL = VIDEOMODE_0 | BG0_ENABLE | BG1_ENABLE;
 
-    BG0_CONTROL = (3)      | // BG Priority (3 is lowest)
+    // Level tiles
+    BG0_CONTROL = (3)      | // BG Priority (0 is highest, 3 is lowest)
                   (0 << 2) | // Tileset character block
                   (0 << 6) | // Mosaic flag
-                  (1 << 7) | // Color mode (1 is 256 palette)
+                  (0 << 7) | // Color mode (0 is 4bpp with 16/16 palettes)
                   (8 << 8) | // Tilemap screen block
                   (0 << 14); // BG size (0 is 256x256)
+
+    // Text and GUI
+    BG1_CONTROL = (2)       | // BG Priority (0 is highest, 3 is lowest)
+                  (2 << 2)  | // Tileset character block
+                  (0 << 6)  | // Mosaic flag
+                  (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
+                  (24 << 8) | // Tilemap screen block
+                  (0 << 14);  // BG size (0 is 256x256)
 }
 
 void vsync(void) {

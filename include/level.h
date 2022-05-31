@@ -28,4 +28,6 @@ struct Level {
 
 extern void level_tick(struct Level *level);
 
+extern void level_draw(struct Level *level);
+
 #endif // MINICRAFT_LEVEL

@@ -17,3 +17,20 @@
 
 void level_tick(struct Level *level) {
 }
+
+void level_draw(struct Level *level) {
+    u32 x_offset = 0;
+    u32 y_offset = 0;
+
+    u32 x0 = x_offset >> 4;
+    u32 y0 = y_offset >> 4;
+
+    u32 x1 = x0 + 14;
+    u32 y1 = y0 + 9;
+
+    for(u32 y = y0; y <= y1; y++) {
+        for(u32 x = x0; x <= x1; x++) {
+
+        }
+    }
+}

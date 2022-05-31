@@ -13,21 +13,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_SCREEN
-#define MINICRAFT_SCREEN
+#include "tile.h"
 
-#include "minicraft.h"
+#include "level.h"
 
-#define SCREEN_W (240)
-#define SCREEN_H (160)
+void grass_tick(struct Level *level, u32 xt, u32 yt) {
+}
 
-#define CHAR_BLOCK_0 (0x06000000)
-#define CHAR_BLOCK_1 (0x06004000)
-#define CHAR_BLOCK_2 (0x06008000)
-#define CHAR_BLOCK_3 (0x0600c000)
+void grass_draw(struct Level *level, u32 xt, u32 yt,
+                u16 *t0, u16 *t1, u16 *t2, u16 *t3) {
+    // DEBUG
+    *t0 = 0 | (0 << 12);
+    *t1 = 1 | (0 << 12);
+    *t2 = 2 | (0 << 12);
+    *t3 = 3 | (0 << 12);
+}
 
-extern void screen_init(void);
-
-extern void vsync(void);
-
-#endif // MINICRAFT_SCREEN
+struct Tile tiles[TILES_COUNT] = {
+    // Grass
+    {
+        .tick = grass_tick,
+        .draw = grass_draw
+    }
+};

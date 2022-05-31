@@ -20,6 +20,7 @@
 
 struct Menu {
     void (*tick)(void);
+    void (*draw)(void);
 };
 
 #endif // MINICRAFT_MENU

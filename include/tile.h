@@ -13,21 +13,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_SCREEN
-#define MINICRAFT_SCREEN
+#ifndef MINICRAFT_TILE
+#define MINICRAFT_TILE
 
 #include "minicraft.h"
 
-#define SCREEN_W (240)
-#define SCREEN_H (160)
+#include "level.h"
 
-#define CHAR_BLOCK_0 (0x06000000)
-#define CHAR_BLOCK_1 (0x06004000)
-#define CHAR_BLOCK_2 (0x06008000)
-#define CHAR_BLOCK_3 (0x0600c000)
+struct Tile {
+    void (*tick)(struct Level *level, u32 xt, u32 yt);
+    void (*draw)(struct Level *level, u32 xt, u32 yt,
+                 u16 *t0, u16 *t1, u16 *t2, u16 *t3);
+};
 
-extern void screen_init(void);
+#define TILES_COUNT (23)
+extern struct Tile tiles[TILES_COUNT];
 
-extern void vsync(void);
-
-#endif // MINICRAFT_SCREEN
+#endif // MINICRAFT_TILE

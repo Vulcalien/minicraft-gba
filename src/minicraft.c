@@ -16,26 +16,44 @@
 #include "minicraft.h"
 
 #include "screen.h"
+#include "level.h"
 #include "menu.h"
 
-struct Menu *menu = NULL;
+struct Menu *menu   = NULL;
+struct Level *level = NULL;
+
+// DEBUG
+struct Level level_0 = {};
 
 void tick(void) {
     if(menu)
         menu->tick();
-    else
-        /*level_tick(level);*/
-        ; // TODO level tick
+    else if(level)
+        level_tick(level);
+}
+
+void draw(void) {
+    if(menu)
+        menu->draw();
+
+    if(level)
+        level_draw(level);
 }
 
 int main(void) {
     screen_init();
 
+    // DEBUG
+    level = &level_0;
+
     while(true) {
         tick();
 
         vsync();
-        // TODO screen update here
+        draw();
+
+        // DEBUG check performance
+        ((vu16 **) 0x0e000000)[0] = *((vu16 *) 0x04000006);
     }
     return 0;
 }
