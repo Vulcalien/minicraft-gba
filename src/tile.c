@@ -17,11 +17,12 @@
 
 #include "level.h"
 
-void grass_tick(struct Level *level, u32 xt, u32 yt) {
+static void grass_tick(struct Level *level, u32 xt, u32 yt) {
 }
 
+// DEBUG make static
 void grass_draw(struct Level *level, u32 xt, u32 yt,
-                u16 *t0, u16 *t1, u16 *t2, u16 *t3) {
+                       vu16 *t0, vu16 *t1, vu16 *t2, vu16 *t3) {
     // DEBUG
     *t0 = 0 | (0 << 12);
     *t1 = 1 | (0 << 12);
@@ -29,6 +30,7 @@ void grass_draw(struct Level *level, u32 xt, u32 yt,
     *t3 = 3 | (0 << 12);
 }
 
+// FIXME this thing does not set the fields. I don't understand why...
 struct Tile tiles[TILES_COUNT] = {
     // Grass
     {

@@ -23,7 +23,7 @@
 struct Tile {
     void (*tick)(struct Level *level, u32 xt, u32 yt);
     void (*draw)(struct Level *level, u32 xt, u32 yt,
-                 u16 *t0, u16 *t1, u16 *t2, u16 *t3);
+                 vu16 *t0, vu16 *t1, vu16 *t2, vu16 *t3);
 };
 
 #define TILES_COUNT (23)

@@ -27,7 +27,17 @@ struct Level {
 };
 
 extern void level_tick(struct Level *level);
-
 extern void level_draw(struct Level *level);
+
+#define LEVEL_GET_TILE(level, xt, yt) level->tiles[xt + yt * LEVEL_W]
+#define LEVEL_SET_TILE(level, xt, yt, tile) do {\
+    level->tiles[xt + yt * LEVEL_W] = tile;\
+} while(0)
+
+
+#define LEVEL_GET_DATA(level, xt, yt) level->data[xt + yt * LEVEL_W]
+#define LEVEL_SET_DATA(level, xt, yt, data) do {\
+    level->data[xt + yt * LEVEL_W] = data;\
+} while(0)
 
 #endif // MINICRAFT_LEVEL

@@ -15,22 +15,45 @@
  */
 #include "level.h"
 
+#include "screen.h"
+#include "tile.h"
+
 void level_tick(struct Level *level) {
 }
 
+// DEBUG
+extern void grass_draw(struct Level *level, u32 xt, u32 yt,
+                       vu16 *t0, vu16 *t1, vu16 *t2, vu16 *t3);
+
+
+
+// TODO this function has to be very efficient,
+// since VBlank does not last long
 void level_draw(struct Level *level) {
+    // TODO set offset
     u32 x_offset = 0;
     u32 y_offset = 0;
 
     u32 x0 = x_offset >> 4;
     u32 y0 = y_offset >> 4;
 
-    u32 x1 = x0 + 14;
-    u32 y1 = y0 + 9;
+    for(u32 y = 0; y <= 9; y++) {
+        for(u32 x = 0; x <= 14; x++) {
+            u32 xt = x + x0;
+            u32 yt = y + y0;
 
-    for(u32 y = y0; y <= y1; y++) {
-        for(u32 x = x0; x <= x1; x++) {
+            struct Tile *tile = &tiles[LEVEL_GET_TILE(level, xt, yt)];
 
+            vu16 *vram_tile_0 = &CHAR_BLOCK_1[x * 2 + y * 2 * 32];
+
+            // FIXME
+            tile->draw = grass_draw;
+
+            tile->draw(
+                level, xt, yt,
+                vram_tile_0,      vram_tile_0 + 1,
+                vram_tile_0 + 32, vram_tile_0 + 33
+            );
         }
     }
 }

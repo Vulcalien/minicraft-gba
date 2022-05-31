@@ -21,10 +21,10 @@
 #define SCREEN_W (240)
 #define SCREEN_H (160)
 
-#define CHAR_BLOCK_0 (0x06000000)
-#define CHAR_BLOCK_1 (0x06004000)
-#define CHAR_BLOCK_2 (0x06008000)
-#define CHAR_BLOCK_3 (0x0600c000)
+#define CHAR_BLOCK_0 ((vu16 *) 0x06000000)
+#define CHAR_BLOCK_1 ((vu16 *) 0x06004000)
+#define CHAR_BLOCK_2 ((vu16 *) 0x06008000)
+#define CHAR_BLOCK_3 ((vu16 *) 0x0600c000)
 
 extern void screen_init(void);
 
