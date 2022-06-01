@@ -26,9 +26,6 @@
 #define BG0_CONTROL *((vu16 *) 0x04000008)
 #define BG1_CONTROL *((vu16 *) 0x0400000a)
 
-#define BG0_XOFFSET *((vu16 *) 0x04000010)
-#define BG1_YOFFSET *((vu16 *) 0x04000012)
-
 void screen_init(void) {
     DISPLAY_CONTROL = VIDEOMODE_0 | BG0_ENABLE | BG1_ENABLE;
 

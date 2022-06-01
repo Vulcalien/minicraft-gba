@@ -28,11 +28,14 @@ void level_draw(struct Level *level) {
     u32 x_offset = 0;
     u32 y_offset = 0;
 
+    BG0_XOFFSET = x_offset & 0x0f;
+    BG0_YOFFSET = y_offset & 0x0f;
+
     u32 x0 = x_offset >> 4;
     u32 y0 = y_offset >> 4;
 
-    for(u32 y = 0; y <= 9; y++) {
-        for(u32 x = 0; x <= 14; x++) {
+    for(u32 y = 0; y <= 10; y++) {
+        for(u32 x = 0; x <= 15; x++) {
             u32 xt = x + x0;
             u32 yt = y + y0;
 

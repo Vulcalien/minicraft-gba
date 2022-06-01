@@ -26,6 +26,9 @@
 #define CHAR_BLOCK_2 ((vu16 *) 0x06008000)
 #define CHAR_BLOCK_3 ((vu16 *) 0x0600c000)
 
+#define BG0_XOFFSET *((vu16 *) 0x04000010)
+#define BG0_YOFFSET *((vu16 *) 0x04000012)
+
 extern void screen_init(void);
 
 extern void vsync(void);
