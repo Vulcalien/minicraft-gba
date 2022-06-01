@@ -36,15 +36,15 @@ void level_draw(struct Level *level) {
             u32 xt = x + x0;
             u32 yt = y + y0;
 
-            const struct Tile *tile = &tiles[LEVEL_GET_TILE(level, xt, yt)];
+            const struct Tile *tile = &tile_list[LEVEL_GET_TILE(level, xt, yt)];
+            u16 tiles[4];
+            tile->draw(level, xt, yt, tiles);
 
             vu16 *vram_tile_0 = &CHAR_BLOCK_1[x * 2 + y * 2 * 32];
-
-            tile->draw(
-                level, xt, yt,
-                vram_tile_0,      vram_tile_0 + 1,
-                vram_tile_0 + 32, vram_tile_0 + 33
-            );
+            *vram_tile_0        = tiles[0];
+            *(vram_tile_0 + 1)  = tiles[1];
+            *(vram_tile_0 + 32) = tiles[2];
+            *(vram_tile_0 + 33) = tiles[3];
         }
     }
 }

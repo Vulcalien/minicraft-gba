@@ -22,11 +22,10 @@
 
 struct Tile {
     void (*tick)(struct Level *level, u32 xt, u32 yt);
-    void (*draw)(struct Level *level, u32 xt, u32 yt,
-                 vu16 *t0, vu16 *t1, vu16 *t2, vu16 *t3);
+    void (*draw)(struct Level *level, u32 xt, u32 yt, u16 tiles[4]);
 };
 
 #define TILES_COUNT (23)
-extern const struct Tile tiles[TILES_COUNT];
+extern const struct Tile tile_list[TILES_COUNT];
 
 #endif // MINICRAFT_TILE

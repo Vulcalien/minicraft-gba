@@ -20,17 +20,15 @@
 static void grass_tick(struct Level *level, u32 xt, u32 yt) {
 }
 
-static void grass_draw(struct Level *level, u32 xt, u32 yt,
-                       vu16 *t0, vu16 *t1, vu16 *t2, vu16 *t3) {
+static void grass_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
     // DEBUG
-    *t0 = 0 | (0 << 12);
-    *t1 = 1 | (0 << 12);
-    *t2 = 2 | (0 << 12);
-    *t3 = 3 | (0 << 12);
+    tiles[0] = 0 | (0 << 12);
+    tiles[1] = 1 | (0 << 12);
+    tiles[2] = 2 | (0 << 12);
+    tiles[3] = 3 | (0 << 12);
 }
 
-// FIXME this thing does not set the fields. I don't understand why...
-const struct Tile tiles[TILES_COUNT] = {
+const struct Tile tile_list[TILES_COUNT] = {
     // Grass
     {
         .tick = grass_tick,
