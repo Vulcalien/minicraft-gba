@@ -24,9 +24,12 @@ void level_tick(struct Level *level) {
 // TODO this function has to be very efficient,
 // since VBlank does not last long
 void level_draw(struct Level *level) {
+    // DEBUG
+    static u32 test = 0;
+
     // TODO set offset
-    u32 x_offset = 0;
-    u32 y_offset = 0;
+    u32 x_offset = test;
+    u32 y_offset = test++ / 2;
 
     BG0_XOFFSET = x_offset & 0x0f;
     BG0_YOFFSET = y_offset & 0x0f;

@@ -15,6 +15,8 @@
  */
 #include "screen.h"
 
+#include "images.h"
+
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
 #define VCOUNT          *((vu16 *) 0x04000006)
 
@@ -25,6 +27,8 @@
 
 #define BG0_CONTROL *((vu16 *) 0x04000008)
 #define BG1_CONTROL *((vu16 *) 0x0400000a)
+
+#define BG_PALETTE ((vu16 *) 0x05000000)
 
 void screen_init(void) {
     DISPLAY_CONTROL = VIDEOMODE_0 | BG0_ENABLE | BG1_ENABLE;
@@ -44,6 +48,21 @@ void screen_init(void) {
                   (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
                   (24 << 8) | // Tilemap screen block
                   (0 << 14);  // BG size (0 is 256x256)
+
+    // copy bg_palette
+    memcpy16(BG_PALETTE, bg_palette, 256);
+
+    // NOTE: this code is very inefficient
+    for(u32 i = 0; i < sizeof(level_tileset) / sizeof(u16); i++) {
+        u8 b0 = level_tileset[i * 2];
+        u8 b1 = level_tileset[i * 2 + 1];
+
+        // in a byte, lower 4 bits are for left, upper 4 bits for right
+        b0 = (b0 << 4) | (b0 >> 4);
+        b1 = (b1 << 4) | (b1 >> 4);
+
+        CHAR_BLOCK_0[i] = (b1 << 8) | b0;
+    }
 }
 
 void vsync(void) {

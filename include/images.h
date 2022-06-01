@@ -13,15 +13,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_CORE
-#define MINICRAFT_CORE
+#ifndef MINICRAFT_IMAGES
+#define MINICRAFT_IMAGES
 
-#include "types.h"
+#include "minicraft.h"
 
-#ifndef NULL
-    #define NULL ((void *) 0)
-#endif
+extern const u16 bg_palette[256];
 
-extern void memcpy16(vu16 *dest, const vu16 *src, u32 n);
+// TODO adjust this to be the right size
+// once the tileset is complete
+extern const u8 level_tileset[32 * 64];
 
-#endif // MINICRAFT_CORE
+#endif // MINICRAFT_IMAGES
