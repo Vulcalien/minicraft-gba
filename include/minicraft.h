@@ -18,6 +18,7 @@
 
 #include "types.h"
 
+#define EWRAM_SECTION __attribute__((section(".ewram")))
 #define IWRAM_SECTION __attribute__((section(".iwram")))
 
 #ifndef NULL
