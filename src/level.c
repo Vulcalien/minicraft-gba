@@ -21,8 +21,7 @@
 void level_tick(struct Level *level) {
 }
 
-// TODO this function has to be very efficient,
-// since VBlank does not last long
+IWRAM_SECTION
 void level_draw(struct Level *level) {
     // DEBUG
     static u32 test = 0;
@@ -42,7 +41,7 @@ void level_draw(struct Level *level) {
             u32 xt = x + x0;
             u32 yt = y + y0;
 
-            const struct Tile *tile = &tile_list[LEVEL_GET_TILE(level, xt, yt)];
+            const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
             u16 tiles[4];
             tile->draw(level, xt, yt, tiles);
 
