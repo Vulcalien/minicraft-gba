@@ -23,6 +23,7 @@ struct Menu  *menu  = NULL;
 struct Level *level = NULL;
 
 // DEBUG
+EWRAM_SECTION
 struct Level level_0 = {};
 
 void tick(void) {

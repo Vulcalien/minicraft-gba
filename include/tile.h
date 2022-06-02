@@ -23,6 +23,15 @@
 struct Tile {
     void (*tick)(struct Level *level, u32 xt, u32 yt);
     void (*draw)(struct Level *level, u32 xt, u32 yt, u16 tiles[4]);
+
+    struct {
+        bool grass;
+        bool sand;
+
+        // TODO is there really a case where lava != water?
+        bool water;
+        bool lava;
+    } connects_to;
 };
 
 #define TILES_COUNT (23)
