@@ -16,8 +16,15 @@
 #include "images.h"
 
 const u16 bg_palette[256] = {
-    0xf000, 0x0f00, 0x00f0, 0x000f,
-    0xff00, 0x0ff0, 0x00ff, 0x7fff
+    // --- palette 0 ---
+    // grass
+    0x328c, 0x4751, 0x19c6,
+
+    //unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // dirt
+    0x35b0
 };
 
 // 4bpp
