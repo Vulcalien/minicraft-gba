@@ -20,6 +20,10 @@
 
 #include "level.h"
 
+#define GRASS_TILE (0)
+#define ROCK_TILE  (1)
+// TODO more tiles...
+
 struct Tile {
     void (*tick)(struct Level *level, u32 xt, u32 yt);
     void (*draw)(struct Level *level, u32 xt, u32 yt, u16 tiles[4]);
