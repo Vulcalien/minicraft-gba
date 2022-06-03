@@ -89,6 +89,19 @@ static void rock_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
         tiles[3] = SPR(15 + d * 2 + r * 3, 1);
 }
 
+// Water Tile
+static void water_tick(struct Level *level, u32 xt, u32 yt) {
+}
+
+IWRAM_SECTION
+static void water_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
+    // DEBUG
+    tiles[0] = SPR(0, 2);
+    tiles[1] = SPR(1, 2);
+    tiles[2] = SPR(2, 2);
+    tiles[3] = SPR(3, 2);
+}
+
 // Tile List
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
@@ -105,5 +118,16 @@ const struct Tile tile_list[TILES_COUNT] = {
     {
         .tick = rock_tick,
         .draw = rock_draw
+    },
+
+    // Water
+    {
+        .tick = water_tick,
+        .draw = water_draw,
+
+        .connects_to = {
+            .sand = true,
+            .water = true
+        }
     }
 };
