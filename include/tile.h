@@ -27,7 +27,8 @@
 
 struct Tile {
     void (*tick)(struct Level *level, u32 xt, u32 yt);
-    void (*draw)(struct Level *level, u32 xt, u32 yt, u16 tiles[4]);
+    void (*draw)(struct Level *level, u32 xt, u32 yt,
+                 u16 tiles[4], u16 tiles2[4]);
 
     struct {
         bool grass;

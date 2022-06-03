@@ -19,12 +19,19 @@
 
 #define SPR(id, palette) ((id) | ((palette) << 12))
 
+#define FTICK(name)\
+    static void name(struct Level *level, u32 xt, u32 yt)
+
+#define FDRAW(name)\
+    IWRAM_SECTION\
+    static void name(struct Level *level, u32 xt, u32 yt,\
+                     u16 tiles[4], u16 tiles2[4])
+
 // Grass Tile
-static void grass_tick(struct Level *level, u32 xt, u32 yt) {
+FTICK(grass_tick) {
 }
 
-IWRAM_SECTION
-static void grass_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
+FDRAW(grass_draw) {
     bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.grass;
     bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.grass;
     bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.grass;
@@ -53,11 +60,10 @@ static void grass_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
 }
 
 // Rock Tile
-static void rock_tick(struct Level *level, u32 xt, u32 yt) {
+FTICK(rock_tick) {
 }
 
-IWRAM_SECTION
-static void rock_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
+FDRAW(rock_draw) {
     bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == ROCK_TILE;
     bool d = LEVEL_GET_TILE(level, xt,     yt + 1) == ROCK_TILE;
     bool l = LEVEL_GET_TILE(level, xt - 1, yt    ) == ROCK_TILE;
@@ -90,11 +96,10 @@ static void rock_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
 }
 
 // Water Tile
-static void water_tick(struct Level *level, u32 xt, u32 yt) {
+FTICK(water_tick) {
 }
 
-IWRAM_SECTION
-static void water_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
+FDRAW(water_draw) {
     bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.water;
     bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.water;
     bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.water;

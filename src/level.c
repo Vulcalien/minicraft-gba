@@ -30,8 +30,8 @@ void level_draw(struct Level *level) {
     u32 x_offset = test;
     u32 y_offset = test++ / 2;
 
-    BG0_XOFFSET = x_offset & 0x0f;
-    BG0_YOFFSET = y_offset & 0x0f;
+    BG0_XOFFSET = BG1_XOFFSET = x_offset & 0x0f;
+    BG0_YOFFSET = BG1_YOFFSET = y_offset & 0x0f;
 
     u32 x0 = x_offset >> 4;
     u32 y0 = y_offset >> 4;
@@ -42,14 +42,21 @@ void level_draw(struct Level *level) {
             u32 yt = y + y0;
 
             const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
-            u16 tiles[4];
-            tile->draw(level, xt, yt, tiles);
+            u16 tiles[4]  = { 32, 32, 32, 32 };
+            u16 tiles2[4] = { 32, 32, 32, 32 };
+            tile->draw(level, xt, yt, tiles, tiles2);
 
-            vu16 *vram_tile_0 = &BG0_TILEMAP[x * 2 + y * 2 * 32];
-            *vram_tile_0        = tiles[0];
-            *(vram_tile_0 + 1)  = tiles[1];
-            *(vram_tile_0 + 32) = tiles[2];
-            *(vram_tile_0 + 33) = tiles[3];
+            vu16 *bg0_tile_0 = &BG0_TILEMAP[x * 2 + y * 2 * 32];
+            *(bg0_tile_0)      = tiles[0];
+            *(bg0_tile_0 + 1)  = tiles[1];
+            *(bg0_tile_0 + 32) = tiles[2];
+            *(bg0_tile_0 + 33) = tiles[3];
+
+            vu16 *bg1_tile_0 = &BG1_TILEMAP[x * 2 + y * 2 * 32];
+            *(bg1_tile_0)      = tiles2[0];
+            *(bg1_tile_0 + 1)  = tiles2[1];
+            *(bg1_tile_0 + 32) = tiles2[2];
+            *(bg1_tile_0 + 33) = tiles2[3];
         }
     }
 }

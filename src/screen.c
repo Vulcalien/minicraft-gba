@@ -20,33 +20,43 @@
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
 #define VCOUNT          *((vu16 *) 0x04000006)
 
-#define VIDEOMODE_0 (0)
-
-#define BG0_ENABLE (0x0100)
-#define BG1_ENABLE (0x0200)
-
 #define BG0_CONTROL *((vu16 *) 0x04000008)
 #define BG1_CONTROL *((vu16 *) 0x0400000a)
+#define BG2_CONTROL *((vu16 *) 0x0400000c)
+#define BG3_CONTROL *((vu16 *) 0x0400000e)
 
 #define BG_PALETTE ((vu16 *) 0x05000000)
 
 void screen_init(void) {
-    DISPLAY_CONTROL = VIDEOMODE_0 | BG0_ENABLE | BG1_ENABLE;
+    // TODO enable BG2 and BG3
+    DISPLAY_CONTROL = (0)       | // Video mode
+                      (1 << 8)  | // Enable BG 0
+                      (1 << 9)  | // Enable BG 1
+                      (0 << 10) | // Enable BG 2
+                      (0 << 11);  // Enable BG 3
 
-    // Level tiles
+    // Level tiles - 1st layer
     BG0_CONTROL = (3)       | // BG Priority (0 is highest, 3 is lowest)
                   (0 << 2)  | // Tileset character block
-                  (0 << 6)  | // Mosaic flag
                   (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
                   (16 << 8) | // Tilemap screen block
                   (0 << 14);  // BG size (0 is 256x256)
 
-    // Text and GUI
+    // Level tiles - 2nd layer
     BG1_CONTROL = (2)       | // BG Priority (0 is highest, 3 is lowest)
-                  (1 << 2)  | // Tileset character block
-                  (0 << 6)  | // Mosaic flag
+                  (0 << 2)  | // Tileset character block
                   (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
                   (17 << 8) | // Tilemap screen block
+                  (0 << 14);  // BG size (0 is 256x256)
+
+    // Light system ???
+    // BG2_CONTROL = ...
+
+    // Text and GUI
+    BG3_CONTROL = (0)       | // BG Priority (0 is highest, 3 is lowest)
+                  (1 << 2)  | // Tileset character block
+                  (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
+                  (19 << 8) | // Tilemap screen block
                   (0 << 14);  // BG size (0 is 256x256)
 
     // copy bg_palette
