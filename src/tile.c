@@ -95,11 +95,37 @@ static void water_tick(struct Level *level, u32 xt, u32 yt) {
 
 IWRAM_SECTION
 static void water_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
-    // DEBUG
-    tiles[0] = SPR(0, 2);
-    tiles[1] = SPR(1, 2);
-    tiles[2] = SPR(2, 2);
-    tiles[3] = SPR(3, 2);
+    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.water;
+    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.water;
+    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.water;
+    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.water;
+
+    bool su = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
+    bool sd = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
+    bool sl = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
+    bool sr = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
+
+    // TODO animation and sand connection
+
+    if(u && l)
+        tiles[0] = SPR(0, 2);
+    else
+        tiles[0] = SPR(24 + u * 7 + l * 4, 2);
+
+    if(u && r)
+        tiles[1] = SPR(1, 2);
+    else
+        tiles[1] = SPR(25 + u * 4 + r * 3, 2);
+
+    if(d && l)
+        tiles[2] = SPR(2, 2);
+    else
+        tiles[2] = SPR(26 + d * 5 + l * 4, 2);
+
+    if(d && r)
+        tiles[3] = SPR(3, 2);
+    else
+        tiles[3] = SPR(27 + d * 2 + r * 3, 2);
 }
 
 // Tile List

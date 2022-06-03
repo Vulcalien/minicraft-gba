@@ -25,6 +25,8 @@
     #define NULL ((void *) 0)
 #endif
 
+extern u32 tick_counter;
+
 extern void memcpy16(vu16 *dest, const vu16 *src, u32 n);
 
 #endif // MINICRAFT_CORE

@@ -19,18 +19,22 @@
 #include "level.h"
 #include "menu.h"
 
-struct Menu  *menu  = NULL;
-struct Level *level = NULL;
+u32 tick_counter = 0;
+
+static struct Menu  *menu  = NULL;
+static struct Level *level = NULL;
 
 // DEBUG
 EWRAM_SECTION
-struct Level level_0 = {};
+static struct Level level_0 = {};
 
 void tick(void) {
     if(menu)
         menu->tick();
     else if(level)
         level_tick(level);
+
+    tick_counter++;
 }
 
 void draw(void) {
