@@ -69,24 +69,24 @@ static void rock_draw(struct Level *level, u32 xt, u32 yt, u16 tiles[4]) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == ROCK_TILE;
 
     if(u && l)
-        tiles[0] = SPR(0 + ul * 0, 1); // TODO ul
+        tiles[0] = SPR(0 + !ul * 20, 1);
     else
         tiles[0] = SPR(12 + u * 7 + l * 4, 1);
 
     if(u && r)
-        tiles[1] = SPR(1 + ur * 0, 1); // TODO ur
+        tiles[1] = SPR(1 + !ur * 20, 1);
     else
         tiles[1] = SPR(13 + u * 4 + r * 3, 1);
 
     if(d && l)
-        tiles[2] = SPR(2 + dl * 0, 1); // TODO dl
+        tiles[2] = SPR(2 + !dl * 20, 1);
     else
         tiles[2] = SPR(14 + d * 5 + l * 4, 1);
 
     if(d && r)
-        tiles[3] = SPR(3 + dr * 0, 1); // TODO dr
+        tiles[3] = SPR(3 + !dr * 20, 1);
     else
-        tiles[3] = SPR(15 + d * 2 + r * 4, 1);
+        tiles[3] = SPR(15 + d * 2 + r * 3, 1);
 }
 
 // Tile List
