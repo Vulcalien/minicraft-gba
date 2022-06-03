@@ -45,7 +45,7 @@ void level_draw(struct Level *level) {
             u16 tiles[4];
             tile->draw(level, xt, yt, tiles);
 
-            vu16 *vram_tile_0 = &CHAR_BLOCK_1[x * 2 + y * 2 * 32];
+            vu16 *vram_tile_0 = &BG0_TILEMAP[x * 2 + y * 2 * 32];
             *vram_tile_0        = tiles[0];
             *(vram_tile_0 + 1)  = tiles[1];
             *(vram_tile_0 + 32) = tiles[2];

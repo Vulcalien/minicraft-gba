@@ -34,19 +34,19 @@ void screen_init(void) {
     DISPLAY_CONTROL = VIDEOMODE_0 | BG0_ENABLE | BG1_ENABLE;
 
     // Level tiles
-    BG0_CONTROL = (3)      | // BG Priority (0 is highest, 3 is lowest)
-                  (0 << 2) | // Tileset character block
-                  (0 << 6) | // Mosaic flag
-                  (0 << 7) | // Color mode (0 is 4bpp with 16/16 palettes)
-                  (8 << 8) | // Tilemap screen block
-                  (0 << 14); // BG size (0 is 256x256)
+    BG0_CONTROL = (3)       | // BG Priority (0 is highest, 3 is lowest)
+                  (0 << 2)  | // Tileset character block
+                  (0 << 6)  | // Mosaic flag
+                  (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
+                  (16 << 8) | // Tilemap screen block
+                  (0 << 14);  // BG size (0 is 256x256)
 
     // Text and GUI
     BG1_CONTROL = (2)       | // BG Priority (0 is highest, 3 is lowest)
-                  (2 << 2)  | // Tileset character block
+                  (1 << 2)  | // Tileset character block
                   (0 << 6)  | // Mosaic flag
                   (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
-                  (24 << 8) | // Tilemap screen block
+                  (17 << 8) | // Tilemap screen block
                   (0 << 14);  // BG size (0 is 256x256)
 
     // copy bg_palette
