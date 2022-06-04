@@ -17,7 +17,7 @@
 
 // TODO organize this mess...
 const u16 bg_palette[256] = {
-    // --- palette 0 ---
+    // --- palette 0 --- (grass, flower, tree)
     // BG color
     0x7c1f,
 
@@ -36,7 +36,7 @@ const u16 bg_palette[256] = {
     // dirt (level-specific)
     0x35b0, // TODO make -1
 
-    // --- palette 1 ---
+    // --- palette 1 --- (rock)
     // transparent
     0,
 
@@ -49,7 +49,7 @@ const u16 bg_palette[256] = {
     // dirt (level-specific)
     0x35b0, // TODO make -1
 
-    // --- palette 2 ---
+    // --- palette 2 --- (water)
     // transparent
     0,
 
@@ -61,6 +61,16 @@ const u16 bg_palette[256] = {
 
     // dirt (level specific)
     0x1cea, 0x35b0,
+
+    // --- palette 3 --- (dirt)
+    // transparent
+    0,
+
+    // dirt (level-specific)
+    0x35b0, 0x1cea,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 // 4bpp

@@ -190,6 +190,17 @@ FDRAW(tree_draw) {
         tiles[3] = SPR(37, 0);
 }
 
+// Dirt Tile
+FTICK(dirt_tick) {
+}
+
+FDRAW(dirt_draw) {
+    tiles[0] = SPR(0, 3);
+    tiles[1] = SPR(1, 3);
+    tiles[2] = SPR(2, 3);
+    tiles[3] = SPR(3, 3);
+}
+
 // Tile List
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
@@ -237,5 +248,11 @@ const struct Tile tile_list[TILES_COUNT] = {
         .connects_to = {
             .grass = true
         }
+    },
+
+    // Dirt
+    {
+        .tick = dirt_tick,
+        .draw = dirt_draw
     }
 };
