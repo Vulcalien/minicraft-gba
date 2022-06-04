@@ -138,6 +138,8 @@ FTICK(flower_tick) {
 }
 
 FDRAW(flower_draw) {
+    // TODO it should be easy to copy the important
+    // code from this function instead of calling it
     grass_draw(level, xt, yt, tiles, tiles2);
 
     bool shape = (LEVEL_GET_DATA(level, xt, yt) >> 5) & 0x01;
@@ -149,6 +151,42 @@ FDRAW(flower_draw) {
         tiles[0] = SPR(33, 0);
         tiles[3] = SPR(33, 0);
     }
+}
+
+// Tree Tile
+FTICK(tree_tick) {
+}
+
+FDRAW(tree_draw) {
+    bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == TREE_TILE;
+    bool d = LEVEL_GET_TILE(level, xt,     yt + 1) == TREE_TILE;
+    bool l = LEVEL_GET_TILE(level, xt - 1, yt    ) == TREE_TILE;
+    bool r = LEVEL_GET_TILE(level, xt + 1, yt    ) == TREE_TILE;
+
+    bool ul = LEVEL_GET_TILE(level, xt - 1, yt - 1) == TREE_TILE;
+    bool dl = LEVEL_GET_TILE(level, xt - 1, yt + 1) == TREE_TILE;
+    bool ur = LEVEL_GET_TILE(level, xt + 1, yt - 1) == TREE_TILE;
+    bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == TREE_TILE;
+
+    if(u && l && ul)
+        ; // TODO
+    else
+        tiles[0] = SPR(34, 0);
+
+    if(u && r && ur)
+        ; // TODO
+    else
+        tiles[1] = SPR(35, 0);
+
+    if(d && l && dl)
+        ; // TODO
+    else
+        tiles[2] = SPR(36, 0);
+
+    if(d && r && dr)
+        ; // TODO
+    else
+        tiles[3] = SPR(37, 0);
 }
 
 // Tile List
@@ -184,6 +222,16 @@ const struct Tile tile_list[TILES_COUNT] = {
     {
         .tick = flower_tick,
         .draw = flower_draw,
+
+        .connects_to = {
+            .grass = true
+        }
+    },
+
+    // Tree
+    {
+        .tick = tree_tick,
+        .draw = tree_draw,
 
         .connects_to = {
             .grass = true

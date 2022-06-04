@@ -73,6 +73,12 @@ int main(void) {
     LEVEL_SET_TILE(level, 9, 6, 3);
     LEVEL_SET_TILE(level, 8, 5, 3);
 
+    LEVEL_SET_TILE(level, 5, 4, 4);
+    LEVEL_SET_TILE(level, 6, 4, 4);
+    LEVEL_SET_TILE(level, 5, 5, 4);
+    LEVEL_SET_TILE(level, 6, 5, 4);
+    LEVEL_SET_TILE(level, 5, 2, 4);
+
     while(true) {
         tick();
 

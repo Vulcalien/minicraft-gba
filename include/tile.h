@@ -24,6 +24,7 @@
 #define ROCK_TILE   (1)
 #define WATER_TILE  (2)
 #define FLOWER_TILE (3)
+#define TREE_TILE   (4)
 // TODO more tiles...
 
 struct Tile {
