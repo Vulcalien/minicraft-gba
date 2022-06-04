@@ -52,6 +52,7 @@ int main(void) {
     level = &level_0;
     for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
         level->tiles[i] = 0;
+        level->data[i] = i << 5;
     }
 
     LEVEL_SET_TILE(level, 5, 5, 1);
@@ -65,6 +66,12 @@ int main(void) {
     LEVEL_SET_TILE(level, 8, 7, 2);
     LEVEL_SET_TILE(level, 8, 8, 2);
     LEVEL_SET_TILE(level, 9, 9, 2);
+
+    LEVEL_SET_TILE(level, 9, 7, 3);
+    LEVEL_SET_TILE(level, 9, 8, 3);
+    LEVEL_SET_TILE(level, 9, 5, 3);
+    LEVEL_SET_TILE(level, 9, 6, 3);
+    LEVEL_SET_TILE(level, 8, 5, 3);
 
     while(true) {
         tick();

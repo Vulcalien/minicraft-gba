@@ -133,6 +133,24 @@ FDRAW(water_draw) {
         tiles[3] = SPR(27 + d * 2 + r * 3, 2);
 }
 
+// Flower Tile
+FTICK(flower_tick) {
+}
+
+FDRAW(flower_draw) {
+    grass_draw(level, xt, yt, tiles, tiles2);
+
+    bool shape = (LEVEL_GET_DATA(level, xt, yt) >> 5) & 0x01;
+
+    if(shape) {
+        tiles[1] = SPR(33, 0);
+        tiles[2] = SPR(33, 0);
+    } else {
+        tiles[0] = SPR(33, 0);
+        tiles[3] = SPR(33, 0);
+    }
+}
+
 // Tile List
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
@@ -159,6 +177,16 @@ const struct Tile tile_list[TILES_COUNT] = {
         .connects_to = {
             .sand = true,
             .water = true
+        }
+    },
+
+    // Flower
+    {
+        .tick = flower_tick,
+        .draw = flower_draw,
+
+        .connects_to = {
+            .grass = true
         }
     }
 };
