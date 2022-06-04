@@ -17,6 +17,7 @@
 
 #include "level.h"
 
+// TODO rename SPR to something else: not sprites!
 #define SPR(id, palette) ((id) | ((palette) << 12))
 
 #define FTICK(name)\
@@ -169,22 +170,22 @@ FDRAW(tree_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == TREE_TILE;
 
     if(u && l && ul)
-        ; // TODO
+        tiles[0] = SPR(38, 0);
     else
         tiles[0] = SPR(34, 0);
 
     if(u && r && ur)
-        ; // TODO
+        tiles[1] = SPR(39, 0);
     else
         tiles[1] = SPR(35, 0);
 
     if(d && l && dl)
-        ; // TODO
+        tiles[2] = SPR(39, 0);
     else
         tiles[2] = SPR(36, 0);
 
     if(d && r && dr)
-        ; // TODO
+        tiles[3] = SPR(38, 0);
     else
         tiles[3] = SPR(37, 0);
 }
