@@ -26,6 +26,7 @@
 #define FLOWER_TILE (3)
 #define TREE_TILE   (4)
 #define DIRT_TILE   (5)
+#define SAND_TILE   (6)
 // TODO more tiles...
 
 struct Tile {

@@ -38,7 +38,6 @@ FDRAW(grass_draw) {
     bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.grass;
     bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.grass;
 
-    // TODO does tiles[0] = 0 + (u && l) * (...) improve performance?
     if(u && l)
         tiles[0] = SPR(0, 0);
     else
@@ -201,6 +200,39 @@ FDRAW(dirt_draw) {
     tiles[3] = SPR(3, 3);
 }
 
+// Sand Tile
+FTICK(sand_tick) {
+}
+
+FDRAW(sand_draw) {
+    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
+    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
+    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
+    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
+
+    bool stepped_on = LEVEL_GET_DATA(level, xt, yt) != 0;
+
+    if(u && l)
+        tiles[0] = SPR(0 + stepped_on * 40, 4);
+    else
+        tiles[0] = SPR(4 + u * 7 + l * 4, 4);
+
+    if(u && r)
+        tiles[1] = SPR(1, 4);
+    else
+        tiles[1] = SPR(5 + u * 4 + r * 3, 4);
+
+    if(d && l)
+        tiles[2] = SPR(2, 4);
+    else
+        tiles[2] = SPR(6 + d * 5 + l * 4, 4);
+
+    if(d && r)
+        tiles[3] = SPR(3 + stepped_on * 37, 4);
+    else
+        tiles[3] = SPR(7 + d * 2 + r * 3, 4);
+}
+
 // Tile List
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
@@ -254,5 +286,15 @@ const struct Tile tile_list[TILES_COUNT] = {
     {
         .tick = dirt_tick,
         .draw = dirt_draw
+    },
+
+    // Sand
+    {
+        .tick = sand_tick,
+        .draw = sand_draw,
+
+        .connects_to = {
+            .sand = true
+        }
     }
 };
