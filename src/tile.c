@@ -233,6 +233,17 @@ FDRAW(sand_draw) {
         tiles[3] = SPR(7 + d * 2 + r * 3, 4);
 }
 
+// Cactus Tile
+FTICK(cactus_tick) {
+}
+
+FDRAW(cactus_draw) {
+    tiles[0] = SPR(41, 4);
+    tiles[1] = SPR(42, 4);
+    tiles[2] = SPR(43, 4);
+    tiles[3] = SPR(44, 4);
+}
+
 // Tile List
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
@@ -292,6 +303,16 @@ const struct Tile tile_list[TILES_COUNT] = {
     {
         .tick = sand_tick,
         .draw = sand_draw,
+
+        .connects_to = {
+            .sand = true
+        }
+    },
+
+    // Cactus
+    {
+        .tick = cactus_tick,
+        .draw = cactus_draw,
 
         .connects_to = {
             .sand = true
