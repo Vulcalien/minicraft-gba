@@ -100,10 +100,10 @@ FTICK(water_tick) {
 }
 
 FDRAW(water_draw) {
-    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.water;
-    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.water;
-    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.water;
-    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.water;
+    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.liquid;
+    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.liquid;
+    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.liquid;
+    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.liquid;
 
     bool su = u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
     bool sd = d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
@@ -249,14 +249,10 @@ FTICK(hole_tick) {
 }
 
 FDRAW(hole_draw) {
-    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.water |
-             LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.lava;
-    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.water |
-             LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.lava;
-    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.water |
-             LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.lava;
-    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.water |
-             LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.lava;
+    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.liquid;
+    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.liquid;
+    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.liquid;
+    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.liquid;
 
     bool su = u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
     bool sd = d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
@@ -310,8 +306,8 @@ const struct Tile tile_list[TILES_COUNT] = {
         .draw = water_draw,
 
         .connects_to = {
-            .sand  = true,
-            .water = true
+            .sand   = true,
+            .liquid = true
         }
     },
 
@@ -367,9 +363,8 @@ const struct Tile tile_list[TILES_COUNT] = {
         .draw = hole_draw,
 
         .connects_to = {
-            .sand  = true,
-            .water = true,
-            .lava  = true
+            .sand   = true,
+            .liquid = true,
         }
     }
 };

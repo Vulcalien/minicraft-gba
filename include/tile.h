@@ -39,10 +39,7 @@ struct Tile {
     struct {
         bool grass;
         bool sand;
-
-        // TODO is there really a case where lava != water?
-        bool water;
-        bool lava;
+        bool liquid;
     } connects_to;
 };
 
