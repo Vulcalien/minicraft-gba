@@ -282,6 +282,28 @@ FDRAW(hole_draw) {
         tiles[3] = SPR(27 + d * 2 + r * 3, 5);
 }
 
+// Tree/Cactus Sapling Tiles
+FTICK(sapling_tick) {
+}
+
+FDRAW(tree_sapling_draw) {
+    grass_draw(level, xt, yt, tiles, tiles2);
+
+    tiles2[0] = SPR(45, 0);
+    tiles2[1] = SPR(46, 0);
+    tiles2[2] = SPR(47, 0);
+    tiles2[3] = SPR(48, 0);
+}
+
+FDRAW(cactus_sapling_draw) {
+    sand_draw(level, xt, yt, tiles, tiles2);
+
+    tiles2[0] = SPR(45, 0);
+    tiles2[1] = SPR(46, 0);
+    tiles2[2] = SPR(47, 0);
+    tiles2[3] = SPR(48, 0);
+}
+
 // Tile List
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
@@ -365,6 +387,26 @@ const struct Tile tile_list[TILES_COUNT] = {
         .connects_to = {
             .sand   = true,
             .liquid = true,
+        }
+    },
+
+    // Tree Sapling
+    {
+        .tick = sapling_tick,
+        .draw = tree_sapling_draw,
+
+        .connects_to = {
+            .grass = true
+        }
+    },
+
+    // Cactus Sapling
+    {
+        .tick = sapling_tick,
+        .draw = cactus_sapling_draw,
+
+        .connects_to = {
+            .sand = true
         }
     }
 };

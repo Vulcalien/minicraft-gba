@@ -20,15 +20,17 @@
 
 #include "level.h"
 
-#define GRASS_TILE  (0)
-#define ROCK_TILE   (1)
-#define WATER_TILE  (2)
-#define FLOWER_TILE (3)
-#define TREE_TILE   (4)
-#define DIRT_TILE   (5)
-#define SAND_TILE   (6)
-#define CACTUS_TILE (7)
-#define HOLE_TILE   (8)
+#define GRASS_TILE          (0)
+#define ROCK_TILE           (1)
+#define WATER_TILE          (2)
+#define FLOWER_TILE         (3)
+#define TREE_TILE           (4)
+#define DIRT_TILE           (5)
+#define SAND_TILE           (6)
+#define CACTUS_TILE         (7)
+#define HOLE_TILE           (8)
+#define TREE_SAPLING_TILE   (9)
+#define CACTUS_SAPLING_TILE (10)
 // TODO more tiles...
 
 struct Tile {
