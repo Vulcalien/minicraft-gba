@@ -105,10 +105,10 @@ FDRAW(water_draw) {
     bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.water;
     bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.water;
 
-    bool su = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
-    bool sd = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
-    bool sl = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
-    bool sr = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
+    bool su = u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
+    bool sd = d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
+    bool sl = l && LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
+    bool sr = r && LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
 
     // TODO animation and sand connection
 
@@ -244,6 +244,48 @@ FDRAW(cactus_draw) {
     tiles[3] = SPR(44, 4);
 }
 
+// Hole Tile
+FTICK(hole_tick) {
+}
+
+FDRAW(hole_draw) {
+    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.water |
+             LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.lava;
+    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.water |
+             LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.lava;
+    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.water |
+             LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.lava;
+    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.water |
+             LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.lava;
+
+    bool su = u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
+    bool sd = d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
+    bool sl = l && LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
+    bool sr = r && LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
+
+    // TODO sand connection
+
+    if(u && l)
+        tiles[0] = SPR(0, 5);
+    else
+        tiles[0] = SPR(24 + u * 7 + l * 4, 5);
+
+    if(u && r)
+        tiles[1] = SPR(1, 5);
+    else
+        tiles[1] = SPR(25 + u * 4 + r * 3, 5);
+
+    if(d && l)
+        tiles[2] = SPR(2, 5);
+    else
+        tiles[2] = SPR(26 + d * 5 + l * 4, 5);
+
+    if(d && r)
+        tiles[3] = SPR(3, 5);
+    else
+        tiles[3] = SPR(27 + d * 2 + r * 3, 5);
+}
+
 // Tile List
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
@@ -268,7 +310,7 @@ const struct Tile tile_list[TILES_COUNT] = {
         .draw = water_draw,
 
         .connects_to = {
-            .sand = true,
+            .sand  = true,
             .water = true
         }
     },
@@ -316,6 +358,18 @@ const struct Tile tile_list[TILES_COUNT] = {
 
         .connects_to = {
             .sand = true
+        }
+    },
+
+    // Hole
+    {
+        .tick = hole_tick,
+        .draw = hole_draw,
+
+        .connects_to = {
+            .sand  = true,
+            .water = true,
+            .lava  = true
         }
     }
 };

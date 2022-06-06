@@ -87,6 +87,19 @@ const u16 bg_palette[256] = {
 
     // dirt (level-specific)
     0x35b0,
+
+    // --- palette 5 --- (hole)
+    // transparent
+    0,
+
+    // hole
+    0x1ce7, 0x0cc6,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // dirt (level-specific)
+    0x1cea, 0x35b0,
 };
 
 // 4bpp

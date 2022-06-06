@@ -28,6 +28,7 @@
 #define DIRT_TILE   (5)
 #define SAND_TILE   (6)
 #define CACTUS_TILE (7)
+#define HOLE_TILE   (8)
 // TODO more tiles...
 
 struct Tile {
