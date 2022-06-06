@@ -20,6 +20,11 @@
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
 #define VCOUNT          *((vu16 *) 0x04000006)
 
+#define CHAR_BLOCK_0 ((vu16 *) 0x06000000)
+#define CHAR_BLOCK_1 ((vu16 *) 0x06004000)
+#define CHAR_BLOCK_2 ((vu16 *) 0x06008000)
+#define CHAR_BLOCK_3 ((vu16 *) 0x0600c000)
+
 #define BG0_CONTROL *((vu16 *) 0x04000008)
 #define BG1_CONTROL *((vu16 *) 0x0400000a)
 #define BG2_CONTROL *((vu16 *) 0x0400000c)
