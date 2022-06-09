@@ -31,6 +31,8 @@
 #define HOLE_TILE           (8)
 #define TREE_SAPLING_TILE   (9)
 #define CACTUS_SAPLING_TILE (10)
+#define FARMLAND_TILE       (11)
+#define WHEAT_TILE          (12)
 // TODO more tiles...
 
 struct Tile {

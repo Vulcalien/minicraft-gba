@@ -22,6 +22,6 @@ extern const u16 bg_palette[256];
 
 // TODO adjust this to be the right size
 // once the tileset is complete
-extern const u8 level_tileset[32 * 64];
+extern const u8 level_tileset[32 * 128];
 
 #endif // MINICRAFT_IMAGES

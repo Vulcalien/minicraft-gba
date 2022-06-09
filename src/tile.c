@@ -19,6 +19,8 @@
 
 // TODO rename SPR to something else: not sprites!
 #define SPR(id, palette) ((id) | ((palette) << 12))
+#define TILE_M(id, flip_h, flip_v, palette)\
+    ((id) | (flip_h << 10) | (flip_v << 11) | (palette << 12))
 
 #define FTICK(name)\
     static void name(struct Level *level, u32 xt, u32 yt)
@@ -28,7 +30,7 @@
     static void name(struct Level *level, u32 xt, u32 yt,\
                      u16 tiles[4], u16 tiles2[4])
 
-// Grass Tile
+// Grass
 FTICK(grass_tick) {
 }
 
@@ -59,7 +61,7 @@ FDRAW(grass_draw) {
         tiles[3] = SPR(7 + d * 2 + r * 3, 0);
 }
 
-// Rock Tile
+// Rock
 FTICK(rock_tick) {
 }
 
@@ -95,7 +97,7 @@ FDRAW(rock_draw) {
         tiles[3] = SPR(15 + d * 2 + r * 3, 1);
 }
 
-// Water Tile
+// Water
 FTICK(water_tick) {
 }
 
@@ -133,7 +135,7 @@ FDRAW(water_draw) {
         tiles[3] = SPR(27 + d * 2 + r * 3, 2);
 }
 
-// Flower Tile
+// Flower
 FTICK(flower_tick) {
 }
 
@@ -153,7 +155,7 @@ FDRAW(flower_draw) {
     }
 }
 
-// Tree Tile
+// Tree
 FTICK(tree_tick) {
 }
 
@@ -189,7 +191,7 @@ FDRAW(tree_draw) {
         tiles[3] = SPR(37, 0);
 }
 
-// Dirt Tile
+// Dirt
 FTICK(dirt_tick) {
 }
 
@@ -200,7 +202,7 @@ FDRAW(dirt_draw) {
     tiles[3] = SPR(3, 3);
 }
 
-// Sand Tile
+// Sand
 FTICK(sand_tick) {
 }
 
@@ -233,7 +235,7 @@ FDRAW(sand_draw) {
         tiles[3] = SPR(7 + d * 2 + r * 3, 4);
 }
 
-// Cactus Tile
+// Cactus
 FTICK(cactus_tick) {
 }
 
@@ -244,7 +246,7 @@ FDRAW(cactus_draw) {
     tiles[3] = SPR(44, 4);
 }
 
-// Hole Tile
+// Hole
 FTICK(hole_tick) {
 }
 
@@ -282,7 +284,7 @@ FDRAW(hole_draw) {
         tiles[3] = SPR(27 + d * 2 + r * 3, 5);
 }
 
-// Tree/Cactus Sapling Tiles
+// Tree/Cactus Sapling
 FTICK(sapling_tick) {
 }
 
@@ -304,7 +306,31 @@ FDRAW(cactus_sapling_draw) {
     tiles2[3] = SPR(48, 0);
 }
 
-// Tile List
+// Farmland
+FTICK(farmland_tick) {
+}
+
+FDRAW(farmland_draw) {
+    tiles[0] = TILE_M(49, true, false, 6);
+    tiles[1] = TILE_M(49, false, false, 6);
+    tiles[2] = TILE_M(49, false, false, 6);
+    tiles[3] = TILE_M(49, true, false, 6);
+}
+
+// Wheat
+FTICK(wheat_tick) {
+}
+
+FDRAW(wheat_draw) {
+    // TODO test if this is accurate
+    u32 age = LEVEL_GET_DATA(level, xt, yt) / 10;
+
+    tiles[0] = TILE_M(50 + age, false, false, 6);
+    tiles[1] = TILE_M(50 + age, false, false, 6);
+    tiles[2] = TILE_M(50 + age, true, false, 6);
+    tiles[3] = TILE_M(50 + age, true, false, 6);
+}
+
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
     {
@@ -408,5 +434,17 @@ const struct Tile tile_list[TILES_COUNT] = {
         .connects_to = {
             .sand = true
         }
+    },
+
+    // Farmland
+    {
+        .tick = farmland_tick,
+        .draw = farmland_draw
+    },
+
+    // Wheat
+    {
+        .tick = wheat_tick,
+        .draw = wheat_draw
     }
 };

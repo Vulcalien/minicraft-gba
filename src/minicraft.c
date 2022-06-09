@@ -51,8 +51,8 @@ int main(void) {
     // DEBUG
     level = &level_0;
     for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
-        level->tiles[i] = (i/8)%11;
-        level->data[i] = i << 5;
+        level->tiles[i] = (i/8)%13;
+        level->data[i] = i;
     }
 
     LEVEL_SET_TILE(level, 5, 5, 1);
