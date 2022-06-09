@@ -33,7 +33,16 @@
 #define CACTUS_SAPLING_TILE (10)
 #define FARMLAND_TILE       (11)
 #define WHEAT_TILE          (12)
-// TODO more tiles...
+#define LAVA_TILE           (13)
+#define STAIRS_DOWN_TILE    (14)
+#define STAIRS_UP_TILE      (15)
+#define INFINITE_FALL_TILE  (16)
+#define CLOUD_TILE          (17)
+#define HARD_ROCK_TILE      (18)
+#define IRON_ORE_TILE       (19)
+#define GOLD_ORE_TILE       (20)
+#define GEM_ORE_TILE        (21)
+#define CLOUD_CACTUS_TILE   (22)
 
 struct Tile {
     void (*tick)(struct Level *level, u32 xt, u32 yt);
