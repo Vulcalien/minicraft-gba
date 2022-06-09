@@ -30,6 +30,17 @@
     static void name(struct Level *level, u32 xt, u32 yt,\
                      u16 tiles[4], u16 tiles2[4])
 
+// NOP
+FTICK(nop_tick) {}
+FDRAW(nop_draw) {}
+
+// DAMAGE RECOVER
+FTICK(damage_recover_tick) {
+    u32 damage = LEVEL_GET_DATA(level, xt, yt);
+    if(damage != 0)
+        LEVEL_SET_DATA(level, xt, yt, damage - 1);
+}
+
 // Grass
 FTICK(grass_tick) {
 }
@@ -62,9 +73,6 @@ FDRAW(grass_draw) {
 }
 
 // Rock
-FTICK(rock_tick) {
-}
-
 FDRAW(rock_draw) {
     bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == ROCK_TILE;
     bool d = LEVEL_GET_TILE(level, xt,     yt + 1) == ROCK_TILE;
@@ -136,9 +144,6 @@ FDRAW(water_draw) {
 }
 
 // Flower
-FTICK(flower_tick) {
-}
-
 FDRAW(flower_draw) {
     // TODO it should be easy to copy the important
     // code from this function instead of calling it
@@ -156,9 +161,6 @@ FDRAW(flower_draw) {
 }
 
 // Tree
-FTICK(tree_tick) {
-}
-
 FDRAW(tree_draw) {
     bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == TREE_TILE;
     bool d = LEVEL_GET_TILE(level, xt,     yt + 1) == TREE_TILE;
@@ -192,9 +194,6 @@ FDRAW(tree_draw) {
 }
 
 // Dirt
-FTICK(dirt_tick) {
-}
-
 FDRAW(dirt_draw) {
     tiles[0] = SPR(0, 3);
     tiles[1] = SPR(1, 3);
@@ -203,9 +202,6 @@ FDRAW(dirt_draw) {
 }
 
 // Sand
-FTICK(sand_tick) {
-}
-
 FDRAW(sand_draw) {
     bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
     bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
@@ -236,9 +232,6 @@ FDRAW(sand_draw) {
 }
 
 // Cactus
-FTICK(cactus_tick) {
-}
-
 FDRAW(cactus_draw) {
     tiles[0] = SPR(41, 4);
     tiles[1] = SPR(42, 4);
@@ -247,9 +240,6 @@ FDRAW(cactus_draw) {
 }
 
 // Hole
-FTICK(hole_tick) {
-}
-
 FDRAW(hole_draw) {
     bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.liquid;
     bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.liquid;
@@ -344,7 +334,7 @@ const struct Tile tile_list[TILES_COUNT] = {
 
     // Rock
     {
-        .tick = rock_tick,
+        .tick = damage_recover_tick,
         .draw = rock_draw
     },
 
@@ -361,7 +351,7 @@ const struct Tile tile_list[TILES_COUNT] = {
 
     // Flower
     {
-        .tick = flower_tick,
+        .tick = grass_tick,
         .draw = flower_draw,
 
         .connects_to = {
@@ -371,7 +361,7 @@ const struct Tile tile_list[TILES_COUNT] = {
 
     // Tree
     {
-        .tick = tree_tick,
+        .tick = damage_recover_tick,
         .draw = tree_draw,
 
         .connects_to = {
@@ -381,13 +371,13 @@ const struct Tile tile_list[TILES_COUNT] = {
 
     // Dirt
     {
-        .tick = dirt_tick,
+        .tick = nop_tick,
         .draw = dirt_draw
     },
 
     // Sand
     {
-        .tick = sand_tick,
+        .tick = damage_recover_tick,
         .draw = sand_draw,
 
         .connects_to = {
@@ -397,7 +387,7 @@ const struct Tile tile_list[TILES_COUNT] = {
 
     // Cactus
     {
-        .tick = cactus_tick,
+        .tick = damage_recover_tick,
         .draw = cactus_draw,
 
         .connects_to = {
@@ -407,7 +397,7 @@ const struct Tile tile_list[TILES_COUNT] = {
 
     // Hole
     {
-        .tick = hole_tick,
+        .tick = nop_tick,
         .draw = hole_draw,
 
         .connects_to = {
@@ -446,5 +436,72 @@ const struct Tile tile_list[TILES_COUNT] = {
     {
         .tick = wheat_tick,
         .draw = wheat_draw
+    },
+    /*
+
+    // Lava
+    {
+        .tick = lava_tick,
+        .draw = lava_draw,
+
+        .connects_to = {
+            .sand   = true,
+            .liquid = true
+        }
+    },
+
+    // Stairs Down
+    {
+        .tick = nop_tick,
+        .draw = stairs_down_draw
+    },
+
+    // Stairs Up
+    {
+        .tick = nop_tick,
+        .draw = stairs_up_draw
+    },
+
+    // Infinite Fall
+    {
+        .tick = nop_tick,
+        .draw = nop_draw
+    },
+
+    // Cloud
+    {
+        .tick = nop_tick,
+        .draw = cloud_draw
+    },
+
+    // Hard Rock
+    {
+        .tick = hard_rock_tick,
+        .draw = hard_rock_draw
+    },
+
+    // Iron Ore
+    {
+        .tick = nop_tick,
+        .draw = iron_ore_draw
+    },
+
+    // Gold Ore
+    {
+        .tick = nop_tick,
+        .draw = gold_ore_draw
+    },
+
+    // Gem Ore
+    {
+        .tick = nop_tick,
+        .draw = gem_ore_draw
+    },
+
+    // Cloud Cactus
+    {
+        .tick = nop_tick,
+        .draw = cloud_cactus_draw
     }
+    */
 };
