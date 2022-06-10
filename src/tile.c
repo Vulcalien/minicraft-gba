@@ -321,6 +321,26 @@ FDRAW(wheat_draw) {
     tiles[3] = TILE_M(50 + age, true, false, 6);
 }
 
+// Lava
+FTICK(lava_tick) {
+}
+
+// Stairs Down
+FDRAW(stairs_down_draw) {
+    tiles[0] = SPR(57, 1);
+    tiles[1] = SPR(58, 1);
+    tiles[2] = SPR(59, 1);
+    tiles[3] = SPR(60, 1);
+}
+
+// Stairs Up
+FDRAW(stairs_up_draw) {
+    tiles[0] = SPR(61, 1);
+    tiles[1] = SPR(62, 1);
+    tiles[2] = SPR(63, 1);
+    tiles[3] = SPR(64, 1);
+}
+
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
     {
@@ -437,12 +457,11 @@ const struct Tile tile_list[TILES_COUNT] = {
         .tick = wheat_tick,
         .draw = wheat_draw
     },
-    /*
 
     // Lava
     {
         .tick = lava_tick,
-        .draw = lava_draw,
+        .draw = water_draw,
 
         .connects_to = {
             .sand   = true,
@@ -468,6 +487,7 @@ const struct Tile tile_list[TILES_COUNT] = {
         .draw = nop_draw
     },
 
+    /*
     // Cloud
     {
         .tick = nop_tick,
