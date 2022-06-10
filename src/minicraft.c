@@ -79,6 +79,14 @@ int main(void) {
     LEVEL_SET_TILE(level, 6, 5, 4);
     LEVEL_SET_TILE(level, 5, 2, 4);
 
+    // DEBUG: calculate header checksum
+    u8 checksum = 0;
+    for(u32 i = 0xa0; i <= 0xbc; i++) {
+        checksum -= ((vu8 *) 0x8000000)[i];
+    }
+    checksum -= 0x19;
+    ((vu8 *) 0x0e000000)[0] = checksum;
+
     while(true) {
         tick();
 

@@ -1,5 +1,7 @@
 @********************************************************************
 @*   crt0.S v1.28 by Jeff Frohwein                                  *
+@*                                                                  *
+@*   Modified by Vulcalien for Minicraft GBA                        *
 @********************************************************************
 
 @ v1.0 - Original release
@@ -160,19 +162,19 @@ _start:
 	.long 0xaf3cf087,0x8be425d6,0x72ac0a38,0x07f8d421
 
     @ Game Title (80000A0h)
-        .byte   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-        .byte   0x00,0x00,0x00,0x00
+        .byte   0x4d,0x49,0x4e,0x49,0x43,0x52,0x41,0x46
+        .byte   0x54,0x47,0x42,0x41
 
  .ifdef __MultibootDedicated
     @ Game Code (80000ACh)
         .ascii  "MB  "
  .else
     @ Game Code (80000ACh)
-        .byte   0x00,0x00,0x00,0x00
+        .byte   0x5a,0x4d,0x43,0x45
  .endif
 
     @ Maker Code (80000B0h)
-        .byte   0x30,0x31
+        .byte   0x00,0x00
 
     @ Fixed Value (80000B2h)
         .byte   0x96
@@ -190,9 +192,9 @@ _start:
         .byte   0x00
 
     @ Complement Check (80000BDh)
-        .byte   0xf0
+        .byte   0xbb
 
-    @ Checksum (80000BEh)
+    @ Unused Data (2Byte) (80000BEh)
         .byte   0x00,0x00
 
     .ALIGN
