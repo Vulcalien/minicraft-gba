@@ -55,7 +55,7 @@ const u16 bg_palette[256] = {
     // dirt (level-specific)
     0x35b0, // TODO make -1
 
-    // --- palette 2 --- (water)
+    // --- palette 2 --- (water+dirt)
     // transparent
     0,
 
@@ -68,12 +68,18 @@ const u16 bg_palette[256] = {
     // dirt (level specific)
     0x1cea, 0x35b0,
 
-    // --- palette 3 --- (unused)
+    // --- palette 3 --- (water+sand)
     // transparent
     0,
 
+    // water
+    0x4442, 0x4d08,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // sand
+    0x2ed6, 0x379c,
 
     // --- palette 4 --- (sand, cactus)
     // transparent
@@ -91,7 +97,7 @@ const u16 bg_palette[256] = {
     // dirt (level-specific)
     0x35b0,
 
-    // --- palette 5 --- (hole)
+    // --- palette 5 --- (hole+dirt)
     // transparent
     0,
 
@@ -116,6 +122,19 @@ const u16 bg_palette[256] = {
 
     // unused
     0, 0, 0,
+
+    // --- palette 7 --- (hole+sand)
+    // transparent
+    0,
+
+    // hole
+    0x1ce7, 0x0cc6,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // sand
+    0x2ed6, 0x379c,
 };
 
 // 4bpp

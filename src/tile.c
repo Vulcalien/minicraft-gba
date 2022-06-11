@@ -115,32 +115,32 @@ FDRAW(water_draw) {
     bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.liquid;
     bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.liquid;
 
-    bool su = u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
-    bool sd = d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
-    bool sl = l && LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
-    bool sr = r && LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
+    bool su = !u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
+    bool sd = !d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
+    bool sl = !l && LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
+    bool sr = !r && LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
 
-    // TODO animation and sand connection
+    // TODO animation
 
     if(u && l)
         tiles[0] = SPR(0, 2);
     else
-        tiles[0] = SPR(24 + u * 7 + l * 4, 2);
+        tiles[0] = SPR(24 + u * 7 + l * 4, 2 + (su || sl) * 1);
 
     if(u && r)
         tiles[1] = SPR(1, 2);
     else
-        tiles[1] = SPR(25 + u * 4 + r * 3, 2);
+        tiles[1] = SPR(25 + u * 4 + r * 3, 2 + (su || sr) * 1);
 
     if(d && l)
         tiles[2] = SPR(2, 2);
     else
-        tiles[2] = SPR(26 + d * 5 + l * 4, 2);
+        tiles[2] = SPR(26 + d * 5 + l * 4, 2 + (sd || sl) * 1);
 
     if(d && r)
         tiles[3] = SPR(3, 2);
     else
-        tiles[3] = SPR(27 + d * 2 + r * 3, 2);
+        tiles[3] = SPR(27 + d * 2 + r * 3, 2 + (sd || sr) * 1);
 }
 
 // Flower
@@ -246,32 +246,30 @@ FDRAW(hole_draw) {
     bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.liquid;
     bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.liquid;
 
-    bool su = u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
-    bool sd = d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
-    bool sl = l && LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
-    bool sr = r && LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
-
-    // TODO sand connection
+    bool su = !u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
+    bool sd = !d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
+    bool sl = !l && LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
+    bool sr = !r && LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
 
     if(u && l)
         tiles[0] = SPR(0, 5);
     else
-        tiles[0] = SPR(24 + u * 7 + l * 4, 5);
+        tiles[0] = SPR(24 + u * 7 + l * 4, 5 + (su || sl) * 2);
 
     if(u && r)
         tiles[1] = SPR(1, 5);
     else
-        tiles[1] = SPR(25 + u * 4 + r * 3, 5);
+        tiles[1] = SPR(25 + u * 4 + r * 3, 5 + (su || sr) * 2);
 
     if(d && l)
         tiles[2] = SPR(2, 5);
     else
-        tiles[2] = SPR(26 + d * 5 + l * 4, 5);
+        tiles[2] = SPR(26 + d * 5 + l * 4, 5 + (sd || sl) * 2);
 
     if(d && r)
         tiles[3] = SPR(3, 5);
     else
-        tiles[3] = SPR(27 + d * 2 + r * 3, 5);
+        tiles[3] = SPR(27 + d * 2 + r * 3, 5 + (sd || sr) * 2);
 }
 
 // Tree/Cactus Sapling
