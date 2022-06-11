@@ -13,19 +13,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_IMAGES
-#define MINICRAFT_IMAGES
+#include "menu.h"
 
-#include "minicraft.h"
+static void start_tick(void) {
 
-extern const u16 bg_palette[256];
+}
 
-// TODO adjust this to be the right size
-// once the tileset is complete
-extern const u8 level_tileset[32 * 128];
+static void start_draw(void) {
 
-// TODO adjust this to be the right size
-// once the tileset is complete
-extern const u8 gui_tileset[32 * 64];
+}
 
-#endif // MINICRAFT_IMAGES
+struct Menu menu_start = {
+    .tick = start_tick,
+    .draw = start_draw
+};

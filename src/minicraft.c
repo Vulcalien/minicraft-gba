@@ -40,8 +40,7 @@ void tick(void) {
 void draw(void) {
     if(menu)
         menu->draw();
-
-    if(level)
+    else if(level)
         level_draw(level);
 }
 
@@ -54,6 +53,9 @@ int main(void) {
         level->tiles[i] = (i/2)%16;
         level->data[i] = i;
     }
+
+    // DEBUG
+    menu = &menu_start;
 
     LEVEL_SET_TILE(level, 5, 5, 1);
     LEVEL_SET_TILE(level, 4, 5, 1);
