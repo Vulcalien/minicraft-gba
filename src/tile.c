@@ -195,10 +195,10 @@ FDRAW(tree_draw) {
 
 // Dirt
 FDRAW(dirt_draw) {
-    tiles[0] = SPR(0, 3);
-    tiles[1] = SPR(1, 3);
-    tiles[2] = SPR(2, 3);
-    tiles[3] = SPR(3, 3);
+    tiles[0] = SPR(65, 2);
+    tiles[1] = SPR(66, 2);
+    tiles[2] = SPR(67, 2);
+    tiles[3] = SPR(68, 2);
 }
 
 // Sand
