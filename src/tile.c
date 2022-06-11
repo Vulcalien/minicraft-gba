@@ -30,6 +30,14 @@
     static void name(struct Level *level, u32 xt, u32 yt,\
                      u16 tiles[4], u16 tiles2[4])
 
+// CONNECTS_TO_X
+#define CONNECTS_TO_GRASS(level, xt, yt)\
+    (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.grass)
+#define CONNECTS_TO_SAND(level, xt, yt)\
+    (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.sand)
+#define CONNECTS_TO_LIQUID(level, xt, yt)\
+    (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.liquid)
+
 // NOP
 FTICK(nop_tick) {}
 FDRAW(nop_draw) {}
@@ -46,10 +54,10 @@ FTICK(grass_tick) {
 }
 
 FDRAW(grass_draw) {
-    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.grass;
-    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.grass;
-    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.grass;
-    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.grass;
+    bool u = CONNECTS_TO_GRASS(level, xt,     yt - 1);
+    bool d = CONNECTS_TO_GRASS(level, xt,     yt + 1);
+    bool l = CONNECTS_TO_GRASS(level, xt - 1, yt    );
+    bool r = CONNECTS_TO_GRASS(level, xt + 1, yt    );
 
     if(u && l)
         tiles[0] = SPR(0, 0);
@@ -110,15 +118,15 @@ FTICK(water_tick) {
 }
 
 FDRAW(water_draw) {
-    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.liquid;
-    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.liquid;
-    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.liquid;
-    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.liquid;
+    bool u = CONNECTS_TO_LIQUID(level, xt,     yt - 1);
+    bool d = CONNECTS_TO_LIQUID(level, xt,     yt + 1);
+    bool l = CONNECTS_TO_LIQUID(level, xt - 1, yt    );
+    bool r = CONNECTS_TO_LIQUID(level, xt + 1, yt    );
 
-    bool su = !u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
-    bool sd = !d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
-    bool sl = !l && LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
-    bool sr = !r && LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
+    bool su = !u && CONNECTS_TO_SAND(level, xt,     yt - 1);
+    bool sd = !d && CONNECTS_TO_SAND(level, xt,     yt + 1);
+    bool sl = !l && CONNECTS_TO_SAND(level, xt - 1, yt    );
+    bool sr = !r && CONNECTS_TO_SAND(level, xt + 1, yt    );
 
     // TODO animation
 
@@ -145,17 +153,40 @@ FDRAW(water_draw) {
 
 // Flower
 FDRAW(flower_draw) {
-    // TODO it should be easy to copy the important
-    // code from this function instead of calling it
-    grass_draw(level, xt, yt, tiles, tiles2);
+    bool u = CONNECTS_TO_GRASS(level, xt,     yt - 1);
+    bool d = CONNECTS_TO_GRASS(level, xt,     yt + 1);
+    bool l = CONNECTS_TO_GRASS(level, xt - 1, yt    );
+    bool r = CONNECTS_TO_GRASS(level, xt + 1, yt    );
 
     bool shape = (LEVEL_GET_DATA(level, xt, yt) >> 5) & 0x01;
 
     if(shape) {
+        if(u && l)
+            tiles[0] = SPR(0, 0);
+        else
+            tiles[0] = SPR(4 + u * 7 + l * 4, 0);
+
         tiles[1] = SPR(33, 0);
+
         tiles[2] = SPR(33, 0);
+
+        if(d && r)
+            tiles[3] = SPR(3, 0);
+        else
+            tiles[3] = SPR(7 + d * 2 + r * 3, 0);
     } else {
         tiles[0] = SPR(33, 0);
+
+        if(u && r)
+            tiles[1] = SPR(1, 0);
+        else
+            tiles[1] = SPR(5 + u * 4 + r * 3, 0);
+
+        if(d && l)
+            tiles[2] = SPR(2, 0);
+        else
+            tiles[2] = SPR(6 + d * 5 + l * 4, 0);
+
         tiles[3] = SPR(33, 0);
     }
 }
@@ -203,10 +234,10 @@ FDRAW(dirt_draw) {
 
 // Sand
 FDRAW(sand_draw) {
-    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
-    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
-    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
-    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
+    bool u = CONNECTS_TO_SAND(level, xt,     yt - 1);
+    bool d = CONNECTS_TO_SAND(level, xt,     yt + 1);
+    bool l = CONNECTS_TO_SAND(level, xt - 1, yt    );
+    bool r = CONNECTS_TO_SAND(level, xt + 1, yt    );
 
     bool stepped_on = LEVEL_GET_DATA(level, xt, yt) != 0;
 
@@ -241,15 +272,15 @@ FDRAW(cactus_draw) {
 
 // Hole
 FDRAW(hole_draw) {
-    bool u = LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.liquid;
-    bool d = LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.liquid;
-    bool l = LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.liquid;
-    bool r = LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.liquid;
+    bool u = CONNECTS_TO_LIQUID(level, xt,     yt - 1);
+    bool d = CONNECTS_TO_LIQUID(level, xt,     yt + 1);
+    bool l = CONNECTS_TO_LIQUID(level, xt - 1, yt    );
+    bool r = CONNECTS_TO_LIQUID(level, xt + 1, yt    );
 
-    bool su = !u && LEVEL_GET_TILE_S(level, xt,     yt - 1)->connects_to.sand;
-    bool sd = !d && LEVEL_GET_TILE_S(level, xt,     yt + 1)->connects_to.sand;
-    bool sl = !l && LEVEL_GET_TILE_S(level, xt - 1, yt    )->connects_to.sand;
-    bool sr = !r && LEVEL_GET_TILE_S(level, xt + 1, yt    )->connects_to.sand;
+    bool su = !u && CONNECTS_TO_SAND(level, xt,     yt - 1);
+    bool sd = !d && CONNECTS_TO_SAND(level, xt,     yt + 1);
+    bool sl = !l && CONNECTS_TO_SAND(level, xt - 1, yt    );
+    bool sr = !r && CONNECTS_TO_SAND(level, xt + 1, yt    );
 
     if(u && l)
         tiles[0] = SPR(0, 5);
