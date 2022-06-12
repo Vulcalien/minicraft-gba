@@ -436,6 +436,14 @@ FDRAW(hard_rock_draw) {
         tiles[3] = SPR(15 + d * 2 + r * 3, 9);
 }
 
+// Ores + Cloud Cactus
+FDRAW(ore_draw) {
+    tiles[0] = SPR(72, 2);
+    tiles[1] = SPR(73, 2);
+    tiles[2] = SPR(74, 2);
+    tiles[3] = SPR(75, 2);
+}
+
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
     {
@@ -594,29 +602,27 @@ const struct Tile tile_list[TILES_COUNT] = {
         .draw = hard_rock_draw
     },
 
-    /*
     // Iron Ore
     {
         .tick = nop_tick,
-        .draw = iron_ore_draw
+        .draw = ore_draw
     },
 
     // Gold Ore
     {
         .tick = nop_tick,
-        .draw = gold_ore_draw
+        .draw = ore_draw
     },
 
     // Gem Ore
     {
         .tick = nop_tick,
-        .draw = gem_ore_draw
+        .draw = ore_draw
     },
 
     // Cloud Cactus
     {
         .tick = nop_tick,
-        .draw = cloud_cactus_draw
+        .draw = ore_draw
     }
-    */
 };
