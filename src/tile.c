@@ -285,22 +285,22 @@ FDRAW(hole_draw) {
     if(u && l)
         tiles[0] = SPR(0, 5);
     else
-        tiles[0] = SPR(24 + u * 7 + l * 4, 5 + (su || sl) * 2);
+        tiles[0] = SPR(24 + u * 7 + l * 4, 5 + (su || sl) * 1);
 
     if(u && r)
         tiles[1] = SPR(1, 5);
     else
-        tiles[1] = SPR(25 + u * 4 + r * 3, 5 + (su || sr) * 2);
+        tiles[1] = SPR(25 + u * 4 + r * 3, 5 + (su || sr) * 1);
 
     if(d && l)
         tiles[2] = SPR(2, 5);
     else
-        tiles[2] = SPR(26 + d * 5 + l * 4, 5 + (sd || sl) * 2);
+        tiles[2] = SPR(26 + d * 5 + l * 4, 5 + (sd || sl) * 1);
 
     if(d && r)
         tiles[3] = SPR(3, 5);
     else
-        tiles[3] = SPR(27 + d * 2 + r * 3, 5 + (sd || sr) * 2);
+        tiles[3] = SPR(27 + d * 2 + r * 3, 5 + (sd || sr) * 1);
 }
 
 // Tree/Cactus Sapling
@@ -383,24 +383,24 @@ FDRAW(cloud_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) != INFINITE_FALL_TILE;
 
     if(u && l)
-        tiles[0] = SPR(70 - !ul * 50, 8);
+        tiles[0] = SPR(70 - !ul * 50, 7);
     else
-        tiles[0] = SPR(12 + u * 7 + l * 4, 8);
+        tiles[0] = SPR(12 + u * 7 + l * 4, 7);
 
     if(u && r)
-        tiles[1] = SPR(69 - !ur * 48, 8);
+        tiles[1] = SPR(69 - !ur * 48, 7);
     else
-        tiles[1] = SPR(13 + u * 4 + r * 3, 8);
+        tiles[1] = SPR(13 + u * 4 + r * 3, 7);
 
     if(d && l)
-        tiles[2] = SPR(69 - !dl * 47, 8);
+        tiles[2] = SPR(69 - !dl * 47, 7);
     else
-        tiles[2] = SPR(14 + d * 5 + l * 4, 8);
+        tiles[2] = SPR(14 + d * 5 + l * 4, 7);
 
     if(d && r)
-        tiles[3] = SPR(71 - !dr * 48, 8);
+        tiles[3] = SPR(71 - !dr * 48, 7);
     else
-        tiles[3] = SPR(15 + d * 2 + r * 3, 8);
+        tiles[3] = SPR(15 + d * 2 + r * 3, 7);
 }
 
 // Hard Rock
@@ -416,24 +416,24 @@ FDRAW(hard_rock_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == HARD_ROCK_TILE;
 
     if(u && l)
-        tiles[0] = SPR(0 + !ul * 20, 9);
+        tiles[0] = SPR(0 + !ul * 20, 8);
     else
-        tiles[0] = SPR(12 + u * 7 + l * 4, 9);
+        tiles[0] = SPR(12 + u * 7 + l * 4, 8);
 
     if(u && r)
-        tiles[1] = SPR(1 + !ur * 20, 9);
+        tiles[1] = SPR(1 + !ur * 20, 8);
     else
-        tiles[1] = SPR(13 + u * 4 + r * 3, 9);
+        tiles[1] = SPR(13 + u * 4 + r * 3, 8);
 
     if(d && l)
-        tiles[2] = SPR(2 + !dl * 20, 9);
+        tiles[2] = SPR(2 + !dl * 20, 8);
     else
-        tiles[2] = SPR(14 + d * 5 + l * 4, 9);
+        tiles[2] = SPR(14 + d * 5 + l * 4, 8);
 
     if(d && r)
-        tiles[3] = SPR(3 + !dr * 20, 9);
+        tiles[3] = SPR(3 + !dr * 20, 8);
     else
-        tiles[3] = SPR(15 + d * 2 + r * 3, 9);
+        tiles[3] = SPR(15 + d * 2 + r * 3, 8);
 }
 
 // Ores + Cloud Cactus

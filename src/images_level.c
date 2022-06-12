@@ -119,13 +119,7 @@ const u16 bg_palette[256] = {
     // dirt (level-specific)
     0x1cea, 0x35b0,
 
-    // --- palette 6 --- (unused)
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-
-    // --- palette 7 --- (hole+sand)
+    // --- palette 6 --- (hole+sand)
     // transparent
     0,
 
@@ -138,7 +132,7 @@ const u16 bg_palette[256] = {
     // sand
     0x2ed6, 0x379c,
 
-    // --- palette 8 --- (cloud)
+    // --- palette 7 --- (cloud)
     // transparent
     0,
 
@@ -148,7 +142,7 @@ const u16 bg_palette[256] = {
     // unused
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 
-    // --- palette 9 --- (hard rock)
+    // --- palette 8 --- (hard rock)
     // transparent
     0,
 
