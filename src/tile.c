@@ -330,10 +330,10 @@ FTICK(farmland_tick) {
 }
 
 FDRAW(farmland_draw) {
-    tiles[0] = TILE_M(49, true, false, 6);
-    tiles[1] = TILE_M(49, false, false, 6);
-    tiles[2] = TILE_M(49, false, false, 6);
-    tiles[3] = TILE_M(49, true, false, 6);
+    tiles[0] = TILE_M(49, true, false, 3);
+    tiles[1] = TILE_M(49, false, false, 3);
+    tiles[2] = TILE_M(49, false, false, 3);
+    tiles[3] = TILE_M(49, true, false, 3);
 }
 
 // Wheat
@@ -344,10 +344,10 @@ FDRAW(wheat_draw) {
     // TODO test if this is accurate
     u32 age = LEVEL_GET_DATA(level, xt, yt) / 10;
 
-    tiles[0] = TILE_M(50 + age, false, false, 6);
-    tiles[1] = TILE_M(50 + age, false, false, 6);
-    tiles[2] = TILE_M(50 + age, true, false, 6);
-    tiles[3] = TILE_M(50 + age, true, false, 6);
+    tiles[0] = TILE_M(50 + age, false, false, 3);
+    tiles[1] = TILE_M(50 + age, false, false, 3);
+    tiles[2] = TILE_M(50 + age, true, false, 3);
+    tiles[3] = TILE_M(50 + age, true, false, 3);
 }
 
 // Lava
