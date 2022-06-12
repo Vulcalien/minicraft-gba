@@ -50,12 +50,12 @@ int main(void) {
     // DEBUG
     level = &level_0;
     for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
-        level->tiles[i] = (i/2)%18;
+        level->tiles[i] = (i/2)%19;
         level->data[i] = i;
     }
 
     // DEBUG
-    menu = &menu_start;
+    /*menu = &menu_start;*/
 
     LEVEL_SET_TILE(level, 5, 5, 1);
     LEVEL_SET_TILE(level, 4, 5, 1);

@@ -145,6 +145,16 @@ const u16 bg_palette[256] = {
 
     // unused
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // --- palette 9 --- (hard rock)
+    // transparent
+    0,
+
+    // hard rock
+    0x5652, 0x3d8c, 0x1021, 0x6f18,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 // 4bpp

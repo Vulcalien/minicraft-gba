@@ -403,6 +403,39 @@ FDRAW(cloud_draw) {
         tiles[3] = SPR(15 + d * 2 + r * 3, 8);
 }
 
+// Hard Rock
+FDRAW(hard_rock_draw) {
+    bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == HARD_ROCK_TILE;
+    bool d = LEVEL_GET_TILE(level, xt,     yt + 1) == HARD_ROCK_TILE;
+    bool l = LEVEL_GET_TILE(level, xt - 1, yt    ) == HARD_ROCK_TILE;
+    bool r = LEVEL_GET_TILE(level, xt + 1, yt    ) == HARD_ROCK_TILE;
+
+    bool ul = LEVEL_GET_TILE(level, xt - 1, yt - 1) == HARD_ROCK_TILE;
+    bool dl = LEVEL_GET_TILE(level, xt - 1, yt + 1) == HARD_ROCK_TILE;
+    bool ur = LEVEL_GET_TILE(level, xt + 1, yt - 1) == HARD_ROCK_TILE;
+    bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == HARD_ROCK_TILE;
+
+    if(u && l)
+        tiles[0] = SPR(0 + !ul * 20, 9);
+    else
+        tiles[0] = SPR(12 + u * 7 + l * 4, 9);
+
+    if(u && r)
+        tiles[1] = SPR(1 + !ur * 20, 9);
+    else
+        tiles[1] = SPR(13 + u * 4 + r * 3, 9);
+
+    if(d && l)
+        tiles[2] = SPR(2 + !dl * 20, 9);
+    else
+        tiles[2] = SPR(14 + d * 5 + l * 4, 9);
+
+    if(d && r)
+        tiles[3] = SPR(3 + !dr * 20, 9);
+    else
+        tiles[3] = SPR(15 + d * 2 + r * 3, 9);
+}
+
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
     {
@@ -555,13 +588,13 @@ const struct Tile tile_list[TILES_COUNT] = {
         .draw = cloud_draw
     },
 
-    /*
     // Hard Rock
     {
-        .tick = hard_rock_tick,
+        .tick = damage_recover_tick,
         .draw = hard_rock_draw
     },
 
+    /*
     // Iron Ore
     {
         .tick = nop_tick,
