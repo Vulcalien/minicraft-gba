@@ -370,6 +370,39 @@ FDRAW(stairs_up_draw) {
     tiles[3] = SPR(64, 1);
 }
 
+// Cloud
+FDRAW(cloud_draw) {
+    bool u = LEVEL_GET_TILE(level, xt,     yt - 1) != INFINITE_FALL_TILE;
+    bool d = LEVEL_GET_TILE(level, xt,     yt + 1) != INFINITE_FALL_TILE;
+    bool l = LEVEL_GET_TILE(level, xt - 1, yt    ) != INFINITE_FALL_TILE;
+    bool r = LEVEL_GET_TILE(level, xt + 1, yt    ) != INFINITE_FALL_TILE;
+
+    bool ul = LEVEL_GET_TILE(level, xt - 1, yt - 1) != INFINITE_FALL_TILE;
+    bool dl = LEVEL_GET_TILE(level, xt - 1, yt + 1) != INFINITE_FALL_TILE;
+    bool ur = LEVEL_GET_TILE(level, xt + 1, yt - 1) != INFINITE_FALL_TILE;
+    bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) != INFINITE_FALL_TILE;
+
+    if(u && l)
+        tiles[0] = SPR(70 - !ul * 50, 8);
+    else
+        tiles[0] = SPR(12 + u * 7 + l * 4, 8);
+
+    if(u && r)
+        tiles[1] = SPR(69 - !ur * 48, 8);
+    else
+        tiles[1] = SPR(13 + u * 4 + r * 3, 8);
+
+    if(d && l)
+        tiles[2] = SPR(69 - !dl * 47, 8);
+    else
+        tiles[2] = SPR(14 + d * 5 + l * 4, 8);
+
+    if(d && r)
+        tiles[3] = SPR(71 - !dr * 48, 8);
+    else
+        tiles[3] = SPR(15 + d * 2 + r * 3, 8);
+}
+
 const struct Tile tile_list[TILES_COUNT] = {
     // Grass
     {
@@ -516,13 +549,13 @@ const struct Tile tile_list[TILES_COUNT] = {
         .draw = nop_draw
     },
 
-    /*
     // Cloud
     {
         .tick = nop_tick,
         .draw = cloud_draw
     },
 
+    /*
     // Hard Rock
     {
         .tick = hard_rock_tick,
