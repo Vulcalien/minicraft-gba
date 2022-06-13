@@ -13,19 +13,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_CORE
-#define MINICRAFT_CORE
-
-#include "types.h"
 #include "util.h"
 
-#define EWRAM_SECTION __attribute__((section(".ewram")))
-#define IWRAM_SECTION __attribute__((section(".iwram")))
+// TODO make this inline ???
 
-#ifndef NULL
-    #define NULL ((void *) 0)
-#endif
+#define DMA3_SOURCE *((vu32 *) 0x040000d4)
+#define DMA3_DEST   *((vu32 *) 0x040000d8)
 
-extern u32 tick_counter;
+#define DMA3_COUNT   *((vu16 *) 0x040000dc)
+#define DMA3_CONTROL *((vu16 *) 0x040000de)
 
-#endif // MINICRAFT_CORE
+void memcpy16(vu16 *dest, const vu16 *src, u32 n) {
+    DMA3_SOURCE  = (u32) src;
+    DMA3_DEST    = (u32) dest;
+
+    DMA3_COUNT   = n;
+    DMA3_CONTROL = (0 << 10) | // Transfer type (0 is 16bit, 1 is 32bit)
+                   (1 << 15);  // DMA Enable
+}
+
+// pseudorandom number generator
+static u32 seed = 0;
+
+IWRAM_SECTION
+u16 rand(void) {
+    seed = seed * 0x248f7b13 + 0xc21840c5;
+    return seed >> 16;
+}
+
+void srand(u32 new_seed) {
+    seed = new_seed;
+}

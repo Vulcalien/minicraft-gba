@@ -13,19 +13,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_CORE
-#define MINICRAFT_CORE
+#ifndef MINICRAFT_UTIL
+#define MINICRAFT_UTIL
 
-#include "types.h"
-#include "util.h"
+#include "minicraft.h"
 
-#define EWRAM_SECTION __attribute__((section(".ewram")))
-#define IWRAM_SECTION __attribute__((section(".iwram")))
+extern void memcpy16(vu16 *dest, const vu16 *src, u32 n);
 
-#ifndef NULL
-    #define NULL ((void *) 0)
-#endif
+extern u16 rand(void);
+extern void srand(u32 new_seed);
 
-extern u32 tick_counter;
-
-#endif // MINICRAFT_CORE
+#endif // MINICRAFT_UTIL
