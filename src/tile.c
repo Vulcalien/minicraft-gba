@@ -17,8 +17,7 @@
 
 #include "level.h"
 
-// TODO rename SPR to something else: not sprites!
-#define SPR(id, palette) ((id) | ((palette) << 12))
+#define TILE(id, palette) ((id) | ((palette) << 12))
 #define TILE_M(id, flip_h, flip_v, palette)\
     ((id) | (flip_h << 10) | (flip_v << 11) | (palette << 12))
 
@@ -74,24 +73,24 @@ FDRAW(grass_draw) {
     bool r = CONNECTS_TO_GRASS(level, xt + 1, yt    );
 
     if(u && l)
-        tiles[0] = SPR(0, 0);
+        tiles[0] = TILE(0, 0);
     else
-        tiles[0] = SPR(4 + u * 7 + l * 4, 0);
+        tiles[0] = TILE(4 + u * 7 + l * 4, 0);
 
     if(u && r)
-        tiles[1] = SPR(1, 0);
+        tiles[1] = TILE(1, 0);
     else
-        tiles[1] = SPR(5 + u * 4 + r * 3, 0);
+        tiles[1] = TILE(5 + u * 4 + r * 3, 0);
 
     if(d && l)
-        tiles[2] = SPR(2, 0);
+        tiles[2] = TILE(2, 0);
     else
-        tiles[2] = SPR(6 + d * 5 + l * 4, 0);
+        tiles[2] = TILE(6 + d * 5 + l * 4, 0);
 
     if(d && r)
-        tiles[3] = SPR(3, 0);
+        tiles[3] = TILE(3, 0);
     else
-        tiles[3] = SPR(7 + d * 2 + r * 3, 0);
+        tiles[3] = TILE(7 + d * 2 + r * 3, 0);
 }
 
 // Rock
@@ -107,24 +106,24 @@ FDRAW(rock_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == ROCK_TILE;
 
     if(u && l)
-        tiles[0] = SPR(0 + !ul * 20, 1);
+        tiles[0] = TILE(0 + !ul * 20, 1);
     else
-        tiles[0] = SPR(12 + u * 7 + l * 4, 1);
+        tiles[0] = TILE(12 + u * 7 + l * 4, 1);
 
     if(u && r)
-        tiles[1] = SPR(1 + !ur * 20, 1);
+        tiles[1] = TILE(1 + !ur * 20, 1);
     else
-        tiles[1] = SPR(13 + u * 4 + r * 3, 1);
+        tiles[1] = TILE(13 + u * 4 + r * 3, 1);
 
     if(d && l)
-        tiles[2] = SPR(2 + !dl * 20, 1);
+        tiles[2] = TILE(2 + !dl * 20, 1);
     else
-        tiles[2] = SPR(14 + d * 5 + l * 4, 1);
+        tiles[2] = TILE(14 + d * 5 + l * 4, 1);
 
     if(d && r)
-        tiles[3] = SPR(3 + !dr * 20, 1);
+        tiles[3] = TILE(3 + !dr * 20, 1);
     else
-        tiles[3] = SPR(15 + d * 2 + r * 3, 1);
+        tiles[3] = TILE(15 + d * 2 + r * 3, 1);
 }
 
 // Water
@@ -155,24 +154,24 @@ FDRAW(water_draw) {
     // TODO animation
 
     if(u && l)
-        tiles[0] = SPR(0, 2);
+        tiles[0] = TILE(0, 2);
     else
-        tiles[0] = SPR(24 + u * 7 + l * 4, 2 + (su || sl) * 1);
+        tiles[0] = TILE(24 + u * 7 + l * 4, 2 + (su || sl) * 1);
 
     if(u && r)
-        tiles[1] = SPR(1, 2);
+        tiles[1] = TILE(1, 2);
     else
-        tiles[1] = SPR(25 + u * 4 + r * 3, 2 + (su || sr) * 1);
+        tiles[1] = TILE(25 + u * 4 + r * 3, 2 + (su || sr) * 1);
 
     if(d && l)
-        tiles[2] = SPR(2, 2);
+        tiles[2] = TILE(2, 2);
     else
-        tiles[2] = SPR(26 + d * 5 + l * 4, 2 + (sd || sl) * 1);
+        tiles[2] = TILE(26 + d * 5 + l * 4, 2 + (sd || sl) * 1);
 
     if(d && r)
-        tiles[3] = SPR(3, 2);
+        tiles[3] = TILE(3, 2);
     else
-        tiles[3] = SPR(27 + d * 2 + r * 3, 2 + (sd || sr) * 1);
+        tiles[3] = TILE(27 + d * 2 + r * 3, 2 + (sd || sr) * 1);
 }
 
 // Flower
@@ -186,32 +185,32 @@ FDRAW(flower_draw) {
 
     if(shape) {
         if(u && l)
-            tiles[0] = SPR(0, 0);
+            tiles[0] = TILE(0, 0);
         else
-            tiles[0] = SPR(4 + u * 7 + l * 4, 0);
+            tiles[0] = TILE(4 + u * 7 + l * 4, 0);
 
-        tiles[1] = SPR(33, 0);
+        tiles[1] = TILE(33, 0);
 
-        tiles[2] = SPR(33, 0);
+        tiles[2] = TILE(33, 0);
 
         if(d && r)
-            tiles[3] = SPR(3, 0);
+            tiles[3] = TILE(3, 0);
         else
-            tiles[3] = SPR(7 + d * 2 + r * 3, 0);
+            tiles[3] = TILE(7 + d * 2 + r * 3, 0);
     } else {
-        tiles[0] = SPR(33, 0);
+        tiles[0] = TILE(33, 0);
 
         if(u && r)
-            tiles[1] = SPR(1, 0);
+            tiles[1] = TILE(1, 0);
         else
-            tiles[1] = SPR(5 + u * 4 + r * 3, 0);
+            tiles[1] = TILE(5 + u * 4 + r * 3, 0);
 
         if(d && l)
-            tiles[2] = SPR(2, 0);
+            tiles[2] = TILE(2, 0);
         else
-            tiles[2] = SPR(6 + d * 5 + l * 4, 0);
+            tiles[2] = TILE(6 + d * 5 + l * 4, 0);
 
-        tiles[3] = SPR(33, 0);
+        tiles[3] = TILE(33, 0);
     }
 }
 
@@ -228,32 +227,32 @@ FDRAW(tree_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == TREE_TILE;
 
     if(u && l && ul)
-        tiles[0] = SPR(38, 0);
+        tiles[0] = TILE(38, 0);
     else
-        tiles[0] = SPR(34, 0);
+        tiles[0] = TILE(34, 0);
 
     if(u && r && ur)
-        tiles[1] = SPR(39, 0);
+        tiles[1] = TILE(39, 0);
     else
-        tiles[1] = SPR(35, 0);
+        tiles[1] = TILE(35, 0);
 
     if(d && l && dl)
-        tiles[2] = SPR(39, 0);
+        tiles[2] = TILE(39, 0);
     else
-        tiles[2] = SPR(36, 0);
+        tiles[2] = TILE(36, 0);
 
     if(d && r && dr)
-        tiles[3] = SPR(38, 0);
+        tiles[3] = TILE(38, 0);
     else
-        tiles[3] = SPR(37, 0);
+        tiles[3] = TILE(37, 0);
 }
 
 // Dirt
 FDRAW(dirt_draw) {
-    tiles[0] = SPR(65, 2);
-    tiles[1] = SPR(66, 2);
-    tiles[2] = SPR(67, 2);
-    tiles[3] = SPR(68, 2);
+    tiles[0] = TILE(65, 2);
+    tiles[1] = TILE(66, 2);
+    tiles[2] = TILE(67, 2);
+    tiles[3] = TILE(68, 2);
 }
 
 // Sand
@@ -266,32 +265,32 @@ FDRAW(sand_draw) {
     bool stepped_on = LEVEL_GET_DATA(level, xt, yt) != 0;
 
     if(u && l)
-        tiles[0] = SPR(0 + stepped_on * 40, 4);
+        tiles[0] = TILE(0 + stepped_on * 40, 4);
     else
-        tiles[0] = SPR(4 + u * 7 + l * 4, 4);
+        tiles[0] = TILE(4 + u * 7 + l * 4, 4);
 
     if(u && r)
-        tiles[1] = SPR(1, 4);
+        tiles[1] = TILE(1, 4);
     else
-        tiles[1] = SPR(5 + u * 4 + r * 3, 4);
+        tiles[1] = TILE(5 + u * 4 + r * 3, 4);
 
     if(d && l)
-        tiles[2] = SPR(2, 4);
+        tiles[2] = TILE(2, 4);
     else
-        tiles[2] = SPR(6 + d * 5 + l * 4, 4);
+        tiles[2] = TILE(6 + d * 5 + l * 4, 4);
 
     if(d && r)
-        tiles[3] = SPR(3 + stepped_on * 37, 4);
+        tiles[3] = TILE(3 + stepped_on * 37, 4);
     else
-        tiles[3] = SPR(7 + d * 2 + r * 3, 4);
+        tiles[3] = TILE(7 + d * 2 + r * 3, 4);
 }
 
 // Cactus
 FDRAW(cactus_draw) {
-    tiles[0] = SPR(41, 4);
-    tiles[1] = SPR(42, 4);
-    tiles[2] = SPR(43, 4);
-    tiles[3] = SPR(44, 4);
+    tiles[0] = TILE(41, 4);
+    tiles[1] = TILE(42, 4);
+    tiles[2] = TILE(43, 4);
+    tiles[3] = TILE(44, 4);
 }
 
 // Hole
@@ -307,24 +306,24 @@ FDRAW(hole_draw) {
     bool sr = !r && CONNECTS_TO_SAND(level, xt + 1, yt    );
 
     if(u && l)
-        tiles[0] = SPR(0, 5);
+        tiles[0] = TILE(0, 5);
     else
-        tiles[0] = SPR(24 + u * 7 + l * 4, 5 + (su || sl) * 1);
+        tiles[0] = TILE(24 + u * 7 + l * 4, 5 + (su || sl) * 1);
 
     if(u && r)
-        tiles[1] = SPR(1, 5);
+        tiles[1] = TILE(1, 5);
     else
-        tiles[1] = SPR(25 + u * 4 + r * 3, 5 + (su || sr) * 1);
+        tiles[1] = TILE(25 + u * 4 + r * 3, 5 + (su || sr) * 1);
 
     if(d && l)
-        tiles[2] = SPR(2, 5);
+        tiles[2] = TILE(2, 5);
     else
-        tiles[2] = SPR(26 + d * 5 + l * 4, 5 + (sd || sl) * 1);
+        tiles[2] = TILE(26 + d * 5 + l * 4, 5 + (sd || sl) * 1);
 
     if(d && r)
-        tiles[3] = SPR(3, 5);
+        tiles[3] = TILE(3, 5);
     else
-        tiles[3] = SPR(27 + d * 2 + r * 3, 5 + (sd || sr) * 1);
+        tiles[3] = TILE(27 + d * 2 + r * 3, 5 + (sd || sr) * 1);
 }
 
 // Tree Sapling
@@ -340,10 +339,10 @@ FTICK(tree_sapling_tick) {
 FDRAW(tree_sapling_draw) {
     grass_draw(level, xt, yt, tiles, tiles2);
 
-    tiles2[0] = SPR(45, 0);
-    tiles2[1] = SPR(46, 0);
-    tiles2[2] = SPR(47, 0);
-    tiles2[3] = SPR(48, 0);
+    tiles2[0] = TILE(45, 0);
+    tiles2[1] = TILE(46, 0);
+    tiles2[2] = TILE(47, 0);
+    tiles2[3] = TILE(48, 0);
 }
 
 // Cactus Sapling
@@ -359,10 +358,10 @@ FTICK(cactus_sapling_tick) {
 FDRAW(cactus_sapling_draw) {
     sand_draw(level, xt, yt, tiles, tiles2);
 
-    tiles2[0] = SPR(45, 0);
-    tiles2[1] = SPR(46, 0);
-    tiles2[2] = SPR(47, 0);
-    tiles2[3] = SPR(48, 0);
+    tiles2[0] = TILE(45, 0);
+    tiles2[1] = TILE(46, 0);
+    tiles2[2] = TILE(47, 0);
+    tiles2[3] = TILE(48, 0);
 }
 
 // Farmland
@@ -417,18 +416,18 @@ FTICK(lava_tick) {
 
 // Stairs Down
 FDRAW(stairs_down_draw) {
-    tiles[0] = SPR(57, 1);
-    tiles[1] = SPR(58, 1);
-    tiles[2] = SPR(59, 1);
-    tiles[3] = SPR(60, 1);
+    tiles[0] = TILE(57, 1);
+    tiles[1] = TILE(58, 1);
+    tiles[2] = TILE(59, 1);
+    tiles[3] = TILE(60, 1);
 }
 
 // Stairs Up
 FDRAW(stairs_up_draw) {
-    tiles[0] = SPR(61, 1);
-    tiles[1] = SPR(62, 1);
-    tiles[2] = SPR(63, 1);
-    tiles[3] = SPR(64, 1);
+    tiles[0] = TILE(61, 1);
+    tiles[1] = TILE(62, 1);
+    tiles[2] = TILE(63, 1);
+    tiles[3] = TILE(64, 1);
 }
 
 // Cloud
@@ -444,24 +443,24 @@ FDRAW(cloud_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) != INFINITE_FALL_TILE;
 
     if(u && l)
-        tiles[0] = SPR(70 - !ul * 50, 7);
+        tiles[0] = TILE(70 - !ul * 50, 7);
     else
-        tiles[0] = SPR(12 + u * 7 + l * 4, 7);
+        tiles[0] = TILE(12 + u * 7 + l * 4, 7);
 
     if(u && r)
-        tiles[1] = SPR(69 - !ur * 48, 7);
+        tiles[1] = TILE(69 - !ur * 48, 7);
     else
-        tiles[1] = SPR(13 + u * 4 + r * 3, 7);
+        tiles[1] = TILE(13 + u * 4 + r * 3, 7);
 
     if(d && l)
-        tiles[2] = SPR(69 - !dl * 47, 7);
+        tiles[2] = TILE(69 - !dl * 47, 7);
     else
-        tiles[2] = SPR(14 + d * 5 + l * 4, 7);
+        tiles[2] = TILE(14 + d * 5 + l * 4, 7);
 
     if(d && r)
-        tiles[3] = SPR(71 - !dr * 48, 7);
+        tiles[3] = TILE(71 - !dr * 48, 7);
     else
-        tiles[3] = SPR(15 + d * 2 + r * 3, 7);
+        tiles[3] = TILE(15 + d * 2 + r * 3, 7);
 }
 
 // Hard Rock
@@ -477,32 +476,32 @@ FDRAW(hard_rock_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == HARD_ROCK_TILE;
 
     if(u && l)
-        tiles[0] = SPR(0 + !ul * 20, 8);
+        tiles[0] = TILE(0 + !ul * 20, 8);
     else
-        tiles[0] = SPR(12 + u * 7 + l * 4, 8);
+        tiles[0] = TILE(12 + u * 7 + l * 4, 8);
 
     if(u && r)
-        tiles[1] = SPR(1 + !ur * 20, 8);
+        tiles[1] = TILE(1 + !ur * 20, 8);
     else
-        tiles[1] = SPR(13 + u * 4 + r * 3, 8);
+        tiles[1] = TILE(13 + u * 4 + r * 3, 8);
 
     if(d && l)
-        tiles[2] = SPR(2 + !dl * 20, 8);
+        tiles[2] = TILE(2 + !dl * 20, 8);
     else
-        tiles[2] = SPR(14 + d * 5 + l * 4, 8);
+        tiles[2] = TILE(14 + d * 5 + l * 4, 8);
 
     if(d && r)
-        tiles[3] = SPR(3 + !dr * 20, 8);
+        tiles[3] = TILE(3 + !dr * 20, 8);
     else
-        tiles[3] = SPR(15 + d * 2 + r * 3, 8);
+        tiles[3] = TILE(15 + d * 2 + r * 3, 8);
 }
 
 // Ores + Cloud Cactus
 FDRAW(ore_draw) {
-    tiles[0] = SPR(72, 2);
-    tiles[1] = SPR(73, 2);
-    tiles[2] = SPR(74, 2);
-    tiles[3] = SPR(75, 2);
+    tiles[0] = TILE(72, 2);
+    tiles[1] = TILE(73, 2);
+    tiles[2] = TILE(74, 2);
+    tiles[3] = TILE(75, 2);
 }
 
 const struct Tile tile_list[TILES_COUNT] = {
