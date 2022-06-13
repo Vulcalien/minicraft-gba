@@ -29,18 +29,26 @@ struct Level {
 extern void level_tick(struct Level *level);
 extern void level_draw(struct Level *level);
 
-#define LEVEL_GET_TILE(level, xt, yt) level->tiles[(xt) + (yt) * LEVEL_W]
-#define LEVEL_SET_TILE(level, xt, yt, val) do {\
-    level->tiles[(xt) + (yt) * LEVEL_W] = val;\
+#define LEVEL_GET_TILE(level, xt, yt)\
+    (((xt) < 0 || (xt) >= LEVEL_W || (yt) < 0 || (yt) >= LEVEL_H) ?\
+        ROCK_TILE : level->tiles[(xt) + (yt) * LEVEL_W])
+#define LEVEL_SET_TILE(level, xt, yt, val, data_val) do {\
+    if((xt) >= 0 && (xt) < LEVEL_W && (yt) >= 0 && (yt) < LEVEL_H) {\
+        level->tiles[(xt) + (yt) * LEVEL_W] = val;\
+        level->data[(xt) + (yt) * LEVEL_W]  = data_val;\
+    }\
 } while(0)
 
 // returns 'struct Tile *' instead of the ID
 #define LEVEL_GET_TILE_S(level, xt, yt)\
     (&tile_list[LEVEL_GET_TILE(level, xt, yt)])
 
-#define LEVEL_GET_DATA(level, xt, yt) level->data[(xt) + (yt) * LEVEL_W]
+#define LEVEL_GET_DATA(level, xt, yt)\
+    (((xt) < 0 || (xt) >= LEVEL_W || (yt) < 0 || (yt) >= LEVEL_H) ?\
+        0 : level->data[(xt) + (yt) * LEVEL_W])
 #define LEVEL_SET_DATA(level, xt, yt, val) do {\
-    level->data[(xt) + (yt) * LEVEL_W] = val;\
+    if((xt) >= 0 && (xt) < LEVEL_W && (yt) >= 0 && (yt) < LEVEL_H)\
+        level->data[(xt) + (yt) * LEVEL_W] = val;\
 } while(0)
 
 #endif // MINICRAFT_LEVEL

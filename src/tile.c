@@ -23,6 +23,7 @@
     ((id) | (flip_h << 10) | (flip_v << 11) | (palette << 12))
 
 #define FTICK(name)\
+    IWRAM_SECTION\
     static void name(struct Level *level, u32 xt, u32 yt)
 
 #define FDRAW(name)\
@@ -51,6 +52,19 @@ FTICK(damage_recover_tick) {
 
 // Grass
 FTICK(grass_tick) {
+    if(rand() % 40 != 0)
+        return;
+
+    i32 xn = xt;
+    i32 yn = yt;
+
+    if(rand() & 1)
+        xn += (rand() & 1) * 2 - 1;
+    else
+        yn += (rand() & 1) * 2 - 1;
+
+    if(LEVEL_GET_TILE(level, xn, yn) == DIRT_TILE)
+        LEVEL_SET_TILE(level, xn, yn, GRASS_TILE, 0);
 }
 
 FDRAW(grass_draw) {
@@ -115,6 +129,16 @@ FDRAW(rock_draw) {
 
 // Water
 FTICK(water_tick) {
+    i32 xn = xt;
+    i32 yn = yt;
+
+    if(rand() & 1)
+        xn += (rand() & 1) * 2 - 1;
+    else
+        yn += (rand() & 1) * 2 - 1;
+
+    if(LEVEL_GET_TILE(level, xn, yn) == HOLE_TILE)
+        LEVEL_SET_TILE(level, xn, yn, WATER_TILE, 0);
 }
 
 FDRAW(water_draw) {
@@ -303,8 +327,14 @@ FDRAW(hole_draw) {
         tiles[3] = SPR(27 + d * 2 + r * 3, 5 + (sd || sr) * 1);
 }
 
-// Tree/Cactus Sapling
-FTICK(sapling_tick) {
+// Tree Sapling
+FTICK(tree_sapling_tick) {
+    u32 age = LEVEL_GET_DATA(level, xt, yt) + 1;
+
+    if(age > 100)
+        LEVEL_SET_TILE(level, xt, yt, TREE_TILE, 0);
+    else
+        LEVEL_SET_DATA(level, xt, yt, age);
 }
 
 FDRAW(tree_sapling_draw) {
@@ -314,6 +344,16 @@ FDRAW(tree_sapling_draw) {
     tiles2[1] = SPR(46, 0);
     tiles2[2] = SPR(47, 0);
     tiles2[3] = SPR(48, 0);
+}
+
+// Cactus Sapling
+FTICK(cactus_sapling_tick) {
+    u32 age = LEVEL_GET_DATA(level, xt, yt) + 1;
+
+    if(age > 100)
+        LEVEL_SET_TILE(level, xt, yt, CACTUS_TILE, 0);
+    else
+        LEVEL_SET_DATA(level, xt, yt, age);
 }
 
 FDRAW(cactus_sapling_draw) {
@@ -327,6 +367,10 @@ FDRAW(cactus_sapling_draw) {
 
 // Farmland
 FTICK(farmland_tick) {
+    u32 age = LEVEL_GET_DATA(level, xt, yt);
+
+    if(age < 5)
+        LEVEL_SET_DATA(level, xt, yt, age + 1);
 }
 
 FDRAW(farmland_draw) {
@@ -338,6 +382,13 @@ FDRAW(farmland_draw) {
 
 // Wheat
 FTICK(wheat_tick) {
+    if(rand() & 1)
+        return;
+
+    u32 age = LEVEL_GET_DATA(level, xt, yt);
+
+    if(age < 50)
+        LEVEL_SET_DATA(level, xt, yt, age + 1);
 }
 
 FDRAW(wheat_draw) {
@@ -352,6 +403,16 @@ FDRAW(wheat_draw) {
 
 // Lava
 FTICK(lava_tick) {
+    i32 xn = xt;
+    i32 yn = yt;
+
+    if(rand() & 1)
+        xn += (rand() & 1) * 2 - 1;
+    else
+        yn += (rand() & 1) * 2 - 1;
+
+    if(LEVEL_GET_TILE(level, xn, yn) == HOLE_TILE)
+        LEVEL_SET_TILE(level, xn, yn, LAVA_TILE, 0);
 }
 
 // Stairs Down
@@ -531,7 +592,7 @@ const struct Tile tile_list[TILES_COUNT] = {
 
     // Tree Sapling
     {
-        .tick = sapling_tick,
+        .tick = tree_sapling_tick,
         .draw = tree_sapling_draw,
 
         .connects_to = {
@@ -541,7 +602,7 @@ const struct Tile tile_list[TILES_COUNT] = {
 
     // Cactus Sapling
     {
-        .tick = sapling_tick,
+        .tick = cactus_sapling_tick,
         .draw = cactus_sapling_draw,
 
         .connects_to = {

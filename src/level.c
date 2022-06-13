@@ -18,7 +18,18 @@
 #include "screen.h"
 #include "tile.h"
 
+IWRAM_SECTION
 void level_tick(struct Level *level) {
+    // TODO try spawn
+
+    for(u32 i = 0; i < LEVEL_W * LEVEL_H / 50; i++) {
+        u32 xt = rand() % LEVEL_W;
+        u32 yt = rand() % LEVEL_H;
+
+        LEVEL_GET_TILE_S(level, xt, yt)->tick(level, xt, yt);
+    }
+
+    // TODO tick entities
 }
 
 IWRAM_SECTION

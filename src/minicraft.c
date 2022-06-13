@@ -57,30 +57,6 @@ int main(void) {
     // DEBUG
     /*menu = &menu_start;*/
 
-    LEVEL_SET_TILE(level, 5, 5, 1);
-    LEVEL_SET_TILE(level, 4, 5, 1);
-    LEVEL_SET_TILE(level, 5, 4, 1);
-    LEVEL_SET_TILE(level, 6, 5, 1);
-    LEVEL_SET_TILE(level, 5, 6, 1);
-    LEVEL_SET_TILE(level, 6, 6, 1);
-    LEVEL_SET_TILE(level, 6, 7, 1);
-
-    LEVEL_SET_TILE(level, 8, 7, 2);
-    LEVEL_SET_TILE(level, 8, 8, 2);
-    LEVEL_SET_TILE(level, 9, 9, 2);
-
-    LEVEL_SET_TILE(level, 9, 7, 3);
-    LEVEL_SET_TILE(level, 9, 8, 3);
-    LEVEL_SET_TILE(level, 9, 5, 3);
-    LEVEL_SET_TILE(level, 9, 6, 3);
-    LEVEL_SET_TILE(level, 8, 5, 3);
-
-    LEVEL_SET_TILE(level, 5, 4, 4);
-    LEVEL_SET_TILE(level, 6, 4, 4);
-    LEVEL_SET_TILE(level, 5, 5, 4);
-    LEVEL_SET_TILE(level, 6, 5, 4);
-    LEVEL_SET_TILE(level, 5, 2, 4);
-
     // DEBUG: calculate header checksum
     u8 checksum = 0;
     for(u32 i = 0xa0; i <= 0xbc; i++) {
@@ -92,11 +68,14 @@ int main(void) {
     while(true) {
         tick();
 
+        // DEBUG check performance
+        ((vu8 *) 0x0e000000)[1] = *((vu8 *) 0x04000006);
+
         vsync();
         draw();
 
         // DEBUG check performance
-        ((vu16 *) 0x0e000000)[1] = *((vu16 *) 0x04000006);
+        ((vu8 *) 0x0e000000)[0] = *((vu8 *) 0x04000006);
     }
     return 0;
 }
