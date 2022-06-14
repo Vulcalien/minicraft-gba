@@ -19,8 +19,8 @@
 #include "types.h"
 #include "util.h"
 
-#define EWRAM_SECTION __attribute__((section(".ewram")))
-#define IWRAM_SECTION __attribute__((section(".iwram")))
+#define EWRAM_BSS_SECTION __attribute__((section(".bss.ewram")))
+#define IWRAM_SECTION     __attribute__((section(".iwram")))
 
 #ifndef NULL
     #define NULL ((void *) 0)

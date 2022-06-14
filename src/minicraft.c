@@ -24,11 +24,7 @@ u32 tick_counter = 0;
 static struct Menu  *menu  = NULL;
 static struct Level *level = NULL;
 
-// FIXME instead of being in the BSS section, this
-// is put in the initialized data section, meaning
-// that the data is put in the cartridge ROM and
-// then copied to the EWRAM
-EWRAM_SECTION
+EWRAM_BSS_SECTION
 static struct Level levels[5];
 
 void tick(void) {

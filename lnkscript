@@ -1,4 +1,7 @@
 /* Linker Script v1.3 by Jeff Frohwein              */
+/*                                                  */
+/* Modified by Vulcalien for Minicraft GBA          */
+/*                                                  */
 /*  v1.0 - Original release                         */
 /*  v1.1 - Added proper .data section support       */
 /*  v1.2 - Added support for c++ & iwram overlays   */
@@ -252,6 +255,17 @@ SECTIONS
   } = 0xff
 
   __ewram_overlay_end = . ;
+
+  .bss.ewram ALIGN(4) :
+  {
+   __ewram_bss_start = ABSOLUTE(.);
+   __ewram_bss_start__ = ABSOLUTE(.);
+   *(.ewram.bss)
+   . = ALIGN(4);    /* REQUIRED. LD is flaky without it. */
+  }
+
+  __ewram_bss_end = . ;
+  __ewram_bss_end__ = . ;
 
   __eheap_start = . ;
 
