@@ -13,17 +13,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "menu.h"
+#include "entity.h"
 
-static void start_tick(void) {
+#include "mob.h"
 
+ETICK(zombie_tick) {
+    mob_tick(level, entity, data);
+
+    // TODO ...
 }
 
-static void start_draw(void) {
-
-}
-
-const struct Menu menu_start = {
-    .tick = start_tick,
-    .draw = start_draw
+static const struct Entity zombie_entity = {
+    .tick = zombie_tick
 };

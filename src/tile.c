@@ -504,7 +504,7 @@ FDRAW(ore_draw) {
     tiles[3] = TILE(75, 2);
 }
 
-const struct Tile tile_list[TILES_COUNT] = {
+const struct Tile tile_list[TILE_TYPES] = {
     // Grass
     {
         .tick = grass_tick,

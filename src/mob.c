@@ -13,17 +13,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "menu.h"
+#include "mob.h"
 
-static void start_tick(void) {
+#include "level.h"
+#include "entity.h"
+
+IWRAM_SECTION
+void mob_tick(struct Level *level,
+              const struct Entity *entity, u8 data[ENTITY_DATA_SIZE]) {
 
 }
-
-static void start_draw(void) {
-
-}
-
-const struct Menu menu_start = {
-    .tick = start_tick,
-    .draw = start_draw
-};

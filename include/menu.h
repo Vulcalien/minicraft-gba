@@ -23,6 +23,6 @@ struct Menu {
     void (*draw)(void);
 };
 
-extern struct Menu menu_start;
+extern const struct Menu menu_start;
 
 #endif // MINICRAFT_MENU

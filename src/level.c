@@ -17,6 +17,7 @@
 
 #include "screen.h"
 #include "tile.h"
+#include "entity.h"
 
 IWRAM_SECTION
 void level_tick(struct Level *level) {
@@ -29,7 +30,17 @@ void level_tick(struct Level *level) {
         LEVEL_GET_TILE_S(level, xt, yt)->tick(level, xt, yt);
     }
 
-    // TODO tick entities
+    // TODO more on entity ticking...
+    for(u32 i = 0; i < ENTITY_CAP; i++) {
+        u8 *entity_data = level->entities[i];
+
+        u8 entity_type = entity_data[0];
+        if(entity_type >= ENTITY_TYPES)
+            continue;
+
+        const struct Entity *entity = &entity_list[entity_type];
+        entity->tick(level, entity, entity_data);
+    }
 }
 
 IWRAM_SECTION

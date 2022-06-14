@@ -13,17 +13,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "menu.h"
+#include "entity.h"
 
-static void start_tick(void) {
+#include "entity/zombie.c"
 
-}
-
-static void start_draw(void) {
-
-}
-
-const struct Menu menu_start = {
-    .tick = start_tick,
-    .draw = start_draw
+const struct Entity entity_list[ENTITY_TYPES] = {
+    zombie_entity,
+    /*
+    slime_entity,
+    air_wizard_entity,
+    player_entity,
+    text_particle_entity,
+    smash_particle_entity,
+    spark_entity,
+    furniture_entity,
+    lantern_entity,
+    item_entity
+    */
 };

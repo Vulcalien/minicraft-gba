@@ -24,9 +24,12 @@ u32 tick_counter = 0;
 static struct Menu  *menu  = NULL;
 static struct Level *level = NULL;
 
-// DEBUG
+// FIXME instead of being in the BSS section, this
+// is put in the initialized data section, meaning
+// that the data is put in the cartridge ROM and
+// then copied to the EWRAM
 EWRAM_SECTION
-static struct Level level_0 = {};
+static struct Level levels[5];
 
 void tick(void) {
     if(menu)
@@ -48,22 +51,26 @@ int main(void) {
     screen_init();
 
     // DEBUG
-    level = &level_0;
+    level = &levels[0];
     for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
-        level->tiles[i] = (i/2)%23;
-        level->data[i] = i;
+        /*level->tiles[i] = (i/2)%23;*/
+        level->tiles[i] = rand() % 23;
+        /*level->tiles[i] = 12;*/
+        level->data[i] = 0;
     }
 
     // DEBUG
     /*menu = &menu_start;*/
 
     // DEBUG: calculate header checksum
-    u8 checksum = 0;
-    for(u32 i = 0xa0; i <= 0xbc; i++) {
-        checksum -= ((vu8 *) 0x8000000)[i];
-    }
-    checksum -= 0x19;
-    ((vu8 *) 0x0e000000)[0] = checksum;
+    #ifdef GENERATE_CHECKSUM
+        u8 checksum = 0;
+        for(u32 i = 0xa0; i <= 0xbc; i++)
+            checksum -= ((vu8 *) 0x8000000)[i];
+
+        checksum -= 0x19;
+        ((vu8 *) 0x0e000000)[0] = checksum;
+    #endif // GENERATE_CHECKSUM
 
     while(true) {
         tick();

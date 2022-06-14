@@ -56,7 +56,7 @@ struct Tile {
     } connects_to;
 };
 
-#define TILES_COUNT (23)
-extern const struct Tile tile_list[TILES_COUNT];
+#define TILE_TYPES (23)
+extern const struct Tile tile_list[TILE_TYPES];
 
 #endif // MINICRAFT_TILE

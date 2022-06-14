@@ -13,17 +13,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "menu.h"
+#ifndef MINICRAFT_MOB
+#define MINICRAFT_MOB
 
-static void start_tick(void) {
+#include "minicraft.h"
 
-}
+#include "level.h"
+#include "entity.h"
 
-static void start_draw(void) {
+extern void mob_tick(struct Level *level,
+                     const struct Entity *entity, u8 data[ENTITY_DATA_SIZE]);
 
-}
-
-const struct Menu menu_start = {
-    .tick = start_tick,
-    .draw = start_draw
-};
+#endif // MINICRAFT_MOB
