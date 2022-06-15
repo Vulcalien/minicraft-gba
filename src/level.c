@@ -50,7 +50,10 @@ void level_draw(struct Level *level) {
 
     // TODO set offset
     u32 x_offset = test;
-    u32 y_offset = test++ / 2;
+    u32 y_offset = 0;
+
+    // DEBUG
+    test %= 500;
 
     BG0_XOFFSET = BG1_XOFFSET = x_offset & 0x0f;
     BG0_YOFFSET = BG1_YOFFSET = y_offset & 0x0f;

@@ -50,8 +50,8 @@ int main(void) {
     level = &levels[0];
     for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
         /*level->tiles[i] = (i/2)%23;*/
-        level->tiles[i] = rand() % 23;
-        /*level->tiles[i] = 12;*/
+        /*level->tiles[i] = rand() % 23;*/
+        level->tiles[i] = 2;
         level->data[i] = 0;
     }
 

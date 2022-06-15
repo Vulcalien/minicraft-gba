@@ -141,6 +141,9 @@ FTICK(water_tick) {
 }
 
 FDRAW(water_draw) {
+    u32 water_seed = (tick_count + 0x109f77 * xt - 0xab24af3 * yt) / 10 * 0x248f7b13 + 0xc21840c5;
+    u16 water_rand = (water_seed * 0x248f7b13 + 0xc21840c5) >> 16;
+
     bool u = CONNECTS_TO_LIQUID(level, xt,     yt - 1);
     bool d = CONNECTS_TO_LIQUID(level, xt,     yt + 1);
     bool l = CONNECTS_TO_LIQUID(level, xt - 1, yt    );
@@ -151,25 +154,23 @@ FDRAW(water_draw) {
     bool sl = !l && CONNECTS_TO_SAND(level, xt - 1, yt    );
     bool sr = !r && CONNECTS_TO_SAND(level, xt + 1, yt    );
 
-    // TODO animation
-
     if(u && l)
-        tiles[0] = TILE(0, 2);
+        tiles[0] = TILE_M((water_rand >> 0) & 3, (water_rand >> 2) & 3, 2);
     else
         tiles[0] = TILE(24 + u * 7 + l * 4, 2 + (su || sl) * 1);
 
     if(u && r)
-        tiles[1] = TILE(1, 2);
+        tiles[1] = TILE_M((water_rand >> 4) & 3, (water_rand >> 6) & 3, 2);
     else
         tiles[1] = TILE(25 + u * 4 + r * 3, 2 + (su || sr) * 1);
 
     if(d && l)
-        tiles[2] = TILE(2, 2);
+        tiles[2] = TILE_M((water_rand >> 8) & 3, (water_rand >> 10) & 3, 2);
     else
         tiles[2] = TILE(26 + d * 5 + l * 4, 2 + (sd || sl) * 1);
 
     if(d && r)
-        tiles[3] = TILE(3, 2);
+        tiles[3] = TILE_M((water_rand >> 12) & 3, (water_rand >> 14) & 3, 2);
     else
         tiles[3] = TILE(27 + d * 2 + r * 3, 2 + (sd || sr) * 1);
 }

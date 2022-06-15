@@ -37,15 +37,10 @@ static u32 seed = 0;
 
 IWRAM_SECTION
 u16 rand(void) {
-    return rand_with_seed(&seed);
+    seed = seed * 0x248f7b13 + 0xc21840c5;
+    return seed >> 16;
 }
 
 void srand(u32 new_seed) {
     seed = new_seed;
-}
-
-IWRAM_SECTION
-inline u16 rand_with_seed(u32 *seed) {
-    *seed = (*seed) * 0x248f7b13 + 0xc21840c5;
-    return *seed >> 16;
 }
