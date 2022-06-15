@@ -26,6 +26,6 @@
     #define NULL ((void *) 0)
 #endif
 
-extern u32 tick_counter;
+extern u32 tick_count;
 
 #endif // MINICRAFT_CORE

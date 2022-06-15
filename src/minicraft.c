@@ -19,7 +19,7 @@
 #include "level.h"
 #include "menu.h"
 
-u32 tick_counter = 0;
+u32 tick_count = 0;
 
 static struct Menu  *menu  = NULL;
 static struct Level *level = NULL;
@@ -33,7 +33,7 @@ void tick(void) {
     else if(level)
         level_tick(level);
 
-    tick_counter++;
+    tick_count++;
 }
 
 void draw(void) {

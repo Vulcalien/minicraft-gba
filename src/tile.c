@@ -18,8 +18,8 @@
 #include "level.h"
 
 #define TILE(id, palette) ((id) | ((palette) << 12))
-#define TILE_M(id, flip_h, flip_v, palette)\
-    ((id) | (flip_h << 10) | (flip_v << 11) | (palette << 12))
+#define TILE_M(id, flip, palette)\
+    ((id) | (flip << 10) | (palette << 12))
 
 #define FTICK(name)\
     IWRAM_SECTION\
@@ -373,10 +373,10 @@ FTICK(farmland_tick) {
 }
 
 FDRAW(farmland_draw) {
-    tiles[0] = TILE_M(49, true, false, 3);
-    tiles[1] = TILE_M(49, false, false, 3);
-    tiles[2] = TILE_M(49, false, false, 3);
-    tiles[3] = TILE_M(49, true, false, 3);
+    tiles[0] = TILE_M(49, 0x1, 3);
+    tiles[1] = TILE_M(49, 0x0, 3);
+    tiles[2] = TILE_M(49, 0x0, 3);
+    tiles[3] = TILE_M(49, 0x1, 3);
 }
 
 // Wheat
@@ -394,10 +394,10 @@ FDRAW(wheat_draw) {
     // TODO test if this is accurate
     u32 age = LEVEL_GET_DATA(level, xt, yt) / 10;
 
-    tiles[0] = TILE_M(50 + age, false, false, 3);
-    tiles[1] = TILE_M(50 + age, false, false, 3);
-    tiles[2] = TILE_M(50 + age, true, false, 3);
-    tiles[3] = TILE_M(50 + age, true, false, 3);
+    tiles[0] = TILE_M(50 + age, 0x0, 3);
+    tiles[1] = TILE_M(50 + age, 0x0, 3);
+    tiles[2] = TILE_M(50 + age, 0x1, 3);
+    tiles[3] = TILE_M(50 + age, 0x1, 3);
 }
 
 // Lava

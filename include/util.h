@@ -23,4 +23,6 @@ extern void memcpy16(vu16 *dest, const vu16 *src, u32 n);
 extern u16 rand(void);
 extern void srand(u32 new_seed);
 
+extern u16 rand_with_seed(u32 *seed);
+
 #endif // MINICRAFT_UTIL
