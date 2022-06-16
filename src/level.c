@@ -71,17 +71,14 @@ void level_draw(struct Level *level) {
             u16 tiles2[4] = { 32, 32, 32, 32 };
             tile->draw(level, xt, yt, tiles, tiles2);
 
-            vu16 *bg0_tile_0 = &BG0_TILEMAP[x * 2 + y * 2 * 32];
-            *(bg0_tile_0)      = tiles[0];
-            *(bg0_tile_0 + 1)  = tiles[1];
-            *(bg0_tile_0 + 32) = tiles[2];
-            *(bg0_tile_0 + 33) = tiles[3];
+            // using 32bit writes instead of 16bit writes saves a little time
+            vu32 *bg0_tile_0 = (vu32 *) &BG0_TILEMAP[x * 2 + y * 2 * 32];
+            *(bg0_tile_0)      = (tiles[1] << 16) | tiles[0];
+            *(bg0_tile_0 + 16) = (tiles[3] << 16) | tiles[2];
 
-            vu16 *bg1_tile_0 = &BG1_TILEMAP[x * 2 + y * 2 * 32];
-            *(bg1_tile_0)      = tiles2[0];
-            *(bg1_tile_0 + 1)  = tiles2[1];
-            *(bg1_tile_0 + 32) = tiles2[2];
-            *(bg1_tile_0 + 33) = tiles2[3];
+            vu32 *bg1_tile_0 = (vu32 *) &BG1_TILEMAP[x * 2 + y * 2 * 32];
+            *(bg1_tile_0)      = (tiles2[1] << 16) | tiles2[0];
+            *(bg1_tile_0 + 16) = (tiles2[3] << 16) | tiles2[2];
         }
     }
 }
