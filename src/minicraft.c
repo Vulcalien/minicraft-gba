@@ -55,9 +55,6 @@ int main(void) {
         level->data[i] = 0;
     }
 
-    // DEBUG
-    /*menu = &menu_start;*/
-
     // DEBUG: calculate header checksum
     #ifdef GENERATE_CHECKSUM
         u8 checksum = 0;
@@ -67,6 +64,8 @@ int main(void) {
         checksum -= 0x19;
         ((vu8 *) 0x0e000000)[0] = checksum;
     #endif // GENERATE_CHECKSUM
+
+    menu = &menu_start;
 
     while(true) {
         tick();

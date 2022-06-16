@@ -15,12 +15,29 @@
  */
 #include "menu.h"
 
+#include "screen.h"
+
 static void start_tick(void) {
 
 }
 
 static void start_draw(void) {
+    // clear the screen
+    for(u32 y = 0; y < 20; y++) {
+        for(u32 x = 0; x < 30; x += 2) {
+            u32 tile = 1 | (0 << 12);
 
+            *((vu32 *) &BG3_TILEMAP[x + y * 32]) = (tile << 16) | tile;
+        }
+    }
+
+    // draw logo
+    for(u32 y = 0; y < 2; y++) {
+        for(u32 x = 0; x < 14; x++) {
+            u32 tile = (2 + (x + y * 14)) | (1 << 12);
+            BG3_TILEMAP[(x + 8) + (y + 4) * 32] = tile;
+        }
+    }
 }
 
 const struct Menu menu_start = {

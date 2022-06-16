@@ -46,12 +46,12 @@ static void load_tileset(vu16 *char_block, const u8 *tileset, u32 bytes) {
 }
 
 void screen_init(void) {
-    // TODO enable BG2 and BG3
+    // TODO enable BG2
     DISPLAY_CONTROL = (0)       | // Video mode
                       (1 << 8)  | // Enable BG 0
                       (1 << 9)  | // Enable BG 1
                       (0 << 10) | // Enable BG 2
-                      (0 << 11);  // Enable BG 3
+                      (1 << 11);  // Enable BG 3
 
     // Level tiles - 1st layer
     BG0_CONTROL = (3)       | // BG Priority (0 is highest, 3 is lowest)
