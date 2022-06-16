@@ -51,7 +51,7 @@ int main(void) {
     for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
         /*level->tiles[i] = (i/2)%23;*/
         /*level->tiles[i] = rand() % 23;*/
-        level->tiles[i] = 2;
+        level->tiles[i] = 0;
         level->data[i] = 0;
     }
 
@@ -65,7 +65,7 @@ int main(void) {
         ((vu8 *) 0x0e000000)[0] = checksum;
     #endif // GENERATE_CHECKSUM
 
-    menu = &menu_start;
+    /*menu = &menu_start;*/
 
     while(true) {
         tick();

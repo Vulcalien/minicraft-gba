@@ -20,6 +20,6 @@
 
 IWRAM_SECTION
 void mob_tick(struct Level *level,
-              const struct Entity *entity, u8 data[ENTITY_DATA_SIZE]) {
+              const struct Entity *entity, struct entity_Data *data) {
 
 }

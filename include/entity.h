@@ -34,11 +34,14 @@
 #define ETICK(name)\
     IWRAM_SECTION\
     static void name(struct Level *level,\
-                     const struct Entity *entity, u8 data[ENTITY_DATA_SIZE])
+                     const struct Entity *entity, struct entity_Data *data)
 
 struct Entity {
     void (*tick)(struct Level *level,
-                 const struct Entity *entity, u8 data[ENTITY_DATA_SIZE]);
+                 const struct Entity *entity, struct entity_Data *data);
+
+    void (*draw)(struct Level *level,
+                 const struct Entity *entity, struct entity_Data *data);
 };
 
 #define ENTITY_TYPES (10)

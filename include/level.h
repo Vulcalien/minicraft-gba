@@ -22,13 +22,20 @@
 #define LEVEL_H (100)
 
 #define ENTITY_CAP (255)
-#define ENTITY_DATA_SIZE (8)
+
+struct entity_Data {
+    u32 type : 4;
+    u32 x    : 10;
+    u32 y    : 10;
+
+    u8 data[5];
+};
 
 struct Level {
     u8 tiles[LEVEL_W * LEVEL_H];
     u8  data[LEVEL_W * LEVEL_H];
 
-    u8 entities[ENTITY_CAP][ENTITY_DATA_SIZE];
+    struct entity_Data entities[ENTITY_CAP];
 };
 
 extern void level_tick(struct Level *level);

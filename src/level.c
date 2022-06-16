@@ -32,13 +32,12 @@ void level_tick(struct Level *level) {
 
     // TODO more on entity ticking...
     for(u32 i = 0; i < ENTITY_CAP; i++) {
-        u8 *entity_data = level->entities[i];
+        struct entity_Data *entity_data = &level->entities[i];
 
-        u8 entity_type = entity_data[0];
-        if(entity_type >= ENTITY_TYPES)
+        if(entity_data->type >= ENTITY_TYPES)
             continue;
 
-        const struct Entity *entity = &entity_list[entity_type];
+        const struct Entity *entity = &entity_list[entity_data->type];
         entity->tick(level, entity, entity_data);
     }
 }
@@ -81,4 +80,7 @@ void level_draw(struct Level *level) {
             *(bg1_tile_0 + 16) = (tiles2[3] << 16) | tiles2[2];
         }
     }
+
+    // DEBUG zombie drawing
+    /*(&entity_list[0])->draw(level, &entity_list[0], entity_data);*/
 }
