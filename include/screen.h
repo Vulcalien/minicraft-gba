@@ -36,4 +36,6 @@ extern void screen_init(void);
 
 extern void vsync(void);
 
+extern void screen_write(char *text, u32 palette, u32 x, u32 y);
+
 #endif // MINICRAFT_SCREEN

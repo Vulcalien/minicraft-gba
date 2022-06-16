@@ -21,7 +21,7 @@
 
 u32 tick_count = 0;
 
-static struct Menu  *menu  = NULL;
+static const struct Menu *menu  = NULL;
 static struct Level *level = NULL;
 
 EWRAM_BSS_SECTION
