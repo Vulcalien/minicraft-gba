@@ -16,6 +16,7 @@
 #include "images.h"
 
 #include "images/level.c"
+#include "images/gui.c"
 
 // TODO organize this mess...
 const u16 bg_palette[256] = {
@@ -41,18 +42,21 @@ const u16 bg_palette[256] = {
     // dirt (level-specific)
     0x35b0, // TODO make -1
 
-    // --- palette 1 --- (rock and stairs)
+    // --- palette 1 --- (rock, stairs, title)
     // transparent
     0,
 
     // rock
     0x6318, 0x4a52, 0x1ce7, 0x7bde,
 
-    // stairs
+    // stairs (shared with title)
     0x0421,
 
+    // title
+    0x479c, 0x2a0a, 0x24c3,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0,
 
     // dirt (level-specific)
     0x35b0, // TODO make -1
