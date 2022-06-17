@@ -61,7 +61,8 @@ void screen_init(void) {
                       (1 << 8)  | // Enable BG 0
                       (1 << 9)  | // Enable BG 1
                       (0 << 10) | // Enable BG 2
-                      (1 << 11);  // Enable BG 3
+                      (1 << 11) | // Enable BG 3
+                      (1 << 12);  // Enable OBJ
 
     // Level tiles - 1st layer
     BG0_CONTROL = (3)       | // BG Priority (0 is highest, 3 is lowest)

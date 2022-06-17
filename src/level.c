@@ -60,6 +60,7 @@ void level_draw(struct Level *level) {
     u32 x0 = x_offset >> 4;
     u32 y0 = y_offset >> 4;
 
+    // draw level tiles
     for(u32 y = 0; y <= 10; y++) {
         for(u32 x = 0; x <= 15; x++) {
             u32 xt = x + x0;
@@ -81,8 +82,12 @@ void level_draw(struct Level *level) {
         }
     }
 
-    // DEBUG zombie drawing
-    (&entity_list[0])->draw(
-        level, &entity_list[0], &level->entities[0], (vu16 *) 0x07000000
-    );
+    // draw entities
+    for(u32 i = 0; i < 128; i++) {
+        // DEBUG zombie drawing
+        (&entity_list[0])->draw(
+            level, &entity_list[0], &level->entities[0], (vu16 *) (0x07000000 + 8 * i)
+        );
+    }
+
 }
