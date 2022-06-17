@@ -36,12 +36,19 @@
     static void name(struct Level *level,\
                      const struct Entity *entity, struct entity_Data *data)
 
+#define EDRAW(name)\
+    IWRAM_SECTION\
+    static void name(struct Level *level,\
+                     const struct Entity *entity, struct entity_Data *data,\
+                     vu16 *sprite_attribs)
+
 struct Entity {
     void (*tick)(struct Level *level,
                  const struct Entity *entity, struct entity_Data *data);
 
     void (*draw)(struct Level *level,
-                 const struct Entity *entity, struct entity_Data *data);
+                 const struct Entity *entity, struct entity_Data *data,
+                 vu16 *sprite_attribs);
 };
 
 #define ENTITY_TYPES (10)

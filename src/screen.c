@@ -25,15 +25,18 @@
 #define CHAR_BLOCK_2 ((vu16 *) 0x06008000)
 #define CHAR_BLOCK_3 ((vu16 *) 0x0600c000)
 
+#define SPR_TILESET ((vu16 *) 0x06010000)
+
 #define BG0_CONTROL *((vu16 *) 0x04000008)
 #define BG1_CONTROL *((vu16 *) 0x0400000a)
 #define BG2_CONTROL *((vu16 *) 0x0400000c)
 #define BG3_CONTROL *((vu16 *) 0x0400000e)
 
-#define BG_PALETTE ((vu16 *) 0x05000000)
+#define BG_PALETTE  ((vu16 *) 0x05000000)
+#define SPR_PALETTE ((vu16 *) 0x05000200)
 
-static void load_tileset(vu16 *char_block, const u8 *tileset, u32 bytes) {
-    for(u32 i = 0; i < bytes / 2; i++) {
+static void load_tileset(vu16 *dest, const u8 *tileset, u32 size) {
+    for(u32 i = 0; i < size; i++) {
         u8 b0 = tileset[i * 2];
         u8 b1 = tileset[i * 2 + 1];
 
@@ -41,13 +44,20 @@ static void load_tileset(vu16 *char_block, const u8 *tileset, u32 bytes) {
         b0 = (b0 << 4) | (b0 >> 4);
         b1 = (b1 << 4) | (b1 >> 4);
 
-        char_block[i] = (b1 << 8) | b0;
+        dest[i] = (b1 << 8) | b0;
     }
 }
+
+#define LOAD_TILESET(dest, tileset)\
+    load_tileset(dest, tileset, sizeof(tileset) / sizeof(u16))
+
+#define LOAD_PALETTE(dest, palette)\
+    memcpy16(dest, palette, sizeof(palette) / sizeof(u16))
 
 void screen_init(void) {
     // TODO enable BG2
     DISPLAY_CONTROL = (0)       | // Video mode
+                      (1 << 6)  | // OBJ Character mapping (1 is linear)
                       (1 << 8)  | // Enable BG 0
                       (1 << 9)  | // Enable BG 1
                       (0 << 10) | // Enable BG 2
@@ -77,11 +87,15 @@ void screen_init(void) {
                   (19 << 8) | // Tilemap screen block
                   (0 << 14);  // BG size (0 is 256x256)
 
-    // copy bg_palette
-    memcpy16(BG_PALETTE, bg_palette, 256);
+    // load palettes
+    LOAD_PALETTE(BG_PALETTE,  bg_palette);
+    LOAD_PALETTE(SPR_PALETTE, sprite_palette);
 
-    load_tileset(CHAR_BLOCK_0, level_tileset, sizeof(level_tileset));
-    load_tileset(CHAR_BLOCK_1, gui_tileset, sizeof(gui_tileset));
+    // load tilesets
+    LOAD_TILESET(CHAR_BLOCK_0, level_tileset);
+    LOAD_TILESET(CHAR_BLOCK_1, gui_tileset);
+
+    LOAD_TILESET(SPR_TILESET, sprite_tileset);
 }
 
 void vsync(void) {

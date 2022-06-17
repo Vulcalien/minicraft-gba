@@ -18,14 +18,15 @@
 
 #include "minicraft.h"
 
+// TODO adjust the size once the palettes are complete
 extern const u16 bg_palette[256];
+extern const u16 sprite_palette[256];
 
 // TODO adjust this to be the right size
 // once the tileset is complete
 extern const u8 level_tileset[32 * 128];
-
-// TODO adjust this to be the right size
-// once the tileset is complete
 extern const u8 gui_tileset[32 * 64];
+
+extern const u8 sprite_tileset[32 * 64];
 
 #endif // MINICRAFT_IMAGES

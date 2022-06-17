@@ -17,6 +17,7 @@
 
 #include "images/level.c"
 #include "images/gui.c"
+#include "images/sprites.c"
 
 // TODO organize this mess...
 const u16 bg_palette[256] = {
@@ -157,4 +158,8 @@ const u16 bg_palette[256] = {
 
     // unused
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
+
+const u16 sprite_palette[256] = {
+    0
 };

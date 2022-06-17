@@ -82,5 +82,7 @@ void level_draw(struct Level *level) {
     }
 
     // DEBUG zombie drawing
-    /*(&entity_list[0])->draw(level, &entity_list[0], entity_data);*/
+    (&entity_list[0])->draw(
+        level, &entity_list[0], &level->entities[0], (vu16 *) 0x07000000
+    );
 }
