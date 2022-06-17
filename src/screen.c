@@ -54,6 +54,7 @@ static void load_tileset(vu16 *dest, const u8 *tileset, u32 size) {
 #define LOAD_PALETTE(dest, palette)\
     memcpy16(dest, palette, sizeof(palette) / sizeof(u16))
 
+// TODO fix visual glitches at startup
 void screen_init(void) {
     // TODO enable BG2
     DISPLAY_CONTROL = (0)       | // Video mode

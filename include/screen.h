@@ -32,6 +32,8 @@
 #define BG1_XOFFSET *((vu16 *) 0x04000014)
 #define BG1_YOFFSET *((vu16 *) 0x04000016)
 
+#define OAM (vu16 *) (0x07000000)
+
 extern void screen_init(void);
 
 extern void vsync(void);

@@ -33,7 +33,6 @@ void level_tick(struct Level *level) {
     // TODO more on entity ticking...
     for(u32 i = 0; i < ENTITY_CAP; i++) {
         struct entity_Data *entity_data = &level->entities[i];
-
         if(entity_data->type >= ENTITY_TYPES)
             continue;
 
@@ -82,12 +81,28 @@ void level_draw(struct Level *level) {
         }
     }
 
+    // TODO in the original game, entities are sorted by y before rendering
+
     // draw entities
-    for(u32 i = 0; i < 128; i++) {
-        // DEBUG zombie drawing
-        (&entity_list[0])->draw(
-            level, &entity_list[0], &level->entities[0], (vu16 *) (0x07000000 + 8 * i)
-        );
+    u32 sprites_drawn = 0;
+    for(u32 i = 0; i < ENTITY_CAP; i++) {
+        struct entity_Data *entity_data = &level->entities[i];
+        if(entity_data->type >= ENTITY_TYPES)
+            continue;
+
+        // TODO check if entity is visible in screen
+
+        const struct Entity *entity = &entity_list[entity_data->type];
+        entity->draw(level, entity, entity_data, OAM + i * 4);
+
+        sprites_drawn++;
+        if(sprites_drawn == 128)
+            break;
     }
 
+    // hide remaining sprites
+    for(u32 i = sprites_drawn; i < 128; i++) {
+        vu16 *sprite_attribs = OAM + i * 4;
+        sprite_attribs[0] = 1 << 9;
+    }
 }
