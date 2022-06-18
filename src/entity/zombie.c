@@ -18,9 +18,7 @@
 #include "mob.h"
 
 ETICK(zombie_tick) {
-    /*mob_tick(level, data);*/
-
-    entity_move(level, data, 1, 1);
+    mob_tick(level, data);
 
     // TODO ...
 }
@@ -33,5 +31,8 @@ EDRAW(zombie_draw) {
 
 static const struct Entity zombie_entity = {
     .tick = zombie_tick,
-    .draw = zombie_draw
+    .draw = zombie_draw,
+
+    .xr = 4,
+    .yr = 3
 };

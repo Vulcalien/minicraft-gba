@@ -28,5 +28,8 @@ EDRAW(slime_draw) {
 
 static const struct Entity slime_entity = {
     .tick = slime_tick,
-    .draw = slime_draw
+    .draw = slime_draw,
+
+    .xr = 4,
+    .yr = 3
 };

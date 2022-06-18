@@ -28,5 +28,8 @@ EDRAW(air_wizard_draw) {
 
 static const struct Entity air_wizard_entity = {
     .tick = air_wizard_tick,
-    .draw = air_wizard_draw
+    .draw = air_wizard_draw,
+
+    .xr = 4,
+    .yr = 3
 };

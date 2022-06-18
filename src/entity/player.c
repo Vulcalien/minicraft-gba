@@ -31,5 +31,8 @@ EDRAW(player_draw) {
 
 static const struct Entity player_entity = {
     .tick = player_tick,
-    .draw = player_draw
+    .draw = player_draw,
+
+    .xr = 4,
+    .yr = 3
 };
