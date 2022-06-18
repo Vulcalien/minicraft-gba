@@ -260,7 +260,7 @@ SECTIONS
   {
    __ewram_bss_start = ABSOLUTE(.);
    __ewram_bss_start__ = ABSOLUTE(.);
-   *(.ewram.bss)
+   *(.bss.ewram)
    . = ALIGN(4);    /* REQUIRED. LD is flaky without it. */
   }
 
