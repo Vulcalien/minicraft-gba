@@ -17,21 +17,19 @@
 
 #include "mob.h"
 
-ETICK(zombie_tick) {
-    /*mob_tick(level, data);*/
-
-    entity_move(level, data, 1, 1);
+ETICK(player_tick) {
+    mob_tick(level, data);
 
     // TODO ...
 }
 
-EDRAW(zombie_draw) {
+EDRAW(player_draw) {
     sprite_attribs[0] = (rand() & 0xff);
     sprite_attribs[1] = (rand() & 0x1ff) | (1 << 14);
     sprite_attribs[2] = (0 & 0x3ff) | (0 << 10) | (0 << 12);
 }
 
-static const struct Entity zombie_entity = {
-    .tick = zombie_tick,
-    .draw = zombie_draw
+static const struct Entity player_entity = {
+    .tick = player_tick,
+    .draw = player_draw
 };

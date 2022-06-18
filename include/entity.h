@@ -45,6 +45,10 @@ struct Entity {
 
     void (*draw)(struct Level *level, struct entity_Data *data,
                  vu16 *sprite_attribs);
+
+    // entity radius
+    u8 xr;
+    u8 yr;
 };
 
 #define ENTITY_S(data)\
@@ -52,5 +56,11 @@ struct Entity {
 
 #define ENTITY_TYPES (10)
 extern const struct Entity entity_list[ENTITY_TYPES];
+
+extern bool entity_move(struct Level *level, struct entity_Data *data,
+                        i32 xm, i32 ym);
+
+extern bool entity_move2(struct Level *level, struct entity_Data *data,
+                         i32 xm, i32 ym);
 
 #endif // MINICRAFT_ENTITIES
