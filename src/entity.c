@@ -38,6 +38,10 @@ const struct Entity entity_list[ENTITY_TYPES] = {
     */
 };
 
+// COMPATIBILITY NOTE
+// 'x >> n' is assumed to be a floor division by 2^n
+// even for negative numbers: this is implementation-dependent
+
 IWRAM_SECTION
 bool entity_move(struct Level *level, struct entity_Data *data,
                  i32 xm, i32 ym) {
@@ -52,12 +56,12 @@ bool entity_move(struct Level *level, struct entity_Data *data,
         stopped = false;
 
     if(!stopped) {
-        u32 xt = data->x / 16;
-        u32 yt = data->y / 16;
+        i32 xt = data->x >> 4;
+        i32 yt = data->y >> 4;
 
         const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
         if(tile->stepped_on)
-            tile->stepped_on(level, xt, yt, data->type);
+            tile->stepped_on(level, xt, yt, data);
     }
 
     return !stopped;
@@ -66,19 +70,19 @@ bool entity_move(struct Level *level, struct entity_Data *data,
 IWRAM_SECTION
 bool entity_move2(struct Level *level, struct entity_Data *data,
                   i32 xm, i32 ym) {
-    struct Entity *entity = ENTITY_S(data);
+    const struct Entity *entity = ENTITY_S(data);
 
     // current position
-    i32 xto0 = (data->x - entity->xr) / 16;
-    i32 yto0 = (data->y - entity->yr) / 16;
-    i32 xto1 = (data->x + entity->xr) / 16;
-    i32 yto1 = (data->y + entity->yr) / 16;
+    i32 xto0 = (data->x - entity->xr) >> 4;
+    i32 yto0 = (data->y - entity->yr) >> 4;
+    i32 xto1 = (data->x + entity->xr) >> 4;
+    i32 yto1 = (data->y + entity->yr) >> 4;
 
     // position after moving
-    i32 xt0 = (data->x + xm - entity->xr) / 16;
-    i32 yt0 = (data->y + ym - entity->yr) / 16;
-    i32 xt1 = (data->x + xm + entity->xr) / 16;
-    i32 yt1 = (data->y + ym + entity->yr) / 16;
+    i32 xt0 = (data->x + xm - entity->xr) >> 4;
+    i32 yt0 = (data->y + ym - entity->yr) >> 4;
+    i32 xt1 = (data->x + xm + entity->xr) >> 4;
+    i32 yt1 = (data->y + ym + entity->yr) >> 4;
 
     // TODO optimize this if possible
     for(i32 yt = yt0; yt <= yt1; yt++) {
