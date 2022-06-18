@@ -27,7 +27,9 @@ void level_tick(struct Level *level) {
         u32 xt = rand() % LEVEL_W;
         u32 yt = rand() % LEVEL_H;
 
-        LEVEL_GET_TILE_S(level, xt, yt)->tick(level, xt, yt);
+        const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
+        if(tile->tick)
+            tile->tick(level, xt, yt);
     }
 
     // TODO more on entity ticking...
@@ -65,10 +67,12 @@ void level_draw(struct Level *level) {
             u32 xt = x + x0;
             u32 yt = y + y0;
 
-            const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
             u16 tiles[4]  = { 32, 32, 32, 32 };
             u16 tiles2[4] = { 32, 32, 32, 32 };
-            tile->draw(level, xt, yt, tiles, tiles2);
+
+            const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
+            if(tile->draw)
+                tile->draw(level, xt, yt, tiles, tiles2);
 
             // using 32bit writes instead of 16bit writes saves a little time
             vu32 *bg0_tile_0 = (vu32 *) &BG0_TILEMAP[x * 2 + y * 2 * 32];

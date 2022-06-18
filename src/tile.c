@@ -38,10 +38,6 @@
 #define CONNECTS_TO_LIQUID(level, xt, yt)\
     (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.liquid)
 
-// NOP
-FTICK(nop_tick) {}
-FDRAW(nop_draw) {}
-
 // DAMAGE RECOVER
 FTICK(damage_recover_tick) {
     u32 damage = LEVEL_GET_DATA(level, xt, yt);
@@ -555,7 +551,7 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Dirt
     {
-        .tick = nop_tick,
+        .tick = NULL,
         .draw = dirt_draw
     },
 
@@ -581,7 +577,7 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Hole
     {
-        .tick = nop_tick,
+        .tick = NULL,
         .draw = hole_draw,
 
         .connects_to = {
@@ -635,25 +631,25 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Stairs Down
     {
-        .tick = nop_tick,
+        .tick = NULL,
         .draw = stairs_down_draw
     },
 
     // Stairs Up
     {
-        .tick = nop_tick,
+        .tick = NULL,
         .draw = stairs_up_draw
     },
 
     // Infinite Fall
     {
-        .tick = nop_tick,
-        .draw = nop_draw
+        .tick = NULL,
+        .draw = NULL
     },
 
     // Cloud
     {
-        .tick = nop_tick,
+        .tick = NULL,
         .draw = cloud_draw
     },
 
@@ -665,25 +661,25 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Iron Ore
     {
-        .tick = nop_tick,
+        .tick = NULL,
         .draw = ore_draw
     },
 
     // Gold Ore
     {
-        .tick = nop_tick,
+        .tick = NULL,
         .draw = ore_draw
     },
 
     // Gem Ore
     {
-        .tick = nop_tick,
+        .tick = NULL,
         .draw = ore_draw
     },
 
     // Cloud Cactus
     {
-        .tick = nop_tick,
+        .tick = NULL,
         .draw = ore_draw
     }
 };
