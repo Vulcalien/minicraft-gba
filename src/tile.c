@@ -16,6 +16,7 @@
 #include "tile.h"
 
 #include "level.h"
+#include "entity.h"
 
 #define TILE(id, palette) ((id) | ((palette) << 12))
 #define TILE_M(id, flip, palette)\
@@ -515,7 +516,10 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Rock
     {
         .tick = damage_recover_tick,
-        .draw = rock_draw
+        .draw = rock_draw,
+
+        .is_solid = true,
+        .may_pass = -1
     },
 
     // Water
@@ -526,7 +530,10 @@ const struct Tile tile_list[TILE_TYPES] = {
         .connects_to = {
             .sand   = true,
             .liquid = true
-        }
+        },
+
+        .is_solid = true,
+        .may_pass = PLAYER_ENTITY
     },
 
     // Flower
@@ -546,7 +553,10 @@ const struct Tile tile_list[TILE_TYPES] = {
 
         .connects_to = {
             .grass = true
-        }
+        },
+
+        .is_solid = true,
+        .may_pass = -1
     },
 
     // Dirt
@@ -572,7 +582,10 @@ const struct Tile tile_list[TILE_TYPES] = {
 
         .connects_to = {
             .sand = true
-        }
+        },
+
+        .is_solid = true,
+        .may_pass = -1
     },
 
     // Hole
@@ -583,7 +596,10 @@ const struct Tile tile_list[TILE_TYPES] = {
         .connects_to = {
             .sand   = true,
             .liquid = true,
-        }
+        },
+
+        .is_solid = true,
+        .may_pass = PLAYER_ENTITY
     },
 
     // Tree Sapling
@@ -626,7 +642,10 @@ const struct Tile tile_list[TILE_TYPES] = {
         .connects_to = {
             .sand   = true,
             .liquid = true
-        }
+        },
+
+        .is_solid = true,
+        .may_pass = PLAYER_ENTITY
     },
 
     // Stairs Down
@@ -644,7 +663,10 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Infinite Fall
     {
         .tick = NULL,
-        .draw = NULL
+        .draw = NULL,
+
+        .is_solid = true,
+        .may_pass = AIR_WIZARD_ENTITY
     },
 
     // Cloud
@@ -656,30 +678,45 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Hard Rock
     {
         .tick = damage_recover_tick,
-        .draw = hard_rock_draw
+        .draw = hard_rock_draw,
+
+        .is_solid = true,
+        .may_pass = -1
     },
 
     // Iron Ore
     {
         .tick = NULL,
-        .draw = ore_draw
+        .draw = ore_draw,
+
+        .is_solid = true,
+        .may_pass = -1
     },
 
     // Gold Ore
     {
         .tick = NULL,
-        .draw = ore_draw
+        .draw = ore_draw,
+
+        .is_solid = true,
+        .may_pass = -1
     },
 
     // Gem Ore
     {
         .tick = NULL,
-        .draw = ore_draw
+        .draw = ore_draw,
+
+        .is_solid = true,
+        .may_pass = -1
     },
 
     // Cloud Cactus
     {
         .tick = NULL,
-        .draw = ore_draw
+        .draw = ore_draw,
+
+        .is_solid = true,
+        .may_pass = AIR_WIZARD_ENTITY
     }
 };

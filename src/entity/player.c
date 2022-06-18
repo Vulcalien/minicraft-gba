@@ -16,16 +16,28 @@
 #include "entity.h"
 
 #include "mob.h"
+#include "input.h"
 
 ETICK(player_tick) {
     mob_tick(level, data);
+
+    // DEBUG movement
+    i32 xm = 0;
+    i32 ym = 0;
+    if(INPUT_DOWN(KEY_UP))    ym--;
+    if(INPUT_DOWN(KEY_LEFT))  xm--;
+    if(INPUT_DOWN(KEY_DOWN))  ym++;
+    if(INPUT_DOWN(KEY_RIGHT)) xm++;
+
+    // DEBUG should be mob_move
+    entity_move(level, data, xm, ym);
 
     // TODO ...
 }
 
 EDRAW(player_draw) {
-    sprite_attribs[0] = (rand() & 0xff);
-    sprite_attribs[1] = (rand() & 0x1ff) | (1 << 14);
+    sprite_attribs[0] = ((data->y - 11) & 0xff);
+    sprite_attribs[1] = ((data->x - 8)  & 0x1ff) | (1 << 14);
     sprite_attribs[2] = (0 & 0x3ff) | (0 << 10) | (0 << 12);
 }
 
