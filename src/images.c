@@ -161,13 +161,16 @@ const u16 bg_palette[256] = {
 };
 
 const u16 sprite_palette[256] = {
-    // --- palette 0 --- (zombie)
+    // --- palette 0 --- (zombie and slime)
     // transparent
     0,
 
     // zombie
     0x2268, 0x4751, 0x08a2,
 
+    // slime
+    0x7bde,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
