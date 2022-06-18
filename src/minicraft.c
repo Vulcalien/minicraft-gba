@@ -16,6 +16,7 @@
 #include "minicraft.h"
 
 #include "screen.h"
+#include "input.h"
 #include "level.h"
 #include "menu.h"
 
@@ -28,6 +29,8 @@ EWRAM_BSS_SECTION
 static struct Level levels[5];
 
 void tick(void) {
+    input_tick();
+
     if(menu)
         menu->tick();
     else if(level)
