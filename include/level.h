@@ -35,8 +35,12 @@ struct Level {
     u8 tiles[LEVEL_W * LEVEL_H];
     u8  data[LEVEL_W * LEVEL_H];
 
+    struct entity_Data *player;
     struct entity_Data entities[ENTITY_CAP];
 };
+
+extern u32 level_x_offset;
+extern u32 level_y_offset;
 
 extern void level_tick(struct Level *level);
 extern void level_draw(struct Level *level);

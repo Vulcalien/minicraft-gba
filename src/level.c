@@ -19,6 +19,9 @@
 #include "tile.h"
 #include "entity.h"
 
+u32 level_x_offset = 0;
+u32 level_y_offset = 0;
+
 IWRAM_SECTION
 void level_tick(struct Level *level) {
     // TODO try spawn
@@ -45,21 +48,29 @@ void level_tick(struct Level *level) {
 
 IWRAM_SECTION
 void level_draw(struct Level *level) {
-    // DEBUG
-    static u32 test = 0;
+    if(level->player) {
+        i32 x_offset = level->player->x - SCREEN_W / 2;
+        i32 y_offset = level->player->y - SCREEN_H / 2;
+        // TODO in the original, it's (SCREEN_H - 8) for y_offset
 
-    // TODO set offset
-    u32 x_offset = test;
-    u32 y_offset = 0;
+        if(x_offset < 16) x_offset = 16;
+        if(y_offset < 16) y_offset = 16;
 
-    // DEBUG
-    test %= 500;
+        if(x_offset > LEVEL_W * 16 - SCREEN_W - 16)
+            x_offset = LEVEL_W * 16 - SCREEN_W - 16;
 
-    BG0_XOFFSET = BG1_XOFFSET = x_offset & 0x0f;
-    BG0_YOFFSET = BG1_YOFFSET = y_offset & 0x0f;
+        if(y_offset > LEVEL_H * 16 - SCREEN_H - 16)
+            y_offset = LEVEL_H * 16 - SCREEN_H - 16;
 
-    u32 x0 = x_offset >> 4;
-    u32 y0 = y_offset >> 4;
+        level_x_offset = x_offset;
+        level_y_offset = y_offset;
+
+        BG0_XOFFSET = BG1_XOFFSET = level_x_offset & 0x0f;
+        BG0_YOFFSET = BG1_YOFFSET = level_y_offset & 0x0f;
+    }
+
+    u32 x0 = level_x_offset >> 4;
+    u32 y0 = level_y_offset >> 4;
 
     // draw level tiles
     for(u32 y = 0; y <= 10; y++) {
