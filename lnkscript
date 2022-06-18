@@ -160,6 +160,7 @@ SECTIONS
     __iwram_start = ABSOLUTE(.) ;
     *(.iwram)
     *iwram.*(.text)
+    *(.iwram_rodata)
     . = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
   } = 0xff
 /*  laddr += SIZEOF(.iwram); */

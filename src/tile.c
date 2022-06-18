@@ -502,6 +502,7 @@ FDRAW(ore_draw) {
     tiles[3] = TILE(75, 2);
 }
 
+IWRAM_RODATA_SECTION
 const struct Tile tile_list[TILE_TYPES] = {
     // Grass
     {

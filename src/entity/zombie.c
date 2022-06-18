@@ -21,6 +21,7 @@ ETICK(zombie_tick) {
     mob_tick(level, data);
 
     // TODO ...
+    entity_move(level, data, 1, 1);
 }
 
 EDRAW(zombie_draw) {
