@@ -21,7 +21,6 @@
 #include "level.h"
 #include "entity.h"
 
-extern void mob_tick(struct Level *level,
-                     const struct Entity *entity, struct entity_Data *data);
+extern void mob_tick(struct Level *level, struct entity_Data *data);
 
 #endif // MINICRAFT_MOB

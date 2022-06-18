@@ -19,7 +19,6 @@
 #include "entity.h"
 
 IWRAM_SECTION
-void mob_tick(struct Level *level,
-              const struct Entity *entity, struct entity_Data *data) {
-
+void mob_tick(struct Level *level, struct entity_Data *data) {
+    const struct Entity *e = &entity_list[data->type];
 }

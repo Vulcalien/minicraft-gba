@@ -36,8 +36,8 @@ void level_tick(struct Level *level) {
         if(entity_data->type >= ENTITY_TYPES)
             continue;
 
-        const struct Entity *entity = &entity_list[entity_data->type];
-        entity->tick(level, entity, entity_data);
+        const struct Entity *entity = ENTITY_S(entity_data);
+        entity->tick(level, entity_data);
     }
 }
 
@@ -92,8 +92,8 @@ void level_draw(struct Level *level) {
 
         // TODO check if entity is visible in screen
 
-        const struct Entity *entity = &entity_list[entity_data->type];
-        entity->draw(level, entity, entity_data, OAM + i * 4);
+        const struct Entity *entity = ENTITY_S(entity_data);
+        entity->draw(level, entity_data, OAM + i * 4);
 
         sprites_drawn++;
         if(sprites_drawn == 128)

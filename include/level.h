@@ -53,7 +53,7 @@ extern void level_draw(struct Level *level);
 
 // returns 'struct Tile *' instead of the ID
 #define LEVEL_GET_TILE_S(level, xt, yt)\
-    (&tile_list[LEVEL_GET_TILE(level, xt, yt)])
+    (TYPE_S(LEVEL_GET_TILE(level, xt, yt)))
 
 #define LEVEL_GET_DATA(level, xt, yt)\
     (((xt) < 0 || (xt) >= LEVEL_W || (yt) < 0 || (yt) >= LEVEL_H) ?\

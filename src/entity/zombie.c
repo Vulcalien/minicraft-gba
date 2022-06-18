@@ -18,7 +18,7 @@
 #include "mob.h"
 
 ETICK(zombie_tick) {
-    mob_tick(level, entity, data);
+    mob_tick(level, data);
 
     // TODO ...
 }

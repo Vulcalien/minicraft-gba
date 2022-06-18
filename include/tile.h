@@ -56,6 +56,9 @@ struct Tile {
     } connects_to;
 };
 
+#define TYPE_S(id)\
+    (&tile_list[id])
+
 #define TILE_TYPES (23)
 extern const struct Tile tile_list[TILE_TYPES];
 

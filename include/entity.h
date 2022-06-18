@@ -33,23 +33,22 @@
 
 #define ETICK(name)\
     IWRAM_SECTION\
-    static void name(struct Level *level,\
-                     const struct Entity *entity, struct entity_Data *data)
+    static void name(struct Level *level, struct entity_Data *data)
 
 #define EDRAW(name)\
     IWRAM_SECTION\
-    static void name(struct Level *level,\
-                     const struct Entity *entity, struct entity_Data *data,\
+    static void name(struct Level *level, struct entity_Data *data,\
                      vu16 *sprite_attribs)
 
 struct Entity {
-    void (*tick)(struct Level *level,
-                 const struct Entity *entity, struct entity_Data *data);
+    void (*tick)(struct Level *level, struct entity_Data *data);
 
-    void (*draw)(struct Level *level,
-                 const struct Entity *entity, struct entity_Data *data,
+    void (*draw)(struct Level *level, struct entity_Data *data,
                  vu16 *sprite_attribs);
 };
+
+#define ENTITY_S(data)\
+    (&entity_list[data->type])
 
 #define ENTITY_TYPES (10)
 extern const struct Entity entity_list[ENTITY_TYPES];
