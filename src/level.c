@@ -105,10 +105,16 @@ void level_draw(struct Level *level) {
         if(entity_data->type >= ENTITY_TYPES)
             continue;
 
-        // TODO check if entity is visible in screen
+        // position relative to top-left of the screen
+        i32 xr = entity_data->x - level_x_offset;
+        i32 yr = entity_data->y - level_y_offset;
+
+        if(xr < -16 || xr >= SCREEN_W + 16 ||
+           yr < -16 || yr >= SCREEN_H + 16)
+            continue;
 
         const struct Entity *entity = ENTITY_S(entity_data);
-        entity->draw(level, entity_data, OAM + i * 4);
+        entity->draw(level, entity_data, OAM + sprites_drawn * 4);
 
         sprites_drawn++;
         if(sprites_drawn == 128)

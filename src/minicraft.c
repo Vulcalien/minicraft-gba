@@ -61,9 +61,14 @@ int main(void) {
 
     // DEBUG
     for(u32 i = 0; i < ENTITY_CAP; i++)
-        level->entities[i].type = i < 1 ? 0:-1;
+        level->entities[i].type = i < 256 ? 0:-1;
     level->entities[0].type = 3;
     level->player = &level->entities[0];
+
+    level->entities[1].type = 0;
+    level->entities[1].x = 300;
+    level->entities[1].y = 300;
+
 
     // DEBUG: calculate header checksum
     #ifdef GENERATE_CHECKSUM
