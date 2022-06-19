@@ -54,14 +54,14 @@ int main(void) {
     srand(4);
     for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
         /*level->tiles[i] = (i/2)%23;*/
-        level->tiles[i] = rand() % 23;
-        /*level->tiles[i] = 0;*/
+        /*level->tiles[i] = rand() % 23;*/
+        level->tiles[i] = (i/16%2) ? 11 : 6;
         level->data[i] = 0;
     }
 
     // DEBUG
     for(u32 i = 0; i < ENTITY_CAP; i++)
-        level->entities[i].type = i < 256 ? 0:-1;
+        level->entities[i].type = i < 1 ? 0:-1;
     level->entities[0].type = 3;
     level->player = &level->entities[0];
 

@@ -31,6 +31,11 @@
     static void name(struct Level *level, u32 xt, u32 yt,\
                      u16 tiles[4], u16 tiles2[4])
 
+#define FSTEPPED_ON(name)\
+    IWRAM_SECTION\
+    static void name(struct Level *level, u32 xt, u32 yt,\
+                     struct entity_Data *entity_data)
+
 // CONNECTS_TO_X
 #define CONNECTS_TO_GRASS(level, xt, yt)\
     (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.grass)
@@ -283,6 +288,15 @@ FDRAW(sand_draw) {
         tiles[3] = TILE(7 + d * 2 + r * 3, 4);
 }
 
+FSTEPPED_ON(sand_stepped_on) {
+    u32 etype = entity_data->type;
+    if(etype == ZOMBIE_ENTITY ||
+       etype == SLIME_ENTITY ||
+       etype == PLAYER_ENTITY) {
+        LEVEL_SET_DATA(level, xt, yt, 10);
+    }
+}
+
 // Cactus
 FDRAW(cactus_draw) {
     tiles[0] = TILE(41, 4);
@@ -365,7 +379,6 @@ FDRAW(cactus_sapling_draw) {
 // Farmland
 FTICK(farmland_tick) {
     u32 age = LEVEL_GET_DATA(level, xt, yt);
-
     if(age < 5)
         LEVEL_SET_DATA(level, xt, yt, age + 1);
 }
@@ -377,15 +390,30 @@ FDRAW(farmland_draw) {
     tiles[3] = TILE_M(49, 0x1, 3);
 }
 
+FSTEPPED_ON(farmland_stepped_on) {
+    if(rand() % 60 != 0)
+        return;
+
+    if(LEVEL_GET_DATA(level, xt, yt) >= 5)
+        LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+}
+
 // Wheat
 FTICK(wheat_tick) {
     if(rand() & 1)
         return;
 
     u32 age = LEVEL_GET_DATA(level, xt, yt);
-
     if(age < 50)
         LEVEL_SET_DATA(level, xt, yt, age + 1);
+}
+
+FSTEPPED_ON(wheat_stepped_on) {
+    if(rand() % 60 != 0)
+        return;
+
+    if(LEVEL_GET_DATA(level, xt, yt) >= 2)
+        ; // TODO harvest
 }
 
 FDRAW(wheat_draw) {
@@ -573,7 +601,9 @@ const struct Tile tile_list[TILE_TYPES] = {
 
         .connects_to = {
             .sand = true
-        }
+        },
+
+        .stepped_on = sand_stepped_on
     },
 
     // Cactus
@@ -626,13 +656,17 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Farmland
     {
         .tick = farmland_tick,
-        .draw = farmland_draw
+        .draw = farmland_draw,
+
+        .stepped_on = farmland_stepped_on
     },
 
     // Wheat
     {
         .tick = wheat_tick,
-        .draw = wheat_draw
+        .draw = wheat_draw,
+
+        .stepped_on = wheat_stepped_on
     },
 
     // Lava

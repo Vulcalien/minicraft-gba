@@ -52,8 +52,6 @@ struct Tile {
     bool is_solid;
     u8 may_pass;
 
-    // TODO consider only passing entity_data->type
-    // if it would improve performance
     void (*stepped_on)(struct Level *level, u32 xt, u32 yt,
                        struct entity_Data *entity_data);
 
