@@ -27,7 +27,7 @@ ETICK(zombie_tick) {
 EDRAW(zombie_draw) {
     sprite_attribs[0] = (rand() & 0xff);
     sprite_attribs[1] = (rand() & 0x1ff) | (1 << 14);
-    sprite_attribs[2] = (0 & 0x3ff) | (0 << 10) | (0 << 12);
+    sprite_attribs[2] = (0 & 0x3ff) | (0 << 10) | (rand() % 6 << 12);
 }
 
 static const struct Entity zombie_entity = {

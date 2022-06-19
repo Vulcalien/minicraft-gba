@@ -161,7 +161,7 @@ const u16 bg_palette[256] = {
 };
 
 const u16 sprite_palette[256] = {
-    // --- palette 0 --- (zombie and slime)
+    // --- palette 0 --- (zombie and slime - level 1)
     // transparent
     0,
 
@@ -170,6 +170,68 @@ const u16 sprite_palette[256] = {
 
     // slime
     0x7bde,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // --- palette 1 --- (zombie and slime - level 2)
+    // transparent
+    0,
+
+    // zombie
+    0x2268, 0x3df7, 0x0844,
+
+    // slime
+    0x7bde,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // --- palette 2 --- (zombie and slime - level 3)
+    // transparent
+    0,
+
+    // zombie
+    0x2268, 0x6318, 0x1ce7,
+
+    // slime
+    0x7bde,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // --- palette 3 --- (zombie and slime - level 4)
+    // transparent
+    0,
+
+    // zombie
+    0x1144, 0x1ce7, 0x0421,
+
+    // slime
+    0x4dad,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // --- palette 4 --- (player)
+    // transparent
+    0,
+
+    // player
+    0x4279, 0x198c, 0x0844,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // --- palette 5 --- (mob damaged)
+    // transparent
+    0,
+
+    // zombie/player
+    0x7fff, 0x7fff, 0x7fff,
+
+    // slime
+    0x7fff,
 
     // unused
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
