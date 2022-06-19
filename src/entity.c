@@ -73,33 +73,62 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
                   i32 xm, i32 ym) {
     const struct Entity *entity = ENTITY_S(data);
 
-    // current position
-    i32 xto0 = (data->x - entity->xr) >> 4;
-    i32 yto0 = (data->y - entity->yr) >> 4;
-    i32 xto1 = (data->x + entity->xr) >> 4;
-    i32 yto1 = (data->y + entity->yr) >> 4;
+    u32 tiles_to_check;
+    i32 tiles[2][2];
 
-    // position after moving
-    i32 xt0 = (data->x + xm - entity->xr) >> 4;
-    i32 yt0 = (data->y + ym - entity->yr) >> 4;
-    i32 xt1 = (data->x + xm + entity->xr) >> 4;
-    i32 yt1 = (data->y + ym + entity->yr) >> 4;
+    if(xm != 0) {
+        i32 yt0 = (data->y - entity->yr) >> 4;
+        i32 yt1 = (data->y + entity->yr) >> 4;
 
-    // TODO optimize this if possible
-    for(i32 yt = yt0; yt <= yt1; yt++) {
-        for(i32 xt = xt0; xt <= xt1; xt++) {
-            // ignore the tiles the entity already is in
-            if(xt >= xto0 && xt <= xto1 &&
-               yt >= yto0 && yt <= yto1)
-                continue;
+        if(xm < 0) {
+            i32 xto0 = (data->x - entity->xr) >> 4;
+            i32 xt0 = (data->x + xm - entity->xr) >> 4;
 
-            const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
-            if(tile->bumped_into)
-                tile->bumped_into(level, xt, yt, data);
+            tiles[0][0] = xt0; tiles[0][1] = yt0;
+            tiles[1][0] = xt0; tiles[1][1] = yt1;
 
-            if(tile->is_solid && tile->may_pass != data->type)
-                return false;
+            tiles_to_check = (xt0 != xto0) * (1 + (yt0 != yt1));
+        } else {
+            i32 xto1 = (data->x + entity->xr) >> 4;
+            i32 xt1 = (data->x + xm + entity->xr) >> 4;
+
+            tiles[0][0] = xt1; tiles[0][1] = yt0;
+            tiles[1][0] = xt1; tiles[1][1] = yt1;
+
+            tiles_to_check = (xt1 != xto1) * (1 + (yt0 != yt1));
         }
+    } else {
+        i32 xt0 = (data->x - entity->xr) >> 4;
+        i32 xt1 = (data->x + entity->xr) >> 4;
+
+        if(ym < 0) {
+            i32 yto0 = (data->y - entity->yr) >> 4;
+            i32 yt0 = (data->y + ym - entity->yr) >> 4;
+
+            tiles[0][0] = xt0; tiles[0][1] = yt0;
+            tiles[1][0] = xt1; tiles[1][1] = yt0;
+
+            tiles_to_check = (yt0 != yto0) * (1 + (xt0 != xt1));
+        } else {
+            i32 yto1 = (data->y + entity->yr) >> 4;
+            i32 yt1 = (data->y + ym + entity->yr) >> 4;
+
+            tiles[0][0] = xt0; tiles[0][1] = yt1;
+            tiles[1][0] = xt1; tiles[1][1] = yt1;
+
+            tiles_to_check = (yt1 != yto1) * (1 + (xt0 != xt1));
+        }
+    }
+
+    for(u32 i = 0; i < tiles_to_check; i++) {
+        const i32 *t = tiles[i];
+
+        const struct Tile *tile = LEVEL_GET_TILE_S(level, t[0], t[1]);
+        if(tile->bumped_into)
+            tile->bumped_into(level, t[0], t[1], data);
+
+        if(tile->is_solid && tile->may_pass != data->type)
+            return false;
     }
 
     // TODO collision with other entities
