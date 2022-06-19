@@ -23,6 +23,7 @@
 #include "entity/air-wizard.c"
 #include "entity/player.c"
 
+IWRAM_RODATA_SECTION
 const struct Entity entity_list[ENTITY_TYPES] = {
     zombie_entity,
     slime_entity,
