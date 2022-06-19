@@ -21,7 +21,7 @@
 
 #define EWRAM_BSS_SECTION    __attribute__((section(".bss.ewram")))
 #define IWRAM_SECTION        __attribute__((section(".iwram")))
-#define IWRAM_RODATA_SECTION __attribute__((section(".iwram_rodata")))
+#define IWRAM_RODATA_SECTION __attribute__((section(".rodata.iwram")))
 
 #ifndef NULL
     #define NULL ((void *) 0)

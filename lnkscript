@@ -104,7 +104,6 @@ SECTIONS
     *(.rodata)
     *all.rodata*(*)
     *(.roda)
-    *(.rodata.*)
     *(.gnu.linkonce.r*)
     SORT(CONSTRUCTORS)
     . = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
@@ -160,12 +159,21 @@ SECTIONS
     __iwram_start = ABSOLUTE(.) ;
     *(.iwram)
     *iwram.*(.text)
-    *(.iwram_rodata)
     . = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
   } = 0xff
+
+  .rodata.iwram ALIGN(4) :
+  {
+    __iwram_rodata_start = ABSOLUTE(.);
+    *(.rodata.iwram)
+    . = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
+  } = 0xff
+
+  __iwram_rodata_end = . ;
+
 /*  laddr += SIZEOF(.iwram); */
 /*  __data_lma = laddr; */
-  __data_lma = ADDR(.text) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.ctors) + SIZEOF(.dtors) + SIZEOF(.eh_frame) + SIZEOF(.gcc_except_table) + SIZEOF(.iwram);
+  __data_lma = ADDR(.text) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.ctors) + SIZEOF(.dtors) + SIZEOF(.eh_frame) + SIZEOF(.gcc_except_table) + SIZEOF(.iwram) + SIZEOF(.rodata.iwram);
 
   __iwram_end = . ;
 
@@ -193,7 +201,7 @@ SECTIONS
   } = 0xff
 /*  laddr += SIZEOF(.data); */
 /*  __iwram_overlay_lma = laddr; */
-  __iwram_overlay_lma = ADDR(.text) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.ctors) + SIZEOF(.dtors) + SIZEOF(.eh_frame) + SIZEOF(.gcc_except_table) + SIZEOF(.iwram) + SIZEOF(.data);
+  __iwram_overlay_lma = ADDR(.text) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.ctors) + SIZEOF(.dtors) + SIZEOF(.eh_frame) + SIZEOF(.gcc_except_table) + SIZEOF(.iwram) + SIZEOF(.rodata.iwram) + SIZEOF(.data);
 
   __data_end  =  .;
   PROVIDE (edata = .);
@@ -215,7 +223,7 @@ SECTIONS
   } = 0xff
 /*  laddr += (SIZEOF(.iwram0)+SIZEOF(.iwram1)+SIZEOF(.iwram2)+SIZEOF(.iwram3)+SIZEOF(.iwram4)+SIZEOF(.iwram5)+SIZEOF(.iwram6)+SIZEOF(.iwram7)+SIZEOF(.iwram8)+SIZEOF(.iwram9)); */
 /*  __ewram_lma = laddr; */
-  __ewram_lma = ADDR(.text) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.ctors) + SIZEOF(.dtors) + SIZEOF(.eh_frame) + SIZEOF(.gcc_except_table) + SIZEOF(.iwram) + SIZEOF(.data) + SIZEOF(.iwram0)+SIZEOF(.iwram1)+SIZEOF(.iwram2)+SIZEOF(.iwram3)+SIZEOF(.iwram4)+SIZEOF(.iwram5)+SIZEOF(.iwram6)+SIZEOF(.iwram7)+SIZEOF(.iwram8)+SIZEOF(.iwram9);
+  __ewram_lma = ADDR(.text) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.ctors) + SIZEOF(.dtors) + SIZEOF(.eh_frame) + SIZEOF(.gcc_except_table) + SIZEOF(.iwram) + SIZEOF(.rodata.iwram) + SIZEOF(.data) + SIZEOF(.iwram0)+SIZEOF(.iwram1)+SIZEOF(.iwram2)+SIZEOF(.iwram3)+SIZEOF(.iwram4)+SIZEOF(.iwram5)+SIZEOF(.iwram6)+SIZEOF(.iwram7)+SIZEOF(.iwram8)+SIZEOF(.iwram9);
 
 /*  __iwram_overlay_lma = LOADADDR (.iwram0); */
   __iwram_overlay_end = . ;
@@ -235,7 +243,7 @@ SECTIONS
   } = 0xff
 /*  laddr += SIZEOF(.ewram); */
 /*  __ewram_overlay_lma = laddr; */
-  __ewram_overlay_lma = ADDR(.text) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.ctors) + SIZEOF(.dtors) + SIZEOF(.eh_frame) + SIZEOF(.gcc_except_table) + SIZEOF(.iwram) + SIZEOF(.data) + SIZEOF(.iwram0)+SIZEOF(.iwram1)+SIZEOF(.iwram2)+SIZEOF(.iwram3)+SIZEOF(.iwram4)+SIZEOF(.iwram5)+SIZEOF(.iwram6)+SIZEOF(.iwram7)+SIZEOF(.iwram8)+SIZEOF(.iwram9) + SIZEOF(.ewram);
+  __ewram_overlay_lma = ADDR(.text) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.ctors) + SIZEOF(.dtors) + SIZEOF(.eh_frame) + SIZEOF(.gcc_except_table) + SIZEOF(.iwram) + SIZEOF(.rodata.iwram) + SIZEOF(.data) + SIZEOF(.iwram0)+SIZEOF(.iwram1)+SIZEOF(.iwram2)+SIZEOF(.iwram3)+SIZEOF(.iwram4)+SIZEOF(.iwram5)+SIZEOF(.iwram6)+SIZEOF(.iwram7)+SIZEOF(.iwram8)+SIZEOF(.iwram9) + SIZEOF(.ewram);
 
 /*  __ewram_lma = LOADADDR(.ewram); */
   __ewram_end = . ;
