@@ -32,10 +32,10 @@
 #define KEY_R      (1 << 9)
 
 #define INPUT_DOWN(key)\
-    (!(input_keys_down & key))
+    (!(input_keys_down & (key)))
 
 #define INPUT_CLICKED(key)\
-    (!(input_keys_clicked & key))
+    (!(input_keys_clicked & (key)))
 
 extern u16 input_keys_down;
 extern u16 input_keys_clicked;
