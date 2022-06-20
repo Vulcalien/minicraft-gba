@@ -24,11 +24,12 @@
 #define ENTITY_CAP (255)
 
 struct entity_Data {
-    u32 type : 4;
-    u32 x    : 10;
-    u32 y    : 10;
+    u8 type;
 
-    u8 data[5];
+    u16 x;
+    u16 y;
+
+    u8 data[8];
 };
 
 struct Level {

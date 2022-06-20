@@ -19,6 +19,8 @@
 
 ETICK(zombie_tick) {
     mob_tick(level, data);
+
+    mob_move(level, data, 1, 1);
 }
 
 EDRAW(zombie_draw) {

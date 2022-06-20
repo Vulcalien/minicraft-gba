@@ -21,6 +21,24 @@
 #include "level.h"
 #include "entity.h"
 
+// one byte unused
+struct mob_Data {
+    u16 hp;
+    u8 dir;
+
+    struct {
+        u8 val : 6;
+        u8 dir : 2;
+    } knockback;
+
+    u8 hurt_time;
+
+    u8 data[2];
+};
+
 extern void mob_tick(struct Level *level, struct entity_Data *data);
+
+extern bool mob_move(struct Level *level, struct entity_Data *data,
+                     i32 xm, i32 ym);
 
 #endif // MINICRAFT_MOB
