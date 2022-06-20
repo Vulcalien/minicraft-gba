@@ -66,8 +66,8 @@ int main(void) {
     level->player = &level->entities[0];
 
     level->entities[1].type = 0;
-    level->entities[1].x = 300;
-    level->entities[1].y = 300;
+    level->entities[1].x = 80;
+    level->entities[1].y = 80;
 
 
     // DEBUG: calculate header checksum

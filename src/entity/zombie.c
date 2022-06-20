@@ -20,7 +20,12 @@
 ETICK(zombie_tick) {
     mob_tick(level, data);
 
-    mob_move(level, data, 1, 1);
+    if(rand() % 30 == 0) {
+        ((struct mob_Data *) &data->data)->knockback.val = 6;
+        ((struct mob_Data *) &data->data)->knockback.dir = 3;
+    }
+
+    mob_move(level, data, 0, 0);
 }
 
 EDRAW(zombie_draw) {

@@ -38,10 +38,10 @@ bool mob_move(struct Level *level, struct entity_Data *data,
         i32 xk = 0;
         i32 yk = 0;
 
-        if     (mob_data->knockback.dir == 0) yk = -6;
-        else if(mob_data->knockback.dir == 1) xk = -6;
-        else if(mob_data->knockback.dir == 2) yk = +6;
-        else if(mob_data->knockback.dir == 3) xk = +6;
+        if     (mob_data->knockback.dir == 0) yk--;
+        else if(mob_data->knockback.dir == 1) xk--;
+        else if(mob_data->knockback.dir == 2) yk++;
+        else if(mob_data->knockback.dir == 3) xk++;
 
         entity_move2(level, data, xk, yk);
         mob_data->knockback.val--;
