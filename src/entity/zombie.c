@@ -22,7 +22,7 @@ ETICK(zombie_tick) {
 
     if(rand() % 30 == 0) {
         ((struct mob_Data *) &data->data)->knockback.val = 6;
-        ((struct mob_Data *) &data->data)->knockback.dir = 3;
+        ((struct mob_Data *) &data->data)->knockback.dir = rand();
     }
 
     mob_move(level, data, 0, 0);

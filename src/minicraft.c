@@ -69,7 +69,6 @@ int main(void) {
     level->entities[1].x = 80;
     level->entities[1].y = 80;
 
-
     // DEBUG: calculate header checksum
     #ifdef GENERATE_CHECKSUM
         u8 checksum = 0;

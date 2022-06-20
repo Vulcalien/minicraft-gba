@@ -18,21 +18,48 @@
 #include "mob.h"
 #include "input.h"
 
+// TODO should be accessible by GUI
+static u8 player_stamina;
+
+static u8 player_invulnerable_time = 0;
+
 ETICK(player_tick) {
+    u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
+
+    if(on_tile == LAVA_TILE)
+        ; // TODO lava damage
+
     mob_tick(level, data);
 
-    // DEBUG movement
-    i32 xm = 0;
-    i32 ym = 0;
-    if(INPUT_DOWN(KEY_UP))    ym--;
-    if(INPUT_DOWN(KEY_LEFT))  xm--;
-    if(INPUT_DOWN(KEY_DOWN))  ym++;
-    if(INPUT_DOWN(KEY_RIGHT)) xm++;
+    if(player_invulnerable_time > 0)
+        player_invulnerable_time--;
 
-    // DEBUG should be mob_move
-    entity_move(level, data, xm, ym);
+    // check if on stairs
+    static u8 on_stairs_delay = 0;
+    if(on_tile == STAIRS_DOWN_TILE || on_tile == STAIRS_UP_TILE) {
+        if(on_stairs_delay == 0) {
+            // TODO change level
+            on_stairs_delay = 10;
+            return;
+        }
+        on_stairs_delay = 10;
+    } else if(on_stairs_delay > 0) {
+        on_stairs_delay--;
+    }
 
-    // TODO ...
+    // TODO stamina
+
+    // TODO swimming
+
+    // movement
+    i32 xm = (INPUT_DOWN(KEY_RIGHT) != 0) - (INPUT_DOWN(KEY_LEFT) != 0);
+    i32 ym = (INPUT_DOWN(KEY_DOWN)  != 0) - (INPUT_DOWN(KEY_UP)   != 0);
+
+    if(true) { // TODO stamina recharge delay
+        mob_move(level, data, xm, ym);
+    }
+
+    // TODO attack and use
 }
 
 EDRAW(player_draw) {
