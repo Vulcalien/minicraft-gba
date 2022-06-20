@@ -18,12 +18,30 @@
 #include "mob.h"
 #include "input.h"
 
+#define MAX_STAMINA (10)
+
+#define IS_SWIMMING(on_tile)\
+    ((on_tile) == WATER_TILE || (on_tile) == LAVA_TILE)
+
 // TODO should be accessible by GUI
 static u8 player_stamina;
+static u8 player_stamina_recharge_delay = 0;
 
 static u8 player_invulnerable_time = 0;
+static u8 player_tick_time = 0;
+
+ALWAYS_INLINE
+static inline void player_attack(struct Level *level, struct entity_Data *data) {
+}
+
+ALWAYS_INLINE
+static inline bool player_use(struct Level *level, struct entity_Data *data) {
+    return false;
+}
 
 ETICK(player_tick) {
+    player_tick_time++;
+
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
 
     if(on_tile == LAVA_TILE)
@@ -47,19 +65,65 @@ ETICK(player_tick) {
         on_stairs_delay--;
     }
 
-    // TODO stamina
+    // stamina
+    static u8 stamina_recharge = 0;
 
-    // TODO swimming
+    // TODO ugly code
+    if(player_stamina_recharge_delay == 0 &&
+       player_stamina == 0 &&
+       stamina_recharge == 0)
+        player_stamina_recharge_delay = 40;
+
+    if(player_stamina_recharge_delay > 0)
+        player_stamina_recharge_delay--;
+
+    if(player_stamina_recharge_delay == 0) {
+        stamina_recharge++;
+
+        if(IS_SWIMMING(on_tile))
+            stamina_recharge = 0;
+
+        // this fixes what probably is a bug in the original game
+        // (Player.java: 78-79)
+        if(stamina_recharge == 10) {
+            stamina_recharge = 0;
+
+            if(player_stamina < MAX_STAMINA)
+                player_stamina++;
+        }
+    }
+
+    if(IS_SWIMMING(on_tile) && player_tick_time % 60 == 0) {
+        if(player_stamina > 0)
+            player_stamina--;
+        else
+            ; // TODO drowning damage
+    }
 
     // movement
     i32 xm = (INPUT_DOWN(KEY_RIGHT) != 0) - (INPUT_DOWN(KEY_LEFT) != 0);
     i32 ym = (INPUT_DOWN(KEY_DOWN)  != 0) - (INPUT_DOWN(KEY_UP)   != 0);
 
-    if(true) { // TODO stamina recharge delay
-        mob_move(level, data, xm, ym);
+    if((player_stamina_recharge_delay & 1) == 0) {
+        static u8 swim_move_flag = 0;
+        if(IS_SWIMMING(on_tile))
+            swim_move_flag ^= 1;
+
+        if(!swim_move_flag)
+            mob_move(level, data, xm, ym);
     }
 
-    // TODO attack and use
+    if(player_stamina > 0 && INPUT_CLICKED(KEY_A)) {
+        player_stamina--;
+        stamina_recharge = 0;
+
+        player_attack(level, data);
+    }
+
+    if(INPUT_CLICKED(KEY_B)) {
+        if(!player_use(level, data))
+            ; // set inventory menu
+    }
 }
 
 EDRAW(player_draw) {
@@ -76,3 +140,6 @@ static const struct Entity player_entity = {
     .xr = 4,
     .yr = 3
 };
+
+#undef MAX_STAMINA
+#undef IS_SWIMMING
