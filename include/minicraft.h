@@ -25,6 +25,8 @@
 
 #define ALWAYS_INLINE __attribute__((always_inline))
 
+#define static_assert _Static_assert
+
 #ifndef NULL
     #define NULL ((void *) 0)
 #endif

@@ -18,13 +18,15 @@
 #include "mob.h"
 
 struct zombie_Data {
-    i8 xm : 3;
-    i8 ym : 3;
+    i8 xm : 2;
+    i8 ym : 2;
 
     u8 level : 2;
     u8 random_walk_time : 6;
     u8 move_flag : 1;
 };
+
+static_assert(sizeof(struct zombie_Data) == 2, "struct zombie_Data: wrong size");
 
 ETICK(zombie_tick) {
     struct mob_Data    *mob_data    = (struct mob_Data *)    &data->data;

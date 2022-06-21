@@ -36,6 +36,8 @@ struct mob_Data {
     u8 data[2];
 };
 
+static_assert(sizeof(struct mob_Data) == 8, "struct mob_Data: wrong size");
+
 extern void mob_tick(struct Level *level, struct entity_Data *data);
 
 extern bool mob_move(struct Level *level, struct entity_Data *data,

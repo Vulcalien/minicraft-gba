@@ -32,6 +32,8 @@ struct entity_Data {
     u8 data[8];
 };
 
+static_assert(sizeof(struct entity_Data) == 14, "struct entity_Data: wrong size");
+
 struct Level {
     u8 tiles[LEVEL_W * LEVEL_H];
     u8  data[LEVEL_W * LEVEL_H];
