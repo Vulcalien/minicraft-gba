@@ -23,6 +23,8 @@
 #define IWRAM_SECTION        __attribute__((section(".iwram")))
 #define IWRAM_RODATA_SECTION __attribute__((section(".rodata.iwram")))
 
+#define ALWAYS_INLINE __attribute__((always_inline))
+
 #ifndef NULL
     #define NULL ((void *) 0)
 #endif

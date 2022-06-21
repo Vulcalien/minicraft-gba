@@ -60,8 +60,15 @@ int main(void) {
     }
 
     // DEBUG
-    for(u32 i = 0; i < ENTITY_CAP; i++)
-        level->entities[i].type = i < 256 ? 0:-1;
+    for(u32 i = 0; i < ENTITY_CAP; i++) {
+        if(i < 16) {
+            level->entities[i].type = 0;
+            level->entities[i].x = 80;
+            level->entities[i].y = 80;
+        } else {
+            level->entities[i].type = -1;
+        }
+    }
     level->entities[0].type = 3;
     level->player = &level->entities[0];
 

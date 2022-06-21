@@ -21,7 +21,6 @@
 #include "level.h"
 #include "entity.h"
 
-// one byte unused
 struct mob_Data {
     u16 hp;
     u8 dir;
@@ -31,6 +30,7 @@ struct mob_Data {
         u8 dir : 2;
     } knockback;
 
+    u8 walk_dist;
     u8 hurt_time;
 
     u8 data[2];

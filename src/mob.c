@@ -53,6 +53,8 @@ bool mob_move(struct Level *level, struct entity_Data *data,
     if(xm != 0 || ym != 0) {
         mob_data->dir = (ym == 0) * ((xm < 0) * 1 + (xm > 0) * 3) +
                                     ((ym < 0) * 0 + (ym > 0) * 2);
+
+        mob_data->walk_dist++;
     }
 
     return entity_move(level, data, xm, ym);
