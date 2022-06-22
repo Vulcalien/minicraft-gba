@@ -57,7 +57,7 @@ ETICK(zombie_tick) {
         zombie_data->ym = (rand() & 1) * ((rand() % 3) - 1);
     }
 
-    if(zombie_data->random_walk_time)
+    if(zombie_data->random_walk_time > 0)
         zombie_data->random_walk_time--;
 }
 
