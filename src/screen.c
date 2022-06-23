@@ -105,11 +105,11 @@ void vsync(void) {
     while(VCOUNT < SCREEN_H);
 }
 
-void screen_write(char *text, u32 palette, u32 x, u32 y) {
-    u32 x0 = x;
+void screen_write(const char *text, u8 palette, u8 x, u8 y) {
+    const u8 x0 = x;
 
     for(u32 i = 0; text[i] != '\0'; i++) {
-        char c = text[i];
+        const char c = text[i];
 
         if(c == '\n') {
             x = x0;
@@ -121,9 +121,8 @@ void screen_write(char *text, u32 palette, u32 x, u32 y) {
             if(x >= 30)
                 continue;
 
-            // TODO get font tile
-            u32 tile = -1;
-            BG3_TILEMAP[x + y * 32] = tile;
+            u16 tile = 30 + (c - 32);
+            BG3_TILEMAP[x + y * 32] = tile | palette << 12;
 
             x++;
         }
