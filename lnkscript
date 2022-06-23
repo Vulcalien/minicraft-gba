@@ -103,6 +103,7 @@ SECTIONS
   {
     *(.rodata)
     *all.rodata*(*)
+    *(.rodata.*)
     *(.roda)
     *(.gnu.linkonce.r*)
     SORT(CONSTRUCTORS)
@@ -165,7 +166,7 @@ SECTIONS
   .rodata.iwram ALIGN(4) :
   {
     __iwram_rodata_start = ABSOLUTE(.);
-    *(.rodata.iwram)
+    *(.rodata_iwram)
     . = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
   } = 0xff
 
