@@ -25,7 +25,7 @@ for tile in range(tw * th):
             pix = pix[0] << 16 | pix[1] << 8 | pix[2];
 
             if pix not in palette:
-                palette[pix] = int(input('color ' + hex(pix)[2:].zfill(6) + ': '))
+                palette[pix] = int(input('color ' + hex(pix)[2:].zfill(6) + ': '), 16)
 
             if x & 1 == 0:
                 output += '0x'
