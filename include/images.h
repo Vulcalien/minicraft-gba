@@ -25,7 +25,7 @@ extern const u16 sprite_palette[256];
 // TODO adjust this to be the right size
 // once the tileset is complete
 extern const u8 level_tileset[32 * 128];
-extern const u8 gui_tileset[32 * 64];
+extern const u8 gui_tileset[32 * 128];
 
 extern const u8 sprite_tileset[32 * 64];
 

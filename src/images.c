@@ -37,8 +37,11 @@ const u16 bg_palette[256] = {
     // sapling
     0x2268, 0x2709,
 
+    // white font - blue bg
+    0x7bde, 0x4442,
+
     //unused
-    0, 0, 0,
+    0,
 
     // dirt (level-specific)
     0x35b0, // TODO make -1
