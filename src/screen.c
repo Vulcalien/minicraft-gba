@@ -121,7 +121,7 @@ void screen_write(const char *text, u8 palette, u8 x, u8 y) {
             if(x >= 30)
                 continue;
 
-            u16 tile = 30 + (c - 32);
+            u16 tile = 29 + (c - 32);
             BG3_TILEMAP[x + y * 32] = tile | palette << 12;
 
             x++;
