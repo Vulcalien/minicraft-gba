@@ -53,14 +53,20 @@ const u16 bg_palette[256] = {
     // rock
     0x6318, 0x4a52, 0x1ce7, 0x7bde,
 
-    // stairs (shared with title)
+    // stairs
     0x0421,
 
     // title
     0x479c, 0x2a0a, 0x24c3,
 
     // unused
-    0, 0, 0, 0, 0, 0,
+    0, 0, 0,
+
+    // white font - black bg
+    0x7bde, 0x0421,
+
+    // unused
+    0,
 
     // dirt (level-specific)
     0x35b0, // TODO make -1

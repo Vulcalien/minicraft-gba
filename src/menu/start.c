@@ -38,6 +38,9 @@ static void start_draw(void) {
             BG3_TILEMAP[(x + 8) + (y + 4) * 32] = tile;
         }
     }
+
+    // DEBUG
+    screen_write("HEY THERE!", 1, 5, 7);
 }
 
 const struct Menu menu_start = {
