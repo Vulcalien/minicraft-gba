@@ -22,13 +22,12 @@
 
 u32 tick_count = 0;
 
-static const struct Menu *menu  = NULL;
 static struct Level *level = NULL;
 
 EWRAM_BSS_SECTION
 static struct Level levels[5];
 
-void tick(void) {
+static void tick(void) {
     input_tick();
 
     if(menu)
@@ -39,7 +38,7 @@ void tick(void) {
     tick_count++;
 }
 
-void draw(void) {
+static void draw(void) {
     if(menu)
         menu->draw();
     else if(level)
@@ -84,10 +83,7 @@ int main(void) {
         ((vu8 *) 0x0e000000)[0] = checksum;
     #endif // GENERATE_CHECKSUM
 
-    /*menu = &menu_about;*/
-    /*menu = &menu_start;*/
-    menu = &menu_instructions;
-    menu->init();
+    set_menu(&menu_start, true);
 
     while(true) {
         tick();

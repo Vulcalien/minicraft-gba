@@ -18,13 +18,9 @@
 #include "input.h"
 #include "screen.h"
 
-static void instructions_init(void) {
-}
-
 static void instructions_tick(void) {
-    if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
-        // TODO go back to menu_start
-    }
+    if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B))
+        set_menu(&menu_start, false);
 }
 
 static void instructions_draw(void) {
@@ -58,8 +54,6 @@ static void instructions_draw(void) {
 }
 
 const struct Menu menu_instructions = {
-    .init = instructions_init,
-
     .tick = instructions_tick,
     .draw = instructions_draw
 };

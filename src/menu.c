@@ -15,6 +15,8 @@
  */
 #include "menu.h"
 
+const struct Menu *menu = NULL;
+
 #include "menu/start.c"
 #include "menu/instructions.c"
 #include "menu/about.c"

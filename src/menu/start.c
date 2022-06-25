@@ -42,6 +42,14 @@ static void start_tick(void) {
         start_selected = (start_can_load == false);
 
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
+        if(start_selected == 0)
+            ;
+        else if(start_selected == 1)
+            ;
+        else if(start_selected == 2)
+            set_menu(&menu_instructions, true);
+        else if(start_selected == 3)
+            set_menu(&menu_about, true);
     }
 }
 

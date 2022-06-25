@@ -24,8 +24,17 @@ struct Menu {
     void (*draw)(void);
 };
 
+extern const struct Menu *menu;
+
 extern const struct Menu menu_start;
 extern const struct Menu menu_instructions;
 extern const struct Menu menu_about;
+
+inline void set_menu(const struct Menu *new_menu, bool init) {
+    menu = new_menu;
+
+    if(menu && init)
+        menu->init();
+}
 
 #endif // MINICRAFT_MENU

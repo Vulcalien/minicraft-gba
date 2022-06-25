@@ -18,6 +18,7 @@
 
 #include "types.h"
 #include "util.h"
+#include "menu.h"
 
 #define EWRAM_BSS_SECTION    __attribute__((section(".bss.ewram")))
 #define IWRAM_SECTION        __attribute__((section(".iwram")))
