@@ -37,8 +37,8 @@ const u16 bg_palette[256] = {
     // sapling
     0x2268, 0x2709,
 
-    // white font - blue bg
-    0x7bde, 0x4442,
+    // white font - black bg
+    0x7bde, 0x0421,
 
     //unused
     0,
@@ -62,8 +62,8 @@ const u16 bg_palette[256] = {
     // unused
     0, 0, 0,
 
-    // white font - black bg
-    0x7bde, 0x0421,
+    // gray font - black bg
+    0x318c, 0x0421,
 
     // unused
     0,
@@ -82,7 +82,10 @@ const u16 bg_palette[256] = {
     0x673b, 0x35b0, 0x0844,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0,
+
+    // light gray font - black bg
+    0x4a52, 0x0421,
 
     // dirt (level-specific)
     0x1cea, 0x35b0,
@@ -117,7 +120,13 @@ const u16 bg_palette[256] = {
     0x2709, 0x2268, 0x1144,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0,
+
+    // white font - blue bg
+    0x7bde, 0x4442,
+
+    // unused
+    0,
 
     // dirt (level-specific)
     0x35b0,

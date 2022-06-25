@@ -15,17 +15,41 @@
  */
 #include "menu.h"
 
+#include "input.h"
 #include "screen.h"
 
-static void start_tick(void) {
+static i8 start_selected;
+static bool start_can_load;
 
+static void start_init(void) {
+    start_can_load = false;
+
+    if(start_can_load)
+        start_selected = 0;
+    else
+        start_selected = 1;
+}
+
+static void start_tick(void) {
+    if(INPUT_CLICKED(KEY_UP))
+        start_selected--;
+    if(INPUT_CLICKED(KEY_DOWN))
+        start_selected++;
+
+    if(start_selected < (start_can_load == false))
+        start_selected = 3;
+    else if(start_selected >= 4)
+        start_selected = (start_can_load == false);
+
+    if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
+    }
 }
 
 static void start_draw(void) {
     // clear the screen
     for(u32 y = 0; y < 20; y++) {
         for(u32 x = 0; x < 30; x += 2) {
-            const u16 tile = 29 | (0 << 12);
+            const u16 tile = 29 | (1 << 12);
 
             *((vu32 *) &BG3_TILEMAP[x + y * 32]) = (tile << 16) | tile;
         }
@@ -39,11 +63,19 @@ static void start_draw(void) {
         }
     }
 
-    // DEBUG
-    screen_write("HEY THERE!", 1, 5, 7);
+    if(start_can_load)
+        screen_write("LOAD GAME", 0 + (start_selected != 0) * 1, 10, 9);
+    screen_write("NEW  GAME", 0 + (start_selected != 1) * 1, 10, 10);
+
+    screen_write("HOW TO PLAY", 0 + (start_selected != 2) * 1, 9, 12);
+    screen_write("ABOUT",       0 + (start_selected != 3) * 1, 12, 13);
+
+    // TODO draw arrows
 }
 
 const struct Menu menu_start = {
+    .init = start_init,
+
     .tick = start_tick,
     .draw = start_draw
 };

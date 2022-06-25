@@ -84,7 +84,9 @@ int main(void) {
         ((vu8 *) 0x0e000000)[0] = checksum;
     #endif // GENERATE_CHECKSUM
 
-    menu = &menu_start;
+    menu = &menu_about;
+    /*menu = &menu_start;*/
+    menu->init();
 
     while(true) {
         tick();

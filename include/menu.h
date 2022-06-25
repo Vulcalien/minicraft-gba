@@ -19,10 +19,12 @@
 #include "minicraft.h"
 
 struct Menu {
+    void (*init)(void);
     void (*tick)(void);
     void (*draw)(void);
 };
 
 extern const struct Menu menu_start;
+extern const struct Menu menu_about;
 
 #endif // MINICRAFT_MENU

@@ -16,3 +16,4 @@
 #include "menu.h"
 
 #include "menu/start.c"
+#include "menu/about.c"
