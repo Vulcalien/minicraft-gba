@@ -25,6 +25,7 @@ struct Menu {
 };
 
 extern const struct Menu menu_start;
+extern const struct Menu menu_instructions;
 extern const struct Menu menu_about;
 
 #endif // MINICRAFT_MENU
