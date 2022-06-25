@@ -20,6 +20,8 @@
 
 #include "level.h"
 
+#define TILE_TYPES (23)
+
 #define GRASS_TILE          (0)
 #define ROCK_TILE           (1)
 #define WATER_TILE          (2)
@@ -68,7 +70,6 @@ struct Tile {
 #define TYPE_S(id)\
     (&tile_list[id])
 
-#define TILE_TYPES (23)
 extern const struct Tile tile_list[TILE_TYPES];
 
 #endif // MINICRAFT_TILE

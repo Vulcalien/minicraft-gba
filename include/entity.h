@@ -20,6 +20,8 @@
 
 #include "level.h"
 
+#define ENTITY_TYPES (10)
+
 #define ZOMBIE_ENTITY         (0)
 #define SLIME_ENTITY          (1)
 #define AIR_WIZARD_ENTITY     (2)
@@ -54,7 +56,6 @@ struct Entity {
 #define ENTITY_S(data)\
     (&entity_list[data->type])
 
-#define ENTITY_TYPES (10)
 extern const struct Entity entity_list[ENTITY_TYPES];
 
 extern bool entity_move(struct Level *level, struct entity_Data *data,
