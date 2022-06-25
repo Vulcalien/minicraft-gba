@@ -30,10 +30,10 @@ extern const struct Menu menu_start;
 extern const struct Menu menu_instructions;
 extern const struct Menu menu_about;
 
-inline void set_menu(const struct Menu *new_menu, bool init) {
+inline void set_menu(const struct Menu *new_menu, bool should_init) {
     menu = new_menu;
 
-    if(menu && init)
+    if(should_init && menu && menu->init)
         menu->init();
 }
 

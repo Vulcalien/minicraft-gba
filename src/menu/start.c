@@ -47,9 +47,9 @@ static void start_tick(void) {
         else if(start_selected == 1)
             ;
         else if(start_selected == 2)
-            set_menu(&menu_instructions, true);
+            set_menu(&menu_instructions, false);
         else if(start_selected == 3)
-            set_menu(&menu_about, true);
+            set_menu(&menu_about, false);
     }
 }
 
