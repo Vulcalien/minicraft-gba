@@ -47,6 +47,7 @@ static void draw(void) {
 
 int main(void) {
     screen_init();
+    /*set_menu(&menu_start, true);*/
 
     // DEBUG
     level = &levels[0];
@@ -81,21 +82,46 @@ int main(void) {
 
         checksum -= 0x19;
         ((vu8 *) 0x0e000000)[0] = checksum;
-    #endif // GENERATE_CHECKSUM
-
-    set_menu(&menu_start, true);
+    #endif
 
     while(true) {
         tick();
 
-        // DEBUG check performance
-        ((vu8 *) 0x0e000000)[1] = *((vu8 *) 0x04000006);
+        #define PERFORMANCE_CHECK
+        #ifdef PERFORMANCE_CHECK
+        if(tick_count % 15 == 0) {
+            u8 vcount = *((vu8 *) 0x04000006);
+            for(u32 x = 0; x < 2; x++) {
+                char c[2] = { '\0', '\0' };
+
+                u8 hex_digit = (vcount >> 4 * (1 - x)) & 0x0f;
+                c[0] = hex_digit +
+                       (hex_digit <  0xa) * '0' +
+                       (hex_digit >= 0xa) * ('A' - 0xa);
+
+                screen_write(c, 0, x, 0);
+            }
+        }
+        #endif
 
         vsync();
         draw();
 
-        // DEBUG check performance
-        ((vu8 *) 0x0e000000)[0] = *((vu8 *) 0x04000006);
+        #ifdef PERFORMANCE_CHECK
+        if(tick_count % 15 == 0) {
+            u8 vcount = *((vu8 *) 0x04000006);
+            for(u32 x = 0; x < 2; x++) {
+                char c[2] = { '\0', '\0' };
+
+                u8 hex_digit = (vcount >> 4 * (1 - x)) & 0x0f;
+                c[0] = hex_digit +
+                       (hex_digit <  0xa) * '0' +
+                       (hex_digit >= 0xa) * ('A' - 0xa);
+
+                screen_write(c, 0, x, 1);
+            }
+        }
+        #endif
     }
     return 0;
 }
