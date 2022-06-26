@@ -13,10 +13,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "menu.h"
+#ifndef MINICRAFT_GENERATOR
+#define MINICRAFT_GENERATOR
 
-const struct Menu *menu = NULL;
+#include "minicraft.h"
 
-#include "menu/start.c"
-#include "menu/instructions.c"
-#include "menu/about.c"
+extern void generate_levels(void);
+
+#endif // MINICRAFT_GENERATOR

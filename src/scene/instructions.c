@@ -13,14 +13,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "menu.h"
+#include "scene.h"
 
 #include "input.h"
 #include "screen.h"
 
 static void instructions_tick(void) {
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B))
-        set_menu(&menu_start, false);
+        set_scene(&scene_start, false);
 }
 
 static void instructions_draw(void) {
@@ -53,7 +53,7 @@ static void instructions_draw(void) {
     );
 }
 
-const struct Menu menu_instructions = {
+const struct Scene scene_instructions = {
     .tick = instructions_tick,
     .draw = instructions_draw
 };

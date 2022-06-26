@@ -42,6 +42,8 @@ struct Level {
     struct entity_Data entities[ENTITY_CAP];
 };
 
+extern struct Level levels[5];
+
 extern u32 level_x_offset;
 extern u32 level_y_offset;
 

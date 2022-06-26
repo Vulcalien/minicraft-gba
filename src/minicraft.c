@@ -17,62 +17,24 @@
 
 #include "screen.h"
 #include "input.h"
-#include "level.h"
-#include "menu.h"
+#include "scene.h"
 
 u32 tick_count = 0;
 
-static struct Level *level = NULL;
-
-EWRAM_BSS_SECTION
-static struct Level levels[5];
-
 static void tick(void) {
     input_tick();
-
-    if(menu)
-        menu->tick();
-    else if(level)
-        level_tick(level);
+    scene->tick();
 
     tick_count++;
 }
 
 static void draw(void) {
-    if(menu)
-        menu->draw();
-    else if(level)
-        level_draw(level);
+    scene->draw();
 }
 
 int main(void) {
     screen_init();
-    /*set_menu(&menu_start, true);*/
-
-    // DEBUG
-    level = &levels[0];
-    srand(4);
-    for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
-        /*level->tiles[i] = (i/2)%23;*/
-        /*level->tiles[i] = rand() % 23;*/
-        level->tiles[i] = (i/16%2) ? 11 : 2;
-        level->data[i] = 0;
-    }
-
-    // DEBUG
-    for(u32 i = 1; i < ENTITY_CAP; i++) {
-        if(i < 256) {
-            level->entities[i].type = i % 2;
-            level->entities[i].x = 80;
-            level->entities[i].y = 80;
-        } else {
-            level->entities[i].type = -1;
-        }
-    }
-    level->entities[0].type = 3;
-    level->entities[0].x = 40;
-    level->entities[0].y = 40;
-    level->player = &level->entities[0];
+    set_scene(&scene_start, true);
 
     // DEBUG: calculate header checksum
     #ifdef GENERATE_CHECKSUM

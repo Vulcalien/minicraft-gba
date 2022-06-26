@@ -13,9 +13,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "menu.h"
+#include "scene.h"
 
 #include "input.h"
+#include "generator.h"
 #include "screen.h"
 
 static i8 start_selected;
@@ -42,14 +43,18 @@ static void start_tick(void) {
         start_selected = (start_can_load == false);
 
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
-        if(start_selected == 0)
-            ;
-        else if(start_selected == 1)
-            ;
-        else if(start_selected == 2)
-            set_menu(&menu_instructions, false);
-        else if(start_selected == 3)
-            set_menu(&menu_about, false);
+        if(start_selected == 0) {
+            // TODO load game
+        } else if(start_selected == 1) {
+            // TODO srand
+            generate_levels();
+
+            set_scene(NULL, false);
+        } else if(start_selected == 2) {
+            set_scene(&scene_instructions, false);
+        } else if(start_selected == 3) {
+            set_scene(&scene_about, false);
+        }
     }
 }
 
@@ -81,7 +86,7 @@ static void start_draw(void) {
     // TODO draw arrows
 }
 
-const struct Menu menu_start = {
+const struct Scene scene_start = {
     .init = start_init,
 
     .tick = start_tick,

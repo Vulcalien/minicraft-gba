@@ -13,24 +13,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_CORE
-#define MINICRAFT_CORE
+#ifndef MINICRAFT_SCENE
+#define MINICRAFT_SCENE
 
-#include "types.h"
-#include "util.h"
+#include "minicraft.h"
 
-#define EWRAM_BSS_SECTION    __attribute__((section(".bss.ewram")))
-#define IWRAM_SECTION        __attribute__((section(".iwram")))
-#define IWRAM_RODATA_SECTION __attribute__((section(".rodata_iwram")))
+struct Scene {
+    void (*init)(void);
+    void (*tick)(void);
+    void (*draw)(void);
+};
 
-#define ALWAYS_INLINE __attribute__((always_inline))
+extern const struct Scene *scene;
 
-#define static_assert _Static_assert
+extern const struct Scene scene_start;
+extern const struct Scene scene_instructions;
+extern const struct Scene scene_about;
 
-#ifndef NULL
-    #define NULL ((void *) 0)
-#endif
+inline void set_scene(const struct Scene *new_scene, bool should_init) {
+    scene = new_scene;
 
-extern u32 tick_count;
+    if(should_init && scene->init)
+        scene->init();
+}
 
-#endif // MINICRAFT_CORE
+#endif // MINICRAFT_SCENE
