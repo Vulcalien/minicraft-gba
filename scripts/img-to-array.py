@@ -10,13 +10,9 @@ th = img.height // 8
 
 output = ''
 
-name = input('texture name: ')
-
 palette = {}
 
 for tile in range(tw * th):
-    output += '    // ' + name + ' ' + str(tile)
-
     for y in range(8):
         output += '\n    '
         for x in range(8):
@@ -34,7 +30,7 @@ for tile in range(tw * th):
 
             if x & 1 == 1:
                 output += ', '
-    output += '\n\n'
+    output += '\n'
 
 print('---PRINTING OUTPUT---')
 print(output)
