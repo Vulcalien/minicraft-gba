@@ -127,10 +127,33 @@ ETICK(player_tick) {
 }
 
 EDRAW(player_draw) {
-    sprite_attribs[0] = ((data->y - 11 - level_y_offset) & 0xff);
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    const u8 dir = mob_data->dir;
+    const u8 walk_dist = mob_data->walk_dist;
+    const u8 hurt_time = mob_data->hurt_time;
+
+    u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
+
+    u16 sprite = (dir == 0) * 4 +
+                 (dir == 2) * 0 +
+                 (dir & 1)  * 8;
+    sprite += (dir & 1) * (
+        ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4)
+    );
+    sprite += IS_SWIMMING(on_tile) * (28 + ((player_tick_time / 8) & 1) * 20);
+
+    u8 palette = 4 + (hurt_time > 0) * 1;
+
+    u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);
+
+    sprite_attribs[0] = (
+        (data->y - 11 + IS_SWIMMING(on_tile) * 4 - level_y_offset) & 0xff
+    );
     sprite_attribs[1] = ((data->x - 8  - level_x_offset) & 0x1ff) |
-                        (1 << 14);
-    sprite_attribs[2] = (0 & 0x3ff) | (0 << 10) | (4 << 12);
+                        (flip << 12) | (1 << 14);
+    sprite_attribs[2] = (sprite & 0x3ff) | (0 << 10) | (palette << 12);
+
 }
 
 static const struct Entity player_entity = {

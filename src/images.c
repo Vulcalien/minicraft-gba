@@ -238,6 +238,9 @@ const u16 sprite_palette[256] = {
     // player
     0x4279, 0x198c, 0x0844,
 
+    // water
+    0x6273, 0x4d08, 0x4442,
+
     // unused
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 

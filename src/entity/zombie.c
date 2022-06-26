@@ -66,16 +66,17 @@ EDRAW(zombie_draw) {
     struct zombie_Data *zombie_data = (struct zombie_Data *) &mob_data->data;
 
     const u8 dir = mob_data->dir;
+    const u8 walk_dist = mob_data->walk_dist;
+    const u8 hurt_time = mob_data->hurt_time;
+
     u16 sprite = (dir == 0) * 4 +
                  (dir == 2) * 0 +
                  (dir & 1)  * 8;
 
-    const u8 walk_dist = mob_data->walk_dist;
     sprite += (dir & 1) * (
         ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4)
     );
 
-    const u8 hurt_time = mob_data->hurt_time;
     u8 palette = (hurt_time > 0)  * 5 +
                  (hurt_time == 0) * zombie_data->level;
 
