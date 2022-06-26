@@ -13,26 +13,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_CORE
-#define MINICRAFT_CORE
+#include "scene.h"
 
-#include "types.h"
-#include "util.h"
+#include "level.h"
+#include "screen.h"
 
-#define EWRAM_BSS_SECTION    __attribute__((section(".bss.ewram")))
-#define IWRAM_SECTION        __attribute__((section(".iwram")))
-#define IWRAM_RODATA_SECTION __attribute__((section(".rodata_iwram")))
+struct Level *level;
 
-#define ALWAYS_INLINE __attribute__((always_inline))
+static void game_init(void) {
+    // DEBUG
+    current_level = 0;
 
-#define static_assert _Static_assert
+    level = &levels[current_level];
 
-#ifndef NULL
-    #define NULL ((void *) 0)
-#endif
+    // clear the screen (fully transparent)
+    for(u32 y = 0; y < 20; y++)
+        for(u32 x = 0; x < 30; x += 2)
+            *((vu32 *) &BG3_TILEMAP[x + y * 32]) = 0;
+}
 
-extern u32 tick_count;
+static void game_tick(void) {
+    level_tick(level);
+}
 
-extern u8 current_level;
+static void game_draw(void) {
+    level_draw(level);
+}
 
-#endif // MINICRAFT_CORE
+const struct Scene scene_game = {
+    .init = game_init,
+
+    .tick = game_tick,
+    .draw = game_draw
+};

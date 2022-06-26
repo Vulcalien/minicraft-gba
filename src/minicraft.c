@@ -21,6 +21,9 @@
 
 u32 tick_count = 0;
 
+// DEBUG
+u8 current_level = 0;
+
 static void tick(void) {
     input_tick();
     scene->tick();

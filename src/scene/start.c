@@ -49,7 +49,7 @@ static void start_tick(void) {
             // TODO srand
             generate_levels();
 
-            set_scene(NULL, false);
+            set_scene(&scene_game, true);
         } else if(start_selected == 2) {
             set_scene(&scene_instructions, false);
         } else if(start_selected == 3) {

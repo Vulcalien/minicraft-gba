@@ -30,6 +30,8 @@ extern const struct Scene scene_start;
 extern const struct Scene scene_instructions;
 extern const struct Scene scene_about;
 
+extern const struct Scene scene_game;
+
 inline void set_scene(const struct Scene *new_scene, bool should_init) {
     scene = new_scene;
 

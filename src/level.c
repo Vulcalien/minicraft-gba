@@ -19,11 +19,11 @@
 #include "tile.h"
 #include "entity.h"
 
-u32 level_x_offset = 0;
-u32 level_y_offset = 0;
-
 EWRAM_BSS_SECTION
 struct Level levels[5];
+
+u32 level_x_offset = 0;
+u32 level_y_offset = 0;
 
 IWRAM_SECTION
 void level_tick(struct Level *level) {

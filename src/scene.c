@@ -20,3 +20,5 @@ const struct Scene *scene = NULL;
 #include "scene/start.c"
 #include "scene/instructions.c"
 #include "scene/about.c"
+
+#include "scene/game.c"
