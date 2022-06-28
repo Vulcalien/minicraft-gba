@@ -120,7 +120,10 @@ const u16 bg_palette[256] = {
     0x2709, 0x2268, 0x1144,
 
     // unused
-    0, 0, 0, 0,
+    0, 0,
+
+    // GUI window border
+    0x6f18, 0x1021,
 
     // white font - blue bg
     0x7bde, 0x4442,
@@ -242,7 +245,7 @@ const u16 sprite_palette[256] = {
     0x6273, 0x4d08, 0x4442,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0,
 
     // --- palette 5 --- (mob damaged)
     // transparent

@@ -17,6 +17,7 @@
 
 #include "mob.h"
 #include "input.h"
+#include "scene.h"
 
 #define MAX_STAMINA (10)
 
@@ -122,7 +123,7 @@ ETICK(player_tick) {
 
     if(INPUT_CLICKED(KEY_B)) {
         if(!player_use(level, data))
-            ; // set inventory menu
+            set_scene(&scene_inventory, true);
     }
 }
 
