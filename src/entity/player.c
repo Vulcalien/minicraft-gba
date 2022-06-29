@@ -14,6 +14,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "entity.h"
+#include "player.h"
 
 #include "mob.h"
 #include "input.h"
@@ -23,6 +24,9 @@
 
 #define IS_SWIMMING(on_tile)\
     ((on_tile) == WATER_TILE || (on_tile) == LAVA_TILE)
+
+EWRAM_BSS_SECTION
+struct Inventory player_inventory;
 
 // TODO should be accessible by GUI
 static u8 player_stamina = MAX_STAMINA;
@@ -41,6 +45,24 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
 }
 
 ETICK(player_tick) {
+    // DEBUG add stuff to inventory
+    player_inventory.size = 0;
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = POWERGLOVE_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = DIRT_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = HOE_ITEM, .tool_level = 4 };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = LANTERN_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = SWORD_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = POWERGLOVE_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = DIRT_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = HOE_ITEM, .tool_level = 4 };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = LANTERN_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = SWORD_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = POWERGLOVE_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = DIRT_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = HOE_ITEM, .tool_level = 4 };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = LANTERN_ITEM };
+    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = SWORD_ITEM, .tool_level = 3 };
+
     player_tick_time++;
 
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);

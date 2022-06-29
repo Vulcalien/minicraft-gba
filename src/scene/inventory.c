@@ -18,11 +18,36 @@
 #include "input.h"
 #include "screen.h"
 #include "item.h"
+#include "player.h"
+
+static i8 inventory_selected;
 
 static void inventory_init(void) {
+    inventory_selected = 0;
 }
 
 static void inventory_tick(void) {
+    if(INPUT_CLICKED(KEY_B))
+        set_scene(&scene_game, true);
+
+    if(player_inventory.size == 0)
+        return;
+
+    if(INPUT_CLICKED(KEY_UP))
+        inventory_selected--;
+    if(INPUT_CLICKED(KEY_DOWN))
+        inventory_selected++;
+
+    if(inventory_selected < 0)
+        inventory_selected = player_inventory.size - 1;
+    if(inventory_selected >= player_inventory.size)
+        inventory_selected = 0;
+
+    if(INPUT_CLICKED(KEY_A)) {
+        // TODO set active item
+
+        set_scene(&scene_game, true);
+    }
 }
 
 #define SET_TILE(x, y, id, flip, palette)\
@@ -34,10 +59,13 @@ static void inventory_tick(void) {
 
 static void inventory_draw(void) {
     // TODO change these values
+    #define INV_W  (11)
+    #define INV_H  (14)
+
     #define INV_X0 (2)
     #define INV_Y0 (2)
-    #define INV_X1 (INV_X0 + 11)
-    #define INV_Y1 (INV_Y0 + 14)
+    #define INV_X1 (INV_X0 + INV_W)
+    #define INV_Y1 (INV_Y0 + INV_H)
 
     // draw corners
     SET_TILE(INV_X0, INV_Y0, 88, 0, 4);
@@ -64,12 +92,25 @@ static void inventory_draw(void) {
     // DEBUG use yellow font + blue bg
     screen_write("INVENTORY", 0, INV_X0 + 1, INV_Y0);
 
-    // DEBUG
-    struct item_Data data = {
-        .type = SWORD_ITEM,
-        .tool_level = 2
-    };
-    item_write(&data, 0, INV_X0 + 2, INV_Y0 + 1);
+    i8 item0 = inventory_selected - (INV_H - 2) / 2;
+    if(item0 > player_inventory.size - (INV_H - 1))
+        item0 = player_inventory.size - (INV_H - 1);
+    if(item0 < 0)
+        item0 = 0;
+
+    // draw inventory items
+    for(u32 i = 0; i < INV_H - 1; i++) {
+        if(item0 + i >= player_inventory.size)
+            break;
+
+        struct item_Data *data = &player_inventory.items[item0 + i];
+
+        item_write(data, 4, INV_X0 + 2, INV_Y0 + 1 + i);
+    }
+
+    // draw cursor arrows
+    screen_write(">", 4, INV_X0, INV_Y0 + 1 + (inventory_selected - item0));
+    screen_write("<", 4, INV_X1, INV_Y0 + 1 + (inventory_selected - item0));
 }
 
 const struct Scene scene_inventory = {
