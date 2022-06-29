@@ -16,6 +16,7 @@
 #include "item.h"
 
 #include "tile.h"
+#include "screen.h"
 
 const struct Item item_list[ITEM_TYPES] = {
     // Wood
@@ -251,3 +252,27 @@ const struct Item item_list[ITEM_TYPES] = {
         .name = "POW GLOVE"
     }
 };
+
+const char level_names[5][5] = {
+    "WOOD", "ROCK", "IRON", "GOLD", "GEM"
+};
+
+void item_write(struct item_Data *data, u8 palette, u8 x, u8 y) {
+    const struct Item *item = ITEM_S(data);
+
+    if(item->class == ITEMCLASS_TOOL) {
+        const u8 level = data->tool_level;
+
+        screen_write(level_names[level], palette, x, y);
+        screen_write(item->name, palette, x + 4 + (level != 4), y);
+    } else if(item->class == ITEMCLASS_MATERIAL ||
+              item->class == ITEMCLASS_PLACEABLE ||
+              item->class == ITEMCLASS_FOOD) {
+        const u8 count = data->count;
+
+        // TODO write the count
+        screen_write(item->name, palette, x + 4, y);
+    } else {
+        screen_write(item->name, palette, x, y);
+    }
+}

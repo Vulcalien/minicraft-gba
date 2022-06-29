@@ -17,6 +17,7 @@
 
 #include "input.h"
 #include "screen.h"
+#include "item.h"
 
 static void inventory_init(void) {
 }
@@ -48,6 +49,10 @@ static void inventory_draw(void) {
     for(u32 y = INV_Y0 + 1; y <= INV_Y1 - 1; y++) {
         SET_TILE(INV_X0, y, 90, 0, 4);
         SET_TILE(INV_X1, y, 90, 1, 4);
+
+        // draw background
+        for(u32 x = INV_X0 + 1; x <= INV_X1 - 1; x++)
+            SET_TILE(x, y, 29, 0, 4);
     }
 
     // draw horizontal borders
@@ -58,6 +63,13 @@ static void inventory_draw(void) {
 
     // DEBUG use yellow font + blue bg
     screen_write("INVENTORY", 0, INV_X0 + 1, INV_Y0);
+
+    // DEBUG
+    struct item_Data data = {
+        .type = SWORD_ITEM,
+        .tool_level = 2
+    };
+    item_write(&data, 0, INV_X0 + 2, INV_Y0 + 1);
 }
 
 const struct Scene scene_inventory = {

@@ -99,6 +99,11 @@ struct item_Data {
     };
 };
 
+#define ITEM_S(data)\
+    (&item_list[data->type])
+
 extern const struct Item item_list[ITEM_TYPES];
+
+extern void item_write(struct item_Data *data, u8 palette, u8 x, u8 y);
 
 #endif // MINICRAFT_ITEM
