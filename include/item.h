@@ -18,7 +18,7 @@
 
 #include "minicraft.h"
 
-#define ITEM_TYPES (100) // DEBUG 100
+#define ITEM_TYPES (33)
 
 #define WOOD_ITEM       (0)
 #define STONE_ITEM      (1)
@@ -50,7 +50,14 @@
 #define SHOVEL_ITEM (24)
 #define HOE_ITEM    (25)
 
-// TODO Furniture and Power Glove
+#define WORKBENCH_ITEM (26)
+#define FURNACE_ITEM   (27)
+#define OVEN_ITEM      (28)
+#define ANVIL_ITEM     (29)
+#define CHEST_ITEM     (30)
+#define LANTERN_ITEM   (31)
+
+#define POWERGLOVE_ITEM (32)
 
 #define ITEMCLASS_MATERIAL   (0)
 #define ITEMCLASS_PLACEABLE  (1)

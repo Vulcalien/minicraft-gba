@@ -204,4 +204,50 @@ const struct Item item_list[ITEM_TYPES] = {
         .class = ITEMCLASS_TOOL,
         .name = "HOE"
     },
+
+    // -----
+
+    // Workbench
+    {
+        .class = ITEMCLASS_FURNITURE,
+        .name = "WORKBENCH"
+    },
+
+    // Furnace
+    {
+        .class = ITEMCLASS_FURNITURE,
+        .name = "FURNACE"
+    },
+
+    // Oven
+    {
+        .class = ITEMCLASS_FURNITURE,
+        .name = "OVEN"
+    },
+
+    // Anvil
+    {
+        .class = ITEMCLASS_FURNITURE,
+        .name = "ANVIL"
+    },
+
+    // Chest
+    {
+        .class = ITEMCLASS_FURNITURE,
+        .name = "CHEST"
+    },
+
+    // Lantern
+    {
+        .class = ITEMCLASS_FURNITURE,
+        .name = "LANTERN"
+    },
+
+    // -----
+
+    // Power Glove
+    {
+        .class = ITEMCLASS_FURNITURE,
+        .name = "POW GLOVE"
+    }
 };
