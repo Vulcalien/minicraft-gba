@@ -44,27 +44,27 @@
 #define APPLE_ITEM (19)
 #define BREAD_ITEM (20)
 
-#define SWORD_ITEM  (21)
-#define AXE_ITEM    (22)
-#define PICK_ITEM   (23)
-#define SHOVEL_ITEM (24)
-#define HOE_ITEM    (25)
+#define WORKBENCH_ITEM (21)
+#define FURNACE_ITEM   (22)
+#define OVEN_ITEM      (23)
+#define ANVIL_ITEM     (24)
+#define CHEST_ITEM     (25)
+#define LANTERN_ITEM   (26)
 
-#define WORKBENCH_ITEM (26)
-#define FURNACE_ITEM   (27)
-#define OVEN_ITEM      (28)
-#define ANVIL_ITEM     (29)
-#define CHEST_ITEM     (30)
-#define LANTERN_ITEM   (31)
+#define POWERGLOVE_ITEM (27)
 
-#define POWERGLOVE_ITEM (32)
+#define SWORD_ITEM  (28)
+#define AXE_ITEM    (29)
+#define PICK_ITEM   (30)
+#define SHOVEL_ITEM (31)
+#define HOE_ITEM    (32)
 
 #define ITEMCLASS_MATERIAL   (0)
 #define ITEMCLASS_PLACEABLE  (1)
 #define ITEMCLASS_FOOD       (2)
-#define ITEMCLASS_TOOL       (3)
-#define ITEMCLASS_FURNITURE  (4)
-#define ITEMCLASS_POWERGLOVE (5)
+#define ITEMCLASS_FURNITURE  (3)
+#define ITEMCLASS_POWERGLOVE (4)
+#define ITEMCLASS_TOOL       (5)
 
 struct Item {
     u8 class;
@@ -106,5 +106,6 @@ struct item_Data {
 extern const struct Item item_list[ITEM_TYPES];
 
 extern void item_write(struct item_Data *data, u8 palette, u8 x, u8 y);
+extern void item_draw_icon(struct item_Data *data, u8 x, u8 y);
 
 #endif // MINICRAFT_ITEM

@@ -21,7 +21,7 @@
 #include "images/items.c"
 
 // TODO organize this mess...
-const u16 bg_palette[13 * 16] = {
+const u16 bg_palette[12 * 16] = {
     // --- palette 0 --- (grass, flower, tree, sapling)
     // BG color
     0x7c1f,
@@ -182,7 +182,7 @@ const u16 bg_palette[13 * 16] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-const u16 sprite_palette[13 * 16] = {
+const u16 sprite_palette[12 * 16] = {
     // --- palette 0 --- (zombie and slime - level 1)
     // transparent
     0,
@@ -262,7 +262,7 @@ const u16 sprite_palette[13 * 16] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-const u16 item_palette[3 * 16] = {
+const u16 item_palette[4 * 16] = {
     // --- palette 0 --- (wood, acorn, powerglove, apple, iron ore, iron ingot,
     //                    dirt, workbench)
     // transparent
@@ -312,6 +312,22 @@ const u16 item_palette[3 * 16] = {
     0x6318,
     0x733c, 0x44b1, 0x1445,
     0x328c, 0x4751, 0x5166,
+
+    // background
+    0x4442,
+
+    // --- palette 4 --- (tools)
+    // transparent
+    0,
+
+    // handle and shadow
+    0x29b0, 0x0844,
+
+    // levels
+    0x3255, 0x1ce7, 0x7bde, 0x379c, 0x5ea9,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0,
 
     // background
     0x4442

@@ -47,22 +47,6 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
 ETICK(player_tick) {
     // DEBUG add stuff to inventory
     player_inventory.size = 0;
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = POWERGLOVE_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = DIRT_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = HOE_ITEM, .tool_level = 4 };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = LANTERN_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = SWORD_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = POWERGLOVE_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = DIRT_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = HOE_ITEM, .tool_level = 4 };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = LANTERN_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = SWORD_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = POWERGLOVE_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = DIRT_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = HOE_ITEM, .tool_level = 4 };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = LANTERN_ITEM };
-    player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = SWORD_ITEM, .tool_level = 3 };
-
     for(u32 i = 0; i < ITEM_TYPES; i++) {
         player_inventory.items[player_inventory.size++] = (struct item_Data) {
             .type = i, .tool_level = i % 4

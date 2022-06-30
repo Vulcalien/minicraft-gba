@@ -197,38 +197,6 @@ const struct Item item_list[ITEM_TYPES] = {
 
     // -----
 
-    // Sword
-    {
-        .class = ITEMCLASS_TOOL,
-        .name = "SWRD"
-    },
-
-    // Axe
-    {
-        .class = ITEMCLASS_TOOL,
-        .name = "AXE"
-    },
-
-    // Pick
-    {
-        .class = ITEMCLASS_TOOL,
-        .name = "PICK"
-    },
-
-    // Shovel
-    {
-        .class = ITEMCLASS_TOOL,
-        .name = "SHVL"
-    },
-
-    // Hoe
-    {
-        .class = ITEMCLASS_TOOL,
-        .name = "HOE"
-    },
-
-    // -----
-
     // Workbench
     {
         .class = ITEMCLASS_FURNITURE,
@@ -278,6 +246,43 @@ const struct Item item_list[ITEM_TYPES] = {
         .class = ITEMCLASS_FURNITURE,
         .name = "POW GLOVE",
         .palette = 0
+    },
+
+    // -----
+
+    // Sword
+    {
+        .class = ITEMCLASS_TOOL,
+        .name = "SWRD",
+        .palette = 3
+    },
+
+    // Axe
+    {
+        .class = ITEMCLASS_TOOL,
+        .name = "AXE",
+        .palette = 3
+    },
+
+    // Pick
+    {
+        .class = ITEMCLASS_TOOL,
+        .name = "PICK",
+        .palette = 3
+    },
+
+    // Shovel
+    {
+        .class = ITEMCLASS_TOOL,
+        .name = "SHVL",
+        .palette = 3
+    },
+
+    // Hoe
+    {
+        .class = ITEMCLASS_TOOL,
+        .name = "HOE",
+        .palette = 3
     }
 };
 
@@ -299,8 +304,23 @@ void item_write(struct item_Data *data, u8 palette, u8 x, u8 y) {
         const u8 count = data->count;
 
         // TODO write the count
-        screen_write(item->name, palette, x + 4, y);
+        screen_write(item->name, palette, x + 3, y);
     } else {
         screen_write(item->name, palette, x, y);
     }
+}
+
+#define SET_TILE(x, y, id, palette)\
+    do {\
+        BG3_TILEMAP[(x) + (y) * 32] = (id) |\
+                                      ((palette) << 12);\
+    } while(0)
+
+void item_draw_icon(struct item_Data *data, u8 x, u8 y) {
+    const struct Item *item = ITEM_S(data);
+
+    const u8 tile = data->type +
+                    (item->class == ITEMCLASS_TOOL) * (data->tool_level * 5);
+
+    SET_TILE(x, y, 128 + tile, 12 + item->palette);
 }
