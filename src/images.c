@@ -20,7 +20,7 @@
 #include "images/sprites.c"
 
 // TODO organize this mess...
-const u16 bg_palette[256] = {
+const u16 bg_palette[13 * 16] = {
     // --- palette 0 --- (grass, flower, tree, sapling)
     // BG color
     0x7c1f,
@@ -181,7 +181,7 @@ const u16 bg_palette[256] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-const u16 sprite_palette[256] = {
+const u16 sprite_palette[13 * 16] = {
     // --- palette 0 --- (zombie and slime - level 1)
     // transparent
     0,
@@ -259,4 +259,50 @@ const u16 sprite_palette[256] = {
 
     // unused
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
+
+const u16 item_palette[3 * 16] = {
+    // --- palette 0 --- (wood, acorn, powerglove, apple, iron ore, iron ingot,
+    //                    dirt, workbench)
+    // transparent
+    0,
+
+    0x2655, 0x3679, 0x0848,
+    0x0844, 0x1d8f,
+    0x2655,
+    0x0c6c, 0x14b3,
+    0x35b0, 0x673b,
+    0x4255,
+    0x3255, 0x29b0,
+
+    // unused
+    0, 0,
+
+    // --- palette 1 --- (wheat, bread, gold ore, gold ingot, sand, chest,
+    //                    flower, cloth, slime, seeds, cactus)
+    // transparent
+    0,
+
+    0x379c, 0x2231, 0x0cc6,
+    0x2ed6, 0x5fbd,
+    0x539c, 0x3231,
+    0x6318, 0x08a2,
+    0x328c, 0x4751, 0x5166,
+    0x19c6, 0x2709,
+    0x2268,
+
+    // --- palette 2 --- (anvil, furnace, coal, lantern, glass, oven, stone,
+    //                    cloud, gem)
+    // transparent
+    0,
+
+    0x0421, 0x318c, 0x1ce7,
+    0x7bde,
+    0x3e52, 0x46f7,
+    0x4a52,
+    0x6318,
+    0x733c, 0x44b1, 0x1445,
+
+    // unused
+    0, 0, 0, 0,
 };

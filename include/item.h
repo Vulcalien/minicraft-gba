@@ -69,6 +69,7 @@
 struct Item {
     u8 class;
     char *name;
+    u8 palette;
 
     union {
         // ITEMCLASS_PLACEABLE

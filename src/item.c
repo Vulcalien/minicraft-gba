@@ -22,73 +22,85 @@ const struct Item item_list[ITEM_TYPES] = {
     // Wood
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "WOOD"
+        .name = "WOOD",
+        .palette = 0
     },
 
     // Stone
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "STONE"
+        .name = "STONE",
+        .palette = 2
     },
 
     // Glass
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "GLASS"
+        .name = "GLASS",
+        .palette = 2
     },
 
     // Wheat
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "WHEAT"
+        .name = "WHEAT",
+        .palette = 1
     },
 
     // Slime
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "SLIME"
+        .name = "SLIME",
+        .palette = 1
     },
 
     // Cloth
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "CLOTH"
+        .name = "CLOTH",
+        .palette = 1
     },
 
     // Coal
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "COAL"
+        .name = "COAL",
+        .palette = 2
     },
 
     // Iron Ore
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "I.ORE"
+        .name = "I.ORE",
+        .palette = 0
     },
 
     // Gold Ore
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "G.ORE"
+        .name = "G.ORE",
+        .palette = 1
     },
 
     // Iron Ingot
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "IRON"
+        .name = "IRON",
+        .palette = 0
     },
 
     // Gold Ingot
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "GOLD"
+        .name = "GOLD",
+        .palette = 1
     },
 
     // Gem
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "GEM"
+        .name = "GEM",
+        .palette = 2
     },
 
     // -----
@@ -97,6 +109,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_PLACEABLE,
         .name = "FLOWER",
+        .palette = 1,
 
         .placed_tile = FLOWER_TILE,
         .placeable_on = { GRASS_TILE, -1, -1 }
@@ -106,6 +119,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_PLACEABLE,
         .name = "SEEDS",
+        .palette = 1,
 
         .placed_tile = WHEAT_TILE,
         .placeable_on = { FARMLAND_TILE, -1, -1 }
@@ -115,6 +129,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_PLACEABLE,
         .name = "ACORN",
+        .palette = 0,
 
         .placed_tile = TREE_SAPLING_TILE,
         .placeable_on = { GRASS_TILE, -1, -1 }
@@ -124,6 +139,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_PLACEABLE,
         .name = "CACTUS",
+        .palette = 1,
 
         .placed_tile = CACTUS_SAPLING_TILE,
         .placeable_on = { SAND_TILE, -1, -1 }
@@ -133,6 +149,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_PLACEABLE,
         .name = "DIRT",
+        .palette = 0,
 
         .placed_tile = DIRT_TILE,
         .placeable_on = { HOLE_TILE, WATER_TILE, LAVA_TILE }
@@ -142,6 +159,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_PLACEABLE,
         .name = "SAND",
+        .palette = 1,
 
         .placed_tile = SAND_TILE,
         .placeable_on = { GRASS_TILE, DIRT_TILE, -1 }
@@ -151,6 +169,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_PLACEABLE,
         .name = "CLOUD",
+        .palette = 2,
 
         .placed_tile = CLOUD_TILE,
         .placeable_on = { INFINITE_FALL_TILE, -1, -1 }
@@ -162,6 +181,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_FOOD,
         .name = "APPLE",
+        .palette = 0,
 
         .hp_gain = 1
     },
@@ -170,6 +190,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_FOOD,
         .name = "Bread",
+        .palette = 1,
 
         .hp_gain = 2
     },
@@ -211,37 +232,43 @@ const struct Item item_list[ITEM_TYPES] = {
     // Workbench
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "WORKBENCH"
+        .name = "WORKBENCH",
+        .palette = 0
     },
 
     // Furnace
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "FURNACE"
+        .name = "FURNACE",
+        .palette = 2
     },
 
     // Oven
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "OVEN"
+        .name = "OVEN",
+        .palette = 2
     },
 
     // Anvil
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "ANVIL"
+        .name = "ANVIL",
+        .palette = 2
     },
 
     // Chest
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "CHEST"
+        .name = "CHEST",
+        .palette = 2
     },
 
     // Lantern
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "LANTERN"
+        .name = "LANTERN",
+        .palette = 2
     },
 
     // -----
@@ -249,7 +276,8 @@ const struct Item item_list[ITEM_TYPES] = {
     // Power Glove
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "POW GLOVE"
+        .name = "POW GLOVE",
+        .palette = 0
     }
 };
 

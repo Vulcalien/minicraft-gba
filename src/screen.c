@@ -93,6 +93,9 @@ void screen_init(void) {
     LOAD_PALETTE(BG_PALETTE,  bg_palette);
     LOAD_PALETTE(SPR_PALETTE, sprite_palette);
 
+    LOAD_PALETTE(BG_PALETTE  + 13 * 16, item_palette);
+    LOAD_PALETTE(SPR_PALETTE + 13 * 16, item_palette);
+
     // load tilesets
     LOAD_TILESET(CHAR_BLOCK_0, level_tileset);
     LOAD_TILESET(CHAR_BLOCK_1, gui_tileset);
