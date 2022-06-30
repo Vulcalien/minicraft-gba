@@ -76,48 +76,36 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
     u32 tiles_to_check;
     i32 tiles[2][2];
 
-    if(xm != 0) {
-        i32 yt0 = (data->y - entity->yr) >> 4;
-        i32 yt1 = (data->y + entity->yr) >> 4;
+    i32 xto0 = (data->x - entity->xr) >> 4;
+    i32 yto0 = (data->y - entity->yr) >> 4;
+    i32 xto1 = (data->x + entity->xr) >> 4;
+    i32 yto1 = (data->y + entity->yr) >> 4;
 
-        if(xm < 0) {
-            i32 xto0 = (data->x - entity->xr) >> 4;
-            i32 xt0 = (data->x + xm - entity->xr) >> 4;
+    i32 xt0 = (data->x + xm - entity->xr) >> 4;
+    i32 yt0 = (data->y + ym - entity->yr) >> 4;
+    i32 xt1 = (data->x + xm + entity->xr) >> 4;
+    i32 yt1 = (data->y + ym + entity->yr) >> 4;
 
-            tiles[0][0] = xt0; tiles[0][1] = yt0;
-            tiles[1][0] = xt0; tiles[1][1] = yt1;
+    if(xm < 0) {
+        tiles[0][0] = xt0; tiles[0][1] = yt0;
+        tiles[1][0] = xt0; tiles[1][1] = yt1;
 
-            tiles_to_check = (xt0 != xto0) * (1 + (yt0 != yt1));
-        } else {
-            i32 xto1 = (data->x + entity->xr) >> 4;
-            i32 xt1 = (data->x + xm + entity->xr) >> 4;
+        tiles_to_check = (xt0 != xto0) * (1 + (yt0 != yt1));
+    } else if(xm > 0) {
+        tiles[0][0] = xt1; tiles[0][1] = yt0;
+        tiles[1][0] = xt1; tiles[1][1] = yt1;
 
-            tiles[0][0] = xt1; tiles[0][1] = yt0;
-            tiles[1][0] = xt1; tiles[1][1] = yt1;
+        tiles_to_check = (xt1 != xto1) * (1 + (yt0 != yt1));
+    } else if(ym < 0) {
+        tiles[0][0] = xt0; tiles[0][1] = yt0;
+        tiles[1][0] = xt1; tiles[1][1] = yt0;
 
-            tiles_to_check = (xt1 != xto1) * (1 + (yt0 != yt1));
-        }
+        tiles_to_check = (yt0 != yto0) * (1 + (xt0 != xt1));
     } else {
-        i32 xt0 = (data->x - entity->xr) >> 4;
-        i32 xt1 = (data->x + entity->xr) >> 4;
+        tiles[0][0] = xt0; tiles[0][1] = yt1;
+        tiles[1][0] = xt1; tiles[1][1] = yt1;
 
-        if(ym < 0) {
-            i32 yto0 = (data->y - entity->yr) >> 4;
-            i32 yt0 = (data->y + ym - entity->yr) >> 4;
-
-            tiles[0][0] = xt0; tiles[0][1] = yt0;
-            tiles[1][0] = xt1; tiles[1][1] = yt0;
-
-            tiles_to_check = (yt0 != yto0) * (1 + (xt0 != xt1));
-        } else {
-            i32 yto1 = (data->y + entity->yr) >> 4;
-            i32 yt1 = (data->y + ym + entity->yr) >> 4;
-
-            tiles[0][0] = xt0; tiles[0][1] = yt1;
-            tiles[1][0] = xt1; tiles[1][1] = yt1;
-
-            tiles_to_check = (yt1 != yto1) * (1 + (xt0 != xt1));
-        }
+        tiles_to_check = (yt1 != yto1) * (1 + (xt0 != xt1));
     }
 
     for(u32 i = 0; i < tiles_to_check; i++) {
@@ -131,7 +119,38 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
             return false;
     }
 
-    // TODO collision with other entities
+    // TODO try to optimize this as much as possible
+    // FIXME sometimes, entities can pass anyway
+
+    // solid entity collision
+    bool blocked_by_entity = false;
+    for(u32 yt = (yt0 - 1) * (yt0 - 1 >= 0); yt <= (yt1 + 1); yt++) {
+        for(u32 xt = (xt0 - 1) * (xt0 - 1 >= 0); xt <= (xt1 + 1); xt++) {
+            const u32 tile = xt + yt * LEVEL_W;
+
+            for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
+                struct entity_Data *e_data = &level->entities[
+                    level_solid_entities[tile][i]
+                ];
+
+                if(e_data == data)
+                    continue;
+
+                if(entity_intersects(
+                    e_data,
+                    data->x - entity->xr + xm, data->y - entity->yr + ym,
+                    data->x + entity->xr + xm, data->y + entity->yr + ym
+                )) {
+                    blocked_by_entity = true;
+
+                    // TODO touch entity
+                }
+            }
+        }
+    }
+
+    if(blocked_by_entity)
+        return false;
 
     data->x += xm;
     data->y += ym;

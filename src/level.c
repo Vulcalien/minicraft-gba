@@ -22,13 +22,11 @@
 EWRAM_BSS_SECTION
 struct Level levels[5];
 
+EWRAM_BSS_SECTION
+u8 level_solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
+
 u32 level_x_offset = 0;
 u32 level_y_offset = 0;
-
-#define SOLID_ENTITIES_IN_TILE (8)
-
-EWRAM_BSS_SECTION
-static u8 solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
 
 static inline void remove_solid_entity(i8 xt, i8 yt,
                                        struct entity_Data *entity_data) {
@@ -36,7 +34,7 @@ static inline void remove_solid_entity(i8 xt, i8 yt,
        yt < 0 || yt >= LEVEL_H)
         return;
 
-    solid_entities[xt + yt * LEVEL_W][entity_data->solid_id] = -1;
+    level_solid_entities[xt + yt * LEVEL_W][entity_data->solid_id] = -1;
 }
 
 static inline void insert_solid_entity(i8 xt, i8 yt,
@@ -48,8 +46,8 @@ static inline void insert_solid_entity(i8 xt, i8 yt,
 
     const u32 tile = xt + yt * LEVEL_W;
     for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
-        if(solid_entities[tile][i] >= ENTITY_TYPES) {
-            solid_entities[tile][i] = entity_id;
+        if(level_solid_entities[tile][i] >= ENTITY_TYPES) {
+            level_solid_entities[tile][i] = entity_id;
             entity_data->solid_id = i;
         }
     }
