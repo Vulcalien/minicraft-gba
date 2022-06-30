@@ -104,7 +104,12 @@ static void inventory_draw(void) {
             break;
 
         struct item_Data *data = &player_inventory.items[item0 + i];
+        const struct Item *item = ITEM_S(data);
 
+        SET_TILE(
+            INV_X0 + 1, INV_Y0 + 1 + i,
+            128 + data->type, 0, 13 + item->palette
+        );
         item_write(data, 4, INV_X0 + 2, INV_Y0 + 1 + i);
     }
 

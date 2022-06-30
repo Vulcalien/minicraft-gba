@@ -30,4 +30,6 @@ extern const u8 gui_tileset[32 * 128];
 
 extern const u8 sprite_tileset[32 * 96];
 
+extern const u8 item_tileset[32 * 33];
+
 #endif // MINICRAFT_IMAGES

@@ -18,6 +18,7 @@
 #include "images/level.c"
 #include "images/gui.c"
 #include "images/sprites.c"
+#include "images/items.c"
 
 // TODO organize this mess...
 const u16 bg_palette[13 * 16] = {

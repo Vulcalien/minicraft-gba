@@ -63,6 +63,12 @@ ETICK(player_tick) {
     player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = LANTERN_ITEM };
     player_inventory.items[player_inventory.size++] = (struct item_Data) { .type = SWORD_ITEM, .tool_level = 3 };
 
+    for(u32 i = 0; i < ITEM_TYPES; i++) {
+        player_inventory.items[player_inventory.size++] = (struct item_Data) {
+            .type = i, .tool_level = i % 4
+        };
+    }
+
     player_tick_time++;
 
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);

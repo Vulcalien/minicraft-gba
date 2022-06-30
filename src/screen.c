@@ -35,10 +35,21 @@
 #define BG_PALETTE  ((vu16 *) 0x05000000)
 #define SPR_PALETTE ((vu16 *) 0x05000200)
 
-static void load_tileset(vu16 *dest, const u8 *tileset, u32 size) {
+static void load_tileset(vu16 *dest, const u8 *tileset, u32 size,
+                         u8 zero_conversion) {
     for(u32 i = 0; i < size; i++) {
         u8 b0 = tileset[i * 2];
         u8 b1 = tileset[i * 2 + 1];
+
+        if((b0 & 0x0f) == 0)
+            b0 |= zero_conversion;
+        if((b0 & 0xf0) == 0)
+            b0 |= (zero_conversion << 4);
+
+        if((b1 & 0x0f) == 0)
+            b1 |= zero_conversion;
+        if((b1 & 0xf0) == 0)
+            b1 |= (zero_conversion << 4);
 
         // in a byte, lower 4 bits are for left, upper 4 bits for right
         b0 = (b0 << 4) | (b0 >> 4);
@@ -48,8 +59,11 @@ static void load_tileset(vu16 *dest, const u8 *tileset, u32 size) {
     }
 }
 
+#define LOAD_TILESET_CONVERT(dest, tileset, zero_conversion)\
+    load_tileset(dest, tileset, sizeof(tileset) / sizeof(u16), zero_conversion)
+
 #define LOAD_TILESET(dest, tileset)\
-    load_tileset(dest, tileset, sizeof(tileset) / sizeof(u16))
+    LOAD_TILESET_CONVERT(dest, tileset, 0)
 
 #define LOAD_PALETTE(dest, palette)\
     memcpy16(dest, palette, sizeof(palette) / sizeof(u16))
@@ -101,6 +115,8 @@ void screen_init(void) {
     LOAD_TILESET(CHAR_BLOCK_1, gui_tileset);
 
     LOAD_TILESET(SPR_TILESET, sprite_tileset);
+
+    LOAD_TILESET_CONVERT(CHAR_BLOCK_1 + (32 * 128) / 2, item_tileset, 0xf);
 }
 
 void vsync(void) {
