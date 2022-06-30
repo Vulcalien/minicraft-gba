@@ -58,7 +58,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_MATERIAL,
         .name = "CLOTH",
-        .palette = 1
+        .palette = 2
     },
 
     // Coal
@@ -189,7 +189,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Bread
     {
         .class = ITEMCLASS_FOOD,
-        .name = "Bread",
+        .name = "BREAD",
         .palette = 1,
 
         .hp_gain = 2

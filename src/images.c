@@ -276,10 +276,13 @@ const u16 item_palette[3 * 16] = {
     0x3255, 0x29b0,
 
     // unused
-    0, 0,
+    0,
+
+    // background
+    0x4442,
 
     // --- palette 1 --- (wheat, bread, gold ore, gold ingot, sand, chest,
-    //                    flower, cloth, slime, seeds, cactus)
+    //                    flower, slime, seeds, cactus)
     // transparent
     0,
 
@@ -287,12 +290,17 @@ const u16 item_palette[3 * 16] = {
     0x2ed6, 0x5fbd,
     0x539c, 0x3231,
     0x6318, 0x08a2,
-    0x328c, 0x4751, 0x5166,
     0x19c6, 0x2709,
     0x2268,
 
+    // unused
+    0, 0,
+
+    // background
+    0x4442,
+
     // --- palette 2 --- (anvil, furnace, coal, lantern, glass, oven, stone,
-    //                    cloud, gem)
+    //                    cloud, gem, cloth)
     // transparent
     0,
 
@@ -302,7 +310,8 @@ const u16 item_palette[3 * 16] = {
     0x4a52,
     0x6318,
     0x733c, 0x44b1, 0x1445,
+    0x328c, 0x4751, 0x5166,
 
-    // unused
-    0, 0, 0, 0,
+    // background
+    0x4442
 };
