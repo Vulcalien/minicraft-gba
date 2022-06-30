@@ -26,6 +26,8 @@
 struct entity_Data {
     u8 type;
 
+    u8 solid_id;
+
     u16 x;
     u16 y;
 

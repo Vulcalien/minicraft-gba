@@ -174,7 +174,9 @@ static const struct Entity player_entity = {
     .draw = player_draw,
 
     .xr = 4,
-    .yr = 3
+    .yr = 3,
+
+    .is_solid = true
 };
 
 #undef MAX_STAMINA

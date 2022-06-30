@@ -93,5 +93,7 @@ static const struct Entity zombie_entity = {
     .draw = zombie_draw,
 
     .xr = 4,
-    .yr = 3
+    .yr = 3,
+
+    .is_solid = true
 };

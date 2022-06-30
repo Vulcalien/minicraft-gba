@@ -25,6 +25,36 @@ struct Level levels[5];
 u32 level_x_offset = 0;
 u32 level_y_offset = 0;
 
+#define SOLID_ENTITIES_IN_TILE (8)
+
+EWRAM_BSS_SECTION
+static u8 solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
+
+static inline void remove_solid_entity(i8 xt, i8 yt,
+                                       struct entity_Data *entity_data) {
+    if(xt < 0 || xt >= LEVEL_W ||
+       yt < 0 || yt >= LEVEL_H)
+        return;
+
+    solid_entities[xt + yt * LEVEL_W][entity_data->solid_id] = -1;
+}
+
+static inline void insert_solid_entity(i8 xt, i8 yt,
+                                       struct entity_Data *entity_data,
+                                       u32 entity_id) {
+    if(xt < 0 || xt >= LEVEL_W ||
+       yt < 0 || yt >= LEVEL_H)
+        return;
+
+    const u32 tile = xt + yt * LEVEL_W;
+    for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
+        if(solid_entities[tile][i] >= ENTITY_TYPES) {
+            solid_entities[tile][i] = entity_id;
+            entity_data->solid_id = i;
+        }
+    }
+}
+
 IWRAM_SECTION
 void level_tick(struct Level *level) {
     // TODO try spawn
@@ -44,8 +74,24 @@ void level_tick(struct Level *level) {
         if(entity_data->type >= ENTITY_TYPES)
             continue;
 
+        // COMPATIBILITY NOTE
+        // 'x >> n' is assumed to be a floor division by 2^n
+        // even for negative numbers: this is implementation-dependent
+        i8 xt0 = entity_data->x >> 4;
+        i8 yt0 = entity_data->y >> 4;
+
         const struct Entity *entity = ENTITY_S(entity_data);
         entity->tick(level, entity_data);
+
+        // TODO check if removed???
+
+        i8 xt1 = entity_data->x >> 4;
+        i8 yt1 = entity_data->y >> 4;
+
+        if(entity->is_solid && (xt1 != xt0 || yt1 != yt0)) {
+            remove_solid_entity(xt0, yt0, entity_data);
+            insert_solid_entity(xt1, yt1, entity_data, i);
+        }
     }
 }
 

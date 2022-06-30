@@ -51,6 +51,8 @@ struct Entity {
     // entity radius
     u8 xr;
     u8 yr;
+
+    bool is_solid;
 };
 
 #define ENTITY_S(data)\

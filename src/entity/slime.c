@@ -89,5 +89,7 @@ static const struct Entity slime_entity = {
     .draw = slime_draw,
 
     .xr = 4,
-    .yr = 3
+    .yr = 3,
+
+    .is_solid = true
 };
