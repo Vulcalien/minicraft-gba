@@ -29,12 +29,15 @@ u32 level_x_offset = 0;
 u32 level_y_offset = 0;
 
 static inline void remove_solid_entity(i8 xt, i8 yt,
-                                       struct entity_Data *entity_data) {
+                                       struct entity_Data *entity_data,
+                                       u32 entity_id) {
     if(xt < 0 || xt >= LEVEL_W ||
        yt < 0 || yt >= LEVEL_H)
         return;
 
-    level_solid_entities[xt + yt * LEVEL_W][entity_data->solid_id] = -1;
+    const u32 tile = xt + yt * LEVEL_W;
+    if(level_solid_entities[tile][entity_data->solid_id] == entity_id)
+        level_solid_entities[tile][entity_data->solid_id] = -1;
 }
 
 static inline void insert_solid_entity(i8 xt, i8 yt,
@@ -46,9 +49,11 @@ static inline void insert_solid_entity(i8 xt, i8 yt,
 
     const u32 tile = xt + yt * LEVEL_W;
     for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
-        if(level_solid_entities[tile][i] >= ENTITY_TYPES) {
+        if(level_solid_entities[tile][i] >= ENTITY_CAP) {
             level_solid_entities[tile][i] = entity_id;
             entity_data->solid_id = i;
+
+            break;
         }
     }
 }
@@ -87,7 +92,7 @@ void level_tick(struct Level *level) {
         i8 yt1 = entity_data->y >> 4;
 
         if(entity->is_solid && (xt1 != xt0 || yt1 != yt0)) {
-            remove_solid_entity(xt0, yt0, entity_data);
+            remove_solid_entity(xt0, yt0, entity_data, i);
             insert_solid_entity(xt1, yt1, entity_data, i);
         }
     }
