@@ -616,7 +616,10 @@ const struct Tile tile_list[TILE_TYPES] = {
         },
 
         .is_solid = true,
-        .may_pass = -1
+        .may_pass = -1,
+
+        .hurts_on_touch = true,
+        .touch_damage = 1
     },
 
     // Hole
@@ -725,7 +728,10 @@ const struct Tile tile_list[TILE_TYPES] = {
         .draw = ore_draw,
 
         .is_solid = true,
-        .may_pass = -1
+        .may_pass = -1,
+
+        .hurts_on_touch = true,
+        .touch_damage = 3
     },
 
     // Gold Ore
@@ -734,7 +740,10 @@ const struct Tile tile_list[TILE_TYPES] = {
         .draw = ore_draw,
 
         .is_solid = true,
-        .may_pass = -1
+        .may_pass = -1,
+
+        .hurts_on_touch = true,
+        .touch_damage = 3
     },
 
     // Gem Ore
@@ -743,7 +752,10 @@ const struct Tile tile_list[TILE_TYPES] = {
         .draw = ore_draw,
 
         .is_solid = true,
-        .may_pass = -1
+        .may_pass = -1,
+
+        .hurts_on_touch = true,
+        .touch_damage = 3
     },
 
     // Cloud Cactus
@@ -752,6 +764,9 @@ const struct Tile tile_list[TILE_TYPES] = {
         .draw = ore_draw,
 
         .is_solid = true,
-        .may_pass = AIR_WIZARD_ENTITY
+        .may_pass = AIR_WIZARD_ENTITY,
+
+        .hurts_on_touch = true,
+        .touch_damage = 3
     }
 };

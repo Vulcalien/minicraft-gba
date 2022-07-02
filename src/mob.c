@@ -59,3 +59,44 @@ bool mob_move(struct Level *level, struct entity_Data *data,
 
     return entity_move(level, data, xm, ym);
 }
+
+IWRAM_SECTION
+void mob_hurt(struct Level *level, struct entity_Data *data,
+              u8 damage, u8 knockback_dir) {
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    if(mob_data->hurt_time > 0)
+        return;
+
+    // TODO player invulnerable time
+    if(data->type == PLAYER_ENTITY && false)
+        return;
+
+    i32 new_hp = mob_data->hp - damage;
+    if(new_hp <= 0)
+        ; // TODO disappear???
+    else
+        mob_data->hp = new_hp;
+
+    mob_data->hurt_time = 10;
+
+    mob_data->knockback.val = 6;
+    mob_data->knockback.dir = knockback_dir;
+
+    if(data->type == PLAYER_ENTITY) {
+        // TODO player invulnerable time
+
+        // TODO player hurt sound
+        // TODO damage text particle
+    } else {
+        if(level->player) {
+            i32 xd = level->player->x - data->x;
+            i32 yd = level->player->y - data->y;
+
+            if(xd * xd + yd * yd < 80 * 80)
+                ; // TODO mob hurt sound
+        }
+
+        // TODO damage text particle
+    }
+}

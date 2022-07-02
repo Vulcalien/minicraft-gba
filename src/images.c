@@ -242,6 +242,7 @@ const u16 sprite_palette[12 * 16] = {
     // player
     0x4279, 0x198c, 0x0844,
 
+    // FIXME this has to be moved and copied in the all white palette
     // water
     0x6273, 0x4d08, 0x4442,
 

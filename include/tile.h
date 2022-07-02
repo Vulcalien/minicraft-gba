@@ -54,11 +54,11 @@ struct Tile {
     bool is_solid;
     u8 may_pass;
 
+    bool hurts_on_touch;
+    u8 touch_damage;
+
     void (*stepped_on)(struct Level *level, u32 xt, u32 yt,
                        struct entity_Data *entity_data);
-
-    void (*bumped_into)(struct Level *level, u32 xt, u32 yt,
-                        struct entity_Data *entity_data);
 
     struct {
         bool grass;

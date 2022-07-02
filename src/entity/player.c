@@ -53,6 +53,8 @@ ETICK(player_tick) {
         };
     }
 
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
     player_tick_time++;
 
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
@@ -110,7 +112,7 @@ ETICK(player_tick) {
         if(player_stamina > 0)
             player_stamina--;
         else
-            ; // TODO drowning damage
+            mob_hurt(level, data, 1, mob_data->dir ^ 2);
     }
 
     // movement

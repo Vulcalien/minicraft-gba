@@ -25,6 +25,9 @@ void generate_levels(void) {
         for(u32 t = 0; t < LEVEL_W * LEVEL_H; t++) {
             level->tiles[t] = (t / 16 % 2) ? 11 : 2;
             level->data[t] = 0;
+
+            if(t % 7 == 5)
+                level->tiles[t] = 7 + ((t & 8) == 8) * 12;
         }
 
         for(u32 i = 1; i < ENTITY_CAP; i++) {

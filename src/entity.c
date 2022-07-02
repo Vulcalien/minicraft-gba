@@ -17,6 +17,7 @@
 
 #include "level.h"
 #include "tile.h"
+#include "mob.h"
 
 #include "entity/zombie.c"
 #include "entity/slime.c"
@@ -112,8 +113,13 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
         const i32 *t = tiles[i];
 
         const struct Tile *tile = LEVEL_GET_TILE_S(level, t[0], t[1]);
-        if(tile->bumped_into)
-            tile->bumped_into(level, t[0], t[1], data);
+        if(tile->hurts_on_touch && (data->type == ZOMBIE_ENTITY ||
+                                    data->type == SLIME_ENTITY  ||
+                                    data->type == PLAYER_ENTITY)) {
+            struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+            mob_hurt(level, data, tile->touch_damage, mob_data->dir ^ 2);
+        }
 
         if(tile->is_solid && tile->may_pass != data->type)
             return false;

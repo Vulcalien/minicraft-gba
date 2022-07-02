@@ -43,4 +43,7 @@ extern void mob_tick(struct Level *level, struct entity_Data *data);
 extern bool mob_move(struct Level *level, struct entity_Data *data,
                      i32 xm, i32 ym);
 
+extern void mob_hurt(struct Level *level, struct entity_Data *data,
+                     u8 damage, u8 knockback_dir);
+
 #endif // MINICRAFT_MOB
