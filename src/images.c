@@ -242,12 +242,14 @@ const u16 sprite_palette[12 * 16] = {
     // player
     0x4279, 0x198c, 0x0844,
 
-    // FIXME this has to be moved and copied in the all white palette
+    // unused
+    0,
+
     // water
     0x6273, 0x4d08, 0x4442,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
 
     // --- palette 5 --- (mob damaged)
     // transparent
@@ -259,8 +261,11 @@ const u16 sprite_palette[12 * 16] = {
     // slime
     0x7fff,
 
+    // water
+    0x6273, 0x4d08, 0x4442,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 const u16 item_palette[4 * 16] = {
