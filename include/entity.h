@@ -42,6 +42,10 @@
     static void name(struct Level *level, struct entity_Data *data,\
                      vu16 *sprite_attribs)
 
+#define ETOUCH_PLAYER(name)\
+    static void name(struct Level *level, struct entity_Data *data,\
+                     struct entity_Data *player)
+
 struct Entity {
     void (*tick)(struct Level *level, struct entity_Data *data);
 
@@ -53,6 +57,8 @@ struct Entity {
     u8 yr;
 
     bool is_solid;
+    void (*touch_player)(struct Level *level, struct entity_Data *data,
+                         struct entity_Data *player);
 };
 
 #define ENTITY_S(data)\

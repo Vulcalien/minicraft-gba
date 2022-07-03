@@ -88,6 +88,13 @@ EDRAW(zombie_draw) {
     sprite_attribs[2] = (sprite & 0x3ff) | (0 << 10) | (palette << 12);
 }
 
+ETOUCH_PLAYER(zombie_touch_player) {
+    struct mob_Data    *mob_data    = (struct mob_Data *)    &data->data;
+    struct zombie_Data *zombie_data = (struct zombie_Data *) &mob_data->data;
+
+    mob_hurt(level, player, 2 + zombie_data->level, mob_data->dir);
+}
+
 static const struct Entity zombie_entity = {
     .tick = zombie_tick,
     .draw = zombie_draw,
@@ -95,5 +102,6 @@ static const struct Entity zombie_entity = {
     .xr = 4,
     .yr = 3,
 
-    .is_solid = true
+    .is_solid = true,
+    .touch_player = zombie_touch_player
 };

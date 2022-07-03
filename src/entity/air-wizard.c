@@ -26,10 +26,18 @@ ETICK(air_wizard_tick) {
 EDRAW(air_wizard_draw) {
 }
 
+ETOUCH_PLAYER(air_wizard_touch_player) {
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+    mob_hurt(level, player, 3, mob_data->dir);
+}
+
 static const struct Entity air_wizard_entity = {
     .tick = air_wizard_tick,
     .draw = air_wizard_draw,
 
     .xr = 4,
-    .yr = 3
+    .yr = 3,
+
+    .is_solid = true,
+    .touch_player = air_wizard_touch_player
 };

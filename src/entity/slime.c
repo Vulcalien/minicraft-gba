@@ -84,6 +84,13 @@ EDRAW(slime_draw) {
     sprite_attribs[2] = (sprite & 0x3ff) | (0 << 10) | (palette << 12);
 }
 
+ETOUCH_PLAYER(slime_touch_player) {
+    struct mob_Data   *mob_data   = (struct mob_Data *)   &data->data;
+    struct slime_Data *slime_data = (struct slime_Data *) &mob_data->data;
+
+    mob_hurt(level, player, 1 + slime_data->level, mob_data->dir);
+}
+
 static const struct Entity slime_entity = {
     .tick = slime_tick,
     .draw = slime_draw,
@@ -91,5 +98,6 @@ static const struct Entity slime_entity = {
     .xr = 4,
     .yr = 3,
 
-    .is_solid = true
+    .is_solid = true,
+    .touch_player = slime_touch_player
 };

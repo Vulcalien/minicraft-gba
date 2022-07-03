@@ -126,7 +126,6 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
     }
 
     // TODO try to optimize this as much as possible
-    // FIXME sometimes, entities can pass anyway
 
     // solid entity collision
     bool blocked_by_entity = false;
@@ -151,7 +150,14 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
                 )) {
                     blocked_by_entity = true;
 
-                    // TODO touch entity
+                    // touch player
+                    if(data->type == PLAYER_ENTITY) {
+                        const struct Entity *entity = ENTITY_S(e_data);
+                        entity->touch_player(level, e_data, data);
+                    } else if(e_data->type == PLAYER_ENTITY) {
+                        const struct Entity *entity = ENTITY_S(data);
+                        entity->touch_player(level, data, e_data);
+                    }
                 }
             }
         }
