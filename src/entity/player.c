@@ -28,12 +28,12 @@
 EWRAM_BSS_SECTION
 struct Inventory player_inventory;
 
-// TODO should be accessible by GUI
-static u8 player_stamina = MAX_STAMINA;
-static u8 player_stamina_recharge_delay = 0;
+u8 player_stamina = MAX_STAMINA;
+u8 player_stamina_recharge_delay = 0;
 
-static u8 player_invulnerable_time = 0;
-static u8 player_tick_time = 0;
+u8 player_invulnerable_time = 0;
+
+static u32 player_tick_time = 0;
 
 ALWAYS_INLINE
 static inline void player_attack(struct Level *level, struct entity_Data *data) {

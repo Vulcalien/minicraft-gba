@@ -17,6 +17,7 @@
 
 #include "level.h"
 #include "entity.h"
+#include "player.h"
 
 IWRAM_SECTION
 void mob_tick(struct Level *level, struct entity_Data *data) {
@@ -69,7 +70,7 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
         return;
 
     // TODO player invulnerable time
-    if(data->type == PLAYER_ENTITY && false)
+    if(data->type == PLAYER_ENTITY && player_invulnerable_time > 0)
         return;
 
     i32 new_hp = mob_data->hp - damage;
@@ -84,7 +85,7 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
     mob_data->knockback.dir = knockback_dir;
 
     if(data->type == PLAYER_ENTITY) {
-        // TODO player invulnerable time
+        player_invulnerable_time = 30;
 
         // TODO player hurt sound
         // TODO damage text particle

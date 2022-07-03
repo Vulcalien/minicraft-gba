@@ -22,4 +22,9 @@
 
 extern struct Inventory player_inventory;
 
+extern u8 player_stamina;
+extern u8 player_stamina_recharge_delay;
+
+extern u8 player_invulnerable_time;
+
 #endif // MINICRAFT_PLAYER
