@@ -32,6 +32,13 @@ static void game_init(void) {
     for(u32 y = 0; y < 18; y++)
         for(u32 x = 0; x < 30; x += 2)
             *((vu32 *) &BG3_TILEMAP[x + y * 32]) = 0;
+
+    // TODO is this necessary for level transition or useless?
+    // clear two bottom lines
+    /*for(u32 x = 10; x < 30; x++) {*/
+        /*SET_TILE(x, 18, 29, 1);*/
+        /*SET_TILE(x, 19, 29, 1);*/
+    /*}*/
 }
 
 static void game_tick(void) {
@@ -47,12 +54,6 @@ static void game_draw(void) {
 
     // draw hp and stamina
     if(level->player) {
-        // clear two bottom lines
-        for(u32 x = 0; x < 30; x++) {
-            SET_TILE(x, 18, 29, 1);
-            SET_TILE(x, 19, 29, 1);
-        }
-
         struct mob_Data *mob_data = (struct mob_Data *) &level->player->data;
 
         for(u32 i = 0; i < 10; i++) {

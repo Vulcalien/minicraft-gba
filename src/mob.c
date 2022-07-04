@@ -69,7 +69,6 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
     if(mob_data->hurt_time > 0)
         return;
 
-    // TODO player invulnerable time
     if(data->type == PLAYER_ENTITY && player_invulnerable_time > 0)
         return;
 
