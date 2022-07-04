@@ -45,6 +45,8 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
 }
 
 ETICK(player_tick) {
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
     // DEBUG add stuff to inventory
     player_inventory.size = 0;
     for(u32 i = 0; i < ITEM_TYPES; i++) {
@@ -53,14 +55,16 @@ ETICK(player_tick) {
         };
     }
 
-    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+    // DEBUG set player hp
+    if(player_tick_time == 0)
+        mob_data->hp = 10;
 
     player_tick_time++;
 
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
 
     if(on_tile == LAVA_TILE)
-        ; // TODO lava damage
+        mob_hurt(level, data, 4, mob_data->dir ^ 2);
 
     mob_tick(level, data);
 
