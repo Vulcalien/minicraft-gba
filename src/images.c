@@ -41,11 +41,8 @@ const u16 bg_palette[12 * 16] = {
     // white font - black bg
     0x7bde, 0x0421,
 
-    //unused
-    0,
-
     // dirt (level-specific)
-    0x35b0, // TODO make -1
+    0x1cea, 0x35b0,
 
     // --- palette 1 --- (rock, stairs, title)
     // transparent
@@ -66,11 +63,8 @@ const u16 bg_palette[12 * 16] = {
     // gray font - black bg
     0x318c, 0x0421,
 
-    // unused
-    0,
-
     // dirt (level-specific)
-    0x35b0, // TODO make -1
+    0x1cea, 0x35b0,
 
     // --- palette 2 --- (water+dirt, ore/cloud cactus)
     // transparent
@@ -129,11 +123,8 @@ const u16 bg_palette[12 * 16] = {
     // white font - blue bg
     0x7bde, 0x4442,
 
-    // unused
-    0,
-
     // dirt (level-specific)
-    0x35b0,
+    0x1cea, 0x35b0,
 
     // --- palette 5 --- (hole+dirt)
     // transparent
