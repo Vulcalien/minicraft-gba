@@ -29,7 +29,7 @@ static void game_init(void) {
     level = &levels[current_level];
 
     // clear the screen (fully transparent)
-    for(u32 y = 0; y < 20; y++)
+    for(u32 y = 0; y < 18; y++)
         for(u32 x = 0; x < 30; x += 2)
             *((vu32 *) &BG3_TILEMAP[x + y * 32]) = 0;
 }
@@ -45,9 +45,9 @@ static void game_tick(void) {
 static void game_draw(void) {
     level_draw(level);
 
-    for(u32 x = 10; x < SCREEN_W / 8; x++) {
-        SET_TILE(x, SCREEN_H / 8 - 2, 29, 1);
-        SET_TILE(x, SCREEN_H / 8 - 1, 29, 1);
+    for(u32 x = 10; x < 30; x++) {
+        SET_TILE(x, 18, 29, 1);
+        SET_TILE(x, 19, 29, 1);
     }
 
     // draw hp and stamina
@@ -55,8 +55,8 @@ static void game_draw(void) {
         struct mob_Data *mob_data = (struct mob_Data *) &level->player->data;
 
         for(u32 i = 0; i < 10; i++) {
-            SET_TILE(i, SCREEN_H / 8 - 2, 91 + (mob_data->hp <= i), 5);
-            SET_TILE(i, SCREEN_H / 8 - 1, 93 + (player_stamina <= i), 5);
+            SET_TILE(i, 18, 91 + (mob_data->hp <= i), 5);
+            SET_TILE(i, 19, 93 + (player_stamina <= i), 5);
         }
 
         if(player_stamina_recharge_delay != 0 &&
