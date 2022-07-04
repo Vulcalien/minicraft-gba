@@ -45,13 +45,14 @@ static void game_tick(void) {
 static void game_draw(void) {
     level_draw(level);
 
-    for(u32 x = 10; x < 30; x++) {
-        SET_TILE(x, 18, 29, 1);
-        SET_TILE(x, 19, 29, 1);
-    }
-
     // draw hp and stamina
     if(level->player) {
+        // clear two bottom lines
+        for(u32 x = 0; x < 30; x++) {
+            SET_TILE(x, 18, 29, 1);
+            SET_TILE(x, 19, 29, 1);
+        }
+
         struct mob_Data *mob_data = (struct mob_Data *) &level->player->data;
 
         for(u32 i = 0; i < 10; i++) {
@@ -64,6 +65,12 @@ static void game_draw(void) {
             screen_set_bg_palette_color(5, 0xa, 0x7bde);
         } else {
             screen_set_bg_palette_color(5, 0xa, 0x0cc6);
+        }
+
+        // draw active item
+        if(player_active_item) {
+            item_draw_icon(player_active_item, 20, 18);
+            item_write(player_active_item, 0, 21, 18);
         }
     }
 }

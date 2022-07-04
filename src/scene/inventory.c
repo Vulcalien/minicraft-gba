@@ -22,9 +22,21 @@
 
 static i8 inventory_selected;
 
+#define SET_TILE(x, y, id, palette)\
+    do {\
+        BG3_TILEMAP[(x) + (y) * 32] = (id) |\
+                                      ((palette) << 12);\
+    } while(0)
 static void inventory_init(void) {
     inventory_selected = 0;
+
+    player_active_item = NULL;
+
+    // clear displayed active item
+    for(u32 x = 20; x < 30; x++)
+        SET_TILE(x, 18, 29, 1);
 }
+#undef SET_TILE
 
 static void inventory_tick(void) {
     if(INPUT_CLICKED(KEY_B))
@@ -44,7 +56,7 @@ static void inventory_tick(void) {
         inventory_selected = 0;
 
     if(INPUT_CLICKED(KEY_A)) {
-        // TODO set active item
+        player_active_item = &player_inventory.items[inventory_selected];
 
         set_scene(&scene_game, true);
     }

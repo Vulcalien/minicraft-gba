@@ -28,6 +28,8 @@
 EWRAM_BSS_SECTION
 struct Inventory player_inventory;
 
+struct item_Data *player_active_item = NULL;
+
 u8 player_stamina = MAX_STAMINA;
 u8 player_stamina_recharge_delay = 0;
 
