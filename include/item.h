@@ -94,7 +94,7 @@ struct item_Data {
     u8 type;
 
     union {
-        u8 count;
+        u16 count;
         u8 tool_level;
         u8 chest_id;
     };

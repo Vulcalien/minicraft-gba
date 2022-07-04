@@ -301,9 +301,13 @@ void item_write(struct item_Data *data, u8 palette, u8 x, u8 y) {
     } else if(item->class == ITEMCLASS_MATERIAL ||
               item->class == ITEMCLASS_PLACEABLE ||
               item->class == ITEMCLASS_FOOD) {
-        const u8 count = data->count;
+        u16 count = data->count;
+        if(count > 999)
+            count = 999;
 
-        // TODO write the count
+        char count_text[4] = { 0 };
+        screen_write(count_text, 0, x, y);
+
         screen_write(item->name, palette, x + 3, y);
     } else {
         screen_write(item->name, palette, x, y);

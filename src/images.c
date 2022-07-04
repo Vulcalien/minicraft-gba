@@ -98,8 +98,8 @@ const u16 bg_palette[12 * 16] = {
     // wheat
     0x2709, 0x2268, 0x3354, 0x26af, 0x3778, 0x0421,
 
-    // unused
-    0, 0,
+    // white font - blue bg
+    0x7bde, 0x4442,
 
     // sand
     0x2ed6, 0x379c,
@@ -120,8 +120,8 @@ const u16 bg_palette[12 * 16] = {
     // GUI window border
     0x6f18, 0x1021,
 
-    // white font - blue bg
-    0x7bde, 0x4442,
+    // yellow font - blue bg
+    0x379c, 0x4442,
 
     // dirt (level-specific)
     0x1cea, 0x35b0,
