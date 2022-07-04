@@ -126,15 +126,30 @@ const u16 bg_palette[12 * 16] = {
     // dirt (level-specific)
     0x1cea, 0x35b0,
 
-    // --- palette 5 --- (hole+dirt)
+    // --- palette 5 --- (hole+dirt, hp and stamina)
     // transparent
     0,
 
     // hole
     0x1ce7, 0x0cc6,
 
+    // GUI background
+    0x0421,
+
+    // hp full
+    0x0848, 0x14b3, 0x5299,
+
+    // hp empty
+    0x0844,
+
+    // stamina full
+    0x198c, 0x379c,
+
+    // stamina empty (changes)
+    0x0cc6,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0,
 
     // dirt (level-specific)
     0x1cea, 0x35b0,

@@ -113,6 +113,7 @@ static void inventory_draw(void) {
     screen_write(">", 4, INV_X0, INV_Y0 + 1 + (inventory_selected - item0));
     screen_write("<", 4, INV_X1, INV_Y0 + 1 + (inventory_selected - item0));
 }
+#undef SET_TILE
 
 const struct Scene scene_inventory = {
     .init = inventory_init,
