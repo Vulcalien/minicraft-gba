@@ -252,10 +252,10 @@ FDRAW(tree_draw) {
 
 // Dirt
 FDRAW(dirt_draw) {
-    tiles[0] = TILE(65, 2);
-    tiles[1] = TILE(66, 2);
-    tiles[2] = TILE(67, 2);
-    tiles[3] = TILE(68, 2);
+    tiles[0] = TILE(64, 2);
+    tiles[1] = TILE(65, 2);
+    tiles[2] = TILE(66, 2);
+    tiles[3] = TILE(67, 2);
 }
 
 // Sand
@@ -442,18 +442,18 @@ FTICK(lava_tick) {
 
 // Stairs Down
 FDRAW(stairs_down_draw) {
-    tiles[0] = TILE(57, 1);
-    tiles[1] = TILE(58, 1);
-    tiles[2] = TILE(59, 1);
-    tiles[3] = TILE(60, 1);
+    tiles[0] = TILE(56, 1);
+    tiles[1] = TILE(57, 1);
+    tiles[2] = TILE(58, 1);
+    tiles[3] = TILE(59, 1);
 }
 
 // Stairs Up
 FDRAW(stairs_up_draw) {
-    tiles[0] = TILE(61, 1);
-    tiles[1] = TILE(62, 1);
-    tiles[2] = TILE(63, 1);
-    tiles[3] = TILE(64, 1);
+    tiles[0] = TILE(60, 1);
+    tiles[1] = TILE(61, 1);
+    tiles[2] = TILE(62, 1);
+    tiles[3] = TILE(63, 1);
 }
 
 // Cloud
@@ -469,22 +469,22 @@ FDRAW(cloud_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) != INFINITE_FALL_TILE;
 
     if(u && l)
-        tiles[0] = TILE(70 - !ul * 50, 7);
+        tiles[0] = TILE(69 - !ul * 50, 7);
     else
         tiles[0] = TILE(12 + u * 7 + l * 4, 7);
 
     if(u && r)
-        tiles[1] = TILE(69 - !ur * 48, 7);
+        tiles[1] = TILE(68 - !ur * 48, 7);
     else
         tiles[1] = TILE(13 + u * 4 + r * 3, 7);
 
     if(d && l)
-        tiles[2] = TILE(69 - !dl * 47, 7);
+        tiles[2] = TILE(68 - !dl * 47, 7);
     else
         tiles[2] = TILE(14 + d * 5 + l * 4, 7);
 
     if(d && r)
-        tiles[3] = TILE(71 - !dr * 48, 7);
+        tiles[3] = TILE(70 - !dr * 48, 7);
     else
         tiles[3] = TILE(15 + d * 2 + r * 3, 7);
 }
@@ -524,10 +524,10 @@ FDRAW(hard_rock_draw) {
 
 // Ores + Cloud Cactus
 FDRAW(ore_draw) {
-    tiles[0] = TILE(72, 2);
-    tiles[1] = TILE(73, 2);
-    tiles[2] = TILE(74, 2);
-    tiles[3] = TILE(75, 2);
+    tiles[0] = TILE(71, 2);
+    tiles[1] = TILE(72, 2);
+    tiles[2] = TILE(73, 2);
+    tiles[3] = TILE(74, 2);
 }
 
 IWRAM_RODATA_SECTION
