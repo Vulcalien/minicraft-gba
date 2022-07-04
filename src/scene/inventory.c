@@ -58,6 +58,10 @@ static void inventory_tick(void) {
     if(INPUT_CLICKED(KEY_A)) {
         player_active_item = &player_inventory.items[inventory_selected];
 
+        // copy item palette
+        const struct Item *item = ITEM_S(player_active_item);
+        screen_load_active_item_palette(item->palette);
+
         set_scene(&scene_game, true);
     }
 }
@@ -116,7 +120,7 @@ static void inventory_draw(void) {
 
         struct item_Data *data = &player_inventory.items[item0 + i];
 
-        item_draw_icon(data, INV_X0 + 1, INV_Y0 + 1 + i);
+        item_draw_icon(data, INV_X0 + 1, INV_Y0 + 1 + i, false);
         item_write(data, 3, INV_X0 + 2, INV_Y0 + 1 + i);
     }
 

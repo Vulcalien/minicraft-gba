@@ -320,11 +320,13 @@ void item_write(struct item_Data *data, u8 palette, u8 x, u8 y) {
                                       ((palette) << 12);\
     } while(0)
 
-void item_draw_icon(struct item_Data *data, u8 x, u8 y) {
+void item_draw_icon(struct item_Data *data, u8 x, u8 y, bool black_bg) {
     const struct Item *item = ITEM_S(data);
 
     const u8 tile = data->type +
                     (item->class == ITEMCLASS_TOOL) * (data->tool_level * 5);
 
-    SET_TILE(x, y, 128 + tile, 12 + item->palette);
+    const u8 palette = (black_bg == false) * (12 + item->palette) +
+                       (black_bg == true) * 11;
+    SET_TILE(x, y, 128 + tile, palette);
 }

@@ -21,7 +21,7 @@
 #include "images/items.c"
 
 // TODO organize this mess...
-const u16 bg_palette[12 * 16] = {
+const u16 bg_palette[11 * 16] = {
     // --- palette 0 --- (grass, flower, tree, sapling)
     // BG color
     0x7c1f,
@@ -188,7 +188,7 @@ const u16 bg_palette[12 * 16] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-const u16 sprite_palette[12 * 16] = {
+const u16 sprite_palette[11 * 16] = {
     // --- palette 0 --- (zombie and slime - level 1)
     // transparent
     0,

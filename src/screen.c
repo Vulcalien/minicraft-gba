@@ -151,3 +151,8 @@ void screen_write(const char *text, u8 palette, u8 x, u8 y) {
 void screen_set_bg_palette_color(u8 palette, u8 index, u16 color) {
     BG_PALETTE[palette * 16 + index] = color;
 }
+
+void screen_load_active_item_palette(u8 palette) {
+    memcpy16(BG_PALETTE + 11 * 16, item_palette + 16 * palette, 15);
+    screen_set_bg_palette_color(11, 0xf, 0x0421);
+}

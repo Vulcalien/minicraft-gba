@@ -41,4 +41,6 @@ extern void vsync(void);
 extern void screen_write(const char *text, u8 palette, u8 x, u8 y);
 extern void screen_set_bg_palette_color(u8 palette, u8 index, u16 color);
 
+extern void screen_load_active_item_palette(u8 palette);
+
 #endif // MINICRAFT_SCREEN
