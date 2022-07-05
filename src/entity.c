@@ -26,6 +26,8 @@
 
 #include "entity/furniture.c"
 
+#include "entity/item.c"
+
 IWRAM_RODATA_SECTION
 const struct Entity entity_list[ENTITY_TYPES] = {
     zombie_entity,
@@ -40,8 +42,8 @@ const struct Entity entity_list[ENTITY_TYPES] = {
     chest_entity,
     lantern_entity,
 
-    /*
     item_entity,
+    /*
     spark_entity,
 
     text_particle_entity,

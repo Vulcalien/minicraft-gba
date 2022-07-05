@@ -117,6 +117,7 @@ void screen_init(void) {
     LOAD_TILESET(SPR_TILESET, sprite_tileset);
 
     LOAD_TILESET_CONVERT(CHAR_BLOCK_1 + (32 * 128) / 2, item_tileset, 0xf);
+    LOAD_TILESET(SPR_TILESET + (32 * 256) / 2, item_tileset);
 }
 
 void vsync(void) {
