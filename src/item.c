@@ -306,7 +306,19 @@ void item_write(struct item_Data *data, u8 palette, u8 x, u8 y) {
             count = 999;
 
         char count_text[4] = { 0 };
-        screen_write(count_text, 0, x, y);
+        u8 pos = 0;
+        for(u32 i = 0; i < 3; i++) {
+            u16 digit = count;
+            for(u32 j = 0; j < 2 - i; j++)
+                digit /= 10;
+            digit %= 10;
+
+            if(digit != 0 || pos != 0) {
+                count_text[pos] = '0' + digit;
+                pos++;
+            }
+        }
+        screen_write(count_text, palette + 3, x, y);
 
         screen_write(item->name, palette, x + 3, y);
     } else {

@@ -22,21 +22,11 @@
 
 static i8 inventory_selected;
 
-#define SET_TILE(x, y, id, palette)\
-    do {\
-        BG3_TILEMAP[(x) + (y) * 32] = (id) |\
-                                      ((palette) << 12);\
-    } while(0)
 static void inventory_init(void) {
     inventory_selected = 0;
 
     player_active_item.type = -1;
-
-    // clear displayed active item
-    for(u32 x = 20; x < 30; x++)
-        SET_TILE(x, 18, 29, 1);
 }
-#undef SET_TILE
 
 static void inventory_tick(void) {
     if(INPUT_CLICKED(KEY_B))
@@ -84,6 +74,10 @@ static void inventory_draw(void) {
     #define INV_X1 (INV_X0 + INV_W)
     #define INV_Y1 (INV_Y0 + INV_H)
 
+    // clear displayed active item
+    for(u32 x = 20; x < 30; x++)
+        SET_TILE(x, 18, 29, 0, 0);
+
     // draw corners
     SET_TILE(INV_X0, INV_Y0, 88, 0, 4);
     SET_TILE(INV_X1, INV_Y0, 88, 1, 4);
@@ -97,7 +91,7 @@ static void inventory_draw(void) {
 
         // draw background
         for(u32 x = INV_X0 + 1; x <= INV_X1 - 1; x++)
-            SET_TILE(x, y, 29, 0, 3);
+            SET_TILE(x, y, 29, 0, 4);
     }
 
     // draw horizontal borders
@@ -106,7 +100,7 @@ static void inventory_draw(void) {
         SET_TILE(x, INV_Y1, 89, 2, 4);
     }
 
-    screen_write("INVENTORY", 4, INV_X0 + 1, INV_Y0);
+    screen_write("INVENTORY", 8, INV_X0 + 1, INV_Y0);
 
     i8 item0 = inventory_selected - (INV_H - 2) / 2;
     if(item0 > player_inventory.size - (INV_H - 1))
@@ -122,12 +116,12 @@ static void inventory_draw(void) {
         struct item_Data *data = &player_inventory.items[item0 + i];
 
         item_draw_icon(data, INV_X0 + 1, INV_Y0 + 1 + i, false);
-        item_write(data, 3, INV_X0 + 2, INV_Y0 + 1 + i);
+        item_write(data, 4, INV_X0 + 2, INV_Y0 + 1 + i);
     }
 
     // draw cursor arrows
-    screen_write(">", 3, INV_X0, INV_Y0 + 1 + (inventory_selected - item0));
-    screen_write("<", 3, INV_X1, INV_Y0 + 1 + (inventory_selected - item0));
+    screen_write(">", 4, INV_X0, INV_Y0 + 1 + (inventory_selected - item0));
+    screen_write("<", 4, INV_X1, INV_Y0 + 1 + (inventory_selected - item0));
 }
 #undef SET_TILE
 

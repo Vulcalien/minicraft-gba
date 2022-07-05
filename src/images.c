@@ -98,8 +98,8 @@ const u16 bg_palette[11 * 16] = {
     // wheat
     0x2709, 0x2268, 0x3354, 0x26af, 0x3778, 0x0421,
 
-    // white font - blue bg
-    0x7bde, 0x4442,
+    // very light gray font - black bg
+    0x6318, 0x0421,
 
     // sand
     0x2ed6, 0x379c,
@@ -108,6 +108,7 @@ const u16 bg_palette[11 * 16] = {
     // transparent
     0,
 
+    // FIXME double color: 0x2ed6
     // sand
     0x379c, 0x2ed6, 0x2ed6, 0x539c,
 
@@ -120,8 +121,8 @@ const u16 bg_palette[11 * 16] = {
     // GUI window border
     0x6f18, 0x1021,
 
-    // yellow font - blue bg
-    0x379c, 0x4442,
+    // white font - blue bg
+    0x7bde, 0x4442,
 
     // dirt (level-specific)
     0x1cea, 0x35b0,
@@ -149,7 +150,10 @@ const u16 bg_palette[11 * 16] = {
     0x0cc6,
 
     // unused
-    0, 0, 0,
+    0,
+
+    // gray font - blue bg
+    0x318c, 0x4442,
 
     // dirt (level-specific)
     0x1cea, 0x35b0,
@@ -162,7 +166,10 @@ const u16 bg_palette[11 * 16] = {
     0x1ce7, 0x0cc6,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // light gray font - blue bg
+    0x4a52, 0x4442,
 
     // sand
     0x2ed6, 0x379c,
@@ -175,7 +182,13 @@ const u16 bg_palette[11 * 16] = {
     0x6318, 0, 0x4a52, 0x7bde,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+
+    // very light gray font - blue bg
+    0x6318, 0x4442,
+
+    // unused
+    0, 0,
 
     // --- palette 8 --- (hard rock)
     // transparent
@@ -185,7 +198,13 @@ const u16 bg_palette[11 * 16] = {
     0x5652, 0x3d8c, 0x1021, 0x6f18,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+
+    // yellow font - blue bg
+    0x379c, 0x4442,
+
+    // unused
+    0, 0,
 };
 
 const u16 sprite_palette[11 * 16] = {

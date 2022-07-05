@@ -148,7 +148,7 @@ ETICK(player_tick) {
     player_inventory.size = 0;
     for(u32 i = 0; i < ITEM_TYPES; i++) {
         player_inventory.items[player_inventory.size++] = (struct item_Data) {
-            .type = i, .count = 1
+            .type = i, .count = 1000
         };
     }
 

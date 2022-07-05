@@ -28,6 +28,7 @@ static void game_init(void) {
 
     level = &levels[current_level];
 
+    // FIXME this should not be done here, but in game_draw
     // clear the screen (fully transparent)
     for(u32 y = 0; y < 18; y++)
         for(u32 x = 0; x < 30; x += 2)
