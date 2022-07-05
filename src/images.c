@@ -272,6 +272,28 @@ const u16 sprite_palette[11 * 16] = {
 
     // unused
     0, 0, 0, 0, 0, 0, 0, 0,
+
+    // --- palette 6 --- (furniture)
+    // transparent
+    0,
+
+    // workbench
+    0x0844, 0x3255, 0x29b0,
+
+    // furnace
+    0x0421, 0x318c, 0x4a52,
+
+    // oven
+    0x3e52, 0x46f7,
+
+    // anvil
+    0x1ce7,
+
+    // chest
+    0x0cc6, 0x539c, 0x3231,
+
+    // lantern
+    0x7bde,
 };
 
 const u16 item_palette[4 * 16] = {
