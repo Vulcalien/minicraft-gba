@@ -23,18 +23,22 @@ void generate_levels(void) {
         struct Level *level = &levels[l];
 
         for(u32 t = 0; t < LEVEL_W * LEVEL_H; t++) {
-            level->tiles[t] = (t / 16 % 2) ? 11 : 2;
-            level->data[t] = 0;
+            /*level->tiles[t] = (t / 16 % 2) ? 11 : 2;*/
+            /*level->data[t] = 0;*/
 
-            if(t % 7 == 5)
-                level->tiles[t] = 7 + ((t & 8) == 8) * 12;
+            /*if(t % 7 == 5)*/
+                /*level->tiles[t] = 7 + ((t & 8) == 8) * 12;*/
+
+            level->tiles[t] = 0 + (t % 13 == 0) * 19;
+            level->data[t] = 0;
         }
 
         for(u32 i = 1; i < ENTITY_CAP; i++) {
             if(i < 256) {
-                level->entities[i].type = i % 2;
-                level->entities[i].x = 80;
-                level->entities[i].y = 80;
+                /*level->entities[i].type = i % 2;*/
+                level->entities[i].type = 4 + i % 6;
+                level->entities[i].x = 80 + rand() % 300;
+                level->entities[i].y = 80 + rand() % 300;
             } else {
                 level->entities[i].type = -1;
             }

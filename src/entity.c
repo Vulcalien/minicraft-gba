@@ -24,19 +24,28 @@
 #include "entity/air-wizard.c"
 #include "entity/player.c"
 
+#include "entity/furniture.c"
+
 IWRAM_RODATA_SECTION
 const struct Entity entity_list[ENTITY_TYPES] = {
     zombie_entity,
     slime_entity,
     air_wizard_entity,
     player_entity,
-    /*
-    text_particle_entity,
-    smash_particle_entity,
-    spark_entity,
-    furniture_entity,
+
+    workbench_entity,
+    furnace_entity,
+    oven_entity,
+    anvil_entity,
+    chest_entity,
     lantern_entity,
-    item_entity
+
+    /*
+    item_entity,
+    spark_entity,
+
+    text_particle_entity,
+    smash_particle_entity
     */
 };
 

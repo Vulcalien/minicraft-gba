@@ -20,18 +20,25 @@
 
 #include "level.h"
 
-#define ENTITY_TYPES (10)
+#define ENTITY_TYPES (14)
 
 #define ZOMBIE_ENTITY         (0)
 #define SLIME_ENTITY          (1)
 #define AIR_WIZARD_ENTITY     (2)
 #define PLAYER_ENTITY         (3)
-#define TEXT_PARTICLE_ENTITY  (4)
-#define SMASH_PARTICLE_ENTITY (5)
-#define SPARK_ENTITY          (6)
-#define FURNITURE_ENTITY      (7) // TODO maybe split these?
-#define LANTERN_ENTITY        (8)
-#define ITEM_ENTITY           (9)
+
+#define WORKBENCH_ENTITY (4)
+#define FURNACE_ENTITY   (5)
+#define OVEN_ENTITY      (6)
+#define ANVIL_ENTITY     (7)
+#define CHEST_ENTITY     (8)
+#define LANTERN_ENTITY   (9)
+
+#define ITEM_ENTITY           (10)
+#define SPARK_ENTITY          (11)
+
+#define TEXT_PARTICLE_ENTITY  (12)
+#define SMASH_PARTICLE_ENTITY (13)
 
 #define ETICK(name)\
     IWRAM_SECTION\
