@@ -101,7 +101,7 @@ struct item_Data {
 };
 
 #define ITEM_S(data)\
-    (&item_list[data->type])
+    (&item_list[(data)->type])
 
 extern const struct Item item_list[ITEM_TYPES];
 

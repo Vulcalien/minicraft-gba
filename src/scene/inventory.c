@@ -30,7 +30,7 @@ static i8 inventory_selected;
 static void inventory_init(void) {
     inventory_selected = 0;
 
-    player_active_item = NULL;
+    player_active_item.type = -1;
 
     // clear displayed active item
     for(u32 x = 20; x < 30; x++)
@@ -56,10 +56,11 @@ static void inventory_tick(void) {
         inventory_selected = 0;
 
     if(INPUT_CLICKED(KEY_A)) {
-        player_active_item = &player_inventory.items[inventory_selected];
+        player_active_item = player_inventory.items[inventory_selected];
+        // TODO remove active item from inventory
 
         // copy item palette
-        const struct Item *item = ITEM_S(player_active_item);
+        const struct Item *item = ITEM_S(&player_active_item);
         screen_load_active_item_palette(item->palette);
 
         set_scene(&scene_game, true);

@@ -18,8 +18,10 @@
 
 #include "mob.h"
 #include "input.h"
+#include "item.h"
 #include "scene.h"
 
+#define MAX_HP      (10)
 #define MAX_STAMINA (10)
 
 #define IS_SWIMMING(on_tile)\
@@ -28,7 +30,7 @@
 EWRAM_BSS_SECTION
 struct Inventory player_inventory;
 
-struct item_Data *player_active_item = NULL;
+struct item_Data player_active_item;
 
 u8 player_stamina = MAX_STAMINA;
 u8 player_stamina_recharge_delay = 0;
@@ -37,11 +39,104 @@ u8 player_invulnerable_time = 0;
 
 static u32 player_tick_time = 0;
 
-ALWAYS_INLINE
-static inline void player_attack(struct Level *level, struct entity_Data *data) {
+static inline void player_eat(struct entity_Data *data) {
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+    const struct Item *item = ITEM_S(&player_active_item);
+
+    if(mob_data->hp < MAX_HP && player_stamina >= 5) {
+        player_stamina -= 5;
+
+        // FIXED BUG - Mob.java:91
+        // eating while hurt, the food is used but hp is not recovered
+        mob_data->hp += item->hp_gain;
+        if(mob_data->hp > MAX_HP)
+            mob_data->hp = MAX_HP;
+
+        // TODO add text particle with item->hp_gain
+
+        player_active_item.count--;
+        if(player_active_item.count == 0)
+            player_active_item.type = -1;
+    }
 }
 
-ALWAYS_INLINE
+// COMPATIBILITY NOTE
+// 'x >> n' is assumed to be a floor division by 2^n
+// even for negative numbers: this is implementation-dependent
+static inline void player_place(struct Level *level, struct entity_Data *data) {
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+    const struct Item *item = ITEM_S(&player_active_item);
+
+    const u8 dir = mob_data->dir;
+    const u8 range = 12;
+    i32 xt = (data->x     + ((dir == 3) - (dir == 1)) * range) >> 4;
+    i32 yt = (data->y - 2 + ((dir == 2) - (dir == 0)) * range) >> 4;
+
+    // even if it's out of bounds, it's ok
+    // because nothing can be placed on rock
+    u8 tile = LEVEL_GET_TILE(level, xt, yt);
+
+    for(u32 i = 0; i < sizeof(item->placeable_on); i++) {
+        if(tile == item->placeable_on[i]) {
+            LEVEL_SET_TILE(level, xt, yt, item->placed_tile, 0);
+
+            player_active_item.count--;
+            if(player_active_item.count == 0)
+                player_active_item.type = -1;
+
+            break;
+        }
+    }
+}
+
+// COMPATIBILITY NOTE
+// 'x >> n' is assumed to be a floor division by 2^n
+// even for negative numbers: this is implementation-dependent
+static inline void player_place_furniture(struct Level *level, struct entity_Data *data) {
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    const u8 dir = mob_data->dir;
+    const u8 range = 12;
+    i32 xt = (data->x     + ((dir == 3) - (dir == 1)) * range) >> 4;
+    i32 yt = (data->y - 2 + ((dir == 2) - (dir == 0)) * range) >> 4;
+
+    // even if it's out of bounds, it's ok
+    // because rock is solid
+    const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
+
+    if(!tile->is_solid) {
+        ; // TODO add entity
+
+        player_active_item.type = -1;
+    }
+}
+
+static inline void player_attack(struct Level *level, struct entity_Data *data) {
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    mob_data->walk_dist += 8; // TODO maybe can use XOR instead?
+
+    const struct Item *item = (player_active_item.type < ITEM_TYPES) ?
+                              ITEM_S(&player_active_item) : NULL;
+
+    u8 attack_particle_time = 10;
+
+    if(item == NULL || item->class == ITEMCLASS_TOOL) {
+        attack_particle_time = 5;
+
+    } else if(item->class == ITEMCLASS_POWERGLOVE) {
+        // TODO pick furniture
+    } else if(item->class == ITEMCLASS_FOOD) {
+        player_eat(data);
+    } else if(item->class == ITEMCLASS_PLACEABLE) {
+        player_place(level, data);
+    } else if(item->class == ITEMCLASS_FURNITURE) {
+        player_place_furniture(level, data);
+    }
+
+    // TODO add attack particle, lasting attack_particle_time ticks
+}
+
 static inline bool player_use(struct Level *level, struct entity_Data *data) {
     return false;
 }
@@ -53,13 +148,13 @@ ETICK(player_tick) {
     player_inventory.size = 0;
     for(u32 i = 0; i < ITEM_TYPES; i++) {
         player_inventory.items[player_inventory.size++] = (struct item_Data) {
-            .type = i, .tool_level = i % 4
+            .type = i, .count = 1
         };
     }
 
     // DEBUG set player hp
     if(player_tick_time == 0)
-        mob_data->hp = 10;
+        mob_data->hp = MAX_HP;
 
     player_tick_time++;
 
@@ -104,8 +199,9 @@ ETICK(player_tick) {
         if(IS_SWIMMING(on_tile))
             stamina_recharge = 0;
 
-        // this fixes what probably is a bug in the original game
-        // (Player.java: 78-79)
+        // FIXED BUG - Player.java:78-79
+        // after using stamina, the first recovered point
+        // takes 11 ticks, while the others take 10
         if(stamina_recharge == 10) {
             stamina_recharge = 0;
 

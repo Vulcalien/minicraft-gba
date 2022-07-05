@@ -22,10 +22,10 @@
 
 #define ENTITY_TYPES (14)
 
-#define ZOMBIE_ENTITY         (0)
-#define SLIME_ENTITY          (1)
-#define AIR_WIZARD_ENTITY     (2)
-#define PLAYER_ENTITY         (3)
+#define ZOMBIE_ENTITY     (0)
+#define SLIME_ENTITY      (1)
+#define AIR_WIZARD_ENTITY (2)
+#define PLAYER_ENTITY     (3)
 
 #define WORKBENCH_ENTITY (4)
 #define FURNACE_ENTITY   (5)
@@ -34,8 +34,8 @@
 #define CHEST_ENTITY     (8)
 #define LANTERN_ENTITY   (9)
 
-#define ITEM_ENTITY           (10)
-#define SPARK_ENTITY          (11)
+#define ITEM_ENTITY  (10)
+#define SPARK_ENTITY (11)
 
 #define TEXT_PARTICLE_ENTITY  (12)
 #define SMASH_PARTICLE_ENTITY (13)
@@ -69,7 +69,7 @@ struct Entity {
 };
 
 #define ENTITY_S(data)\
-    (&entity_list[data->type])
+    (&entity_list[(data)->type])
 
 extern const struct Entity entity_list[ENTITY_TYPES];
 

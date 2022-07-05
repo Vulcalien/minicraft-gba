@@ -23,8 +23,6 @@
 #define IWRAM_SECTION        __attribute__((section(".iwram")))
 #define IWRAM_RODATA_SECTION __attribute__((section(".rodata_iwram")))
 
-#define ALWAYS_INLINE __attribute__((always_inline))
-
 #define static_assert _Static_assert
 
 #ifndef NULL

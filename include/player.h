@@ -21,7 +21,7 @@
 #include "inventory.h"
 
 extern struct Inventory player_inventory;
-extern struct item_Data *player_active_item;
+extern struct item_Data player_active_item;
 
 extern u8 player_stamina;
 extern u8 player_stamina_recharge_delay;

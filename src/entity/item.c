@@ -16,7 +16,9 @@
 #include "entity.h"
 
 struct item_entity_Data {
-    u8 unused[8];
+    u8 item_id;
+
+    u8 unused[7];
 };
 
 static_assert(

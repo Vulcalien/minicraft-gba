@@ -69,9 +69,9 @@ static void game_draw(void) {
         }
 
         // draw active item
-        if(player_active_item) {
-            item_draw_icon(player_active_item, 20, 18, true);
-            item_write(player_active_item, 0, 21, 18);
+        if(player_active_item.type < ITEM_TYPES) {
+            item_draw_icon(&player_active_item, 20, 18, true);
+            item_write(&player_active_item, 0, 21, 18);
         }
     }
 }
