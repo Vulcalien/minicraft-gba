@@ -108,7 +108,6 @@ const u16 bg_palette[11 * 16] = {
     // transparent
     0,
 
-    // FIXME double color: 0x2ed6
     // sand
     0x379c, 0x2ed6, 0x2ed6, 0x539c,
 
