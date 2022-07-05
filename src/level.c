@@ -125,7 +125,7 @@ void level_draw(struct Level *level) {
     u32 y0 = level_y_offset >> 4;
 
     // draw level tiles
-    for(u32 y = 0; y <= 10; y++) {
+    for(u32 y = 0; y <= 9; y++) {
         for(u32 x = 0; x <= 15; x++) {
             u32 xt = x + x0;
             u32 yt = y + y0;
@@ -162,7 +162,7 @@ void level_draw(struct Level *level) {
         i32 yr = entity_data->y - level_y_offset;
 
         if(xr < -16 || xr >= SCREEN_W + 16 ||
-           yr < -16 || yr >= SCREEN_H + 16)
+           yr < -16 || yr >= SCREEN_H)
             continue;
 
         const struct Entity *entity = ENTITY_S(entity_data);
