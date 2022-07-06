@@ -40,6 +40,70 @@ u8 player_invulnerable_time = 0;
 
 static u32 player_tick_time = 0;
 
+static inline void player_hurt_entities(struct Level *level, struct entity_Data *data) {
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    const u8 dir = mob_data->dir;
+    const u8 range = 20;
+    i32 x0 = data->x     - ((dir & 1) == 0) * 8 - (dir == 1) * range + (dir == 3) * 4;
+    i32 y0 = data->y - 2 - ((dir & 1) == 1) * 8 - (dir == 0) * range + (dir == 2) * 4;
+    i32 x1 = data->x     + ((dir & 1) == 0) * 8 + (dir == 3) * range - (dir == 1) * 4;
+    i32 y1 = data->y - 2 + ((dir & 1) == 1) * 8 + (dir == 2) * range - (dir == 0) * 4;
+
+    i32 xt0 = (x0 >> 4) - 1;
+    i32 yt0 = (y0 >> 4) - 1;
+    i32 xt1 = (x1 >> 4) + 1;
+    i32 yt1 = (y1 >> 4) + 1;
+
+    if(xt0 < 0) xt0 = 0;
+    if(yt0 < 0) yt0 = 0;
+    if(xt1 >= LEVEL_W) xt1 = LEVEL_W;
+    if(yt1 >= LEVEL_H) yt1 = LEVEL_H;
+
+    for(u32 yt = yt0; yt <= yt1; yt++) {
+        for(u32 xt = xt0; xt <= xt1; xt++) {
+            const u32 tile = xt + yt * LEVEL_W;
+
+            for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
+                const u8 entity_id = level_solid_entities[tile][i];
+                struct entity_Data *e_data = &level->entities[entity_id];
+
+                switch(e_data->type) {
+                    case ZOMBIE_ENTITY:
+                    case SLIME_ENTITY:
+                    case AIR_WIZARD_ENTITY:
+                        break;
+
+                    default:
+                        continue;
+                };
+
+                if(entity_intersects(e_data, x0, y0, x1, y1)) {
+                    u8 damage = 1 + rand() % 3;
+
+                    if(player_active_item.type == SWORD_ITEM) {
+                        const u8 level = player_active_item.tool_level;
+                        damage += (level + 1) * 3 +
+                                  rand() % (2 + level * level * 2);
+                    } else if(player_active_item.type == AXE_ITEM) {
+                        const u8 level = player_active_item.tool_level;
+                        damage += (level + 1) * 2 +
+                                  rand() % 4;
+                    } else if(player_active_item.type < ITEM_TYPES) {
+                        damage += 1;
+                    }
+
+                    mob_hurt(level, e_data, damage, dir);
+                }
+            }
+        }
+    }
+}
+
+static inline void player_hurt_tile(struct Level *level, struct entity_Data *data) {
+    // TODO
+}
+
 static inline void player_take_furniture(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
@@ -163,23 +227,35 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
 
     mob_data->walk_dist += 8; // TODO maybe can use XOR instead?
 
-    const struct Item *item = (player_active_item.type < ITEM_TYPES) ?
-                              ITEM_S(&player_active_item) : NULL;
+    const u8 item_class = (player_active_item.type < ITEM_TYPES) ?
+                          ITEM_S(&player_active_item)->class : -1;
 
     u8 attack_particle_time = 10;
+    switch(item_class) {
+        case (u8) -1:
+        case ITEMCLASS_TOOL:
+            attack_particle_time = 5;
 
-    if(item == NULL || item->class == ITEMCLASS_TOOL) {
-        attack_particle_time = 5;
+            player_hurt_entities(level, data);
+            player_hurt_tile(level, data);
+            break;
 
-    } else if(item->class == ITEMCLASS_POWERGLOVE) {
-        player_take_furniture(level, data);
-    } else if(item->class == ITEMCLASS_FOOD) {
-        player_eat(data);
-    } else if(item->class == ITEMCLASS_PLACEABLE) {
-        player_place(level, data);
-    } else if(item->class == ITEMCLASS_FURNITURE) {
-        player_place_furniture(level, data);
-    }
+        case ITEMCLASS_POWERGLOVE:
+            player_take_furniture(level, data);
+            break;
+
+        case ITEMCLASS_FOOD:
+            player_eat(data);
+            break;
+
+        case ITEMCLASS_PLACEABLE:
+            player_place(level, data);
+            break;
+
+        case ITEMCLASS_FURNITURE:
+            player_place_furniture(level, data);
+            break;
+    };
 
     // TODO add attack particle, lasting attack_particle_time ticks
 }
@@ -195,7 +271,7 @@ ETICK(player_tick) {
     player_inventory.size = 0;
     for(u32 i = 0; i < ITEM_TYPES; i++) {
         player_inventory.items[player_inventory.size++] = (struct item_Data) {
-            .type = i, .count = 1000
+            .type = i, .count = 1
         };
     }
 
