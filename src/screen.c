@@ -116,8 +116,25 @@ void screen_init(void) {
 
     LOAD_TILESET(SPR_TILESET, sprite_tileset);
 
-    LOAD_TILESET_CONVERT(CHAR_BLOCK_1 + (32 * 128) / 2, item_tileset, 0xf);
-    LOAD_TILESET(SPR_TILESET + (32 * 256) / 2, item_tileset);
+    LOAD_TILESET_CONVERT(CHAR_BLOCK_1 + 128 * 32 / 2, item_tileset, 0xf);
+    LOAD_TILESET(SPR_TILESET + 256 * 32 / 2, item_tileset);
+
+    // load font sprites
+    for(u32 y = 0; y < 10; y++) {
+        for(u32 x = 0; x < 10; x++) {
+            load_tileset(
+                SPR_TILESET + (512 + y * 20 + x * 2) * 32 / 2,
+                &font_sprite_tileset[y * 32],
+                32 / 2, 0
+            );
+
+            load_tileset(
+                SPR_TILESET + (512 + y * 20 + x * 2 + 1) * 32 / 2,
+                &font_sprite_tileset[x * 32],
+                32 / 2, 0
+            );
+        }
+    }
 }
 
 void vsync(void) {

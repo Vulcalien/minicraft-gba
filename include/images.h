@@ -29,6 +29,7 @@ extern const u8 level_tileset[32 * 128];
 extern const u8 gui_tileset[32 * 128];
 
 extern const u8 sprite_tileset[32 * 96];
+extern const u8 font_sprite_tileset[32 * 10];
 
 extern const u8 item_tileset[32 * 53];
 

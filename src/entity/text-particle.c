@@ -41,7 +41,7 @@ EDRAW(text_particle_draw) {
 
     const u8 length = 1 + (text_data->number >= 10);
 
-    const u16 sprite = 512 + text_data->number * 2;
+    const u16 sprite = 512 + text_data->number * 2 + (length == 1);
     const u8 palette = text_data->palette;
 
     sprite_attribs[0] = ((data->y - level_y_offset) & 0xff) |

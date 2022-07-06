@@ -217,8 +217,11 @@ const u16 sprite_palette[11 * 16] = {
     // slime
     0x7bde,
 
+    // red font
+    0x14b3, 0x0421,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0,
 
     // --- palette 1 --- (zombie and slime - level 2)
     // transparent
@@ -230,8 +233,11 @@ const u16 sprite_palette[11 * 16] = {
     // slime
     0x7bde,
 
+    // purple font
+    0x48d5, 0x0421,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0,
 
     // --- palette 2 --- (zombie and slime - level 3)
     // transparent
@@ -243,8 +249,11 @@ const u16 sprite_palette[11 * 16] = {
     // slime
     0x7bde,
 
+    // green font
+    0x2709, 0x0421,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0,
 
     // --- palette 3 --- (zombie and slime - level 4)
     // transparent
