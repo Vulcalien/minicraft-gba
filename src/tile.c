@@ -17,6 +17,8 @@
 
 #include "level.h"
 #include "entity.h"
+#include "player.h"
+#include "item.h"
 
 #define TILE(id, palette) ((id) | ((palette) << 12))
 #define TILE_M(id, flip, palette)\
@@ -36,6 +38,11 @@
     static void name(struct Level *level, u32 xt, u32 yt,\
                      struct entity_Data *entity_data)
 
+#define FINTERACT(name)\
+    IWRAM_SECTION\
+    static void name(struct Level *level, u32 xt, u32 yt,\
+                     struct item_Data *item)
+
 // CONNECTS_TO_X
 #define CONNECTS_TO_GRASS(level, xt, yt)\
     (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.grass)
@@ -44,9 +51,11 @@
 #define CONNECTS_TO_LIQUID(level, xt, yt)\
     (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.liquid)
 
+#define GET_PUNCH_DAMAGE() (1 + rand() % 3)
+
 // DAMAGE RECOVER
 FTICK(damage_recover_tick) {
-    u32 damage = LEVEL_GET_DATA(level, xt, yt);
+    u8 damage = LEVEL_GET_DATA(level, xt, yt);
     if(damage != 0)
         LEVEL_SET_DATA(level, xt, yt, damage - 1);
 }
@@ -95,6 +104,26 @@ FDRAW(grass_draw) {
         tiles[3] = TILE(7 + d * 2 + r * 3, 0);
 }
 
+FINTERACT(grass_interact) {
+    if(item->type == SHOVEL_ITEM) {
+        if(player_pay_stamina(4 - item->tool_level)) {
+            LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+
+            if(rand() % 5 == 0) {
+                // TODO add seeds
+            }
+
+            // TODO play sound
+        }
+    } else if(item->type == HOE_ITEM) {
+        if(player_pay_stamina(4 - item->tool_level)) {
+            LEVEL_SET_TILE(level, xt, yt, FARMLAND_TILE, 0);
+
+            // TODO play sound
+        }
+    }
+}
+
 // Rock
 FDRAW(rock_draw) {
     bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == ROCK_TILE;
@@ -126,6 +155,35 @@ FDRAW(rock_draw) {
         tiles[3] = TILE(3 + !dr * 20, 1);
     else
         tiles[3] = TILE(15 + d * 2 + r * 3, 1);
+}
+
+FINTERACT(rock_interact) {
+    u8 dmg;
+    if(item->type == PICK_ITEM && player_pay_stamina(4 - item->tool_level))
+        dmg = 10 + item->tool_level * 5 + rand() % 10;
+    else
+        dmg = GET_PUNCH_DAMAGE();
+
+    u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
+
+    if(damage >= 50) {
+        u8 count = 1 + rand() % 4;
+        for(u32 i = 0; i < count; i++) {
+            // TODO drop stone
+        }
+
+        count = rand() % 2;
+        for(u32 i = 0; i < count; i++) {
+            // TODO drop coal
+        }
+
+        LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+    } else {
+        LEVEL_SET_DATA(level, xt, yt, damage);
+    }
+
+    // TODO add smash particle
+    // TODO add text particle
 }
 
 // Water
@@ -289,7 +347,7 @@ FDRAW(sand_draw) {
 }
 
 FSTEPPED_ON(sand_stepped_on) {
-    u32 etype = entity_data->type;
+    u8 etype = entity_data->type;
     if(etype == ZOMBIE_ENTITY ||
        etype == SLIME_ENTITY ||
        etype == PLAYER_ENTITY) {
@@ -340,7 +398,7 @@ FDRAW(hole_draw) {
 
 // Tree Sapling
 FTICK(tree_sapling_tick) {
-    u32 age = LEVEL_GET_DATA(level, xt, yt) + 1;
+    u8 age = LEVEL_GET_DATA(level, xt, yt) + 1;
 
     if(age > 100)
         LEVEL_SET_TILE(level, xt, yt, TREE_TILE, 0);
@@ -359,7 +417,7 @@ FDRAW(tree_sapling_draw) {
 
 // Cactus Sapling
 FTICK(cactus_sapling_tick) {
-    u32 age = LEVEL_GET_DATA(level, xt, yt) + 1;
+    u8 age = LEVEL_GET_DATA(level, xt, yt) + 1;
 
     if(age > 100)
         LEVEL_SET_TILE(level, xt, yt, CACTUS_TILE, 0);
@@ -378,7 +436,7 @@ FDRAW(cactus_sapling_draw) {
 
 // Farmland
 FTICK(farmland_tick) {
-    u32 age = LEVEL_GET_DATA(level, xt, yt);
+    u8 age = LEVEL_GET_DATA(level, xt, yt);
     if(age < 5)
         LEVEL_SET_DATA(level, xt, yt, age + 1);
 }
@@ -403,7 +461,7 @@ FTICK(wheat_tick) {
     if(rand() & 1)
         return;
 
-    u32 age = LEVEL_GET_DATA(level, xt, yt);
+    u8 age = LEVEL_GET_DATA(level, xt, yt);
     if(age < 50)
         LEVEL_SET_DATA(level, xt, yt, age + 1);
 }
@@ -418,7 +476,7 @@ FSTEPPED_ON(wheat_stepped_on) {
 
 FDRAW(wheat_draw) {
     // TODO test if this is accurate
-    u32 age = LEVEL_GET_DATA(level, xt, yt) / 10;
+    u8 age = LEVEL_GET_DATA(level, xt, yt) / 10;
 
     tiles[0] = TILE_M(50 + age, 0x0, 3);
     tiles[1] = TILE_M(50 + age, 0x0, 3);
@@ -539,7 +597,9 @@ const struct Tile tile_list[TILE_TYPES] = {
 
         .connects_to = {
             .grass = true
-        }
+        },
+
+        .interact = grass_interact
     },
 
     // Rock
@@ -548,7 +608,9 @@ const struct Tile tile_list[TILE_TYPES] = {
         .draw = rock_draw,
 
         .is_solid = true,
-        .may_pass = -1
+        .may_pass = -1,
+
+        .interact = rock_interact
     },
 
     // Water

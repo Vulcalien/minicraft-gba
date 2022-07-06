@@ -101,7 +101,19 @@ static inline void player_hurt_entities(struct Level *level, struct entity_Data 
 }
 
 static inline void player_hurt_tile(struct Level *level, struct entity_Data *data) {
-    // TODO
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    const u8 dir = mob_data->dir;
+    const u8 range = 12;
+    i32 xt = (data->x     + ((dir == 3) - (dir == 1)) * range) >> 4;
+    i32 yt = (data->y - 2 + ((dir == 2) - (dir == 0)) * range) >> 4;
+
+    if(xt < 0 || xt >= LEVEL_W || yt < 0 || yt >= LEVEL_H)
+        return;
+
+    const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
+    if(tile->interact)
+        tile->interact(level, xt, yt, &player_active_item);
 }
 
 static inline void player_take_furniture(struct Level *level, struct entity_Data *data) {

@@ -19,6 +19,7 @@
 #include "minicraft.h"
 
 #include "level.h"
+#include "item.h"
 
 #define TILE_TYPES (23)
 
@@ -59,6 +60,9 @@ struct Tile {
 
     void (*stepped_on)(struct Level *level, u32 xt, u32 yt,
                        struct entity_Data *entity_data);
+
+    void (*interact)(struct Level *level, u32 xt, u32 yt,
+                     struct item_Data *item);
 
     struct {
         bool grass;
