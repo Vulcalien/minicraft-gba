@@ -24,7 +24,7 @@ void mob_tick(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
     if(mob_data->hp <= 0)
-        ; // TODO die
+        ; // TODO die here or in mob_hurt???
 
     if(mob_data->hurt_time > 0)
         mob_data->hurt_time--;
@@ -72,11 +72,9 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
     if(data->type == PLAYER_ENTITY && player_invulnerable_time > 0)
         return;
 
-    i32 new_hp = mob_data->hp - damage;
-    if(new_hp <= 0)
-        ; // TODO disappear???
-    else
-        mob_data->hp = new_hp;
+    mob_data->hp = (mob_data->hp - damage) * (mob_data->hp >= damage);
+    if(mob_data->hp == 0)
+        ; // TODO die here or in mob_tick???
 
     mob_data->hurt_time = 10;
 
