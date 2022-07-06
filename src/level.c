@@ -84,7 +84,9 @@ void level_tick(struct Level *level) {
         entity->tick(level, entity_data);
 
         if(entity_data->should_remove) {
-            remove_solid_entity(xt0, yt0, entity_data, i);
+            if(entity->is_solid)
+                remove_solid_entity(xt0, yt0, entity_data, i);
+
             entity_data->type = -1;
         } else {
             i8 xt1 = entity_data->x >> 4;

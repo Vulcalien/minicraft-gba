@@ -27,6 +27,9 @@
 #include "entity/furniture.c"
 
 #include "entity/item.c"
+#include "entity/spark.c"
+
+#include "entity/text-particle.c"
 
 IWRAM_RODATA_SECTION
 const struct Entity entity_list[ENTITY_TYPES] = {
@@ -43,10 +46,10 @@ const struct Entity entity_list[ENTITY_TYPES] = {
     lantern_entity,
 
     item_entity,
-    /*
     spark_entity,
 
     text_particle_entity,
+    /*
     smash_particle_entity
     */
 };

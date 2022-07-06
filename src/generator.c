@@ -39,7 +39,7 @@ void generate_levels(void) {
                 level->entities[i].type = 0 + i % 10;
                 if(level->entities[i].type == 3 ||
                    level->entities[i].type == 2) {
-                    level->entities[i].type = 1;
+                    level->entities[i].type = 12;
                 }
 
                 level->entities[i].x = 80 + rand() % 300;
