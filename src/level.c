@@ -77,9 +77,6 @@ void level_tick(struct Level *level) {
         if(entity_data->type >= ENTITY_TYPES)
             continue;
 
-        // COMPATIBILITY NOTE
-        // 'x >> n' is assumed to be a floor division by 2^n
-        // even for negative numbers: this is implementation-dependent
         i8 xt0 = entity_data->x >> 4;
         i8 yt0 = entity_data->y >> 4;
 

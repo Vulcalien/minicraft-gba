@@ -33,4 +33,8 @@ extern u32 tick_count;
 
 extern u8 current_level;
 
+// The behavior of right shift for negative values is implementation-dependent
+// but Arithmetic Right Shift is required
+static_assert((-1) >> 1 == -1, "Arithmetic Right Shift is required");
+
 #endif // MINICRAFT_CORE

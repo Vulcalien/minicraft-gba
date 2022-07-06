@@ -60,9 +60,6 @@ static inline void player_eat(struct entity_Data *data) {
     }
 }
 
-// COMPATIBILITY NOTE
-// 'x >> n' is assumed to be a floor division by 2^n
-// even for negative numbers: this is implementation-dependent
 static inline void player_place(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
     const struct Item *item = ITEM_S(&player_active_item);
@@ -89,9 +86,6 @@ static inline void player_place(struct Level *level, struct entity_Data *data) {
     }
 }
 
-// COMPATIBILITY NOTE
-// 'x >> n' is assumed to be a floor division by 2^n
-// even for negative numbers: this is implementation-dependent
 static inline void player_place_furniture(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 

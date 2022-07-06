@@ -51,10 +51,6 @@ const struct Entity entity_list[ENTITY_TYPES] = {
     */
 };
 
-// COMPATIBILITY NOTE
-// 'x >> n' is assumed to be a floor division by 2^n
-// even for negative numbers: this is implementation-dependent
-
 IWRAM_SECTION
 bool entity_move(struct Level *level, struct entity_Data *data,
                  i32 xm, i32 ym) {
