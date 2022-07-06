@@ -14,6 +14,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "entity.h"
+#include "furniture.h"
+
+#include "level.h"
 
 struct furniture_Data {
     i8 push_x;
@@ -30,7 +33,14 @@ static_assert(
     sizeof(struct furniture_Data) == 8, "struct furniture_Data: wrong size"
 );
 
+// DEBUG
+static u32 counter = 0;
+
 ETICK(furniture_tick) {
+    // DEBUG
+    if(counter++ < 256 * 20)
+        entity_move(level, data, 1, 0);
+
     struct furniture_Data *furn_data = (struct furniture_Data *) &data->data;
 
     entity_move(level, data, furn_data->push_x, furn_data->push_y);
@@ -86,3 +96,13 @@ GENERATE_STRUCT(chest_entity,     3);
 GENERATE_STRUCT(lantern_entity,   2);
 
 #undef GENERATE_STRUCT
+
+void furniture_take(struct entity_Data *data) {
+    struct furniture_Data *furn_data = (struct furniture_Data *) &data->data;
+
+    player_active_item = (struct item_Data) {
+        .type = WORKBENCH_ITEM + (data->type - WORKBENCH_ENTITY),
+        .chest_id = furn_data->chest_id
+    };
+    data->should_remove = true;
+}

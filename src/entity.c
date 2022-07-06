@@ -136,6 +136,7 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
 
     // solid entity collision
     bool blocked_by_entity = false;
+    // FIXME doesn't this go out of level bounds???
     for(u32 yt = (yt0 - 1) * (yt0 - 1 >= 0); yt <= (yt1 + 1); yt++) {
         for(u32 xt = (xt0 - 1) * (xt0 - 1 >= 0); xt <= (xt1 + 1); xt++) {
             const u32 tile = xt + yt * LEVEL_W;

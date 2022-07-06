@@ -83,14 +83,17 @@ void level_tick(struct Level *level) {
         const struct Entity *entity = ENTITY_S(entity_data);
         entity->tick(level, entity_data);
 
-        // TODO check if removed???
-
-        i8 xt1 = entity_data->x >> 4;
-        i8 yt1 = entity_data->y >> 4;
-
-        if(entity->is_solid && (xt1 != xt0 || yt1 != yt0)) {
+        if(entity_data->should_remove) {
             remove_solid_entity(xt0, yt0, entity_data, i);
-            insert_solid_entity(xt1, yt1, entity_data, i);
+            entity_data->type = -1;
+        } else {
+            i8 xt1 = entity_data->x >> 4;
+            i8 yt1 = entity_data->y >> 4;
+
+            if(entity->is_solid && (xt1 != xt0 || yt1 != yt0)) {
+                remove_solid_entity(xt0, yt0, entity_data, i);
+                insert_solid_entity(xt1, yt1, entity_data, i);
+            }
         }
     }
 }

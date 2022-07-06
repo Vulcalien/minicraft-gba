@@ -243,7 +243,7 @@ const struct Item item_list[ITEM_TYPES] = {
 
     // Power Glove
     {
-        .class = ITEMCLASS_FURNITURE,
+        .class = ITEMCLASS_POWERGLOVE,
         .name = "POW GLOVE",
         .palette = 0
     },
