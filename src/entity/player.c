@@ -160,9 +160,7 @@ static inline void player_eat(struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
     const struct Item *item = ITEM_S(&player_active_item);
 
-    if(mob_data->hp < MAX_HP && player_stamina >= 5) {
-        player_stamina -= 5;
-
+    if(mob_data->hp < MAX_HP && player_pay_stamina(5)) {
         // FIXED BUG - Mob.java:91
         // eating while hurt, the food is used but hp is not recovered
         mob_data->hp += item->hp_gain;
