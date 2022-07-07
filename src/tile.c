@@ -183,7 +183,7 @@ FINTERACT(rock_interact) {
     }
 
     // TODO add smash particle
-    // TODO add text particle
+    entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
 }
 
 // Water

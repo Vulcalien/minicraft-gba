@@ -84,9 +84,11 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
     if(data->type == PLAYER_ENTITY) {
         player_invulnerable_time = 30;
 
+        entity_add_text_particle(level, data->x, data->y, damage, 1);
         // TODO player hurt sound
-        // TODO damage text particle
     } else {
+        entity_add_text_particle(level, data->x, data->y, damage, 0);
+
         if(level->player) {
             i32 xd = level->player->x - data->x;
             i32 yd = level->player->y - data->y;
@@ -94,7 +96,5 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
             if(xd * xd + yd * yd < 80 * 80)
                 ; // TODO mob hurt sound
         }
-
-        // TODO damage text particle
     }
 }
