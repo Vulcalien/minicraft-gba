@@ -233,6 +233,14 @@ static inline void player_place_furniture(struct Level *level, struct entity_Dat
 }
 
 static inline void player_attack(struct Level *level, struct entity_Data *data) {
+    // DEBUG
+    level->entities[1].type = 12;
+    level->entities[1].x = data->x;
+    level->entities[1].y = data->y;
+    level->entities[1].should_remove = false;
+    for(u32 i = 0; i < 8; i++)
+        level->entities[1].data[i] = 0;
+
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
     mob_data->walk_dist += 8; // TODO maybe can use XOR instead?
