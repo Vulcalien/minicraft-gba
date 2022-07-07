@@ -79,4 +79,8 @@ extern void level_draw(struct Level *level);
         level->data[(xt) + (yt) * LEVEL_W] = val;\
 } while(0)
 
+extern u8 level_new_entity(struct Level *level, u8 type);
+
+extern void level_add_entity(struct Level *level, u8 entity_id);
+
 #endif // MINICRAFT_LEVEL

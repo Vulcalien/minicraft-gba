@@ -168,7 +168,7 @@ static inline void player_take_furniture(struct Level *level, struct entity_Data
     }
 }
 
-static inline void player_eat(struct entity_Data *data) {
+static inline void player_eat(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
     const struct Item *item = ITEM_S(&player_active_item);
 
@@ -179,7 +179,7 @@ static inline void player_eat(struct entity_Data *data) {
         if(mob_data->hp > MAX_HP)
             mob_data->hp = MAX_HP;
 
-        // TODO add text particle with item->hp_gain
+        entity_add_text_particle(level, data->x, data->y, item->hp_gain, 2);
 
         player_active_item.count--;
         if(player_active_item.count == 0)
@@ -233,14 +233,6 @@ static inline void player_place_furniture(struct Level *level, struct entity_Dat
 }
 
 static inline void player_attack(struct Level *level, struct entity_Data *data) {
-    // DEBUG
-    level->entities[1].type = 12;
-    level->entities[1].x = data->x;
-    level->entities[1].y = data->y;
-    level->entities[1].should_remove = false;
-    for(u32 i = 0; i < 8; i++)
-        level->entities[1].data[i] = 0;
-
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
     mob_data->walk_dist += 8; // TODO maybe can use XOR instead?
@@ -263,7 +255,7 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
             break;
 
         case ITEMCLASS_FOOD:
-            player_eat(data);
+            player_eat(level, data);
             break;
 
         case ITEMCLASS_PLACEABLE:

@@ -87,4 +87,11 @@ inline bool entity_intersects(struct entity_Data *data,
            (data->x - entity->xr <= x1) && (data->y - entity->yr <= y1);
 }
 
+// entity generators
+
+// ...
+
+extern void entity_add_text_particle(struct Level *level, u16 x, u16 y,
+                                     u8 number, u8 palette);
+
 #endif // MINICRAFT_ENTITIES

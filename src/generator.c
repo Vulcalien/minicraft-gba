@@ -34,7 +34,7 @@ void generate_levels(void) {
         }
 
         for(u32 i = 1; i < ENTITY_CAP; i++) {
-            if(i < 256) {
+            if(i < 2) {
                 /*level->entities[i].type = i % 2;*/
                 level->entities[i].type = 0 + i % 10;
                 if(level->entities[i].type == 3 ||

@@ -28,25 +28,17 @@ u8 level_solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
 u32 level_x_offset = 0;
 u32 level_y_offset = 0;
 
-static inline void remove_solid_entity(i8 xt, i8 yt,
+static inline void remove_solid_entity(u8 xt, u8 yt,
                                        struct entity_Data *entity_data,
-                                       u32 entity_id) {
-    if(xt < 0 || xt >= LEVEL_W ||
-       yt < 0 || yt >= LEVEL_H)
-        return;
-
+                                       u8 entity_id) {
     const u32 tile = xt + yt * LEVEL_W;
     if(level_solid_entities[tile][entity_data->solid_id] == entity_id)
         level_solid_entities[tile][entity_data->solid_id] = -1;
 }
 
-static inline void insert_solid_entity(i8 xt, i8 yt,
+static inline void insert_solid_entity(u8 xt, u8 yt,
                                        struct entity_Data *entity_data,
-                                       u32 entity_id) {
-    if(xt < 0 || xt >= LEVEL_W ||
-       yt < 0 || yt >= LEVEL_H)
-        return;
-
+                                       u8 entity_id) {
     const u32 tile = xt + yt * LEVEL_W;
     for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
         if(level_solid_entities[tile][i] >= ENTITY_CAP) {
@@ -71,14 +63,13 @@ void level_tick(struct Level *level) {
             tile->tick(level, xt, yt);
     }
 
-    // TODO more on entity ticking...
     for(u32 i = 0; i < ENTITY_CAP; i++) {
         struct entity_Data *entity_data = &level->entities[i];
         if(entity_data->type >= ENTITY_TYPES)
             continue;
 
-        i8 xt0 = entity_data->x >> 4;
-        i8 yt0 = entity_data->y >> 4;
+        u8 xt0 = entity_data->x >> 4;
+        u8 yt0 = entity_data->y >> 4;
 
         const struct Entity *entity = ENTITY_S(entity_data);
         entity->tick(level, entity_data);
@@ -89,8 +80,8 @@ void level_tick(struct Level *level) {
 
             entity_data->type = -1;
         } else {
-            i8 xt1 = entity_data->x >> 4;
-            i8 yt1 = entity_data->y >> 4;
+            u8 xt1 = entity_data->x >> 4;
+            u8 yt1 = entity_data->y >> 4;
 
             if(entity->is_solid && (xt1 != xt0 || yt1 != yt0)) {
                 remove_solid_entity(xt0, yt0, entity_data, i);
@@ -180,4 +171,36 @@ void level_draw(struct Level *level) {
         vu16 *sprite_attribs = OAM + i * 4;
         sprite_attribs[0] = 1 << 9;
     }
+}
+
+IWRAM_SECTION
+u8 level_new_entity(struct Level *level, u8 type) {
+    for(u32 i = 0; i < ENTITY_CAP; i++) {
+        struct entity_Data *data = &level->entities[i];
+
+        if(data->type >= ENTITY_TYPES) {
+            data->type = type;
+
+            return i;
+        }
+    }
+    return -1;
+}
+
+IWRAM_SECTION
+void level_add_entity(struct Level *level, u8 entity_id) {
+    struct entity_Data *data = &level->entities[entity_id];
+    const struct Entity *entity = ENTITY_S(data);
+
+    data->should_remove = false;
+
+    if(entity->is_solid) {
+        u8 xt = data->x >> 4;
+        u8 yt = data->y >> 4;
+
+        insert_solid_entity(xt, yt, data, entity_id);
+    }
+
+    if(data->type == PLAYER_ENTITY)
+        level->player = data;
 }

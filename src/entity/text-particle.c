@@ -36,18 +36,32 @@ struct text_Data {
 
 static_assert(sizeof(struct text_Data) == 8, "struct text_Data: wrong size");
 
-ETICK(text_particle_tick) {
+void entity_add_text_particle(struct Level *level, u16 x, u16 y,
+                              u8 number, u8 palette) {
+    u8 entity_id = level_new_entity(level, TEXT_PARTICLE_ENTITY);
+    if(entity_id > ENTITY_CAP)
+        return;
+
+    struct entity_Data *data = &level->entities[entity_id];
     struct text_Data *text_data = (struct text_Data *) &data->data;
 
-    // TODO put this somethere else
-    // without the 'if'
-    if(text_data->time == 0) {
-        text_data->xv = rand() % 59 - 29;
-        text_data->yv = rand() % 39 - 19;
+    data->x = x;
+    data->y = y;
 
-        text_data->zz = 2;
-        text_data->zv = 12 + rand() % 4;
-    }
+    text_data->xv = rand() % 59 - 29;
+    text_data->yv = rand() % 39 - 19;
+
+    text_data->zz = 2;
+    text_data->zv = 12 + rand() % 4;
+
+    text_data->number = number;
+    text_data->palette = palette;
+
+    level_add_entity(level, entity_id);
+}
+
+ETICK(text_particle_tick) {
+    struct text_Data *text_data = (struct text_Data *) &data->data;
 
     text_data->time++;
     if(text_data->time > 60)
@@ -57,6 +71,7 @@ ETICK(text_particle_tick) {
     text_data->xx += text_data->xv;
     text_data->yy += text_data->yv;
 
+    // FIXME can go out of bounds: data->x and y are u16
     data->x += (text_data->xx / 64);
     data->y += (text_data->yy / 64);
 
