@@ -68,8 +68,8 @@ void level_tick(struct Level *level) {
         if(entity_data->type >= ENTITY_TYPES)
             continue;
 
-        u8 xt0 = entity_data->x >> 4;
-        u8 yt0 = entity_data->y >> 4;
+        u32 xt0 = entity_data->x >> 4;
+        u32 yt0 = entity_data->y >> 4;
 
         const struct Entity *entity = ENTITY_S(entity_data);
         entity->tick(level, entity_data);
@@ -80,8 +80,8 @@ void level_tick(struct Level *level) {
 
             entity_data->type = -1;
         } else {
-            u8 xt1 = entity_data->x >> 4;
-            u8 yt1 = entity_data->y >> 4;
+            u32 xt1 = entity_data->x >> 4;
+            u32 yt1 = entity_data->y >> 4;
 
             if(entity->is_solid && (xt1 != xt0 || yt1 != yt0)) {
                 remove_solid_entity(xt0, yt0, entity_data, i);
@@ -181,6 +181,10 @@ u8 level_new_entity(struct Level *level, u8 type) {
         if(data->type >= ENTITY_TYPES) {
             data->type = type;
 
+            // clear entity data
+            for(u32 j = 0; j < sizeof(data->data) / sizeof(u32); j++)
+                *((u32 *) &data->data[j]) = 0;
+
             return i;
         }
     }
@@ -195,8 +199,8 @@ void level_add_entity(struct Level *level, u8 entity_id) {
     data->should_remove = false;
 
     if(entity->is_solid) {
-        u8 xt = data->x >> 4;
-        u8 yt = data->y >> 4;
+        u32 xt = data->x >> 4;
+        u32 yt = data->y >> 4;
 
         insert_solid_entity(xt, yt, data, entity_id);
     }

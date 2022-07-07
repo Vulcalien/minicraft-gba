@@ -182,7 +182,7 @@ FINTERACT(rock_interact) {
         LEVEL_SET_DATA(level, xt, yt, damage);
     }
 
-    // TODO add smash particle
+    entity_add_smash_particle(level, xt, yt);
     entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
 }
 

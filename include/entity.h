@@ -94,4 +94,6 @@ inline bool entity_intersects(struct entity_Data *data,
 extern void entity_add_text_particle(struct Level *level, u16 x, u16 y,
                                      u8 number, u8 palette);
 
+extern void entity_add_smash_particle(struct Level *level, u8 xt, u8 yt);
+
 #endif // MINICRAFT_ENTITIES

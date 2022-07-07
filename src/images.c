@@ -214,7 +214,7 @@ const u16 sprite_palette[11 * 16] = {
     // zombie
     0x2268, 0x4751, 0x08a2,
 
-    // slime
+    // slime and smash particle
     0x7bde,
 
     // red font
