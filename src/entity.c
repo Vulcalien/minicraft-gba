@@ -134,13 +134,20 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
             return false;
     }
 
-    // TODO try to optimize this as much as possible
-
     // solid entity collision
+    xt0--;
+    yt0--;
+    xt1++;
+    yt1++;
+
+    if(xt0 < 0) xt0 = 0;
+    if(yt0 < 0) yt0 = 0;
+    if(xt1 >= LEVEL_W) xt1 = LEVEL_W - 1;
+    if(yt1 >= LEVEL_H) yt1 = LEVEL_H - 1;
+
     bool blocked_by_entity = false;
-    // FIXME doesn't this go out of level bounds???
-    for(u32 yt = (yt0 - 1) * (yt0 - 1 >= 0); yt <= (yt1 + 1); yt++) {
-        for(u32 xt = (xt0 - 1) * (xt0 - 1 >= 0); xt <= (xt1 + 1); xt++) {
+    for(u32 yt = yt0; yt <= yt1; yt++) {
+        for(u32 xt = xt0; xt <= xt1; xt++) {
             const u32 tile = xt + yt * LEVEL_W;
 
             for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {

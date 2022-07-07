@@ -57,8 +57,8 @@ static inline void player_hurt_entities(struct Level *level, struct entity_Data 
 
     if(xt0 < 0) xt0 = 0;
     if(yt0 < 0) yt0 = 0;
-    if(xt1 >= LEVEL_W) xt1 = LEVEL_W;
-    if(yt1 >= LEVEL_H) yt1 = LEVEL_H;
+    if(xt1 >= LEVEL_W) xt1 = LEVEL_W - 1;
+    if(yt1 >= LEVEL_H) yt1 = LEVEL_H - 1;
 
     for(u32 yt = yt0; yt <= yt1; yt++) {
         for(u32 xt = xt0; xt <= xt1; xt++) {
@@ -133,8 +133,8 @@ static inline void player_take_furniture(struct Level *level, struct entity_Data
 
     if(xt0 < 0) xt0 = 0;
     if(yt0 < 0) yt0 = 0;
-    if(xt1 >= LEVEL_W) xt1 = LEVEL_W;
-    if(yt1 >= LEVEL_H) yt1 = LEVEL_H;
+    if(xt1 >= LEVEL_W) xt1 = LEVEL_W - 1;
+    if(yt1 >= LEVEL_H) yt1 = LEVEL_H - 1;
 
     for(u32 yt = yt0; yt <= yt1; yt++) {
         for(u32 xt = xt0; xt <= xt1; xt++) {
