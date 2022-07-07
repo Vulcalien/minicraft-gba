@@ -145,6 +145,11 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
     if(xt1 >= LEVEL_W) xt1 = LEVEL_W - 1;
     if(yt1 >= LEVEL_H) yt1 = LEVEL_H - 1;
 
+    i32 x0 = data->x + xm - entity->xr;
+    i32 y0 = data->y + ym - entity->yr;
+    i32 x1 = data->x + xm + entity->xr;
+    i32 y1 = data->y + ym + entity->yr;
+
     bool blocked_by_entity = false;
     for(u32 yt = yt0; yt <= yt1; yt++) {
         for(u32 xt = xt0; xt <= xt1; xt++) {
@@ -160,11 +165,7 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
                 if(e_data == data)
                     continue;
 
-                if(entity_intersects(
-                    e_data,
-                    data->x - entity->xr + xm, data->y - entity->yr + ym,
-                    data->x + entity->xr + xm, data->y + entity->yr + ym
-                )) {
+                if(entity_intersects(e_data, x0, y0, x1, y1)) {
                     blocked_by_entity = true;
 
                     // touch player
