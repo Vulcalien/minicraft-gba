@@ -90,7 +90,3 @@ int main(void) {
     }
     return 0;
 }
-
-// FIXME string.h is for some reason included,
-// adding memset and memcpy to the binary
-void memset(void) {}
