@@ -172,8 +172,7 @@ FINTERACT(rock_interact) {
         for(u32 i = 0; i < count; i++)
             entity_add_item(level, xt, yt, STONE_ITEM, true);
 
-        count = rand() % 2;
-        for(u32 i = 0; i < count; i++)
+        if(rand() & 1)
             entity_add_item(level, xt, yt, COAL_ITEM, true);
 
         LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
@@ -657,6 +656,14 @@ FDRAW(cloud_draw) {
         tiles[3] = TILE(15 + d * 2 + r * 3, 7);
 }
 
+FINTERACT(cloud_interact) {
+    if(item->type == SHOVEL_ITEM && player_pay_stamina(5)) {
+        u8 count = 1 + rand() % 2;
+        for(u32 i = 0; i < count; i++)
+            entity_add_item(level, xt, yt, CLOUD_ITEM, true);
+    }
+}
+
 // Hard Rock
 FDRAW(hard_rock_draw) {
     bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == HARD_ROCK_TILE;
@@ -690,12 +697,80 @@ FDRAW(hard_rock_draw) {
         tiles[3] = TILE(15 + d * 2 + r * 3, 8);
 }
 
+FINTERACT(hard_rock_interact) {
+    u8 dmg = 0;
+    if(item->type == PICK_ITEM && item->tool_level == 4) {
+        dmg = 30 + rand() % 10;
+
+        u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
+        if(damage >= 200) {
+            u8 count = 1 + rand() % 4;
+            for(u32 i = 0; i < count; i++)
+                entity_add_item(level, xt, yt, STONE_ITEM, true);
+
+            if(rand() & 1)
+                entity_add_item(level, xt, yt, COAL_ITEM, true);
+
+            LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+        } else {
+            LEVEL_SET_DATA(level, xt, yt, damage);
+        }
+    }
+
+    entity_add_smash_particle(level, xt, yt);
+    entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
+}
+
 // Ores + Cloud Cactus
 FDRAW(ore_draw) {
     tiles[0] = TILE(71, 2);
     tiles[1] = TILE(72, 2);
     tiles[2] = TILE(73, 2);
     tiles[3] = TILE(74, 2);
+}
+
+FINTERACT(ore_interact) {
+    u8 dmg = 0;
+    if(item->type == PICK_ITEM && player_pay_stamina(6 - item->tool_level)) {
+        dmg = 1;
+
+        u8 count = rand() % 2;
+        u8 tile = LEVEL_GET_TILE(level, xt, yt);
+        u8 item_to_drop = ((tile == IRON_ORE_TILE) * IRON_ORE_ITEM) |
+                          ((tile == GOLD_ORE_TILE) * GOLD_ORE_ITEM) |
+                          ((tile == GEM_ORE_TILE)  * GEM_ITEM);
+
+        u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
+        if(damage >= 3 + rand() % 10) {
+            LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+
+            count += 2;
+        } else {
+            LEVEL_SET_DATA(level, xt, yt, damage);
+        }
+
+        for(u32 i = 0; i < count; i++)
+            entity_add_item(level, xt, yt, item_to_drop, true);
+    }
+
+    entity_add_smash_particle(level, xt, yt);
+    entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
+}
+
+FINTERACT(cloud_cactus_interact) {
+    u8 dmg = 0;
+    if(item->type == PICK_ITEM && player_pay_stamina(6 - item->tool_level)) {
+        dmg = 1;
+
+        u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
+        if(damage >= 10)
+            LEVEL_SET_TILE(level, xt, yt, CLOUD_TILE, 0);
+        else
+            LEVEL_SET_DATA(level, xt, yt, damage);
+    }
+
+    entity_add_smash_particle(level, xt, yt);
+    entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
 }
 
 IWRAM_RODATA_SECTION
@@ -900,7 +975,9 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Cloud
     {
         .tick = NULL,
-        .draw = cloud_draw
+        .draw = cloud_draw,
+
+        .interact = cloud_interact
     },
 
     // Hard Rock
@@ -909,7 +986,9 @@ const struct Tile tile_list[TILE_TYPES] = {
         .draw = hard_rock_draw,
 
         .is_solid = true,
-        .may_pass = -1
+        .may_pass = -1,
+
+        .interact = hard_rock_interact
     },
 
     // Iron Ore
@@ -921,7 +1000,9 @@ const struct Tile tile_list[TILE_TYPES] = {
         .may_pass = -1,
 
         .hurts_on_touch = true,
-        .touch_damage = 3
+        .touch_damage = 3,
+
+        .interact = ore_interact
     },
 
     // Gold Ore
@@ -933,7 +1014,9 @@ const struct Tile tile_list[TILE_TYPES] = {
         .may_pass = -1,
 
         .hurts_on_touch = true,
-        .touch_damage = 3
+        .touch_damage = 3,
+
+        .interact = ore_interact
     },
 
     // Gem Ore
@@ -945,7 +1028,9 @@ const struct Tile tile_list[TILE_TYPES] = {
         .may_pass = -1,
 
         .hurts_on_touch = true,
-        .touch_damage = 3
+        .touch_damage = 3,
+
+        .interact = ore_interact
     },
 
     // Cloud Cactus
@@ -957,6 +1042,8 @@ const struct Tile tile_list[TILE_TYPES] = {
         .may_pass = AIR_WIZARD_ENTITY,
 
         .hurts_on_touch = true,
-        .touch_damage = 3
+        .touch_damage = 3,
+
+        .interact = cloud_cactus_interact
     }
 };
