@@ -45,6 +45,7 @@ static void game_init(void) {
 static void game_tick(void) {
     level_tick(level);
 }
+
 #define SET_TILE(x, y, id, palette)\
     do {\
         BG3_TILEMAP[(x) + (y) * 32] = (id) |\

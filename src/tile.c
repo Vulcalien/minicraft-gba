@@ -107,10 +107,10 @@ FDRAW(grass_draw) {
 FINTERACT(grass_interact) {
     if(item->type == SHOVEL_ITEM) {
         if(player_pay_stamina(4 - item->tool_level)) {
-            LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
-
             if(rand() % 5 == 0)
                 entity_add_item(level, xt, yt, SEEDS_ITEM, true);
+
+            LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
 
             // TODO play sound
         }
@@ -167,7 +167,6 @@ FINTERACT(rock_interact) {
         dmg = GET_PUNCH_DAMAGE();
 
     u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
-
     if(damage >= 50) {
         u8 count = 1 + rand() % 4;
         for(u32 i = 0; i < count; i++)
@@ -321,12 +320,59 @@ FDRAW(tree_draw) {
         tiles[3] = TILE(37, 0);
 }
 
+FINTERACT(tree_interact) {
+    u8 dmg;
+    if(item->type == AXE_ITEM && player_pay_stamina(4 - item->tool_level))
+        dmg = 10 + item->tool_level * 5 + rand() % 10;
+    else
+        dmg = GET_PUNCH_DAMAGE();
+
+    if(rand() % 10 == 0)
+        entity_add_item(level, xt, yt, APPLE_ITEM, true);
+
+    u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
+    if(damage >= 20) {
+        u8 count = 1 + rand() % 2;
+        for(u32 i = 0; i < count; i++)
+            entity_add_item(level, xt, yt, WOOD_ITEM, true);
+
+        count = rand() % 4;
+        for(u32 i = 0; i < count; i++)
+            entity_add_item(level, xt, yt, ACORN_ITEM, true);
+
+        LEVEL_SET_TILE(level, xt, yt, GRASS_TILE, 0);
+    } else {
+        LEVEL_SET_DATA(level, xt, yt, damage);
+    }
+
+    entity_add_smash_particle(level, xt, yt);
+    entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
+}
+
 // Dirt
 FDRAW(dirt_draw) {
     tiles[0] = TILE(64, 2);
     tiles[1] = TILE(65, 2);
     tiles[2] = TILE(66, 2);
     tiles[3] = TILE(67, 2);
+}
+
+FINTERACT(dirt_interact) {
+    if(item->type == SHOVEL_ITEM) {
+        if(player_pay_stamina(4 - item->tool_level)) {
+            entity_add_item(level, xt, yt, DIRT_ITEM, true);
+
+            LEVEL_SET_TILE(level, xt, yt, HOLE_TILE, 0);
+
+            // TODO play sound
+        }
+    } else if(item->type == HOE_ITEM) {
+        if(player_pay_stamina(4 - item->tool_level)) {
+            LEVEL_SET_TILE(level, xt, yt, FARMLAND_TILE, 0);
+
+            // TODO play sound
+        }
+    }
 }
 
 // Sand
@@ -368,12 +414,43 @@ FSTEPPED_ON(sand_stepped_on) {
     }
 }
 
+FINTERACT(sand_interact) {
+    if(item->type == SHOVEL_ITEM) {
+        if(player_pay_stamina(4 - item->tool_level)) {
+            entity_add_item(level, xt, yt, SAND_ITEM, true);
+
+            LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+
+            // no sound after digging sand
+            // might be a bug in the original game
+        }
+    }
+}
+
 // Cactus
 FDRAW(cactus_draw) {
     tiles[0] = TILE(41, 4);
     tiles[1] = TILE(42, 4);
     tiles[2] = TILE(43, 4);
     tiles[3] = TILE(44, 4);
+}
+
+FINTERACT(cactus_interact) {
+    u8 dmg = GET_PUNCH_DAMAGE();
+
+    u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
+    if(damage >= 10) {
+        u8 count = 1 + rand() % 2;
+        for(u32 i = 0; i < count; i++)
+            entity_add_item(level, xt, yt, CACTUS_ITEM, true);
+
+        LEVEL_SET_TILE(level, xt, yt, SAND_TILE, 0);
+    } else {
+        LEVEL_SET_DATA(level, xt, yt, damage);
+    }
+
+    entity_add_smash_particle(level, xt, yt);
+    entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
 }
 
 // Hole
@@ -428,6 +505,10 @@ FDRAW(tree_sapling_draw) {
     tiles2[3] = TILE(48, 0);
 }
 
+FINTERACT(tree_sapling_interact) {
+    LEVEL_SET_TILE(level, xt, yt, GRASS_TILE, 0);
+}
+
 // Cactus Sapling
 FTICK(cactus_sapling_tick) {
     u8 age = LEVEL_GET_DATA(level, xt, yt) + 1;
@@ -445,6 +526,10 @@ FDRAW(cactus_sapling_draw) {
     tiles2[1] = TILE(46, 0);
     tiles2[2] = TILE(47, 0);
     tiles2[3] = TILE(48, 0);
+}
+
+FINTERACT(cactus_sapling_interact) {
+    LEVEL_SET_TILE(level, xt, yt, SAND_TILE, 0);
 }
 
 // Farmland
@@ -469,6 +554,14 @@ FSTEPPED_ON(farmland_stepped_on) {
         LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
 }
 
+FINTERACT(farmland_interact) {
+    if(item->type == SHOVEL_ITEM) {
+        if(player_pay_stamina(4 - item->tool_level)) {
+            LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+        }
+    }
+}
+
 // Wheat
 FTICK(wheat_tick) {
     if(rand() & 1)
@@ -484,7 +577,7 @@ FSTEPPED_ON(wheat_stepped_on) {
         return;
 
     if(LEVEL_GET_DATA(level, xt, yt) >= 2)
-        ; // TODO harvest
+        ; // TODO harvest (maybe call wheat_interact)
 }
 
 FDRAW(wheat_draw) {
@@ -495,6 +588,10 @@ FDRAW(wheat_draw) {
     tiles[1] = TILE_M(50 + age, 0x0, 3);
     tiles[2] = TILE_M(50 + age, 0x1, 3);
     tiles[3] = TILE_M(50 + age, 0x1, 3);
+}
+
+FINTERACT(wheat_interact) {
+    // TODO harvest
 }
 
 // Lava
@@ -662,13 +759,17 @@ const struct Tile tile_list[TILE_TYPES] = {
         },
 
         .is_solid = true,
-        .may_pass = -1
+        .may_pass = -1,
+
+        .interact = tree_interact
     },
 
     // Dirt
     {
         .tick = NULL,
-        .draw = dirt_draw
+        .draw = dirt_draw,
+
+        .interact = dirt_interact
     },
 
     // Sand
@@ -680,7 +781,9 @@ const struct Tile tile_list[TILE_TYPES] = {
             .sand = true
         },
 
-        .stepped_on = sand_stepped_on
+        .stepped_on = sand_stepped_on,
+
+        .interact = sand_interact
     },
 
     // Cactus
@@ -696,7 +799,9 @@ const struct Tile tile_list[TILE_TYPES] = {
         .may_pass = -1,
 
         .hurts_on_touch = true,
-        .touch_damage = 1
+        .touch_damage = 1,
+
+        .interact = cactus_interact
     },
 
     // Hole
@@ -720,7 +825,9 @@ const struct Tile tile_list[TILE_TYPES] = {
 
         .connects_to = {
             .grass = true
-        }
+        },
+
+        .interact = tree_sapling_interact
     },
 
     // Cactus Sapling
@@ -730,7 +837,9 @@ const struct Tile tile_list[TILE_TYPES] = {
 
         .connects_to = {
             .sand = true
-        }
+        },
+
+        .interact = cactus_sapling_interact
     },
 
     // Farmland
@@ -738,7 +847,9 @@ const struct Tile tile_list[TILE_TYPES] = {
         .tick = farmland_tick,
         .draw = farmland_draw,
 
-        .stepped_on = farmland_stepped_on
+        .stepped_on = farmland_stepped_on,
+
+        .interact = farmland_interact
     },
 
     // Wheat
@@ -746,7 +857,9 @@ const struct Tile tile_list[TILE_TYPES] = {
         .tick = wheat_tick,
         .draw = wheat_draw,
 
-        .stepped_on = wheat_stepped_on
+        .stepped_on = wheat_stepped_on,
+
+        .interact = wheat_interact
     },
 
     // Lava

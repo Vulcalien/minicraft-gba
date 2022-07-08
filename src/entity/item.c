@@ -48,6 +48,7 @@ void entity_add_item(struct Level *level, u16 x, u16 y,
     // TODO set xx, yy, zz, xa, ya, za
 
     item_entity_data->item_type = item;
+    item_entity_data->time = 60 * 10 + rand() % 60;
 
     // use solid_id to store the take delay
     data->solid_id = 30;
