@@ -231,16 +231,15 @@ static inline void player_place_furniture(struct Level *level, struct entity_Dat
     const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
 
     if(!tile->is_solid) {
-        ; // TODO add entity
-
-        player_active_item.type = -1;
+        if(entity_add_furniture(level, xt, yt, &player_active_item))
+            player_active_item.type = -1;
     }
 }
 
 static inline void player_attack(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
-    mob_data->walk_dist += 8; // TODO maybe can use XOR instead?
+    mob_data->walk_dist ^= 8;
 
     const u8 item_class = (player_active_item.type < ITEM_TYPES) ?
                           ITEM_S(&player_active_item)->class : -1;
@@ -288,7 +287,7 @@ ETICK(player_tick) {
         player_active_item.type = -1;
 
         struct item_Data power_glove = { .type = POWERGLOVE_ITEM, .count = 1 };
-        for(u32 i = 0; i < 62; i++)
+        for(u32 i = 0; i < 1; i++)
             inventory_add_top(&player_inventory, &power_glove);
     }
 

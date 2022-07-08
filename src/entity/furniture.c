@@ -17,6 +17,7 @@
 #include "furniture.h"
 
 #include "level.h"
+#include "item.h"
 
 struct furniture_Data {
     i8 push_x;
@@ -32,6 +33,26 @@ struct furniture_Data {
 static_assert(
     sizeof(struct furniture_Data) == 8, "struct furniture_Data: wrong size"
 );
+
+bool entity_add_furniture(struct Level *level, u8 xt, u8 yt,
+                          struct item_Data *item_data) {
+    u8 entity_id = level_new_entity(
+        level, WORKBENCH_ENTITY + (item_data->type - WORKBENCH_ITEM)
+    );
+    if(entity_id >= ENTITY_CAP)
+        return false;
+
+    struct entity_Data *data = &level->entities[entity_id];
+    struct furniture_Data *furn_data = (struct furniture_Data *) &data->data;
+
+    data->x = (xt << 4) + 8;
+    data->y = (yt << 4) + 8;
+
+    furn_data->chest_id = item_data->chest_id;
+
+    level_add_entity(level, entity_id);
+    return true;
+}
 
 // DEBUG
 static u32 counter = 0;

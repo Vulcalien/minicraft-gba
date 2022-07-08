@@ -34,11 +34,11 @@ void generate_levels(void) {
         }
 
         for(u32 i = 1; i < ENTITY_CAP; i++) {
-            if(i < 200) {
+            if(i < 300) {
                 level->entities[i].type = 0 + i % 10;
                 if(level->entities[i].type == 3 ||
                    level->entities[i].type == 2) {
-                    level->entities[i].type = 13;
+                    level->entities[i].type = 0;
                 }
 
                 level->entities[i].x = 80 + rand() % 300;

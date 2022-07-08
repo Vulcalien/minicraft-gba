@@ -19,6 +19,7 @@
 #include "minicraft.h"
 
 #include "level.h"
+#include "item.h"
 
 #define ENTITY_TYPES (14)
 
@@ -90,6 +91,9 @@ inline bool entity_intersects(struct entity_Data *data,
 // entity generators
 
 // ...
+
+extern bool entity_add_furniture(struct Level *level, u8 xt, u8 yt,
+                                 struct item_Data *item_data);
 
 extern void entity_add_item(struct Level *level, u16 x, u16 y,
                             u8 item, bool is_tile);

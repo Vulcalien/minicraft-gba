@@ -15,8 +15,6 @@
  */
 #include "util.h"
 
-// TODO make this inline ???
-
 #define DMA3_SOURCE *((vu32 *) 0x040000d4)
 #define DMA3_DEST   *((vu32 *) 0x040000d8)
 
