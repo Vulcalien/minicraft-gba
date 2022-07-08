@@ -29,15 +29,13 @@ void generate_levels(void) {
             /*if(t % 7 == 5)*/
                 /*level->tiles[t] = 7 + ((t & 8) == 8) * 12;*/
 
-            level->tiles[t] = 0 + t % 23;
+            level->tiles[t] = 0 + (t % 17 == 0) * 4;
             level->data[t] = 0;
         }
 
         for(u32 i = 1; i < ENTITY_CAP; i++) {
-            if(i < 25) {
-                /*level->entities[i].type = i % 2;*/
-                /*level->entities[i].type = 0 + i % 10;*/
-                level->entities[i].type = 10;
+            if(i < 200) {
+                level->entities[i].type = 0 + i % 10;
                 if(level->entities[i].type == 3 ||
                    level->entities[i].type == 2) {
                     level->entities[i].type = 13;

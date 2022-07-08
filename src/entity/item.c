@@ -15,6 +15,8 @@
  */
 #include "entity.h"
 
+#include "inventory.h"
+
 struct item_entity_Data {
     u16 item_type : 6;
     u16 time : 10;
@@ -82,12 +84,18 @@ ETICK(item_tick) {
         i32 y1 = data->y + entity->yr;
 
         if(entity_intersects(level->player, x0, y0, x1, y1)) {
-            // TODO add resource item to inventory
-            data->should_remove = true;
+            bool could_add = inventory_add_resource(
+                &player_inventory,
+                item_entity_data->item_type
+            );
 
-            // TODO increment score
+            if(could_add) {
+                data->should_remove = true;
 
-            // TODO play sound
+                // TODO increment score
+
+                // TODO play sound
+            }
         }
     }
 

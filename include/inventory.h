@@ -20,11 +20,21 @@
 
 #include "item.h"
 
+#define INVENTORY_SIZE (64)
+
 struct Inventory {
     u8 size;
-    struct item_Data items[64];
+    struct item_Data items[INVENTORY_SIZE];
 };
 
 extern struct Inventory inventory;
+
+extern bool inventory_add_resource(struct Inventory *inventory, u8 item_type);
+
+extern bool inventory_add_top(struct Inventory *inventory,
+                              struct item_Data *data);
+
+extern void inventory_remove(struct Inventory *inventory, u8 slot,
+                             struct item_Data *removed_item);
 
 #endif // MINICRAFT_INVENTORY

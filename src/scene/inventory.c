@@ -15,6 +15,7 @@
  */
 #include "scene.h"
 
+#include "inventory.h"
 #include "input.h"
 #include "screen.h"
 #include "item.h"
@@ -25,7 +26,13 @@ static i8 inventory_selected;
 static void inventory_init(void) {
     inventory_selected = 0;
 
-    player_active_item.type = -1;
+    if(player_active_item.type < ITEM_TYPES) {
+        // FIXME currently, the active item is deleted even if
+        // inventory_add_top fails. find a way to either prevent it
+        // or to make it impossible for inventory_add_top to fail
+        inventory_add_top(&player_inventory, &player_active_item);
+        player_active_item.type = -1;
+    }
 }
 
 static void inventory_tick(void) {
@@ -46,8 +53,10 @@ static void inventory_tick(void) {
         inventory_selected = 0;
 
     if(INPUT_CLICKED(KEY_A)) {
-        player_active_item = player_inventory.items[inventory_selected];
-        // TODO remove active item from inventory
+        inventory_remove(
+            &player_inventory, inventory_selected,
+            &player_active_item
+        );
 
         // copy item palette
         const struct Item *item = ITEM_S(&player_active_item);
