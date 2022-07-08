@@ -109,15 +109,17 @@ FINTERACT(grass_interact) {
         if(player_pay_stamina(4 - item->tool_level)) {
             LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
 
-            if(rand() % 5 == 0) {
-                // TODO add seeds
-            }
+            if(rand() % 5 == 0)
+                entity_add_item(level, xt, yt, SEEDS_ITEM, true);
 
             // TODO play sound
         }
     } else if(item->type == HOE_ITEM) {
         if(player_pay_stamina(4 - item->tool_level)) {
             LEVEL_SET_TILE(level, xt, yt, FARMLAND_TILE, 0);
+
+            if(rand() % 5 == 0)
+                entity_add_item(level, xt, yt, SEEDS_ITEM, true);
 
             // TODO play sound
         }

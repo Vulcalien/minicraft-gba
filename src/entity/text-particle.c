@@ -64,8 +64,10 @@ ETICK(text_particle_tick) {
     struct text_Data *text_data = (struct text_Data *) &data->data;
 
     text_data->time++;
-    if(text_data->time > 60)
+    if(text_data->time > 60) {
         data->should_remove = true;
+        return;
+    }
 
     // movement
     text_data->xx += text_data->xv;

@@ -91,6 +91,9 @@ inline bool entity_intersects(struct entity_Data *data,
 
 // ...
 
+extern void entity_add_item(struct Level *level, u16 x, u16 y,
+                            u8 item, bool is_tile);
+
 extern void entity_add_text_particle(struct Level *level, u16 x, u16 y,
                                      u8 number, u8 palette);
 
