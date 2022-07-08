@@ -29,7 +29,7 @@ void generate_levels(void) {
             /*if(t % 7 == 5)*/
                 /*level->tiles[t] = 7 + ((t & 8) == 8) * 12;*/
 
-            level->tiles[t] = 0 + (t % 13 == 0) * 1;
+            level->tiles[t] = 0 + (t % 13 == 0) * 3;
             level->data[t] = 0;
         }
 

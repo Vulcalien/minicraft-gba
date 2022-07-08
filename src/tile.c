@@ -170,14 +170,12 @@ FINTERACT(rock_interact) {
 
     if(damage >= 50) {
         u8 count = 1 + rand() % 4;
-        for(u32 i = 0; i < count; i++) {
-            // TODO drop stone
-        }
+        for(u32 i = 0; i < count; i++)
+            entity_add_item(level, xt, yt, STONE_ITEM, true);
 
         count = rand() % 2;
-        for(u32 i = 0; i < count; i++) {
-            // TODO drop coal
-        }
+        for(u32 i = 0; i < count; i++)
+            entity_add_item(level, xt, yt, COAL_ITEM, true);
 
         LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
     } else {
@@ -275,6 +273,19 @@ FDRAW(flower_draw) {
 
         tiles[3] = TILE(33, 0);
     }
+}
+
+FINTERACT(flower_interact) {
+    u8 count;
+    if(item->type == SHOVEL_ITEM && player_pay_stamina(4 - item->tool_level))
+        count = 2;
+    else
+        count = 1 + rand() % 2;
+
+    for(u32 i = 0; i < count; i++)
+        entity_add_item(level, xt, yt, FLOWER_ITEM, true);
+
+    LEVEL_SET_TILE(level, xt, yt, GRASS_TILE, 0);
 }
 
 // Tree
@@ -636,7 +647,9 @@ const struct Tile tile_list[TILE_TYPES] = {
 
         .connects_to = {
             .grass = true
-        }
+        },
+
+        .interact = flower_interact
     },
 
     // Tree
