@@ -92,7 +92,7 @@ static void chest_tick(void) {
             }
         } else {
             // put the item back into the current inventory
-            inventory_add(inv[1], &removed, chest_selected[chest_window]);
+            inventory_add(inv[0], &removed, chest_selected[chest_window]);
         }
     }
 }
