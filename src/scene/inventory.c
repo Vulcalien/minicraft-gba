@@ -30,7 +30,7 @@ static void inventory_init(void) {
         // FIXME currently, the active item is deleted even if
         // inventory_add fails. find a way to either prevent it
         // or to make it impossible for inventory_add to fail
-        inventory_add(&player_inventory, &player_active_item, true);
+        inventory_add(&player_inventory, &player_active_item, 0);
         player_active_item.type = -1;
     }
 }

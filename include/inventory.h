@@ -30,10 +30,10 @@ struct Inventory {
 extern struct Inventory inventory;
 
 extern bool inventory_add(struct Inventory *inventory,
-                          struct item_Data *data, bool top);
+                          struct item_Data *data, u8 slot);
 
 extern bool inventory_add_resource(struct Inventory *inventory,
-                                   u8 item_type, bool top);
+                                   u8 item_type, u8 slot);
 
 extern void inventory_remove(struct Inventory *inventory,
                              u8 slot, struct item_Data *removed_item);

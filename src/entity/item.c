@@ -87,7 +87,7 @@ ETICK(item_tick) {
             bool could_add = inventory_add_resource(
                 &player_inventory,
                 item_entity_data->item_type,
-                false
+                player_inventory.size
             );
 
             if(could_add) {

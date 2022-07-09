@@ -32,7 +32,7 @@ bool crafting_craft(struct Inventory *inventory,
                 .tool_level = recipe->tool_level
             };
 
-            if(!inventory_add(inventory, &data, true))
+            if(!inventory_add(inventory, &data, 0))
                 return false;
         } else if(item->class == ITEMCLASS_FURNITURE) {
             struct item_Data data = { .type = result };
@@ -45,10 +45,10 @@ bool crafting_craft(struct Inventory *inventory,
                     return false;
             }
 
-            if(!inventory_add(inventory, &data, true))
+            if(!inventory_add(inventory, &data, 0))
                 return false;
         } else {
-            if(!inventory_add_resource(inventory, result, true))
+            if(!inventory_add_resource(inventory, result, 0))
                 return false;
         }
     }

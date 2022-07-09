@@ -16,26 +16,22 @@
 #include "inventory.h"
 
 bool inventory_add(struct Inventory *inventory,
-                   struct item_Data *data, bool top) {
+                   struct item_Data *data, u8 slot) {
     if(inventory->size >= INVENTORY_SIZE)
         return false;
 
-    if(top) {
-        // shift items down
-        for(i32 i = inventory->size - 1; i >= 0; i--)
-            inventory->items[i + 1] = inventory->items[i];
+    // shift items down
+    for(i32 i = inventory->size - 1; i >= slot; i--)
+        inventory->items[i + 1] = inventory->items[i];
 
-        inventory->items[0] = *data;
-    } else {
-        inventory->items[inventory->size] = *data;
-    }
+    inventory->items[slot] = *data;
 
     inventory->size++;
     return true;
 }
 
 bool inventory_add_resource(struct Inventory *inventory,
-                            u8 item_type, bool top) {
+                            u8 item_type, u8 slot) {
     // try to increase the count of an already present item
     for(u32 i = 0; i < inventory->size; i++) {
         struct item_Data *data = &inventory->items[i];
@@ -49,7 +45,7 @@ bool inventory_add_resource(struct Inventory *inventory,
 
     // the resource was not present: add a new item
     struct item_Data data = { .type  = item_type, .count = 1 };
-    return inventory_add(inventory, &data, top);
+    return inventory_add(inventory, &data, slot);
 }
 
 void inventory_remove(struct Inventory *inventory,
