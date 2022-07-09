@@ -15,7 +15,27 @@
  */
 #include "inventory.h"
 
-bool inventory_add_resource(struct Inventory *inventory, u8 item_type) {
+bool inventory_add(struct Inventory *inventory,
+                   struct item_Data *data, bool top) {
+    if(inventory->size >= INVENTORY_SIZE)
+        return false;
+
+    if(top) {
+        // shift items down
+        for(i32 i = inventory->size - 1; i >= 0; i--)
+            inventory->items[i + 1] = inventory->items[i];
+
+        inventory->items[0] = *data;
+    } else {
+        inventory->items[inventory->size] = *data;
+    }
+
+    inventory->size++;
+    return true;
+}
+
+bool inventory_add_resource(struct Inventory *inventory,
+                            u8 item_type, bool top) {
     // try to increase the count of an already present item
     for(u32 i = 0; i < inventory->size; i++) {
         struct item_Data *data = &inventory->items[i];
@@ -27,45 +47,35 @@ bool inventory_add_resource(struct Inventory *inventory, u8 item_type) {
         }
     }
 
-    // append the item at the bottom
-    if(inventory->size < INVENTORY_SIZE) {
-        struct item_Data *data = &inventory->items[inventory->size];
-
-        data->type = item_type;
-        data->count = 1;
-
-        inventory->size++;
-
-        return true;
-    }
-
-    // inventory is full
-    return false;
+    // the resource was not present: add a new item
+    struct item_Data data = { .type  = item_type, .count = 1 };
+    return inventory_add(inventory, &data, top);
 }
 
-bool inventory_add_top(struct Inventory *inventory,
-                       struct item_Data *data) {
-    if(inventory->size < INVENTORY_SIZE) {
-        // shift items down
-        for(i32 i = inventory->size - 1; i >= 0; i--)
-            inventory->items[i + 1] = inventory->items[i];
-
-        inventory->size++;
-
-        inventory->items[0] = *data;
-
-        return true;
-    }
-    return false;
-}
-
-void inventory_remove(struct Inventory *inventory, u8 item_id,
-                      struct item_Data *removed_item) {
-    *removed_item = inventory->items[item_id];
+void inventory_remove(struct Inventory *inventory,
+                      u8 slot, struct item_Data *removed_item) {
+    *removed_item = inventory->items[slot];
 
     // shift items up
-    for(u32 i = item_id; i < inventory->size - 1; i++)
+    for(u32 i = slot; i < inventory->size - 1; i++)
         inventory->items[i] = inventory->items[i + 1];
 
     inventory->size--;
+}
+
+void inventory_remove_resource(struct Inventory *inventory,
+                               u8 item_type, u8 count) {
+    for(u32 i = 0; i < inventory->size; i++) {
+        struct item_Data *data = &inventory->items[i];
+
+        if(data->type == item_type && data->count >= count) {
+            data->count -= count;
+            if(data->count == 0) {
+                struct item_Data removed;
+                inventory_remove(inventory, i, &removed);
+            }
+
+            break;
+        }
+    }
 }

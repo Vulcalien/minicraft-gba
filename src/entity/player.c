@@ -159,8 +159,8 @@ static inline void player_take_furniture(struct Level *level, struct entity_Data
 
                 if(entity_intersects(e_data, x0, y0, x1, y1)) {
                     // add the power glove to the inventory
-                    bool could_add = inventory_add_top(
-                        &player_inventory, &player_active_item
+                    bool could_add = inventory_add(
+                        &player_inventory, &player_active_item, true
                     );
 
                     if(could_add) {
@@ -288,7 +288,7 @@ ETICK(player_tick) {
 
         struct item_Data power_glove = { .type = POWERGLOVE_ITEM, .count = 1 };
         for(u32 i = 0; i < 1; i++)
-            inventory_add_top(&player_inventory, &power_glove);
+            inventory_add(&player_inventory, &power_glove, true);
     }
 
     // DEBUG set player hp

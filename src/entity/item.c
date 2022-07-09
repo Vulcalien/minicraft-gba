@@ -86,7 +86,8 @@ ETICK(item_tick) {
         if(entity_intersects(level->player, x0, y0, x1, y1)) {
             bool could_add = inventory_add_resource(
                 &player_inventory,
-                item_entity_data->item_type
+                item_entity_data->item_type,
+                false
             );
 
             if(could_add) {

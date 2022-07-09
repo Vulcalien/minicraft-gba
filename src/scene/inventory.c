@@ -28,9 +28,9 @@ static void inventory_init(void) {
 
     if(player_active_item.type < ITEM_TYPES) {
         // FIXME currently, the active item is deleted even if
-        // inventory_add_top fails. find a way to either prevent it
-        // or to make it impossible for inventory_add_top to fail
-        inventory_add_top(&player_inventory, &player_active_item);
+        // inventory_add fails. find a way to either prevent it
+        // or to make it impossible for inventory_add to fail
+        inventory_add(&player_inventory, &player_active_item, true);
         player_active_item.type = -1;
     }
 }
