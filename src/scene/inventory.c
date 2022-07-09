@@ -73,48 +73,43 @@ static void inventory_tick(void) {
     } while(0)
 
 static void inventory_draw(void) {
-    #define INV_X (2)
-    #define INV_Y (2)
-    #define INV_W (12)
-    #define INV_H (14)
+    const u8 inv_x = 9;
+    const u8 inv_y = 2;
+    const u8 inv_w = 12;
+    const u8 inv_h = 14;
 
     // clear displayed active item
     for(u32 x = 20; x < 30; x++)
         SET_TILE(x, 18, 29, 0, 0);
 
-    screen_draw_frame("INVENTORY", INV_X, INV_Y, INV_W, INV_H);
+    screen_draw_frame("INVENTORY", inv_x, inv_y, inv_w, inv_h);
 
-    i8 item0 = inventory_selected - (INV_H - 2) / 2;
-    if(item0 > player_inventory.size - (INV_H - 1))
-        item0 = player_inventory.size - (INV_H - 1);
+    i8 item0 = inventory_selected - (inv_h - 2) / 2;
+    if(item0 > player_inventory.size - (inv_h - 2))
+        item0 = player_inventory.size - (inv_h - 2);
     if(item0 < 0)
         item0 = 0;
 
     // draw inventory items
-    for(u32 i = 0; i < INV_H - 1; i++) {
+    for(u32 i = 0; i < inv_h - 2; i++) {
         if(item0 + i >= player_inventory.size)
             break;
 
         struct item_Data *data = &player_inventory.items[item0 + i];
 
-        item_draw_icon(data, INV_X + 1, INV_Y + 1 + i, false);
-        item_write(data, 4, INV_X + 2, INV_Y + 1 + i);
+        item_draw_icon(data, inv_x + 1, inv_y + 1 + i, false);
+        item_write(data, 4, inv_x + 2, inv_y + 1 + i);
     }
 
     // draw cursor arrows
     screen_write(
-        ">", 4, INV_X,             INV_Y + 1 + (inventory_selected - item0)
+        ">", 4, inv_x            , inv_y + 1 + (inventory_selected - item0)
     );
     screen_write(
-        "<", 4, INV_X + INV_W - 1, INV_Y + 1 + (inventory_selected - item0)
+        "<", 4, inv_x + inv_w - 1, inv_y + 1 + (inventory_selected - item0)
     );
 }
 #undef SET_TILE
-
-#undef INV_X
-#undef INV_Y
-#undef INV_W
-#undef INV_H
 
 const struct Scene scene_inventory = {
     .init = inventory_init,

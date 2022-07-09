@@ -289,6 +289,9 @@ ETICK(player_tick) {
         struct item_Data power_glove = { .type = POWERGLOVE_ITEM, .count = 1 };
         for(u32 i = 0; i < 1; i++)
             inventory_add(&player_inventory, &power_glove, 0);
+
+        for(u32 i = 0; i < 7; i++)
+            inventory_add_resource(&player_inventory, i, 1, 0);
     }
 
     // DEBUG set player hp
@@ -378,7 +381,8 @@ ETICK(player_tick) {
 
     if(INPUT_CLICKED(KEY_B)) {
         if(!player_use(level, data))
-            set_scene(&scene_inventory, true);
+            /*set_scene(&scene_inventory, true);*/
+            set_scene(rand() & 1 ? &scene_inventory : &scene_chest, true); // DEBUG
     }
 }
 
