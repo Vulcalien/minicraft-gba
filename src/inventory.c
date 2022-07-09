@@ -31,25 +31,25 @@ bool inventory_add(struct Inventory *inventory,
 }
 
 bool inventory_add_resource(struct Inventory *inventory,
-                            u8 item_type, u8 slot) {
+                            u8 item_type, u16 count, u8 slot) {
     // try to increase the count of an already present item
     for(u32 i = 0; i < inventory->size; i++) {
         struct item_Data *data = &inventory->items[i];
 
         if(data->type == item_type) {
-            data->count++;
+            data->count += count;
 
             return true;
         }
     }
 
     // the resource was not present: add a new item
-    struct item_Data data = { .type  = item_type, .count = 1 };
+    struct item_Data data = { .type  = item_type, .count = count };
     return inventory_add(inventory, &data, slot);
 }
 
 void inventory_remove(struct Inventory *inventory,
-                      u8 slot, struct item_Data *removed_item) {
+                      struct item_Data *removed_item, u8 slot) {
     *removed_item = inventory->items[slot];
 
     // shift items up
@@ -60,7 +60,7 @@ void inventory_remove(struct Inventory *inventory,
 }
 
 void inventory_remove_resource(struct Inventory *inventory,
-                               u8 item_type, u8 count) {
+                               u8 item_type, u16 count) {
     for(u32 i = 0; i < inventory->size; i++) {
         struct item_Data *data = &inventory->items[i];
 
@@ -68,7 +68,7 @@ void inventory_remove_resource(struct Inventory *inventory,
             data->count -= count;
             if(data->count == 0) {
                 struct item_Data removed;
-                inventory_remove(inventory, i, &removed);
+                inventory_remove(inventory, &removed, i);
             }
 
             break;

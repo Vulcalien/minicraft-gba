@@ -33,12 +33,12 @@ extern bool inventory_add(struct Inventory *inventory,
                           struct item_Data *data, u8 slot);
 
 extern bool inventory_add_resource(struct Inventory *inventory,
-                                   u8 item_type, u8 slot);
+                                   u8 item_type, u16 count, u8 slot);
 
 extern void inventory_remove(struct Inventory *inventory,
-                             u8 slot, struct item_Data *removed_item);
+                             struct item_Data *removed_item, u8 slot);
 
 extern void inventory_remove_resource(struct Inventory *inventory,
-                                      u8 item_type, u8 count);
+                                      u8 item_type, u16 count);
 
 #endif // MINICRAFT_INVENTORY

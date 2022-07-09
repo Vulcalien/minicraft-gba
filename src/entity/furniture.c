@@ -24,6 +24,8 @@ static u8 chest_inventory_id = 0;
 EWRAM_BSS_SECTION
 struct Inventory chest_inventories[CHEST_LIMIT];
 
+u8 chest_opened_id;
+
 struct furniture_Data {
     i8 push_x;
     i8 push_y;

@@ -48,7 +48,7 @@ bool crafting_craft(struct Inventory *inventory,
             if(!inventory_add(inventory, &data, 0))
                 return false;
         } else {
-            if(!inventory_add_resource(inventory, result, 0))
+            if(!inventory_add_resource(inventory, result, 1, 0))
                 return false;
         }
     }

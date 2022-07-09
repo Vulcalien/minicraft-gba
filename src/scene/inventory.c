@@ -54,8 +54,7 @@ static void inventory_tick(void) {
 
     if(INPUT_CLICKED(KEY_A)) {
         inventory_remove(
-            &player_inventory, inventory_selected,
-            &player_active_item
+            &player_inventory, &player_active_item, inventory_selected
         );
 
         // copy item palette
@@ -74,9 +73,8 @@ static void inventory_tick(void) {
     } while(0)
 
 static void inventory_draw(void) {
-    // TODO change these values
     #define INV_W  (11)
-    #define INV_H  (14)
+    #define INV_H  (13)
 
     #define INV_X0 (2)
     #define INV_Y0 (2)
@@ -133,6 +131,14 @@ static void inventory_draw(void) {
     screen_write("<", 4, INV_X1, INV_Y0 + 1 + (inventory_selected - item0));
 }
 #undef SET_TILE
+
+#undef INV_W
+#undef INV_H
+
+#undef INV_X0
+#undef INV_Y0
+#undef INX_X1
+#undef INV_Y1
 
 const struct Scene scene_inventory = {
     .init = inventory_init,

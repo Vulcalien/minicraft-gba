@@ -23,3 +23,4 @@ const struct Scene *scene = NULL;
 
 #include "scene/game.c"
 #include "scene/inventory.c"
+#include "scene/chest.c"
