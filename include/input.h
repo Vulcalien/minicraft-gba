@@ -28,8 +28,8 @@
 #define KEY_UP     (1 << 6)
 #define KEY_DOWN   (1 << 7)
 
-#define KEY_L      (1 << 8)
-#define KEY_R      (1 << 9)
+#define KEY_R      (1 << 8)
+#define KEY_L      (1 << 9)
 
 #define INPUT_DOWN(key)\
     (!(input_keys_down & (key)))

@@ -381,9 +381,12 @@ ETICK(player_tick) {
 
     if(INPUT_CLICKED(KEY_B)) {
         if(!player_use(level, data))
-            /*set_scene(&scene_inventory, true);*/
-            set_scene(rand() & 1 ? &scene_inventory : &scene_chest, true); // DEBUG
+            set_scene(&scene_inventory, true);
     }
+
+    // DEBUG
+    if(INPUT_CLICKED(KEY_L))
+        set_scene(&scene_chest, true);
 }
 
 EDRAW(player_draw) {
