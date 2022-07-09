@@ -275,6 +275,63 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
 }
 
 static inline bool player_use(struct Level *level, struct entity_Data *data) {
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    const u8 dir = mob_data->dir;
+    const u8 range = 12;
+    i32 x0 = data->x     - ((dir & 1) == 0) * 8 - (dir == 1) * range + (dir == 3) * 4;
+    i32 y0 = data->y - 2 - ((dir & 1) == 1) * 8 - (dir == 0) * range + (dir == 2) * 4;
+    i32 x1 = data->x     + ((dir & 1) == 0) * 8 + (dir == 3) * range - (dir == 1) * 4;
+    i32 y1 = data->y - 2 + ((dir & 1) == 1) * 8 + (dir == 2) * range - (dir == 0) * 4;
+
+    i32 xt0 = (x0 >> 4) - 1;
+    i32 yt0 = (y0 >> 4) - 1;
+    i32 xt1 = (x1 >> 4) + 1;
+    i32 yt1 = (y1 >> 4) + 1;
+
+    if(xt0 < 0) xt0 = 0;
+    if(yt0 < 0) yt0 = 0;
+    if(xt1 >= LEVEL_W) xt1 = LEVEL_W - 1;
+    if(yt1 >= LEVEL_H) yt1 = LEVEL_H - 1;
+
+    for(u32 yt = yt0; yt <= yt1; yt++) {
+        for(u32 xt = xt0; xt <= xt1; xt++) {
+            const u32 tile = xt + yt * LEVEL_W;
+
+            for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
+                const u8 entity_id = level_solid_entities[tile][i];
+                struct entity_Data *e_data = &level->entities[entity_id];
+
+                if(entity_intersects(e_data, x0, y0, x1, y1)) {
+                    bool found = true;
+                    switch(e_data->type) {
+                        case WORKBENCH_ENTITY:
+                            // TODO open workbench crafting menu
+                            break;
+                        case FURNACE_ENTITY:
+                            // TODO open furnace crafting menu
+                            break;
+                        case OVEN_ENTITY:
+                            // TODO open oven crafting menu
+                            break;
+                        case ANVIL_ENTITY:
+                            // TODO open anvil crafting menu
+                            break;
+                        case CHEST_ENTITY:
+                            furniture_set_opened_chest(data);
+                            set_scene(&scene_chest, true);
+                            break;
+
+                        default:
+                            found = false;
+                    };
+
+                    if(found)
+                        return true;
+                }
+            }
+        }
+    }
     return false;
 }
 

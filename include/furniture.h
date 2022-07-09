@@ -27,6 +27,7 @@ extern u8 chest_opened_id;
 
 extern void furniture_take(struct entity_Data *data);
 
+extern void furniture_set_opened_chest(struct entity_Data *data);
 extern u8 furniture_new_chest_id(void);
 
 #endif // MINICRAFT_FURNITURE

@@ -135,6 +135,12 @@ void furniture_take(struct entity_Data *data) {
     data->should_remove = true;
 }
 
+void furniture_set_opened_chest(struct entity_Data *data) {
+    struct furniture_Data *furn_data = (struct furniture_Data *) &data->data;
+
+    chest_opened_id = furn_data->chest_id;
+}
+
 u8 furniture_new_chest_id(void) {
     if(chest_inventory_id >= CHEST_LIMIT)
         return -1;

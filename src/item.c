@@ -229,7 +229,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_FURNITURE,
         .name = "CHEST",
-        .palette = 2
+        .palette = 1
     },
 
     // Lantern
