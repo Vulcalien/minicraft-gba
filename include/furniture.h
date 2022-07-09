@@ -20,6 +20,11 @@
 
 #include "level.h"
 
+#define CHEST_LIMIT (32)
+extern struct Inventory chest_inventories[CHEST_LIMIT];
+
 extern void furniture_take(struct entity_Data *data);
+
+extern u8 furniture_new_chest_id(void);
 
 #endif // MINICRAFT_FURNITURE

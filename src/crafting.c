@@ -17,6 +17,7 @@
 
 #include "inventory.h"
 #include "item.h"
+#include "furniture.h"
 
 bool crafting_craft(struct Inventory *inventory,
                     struct crafting_Recipe *recipe) {
@@ -37,10 +38,11 @@ bool crafting_craft(struct Inventory *inventory,
             struct item_Data data = { .type = result };
 
             if(result == CHEST_ITEM) {
-                // TODO check if there are already too many chests:
-                // in that case, return false
-                //
-                // if otherwise then set chest_id of the item
+                data.chest_id = furniture_new_chest_id();
+
+                // TODO test if this works
+                if(data.chest_id >= CHEST_LIMIT)
+                    return false;
             }
 
             if(!inventory_add(inventory, &data, true))

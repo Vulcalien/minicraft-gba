@@ -19,6 +19,11 @@
 #include "level.h"
 #include "item.h"
 
+static u8 chest_inventory_id = 0;
+
+EWRAM_BSS_SECTION
+struct Inventory chest_inventories[CHEST_LIMIT];
+
 struct furniture_Data {
     i8 push_x;
     i8 push_y;
@@ -126,4 +131,11 @@ void furniture_take(struct entity_Data *data) {
         .chest_id = furn_data->chest_id
     };
     data->should_remove = true;
+}
+
+u8 furniture_new_chest_id(void) {
+    if(chest_inventory_id >= CHEST_LIMIT)
+        return -1;
+
+    return chest_inventory_id++;
 }
