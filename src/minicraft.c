@@ -19,6 +19,13 @@
 #include "input.h"
 #include "scene.h"
 
+#define PERFORMANCE_CHECK
+
+#ifdef PERFORMANCE_CHECK
+    #include "level.h"
+    #include "entity.h"
+#endif
+
 u32 tick_count = 0;
 
 // DEBUG
@@ -52,7 +59,6 @@ int main(void) {
     while(true) {
         tick();
 
-        #define PERFORMANCE_CHECK
         #ifdef PERFORMANCE_CHECK
         if(tick_count % 15 == 0) {
             u8 vcount = *((vu8 *) 0x04000006);
@@ -66,6 +72,28 @@ int main(void) {
 
                 screen_write(c, 0, x, 0);
             }
+        }
+        #endif
+
+        #ifdef PERFORMANCE_CHECK
+        if(tick_count % 15 == 0) {
+            u32 entity_count = 0;
+            for(u32 i = 0; i < ENTITY_CAP; i++)
+                if(levels[current_level].entities[i].type < ENTITY_TYPES)
+                    entity_count++;
+
+            char c[3] = { '\0', '\0', '\0' };
+            if((entity_count >> 4) < 10)
+                c[0] = '0' + (entity_count >> 4);
+            else
+                c[0] = 'A' + (entity_count >> 4) - 10;
+
+            if((entity_count & 0x0f) < 10)
+                c[1] = '0' + (entity_count & 0x0f);
+            else
+                c[1] = 'A' + (entity_count & 0x0f) - 10;
+
+            screen_write(c, 0, 28, 0);
         }
         #endif
 
