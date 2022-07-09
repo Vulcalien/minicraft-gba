@@ -142,8 +142,8 @@ void vsync(void) {
     while(VCOUNT < SCREEN_H);
 }
 
-void screen_write(const char *text, u8 palette, u8 x, u8 y) {
-    const u8 x0 = x;
+void screen_write(const char *text, u8 palette, u32 x, u32 y) {
+    const u32 x0 = x;
 
     for(u32 i = 0; text[i] != '\0'; i++) {
         const char c = text[i];
@@ -164,6 +164,35 @@ void screen_write(const char *text, u8 palette, u8 x, u8 y) {
             x++;
         }
     }
+}
+
+void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h) {
+    w--;
+    h--;
+
+    // draw corners
+    BG3_TILEMAP[(x)     + (y)     * 32] = 88 | (0 << 10) | (4 << 12);
+    BG3_TILEMAP[(x + w) + (y)     * 32] = 88 | (1 << 10) | (4 << 12);
+    BG3_TILEMAP[(x)     + (y + h) * 32] = 88 | (2 << 10) | (4 << 12);
+    BG3_TILEMAP[(x + w) + (y + h) * 32] = 88 | (3 << 10) | (4 << 12);
+
+    // draw vertical borders
+    for(u32 yi = y + 1; yi <= y + h - 1; yi++) {
+        BG3_TILEMAP[(x)     + yi * 32] = 90 | (0 << 10) | (4 << 12);
+        BG3_TILEMAP[(x + w) + yi * 32] = 90 | (1 << 10) | (4 << 12);
+
+        // draw background
+        for(u32 xi = x + 1; xi <= x + w - 1; xi++)
+            BG3_TILEMAP[xi + yi * 32] = 29 | (4 << 12);
+    }
+
+    // draw horizontal borders
+    for(u32 xi = x + 1; xi <= x + w - 1; xi++) {
+        BG3_TILEMAP[xi + (y)     * 32] = 89 | (0 << 10) | (4 << 12);
+        BG3_TILEMAP[xi + (y + h) * 32] = 89 | (2 << 10) | (4 << 12);
+    }
+
+    screen_write(title, 8, x + 1, y);
 }
 
 void screen_set_bg_palette_color(u8 palette, u8 index, u16 color) {
