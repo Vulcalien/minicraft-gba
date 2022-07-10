@@ -286,21 +286,12 @@ const struct Item item_list[ITEM_TYPES] = {
     }
 };
 
-const char level_names[5][5] = {
-    "WOOD", "ROCK", "IRON", "GOLD", "GEM"
-};
-
-void item_write(struct item_Data *data, u8 palette, u8 x, u8 y) {
+void item_write(struct item_Data *data, u8 palette, u32 x, u32 y) {
     const struct Item *item = ITEM_S(data);
 
-    if(item->class == ITEMCLASS_TOOL) {
-        const u8 level = data->tool_level;
-
-        screen_write(level_names[level], palette, x, y);
-        screen_write(item->name, palette, x + 4 + (level != 4), y);
-    } else if(item->class == ITEMCLASS_MATERIAL ||
-              item->class == ITEMCLASS_PLACEABLE ||
-              item->class == ITEMCLASS_FOOD) {
+    if(item->class == ITEMCLASS_MATERIAL ||
+       item->class == ITEMCLASS_PLACEABLE ||
+       item->class == ITEMCLASS_FOOD) {
         u16 count = data->count;
         if(count > 999)
             count = 999;
@@ -322,6 +313,23 @@ void item_write(struct item_Data *data, u8 palette, u8 x, u8 y) {
 
         screen_write(item->name, palette, x + 3, y);
     } else {
+        item_write_name(data, palette, x, y);
+    }
+}
+
+static const char level_names[5][5] = {
+    "WOOD", "ROCK", "IRON", "GOLD", "GEM"
+};
+
+void item_write_name(struct item_Data *data, u8 palette, u32 x, u32 y) {
+    const struct Item *item = ITEM_S(data);
+
+    if(item->class == ITEMCLASS_TOOL) {
+        const u8 level = data->tool_level;
+
+        screen_write(level_names[level], palette, x, y);
+        screen_write(item->name, palette, x + 4 + (level != 4), y);
+    } else {
         screen_write(item->name, palette, x, y);
     }
 }
@@ -332,7 +340,7 @@ void item_write(struct item_Data *data, u8 palette, u8 x, u8 y) {
                                       ((palette) << 12);\
     } while(0)
 
-void item_draw_icon(struct item_Data *data, u8 x, u8 y, bool black_bg) {
+void item_draw_icon(struct item_Data *data, u32 x, u32 y, bool black_bg) {
     const struct Item *item = ITEM_S(data);
 
     const u8 tile = data->type +

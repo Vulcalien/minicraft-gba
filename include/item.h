@@ -105,7 +105,8 @@ struct item_Data {
 
 extern const struct Item item_list[ITEM_TYPES];
 
-extern void item_write(struct item_Data *data, u8 palette, u8 x, u8 y);
-extern void item_draw_icon(struct item_Data *data, u8 x, u8 y, bool black_bg);
+extern void item_write(struct item_Data *data, u8 palette, u32 x, u32 y);
+extern void item_write_name(struct item_Data *data, u8 palette, u32 x, u32 y);
+extern void item_draw_icon(struct item_Data *data, u32 x, u32 y, bool black_bg);
 
 #endif // MINICRAFT_ITEM
