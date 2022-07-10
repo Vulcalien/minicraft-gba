@@ -240,7 +240,7 @@ FDRAW(flower_draw) {
     bool l = CONNECTS_TO_GRASS(level, xt - 1, yt    );
     bool r = CONNECTS_TO_GRASS(level, xt + 1, yt    );
 
-    bool shape = (LEVEL_GET_DATA(level, xt, yt) >> 5) & 0x01;
+    bool shape = LEVEL_GET_DATA(level, xt, yt) & 1;
 
     if(shape) {
         if(u && l)

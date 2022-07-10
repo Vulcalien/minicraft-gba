@@ -16,6 +16,7 @@
 #include "generator.h"
 
 #include "level.h"
+#include "tile.h"
 
 void generate_levels(void) {
     // DEBUG
@@ -26,15 +27,15 @@ void generate_levels(void) {
             /*level->tiles[t] = (t / 16 % 2) ? 11 : 2;*/
             /*level->data[t] = 0;*/
 
-            /*if(t % 7 == 5)*/
-                /*level->tiles[t] = 7 + ((t & 8) == 8) * 12;*/
+            level->tiles[t] = rand() % TILE_TYPES;
+            level->data[t] = rand();
 
-            level->tiles[t] = 0 + (t % 17 == 0) * 4;
-            level->data[t] = 0;
+            /*level->tiles[t] = 0 + (t % 17 == 0) * 4;*/
+            /*level->data[t] = 0;*/
         }
 
         for(u32 i = 1; i < ENTITY_CAP; i++) {
-            if(i < 30) {
+            if(i < 240) {
                 level->entities[i].type = 0 + i % 10;
                 if(level->entities[i].type == 3 ||
                    level->entities[i].type == 2) {
