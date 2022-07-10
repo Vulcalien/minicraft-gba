@@ -33,6 +33,16 @@ struct crafting_Recipe {
     u8 tool_level;
 };
 
+#define WORKBENCH_RECIPES (16)
+#define FURNACE_RECIPES   (3)
+#define OVEN_RECIPES      (1)
+#define ANVIL_RECIPES     (15)
+
+extern const struct crafting_Recipe workbench_recipes[WORKBENCH_RECIPES];
+extern const struct crafting_Recipe furnace_recipes[FURNACE_RECIPES];
+extern const struct crafting_Recipe oven_recipes[OVEN_RECIPES];
+extern const struct crafting_Recipe anvil_recipes[ANVIL_RECIPES];
+
 extern bool crafting_craft(struct Inventory *inventory,
                            struct crafting_Recipe *recipe);
 
