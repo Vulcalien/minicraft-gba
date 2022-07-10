@@ -30,6 +30,15 @@ static void inventory_init(void) {
         // FIXME currently, the active item is deleted even if
         // inventory_add fails. find a way to either prevent it
         // or to make it impossible for inventory_add to fail
+
+        // Bug in the original game: when opening the inventory menu, thus
+        // adding the active item to the inventory, the item is always put
+        // in slot 0, regardless of it being a resource item or not.
+        // This means that if the inventory already contains that resource,
+        // there will be two distinct items for the same resource.
+        //
+        // This is not a duplication bug, however it causes annoyances for
+        // crafting. To merge the items, the player can use a chest.
         inventory_add(&player_inventory, &player_active_item, 0);
         player_active_item.type = -1;
     }

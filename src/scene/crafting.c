@@ -50,14 +50,10 @@ static void crafting_check_craftable(void) {
             for(u32 j = 0; j < player_inventory.size; j++) {
                 struct item_Data *item_data = &player_inventory.items[j];
 
-                // TODO this ignores split items that could have an higher
-                // count, making it possible to craft
-                //
-                // should the bug be fixed, or left as in the original?
-                //
-                // the fix should be as simple as
-                // if(item_data->type == item_type && item_data->count >= count)
-                //     ...
+                // Bug in the original game: the possibility that items
+                // might be split in two different slots (due to another
+                // bug in inventory menu) is ignored, so only the first
+                // item's count is checked.
                 if(item_data->type == item_type) {
                     if(item_data->count >= count)
                         has_enought = true;
