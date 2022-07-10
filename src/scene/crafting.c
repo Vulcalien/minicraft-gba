@@ -59,10 +59,9 @@ static void crafting_check_craftable(void) {
                 // if(item_data->type == item_type && item_data->count >= count)
                 //     ...
                 if(item_data->type == item_type) {
-                    if(item_data->count >= count) {
+                    if(item_data->count >= count)
                         has_enought = true;
-                        break;
-                    }
+                    break;
                 }
             }
 
