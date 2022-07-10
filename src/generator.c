@@ -27,11 +27,11 @@ void generate_levels(void) {
             /*level->tiles[t] = (t / 16 % 2) ? 11 : 2;*/
             /*level->data[t] = 0;*/
 
-            level->tiles[t] = rand() % TILE_TYPES;
-            level->data[t] = rand();
+            /*level->tiles[t] = rand() % TILE_TYPES;*/
+            /*level->data[t] = rand();*/
 
-            /*level->tiles[t] = 0 + (t % 17 == 0) * 4;*/
-            /*level->data[t] = 0;*/
+            level->tiles[t] = 0 + (t % 17 == 0) * 4;
+            level->data[t] = 0;
         }
 
         for(u32 i = 1; i < ENTITY_CAP; i++) {

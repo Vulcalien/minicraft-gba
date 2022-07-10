@@ -345,6 +345,9 @@ const struct crafting_Recipe anvil_recipes[ANVIL_RECIPES] = {
     }
 };
 
+u8 crafting_current_recipes_size;
+const struct crafting_Recipe *crafting_current_recipes;
+
 bool crafting_craft(struct Inventory *inventory,
                     struct crafting_Recipe *recipe) {
     const u8 result = recipe->result;

@@ -21,6 +21,7 @@
 #include "item.h"
 #include "furniture.h"
 #include "scene.h"
+#include "crafting.h"
 
 #define MAX_HP      (10)
 #define MAX_STAMINA (10)
@@ -274,6 +275,15 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
     // TODO add attack particle, lasting attack_particle_time ticks
 }
 
+#define OPEN_CRAFTING_MENU(recipe_list)\
+    do {\
+        crafting_current_recipes = (struct crafting_Recipe *) &recipe_list;\
+        crafting_current_recipes_size =\
+            sizeof(recipe_list) / sizeof(struct crafting_Recipe);\
+\
+        set_scene(&scene_crafting, true);\
+    } while(0)
+
 static inline bool player_use(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
@@ -306,16 +316,16 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
                     bool found = true;
                     switch(e_data->type) {
                         case WORKBENCH_ENTITY:
-                            // TODO open workbench crafting menu
+                            OPEN_CRAFTING_MENU(workbench_recipes);
                             break;
                         case FURNACE_ENTITY:
-                            // TODO open furnace crafting menu
+                            OPEN_CRAFTING_MENU(furnace_recipes);
                             break;
                         case OVEN_ENTITY:
-                            // TODO open oven crafting menu
+                            OPEN_CRAFTING_MENU(oven_recipes);
                             break;
                         case ANVIL_ENTITY:
-                            // TODO open anvil crafting menu
+                            OPEN_CRAFTING_MENU(anvil_recipes);
                             break;
                         case CHEST_ENTITY:
                             furniture_set_opened_chest(data);

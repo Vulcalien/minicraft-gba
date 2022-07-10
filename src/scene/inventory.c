@@ -65,13 +65,6 @@ static void inventory_tick(void) {
     }
 }
 
-#define SET_TILE(x, y, id, flip, palette)\
-    do {\
-        BG3_TILEMAP[(x) + (y) * 32] = (id) |\
-                                      ((flip) << 10) |\
-                                      ((palette) << 12);\
-    } while(0)
-
 static void inventory_draw(void) {
     const u8 inv_x = 9;
     const u8 inv_y = 2;
@@ -80,7 +73,7 @@ static void inventory_draw(void) {
 
     // clear displayed active item
     for(u32 x = 20; x < 30; x++)
-        SET_TILE(x, 18, 29, 0, 0);
+        BG3_TILEMAP[x + 18 * 32] = 29;
 
     screen_draw_frame("INVENTORY", inv_x, inv_y, inv_w, inv_h);
 
@@ -109,7 +102,6 @@ static void inventory_draw(void) {
         "<", 4, inv_x + inv_w - 1, inv_y + 1 + (inventory_selected - item0)
     );
 }
-#undef SET_TILE
 
 const struct Scene scene_inventory = {
     .init = inventory_init,

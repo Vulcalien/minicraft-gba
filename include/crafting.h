@@ -43,6 +43,9 @@ extern const struct crafting_Recipe furnace_recipes[FURNACE_RECIPES];
 extern const struct crafting_Recipe oven_recipes[OVEN_RECIPES];
 extern const struct crafting_Recipe anvil_recipes[ANVIL_RECIPES];
 
+extern u8 crafting_current_recipes_size;
+extern const struct crafting_Recipe *crafting_current_recipes;
+
 extern bool crafting_craft(struct Inventory *inventory,
                            struct crafting_Recipe *recipe);
 
