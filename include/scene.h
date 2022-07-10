@@ -33,6 +33,7 @@ extern const struct Scene scene_about;
 extern const struct Scene scene_game;
 extern const struct Scene scene_inventory;
 extern const struct Scene scene_chest;
+extern const struct Scene scene_crafting;
 
 inline void set_scene(const struct Scene *new_scene, bool should_init) {
     scene = new_scene;

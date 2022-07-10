@@ -444,6 +444,8 @@ ETICK(player_tick) {
     // DEBUG
     if(INPUT_CLICKED(KEY_L))
         set_scene(&scene_chest, true);
+    if(INPUT_CLICKED(KEY_R))
+        set_scene(&scene_crafting, true);
 }
 
 EDRAW(player_draw) {
