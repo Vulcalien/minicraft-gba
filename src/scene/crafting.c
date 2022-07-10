@@ -97,6 +97,17 @@ static void crafting_tick(void) {
         crafting_selected = crafting_current_recipes_size - 1;
     if(crafting_selected >= crafting_current_recipes_size)
         crafting_selected = 0;
+
+    if(INPUT_CLICKED(KEY_A)) {
+        if(crafting_selected < can_craft_size) {
+            const struct crafting_Recipe *recipe = &crafting_current_recipes[
+                can_craft_recipes[crafting_selected]
+            ];
+
+            if(crafting_craft(&player_inventory, recipe))
+                crafting_check_craftable();
+        }
+    }
 }
 
 static void crafting_draw(void) {
@@ -162,7 +173,6 @@ static void crafting_draw(void) {
         "<", 4,
         craft_x + craft_w - 1, craft_y + 1 + (crafting_selected - item0)
     );
-
 }
 
 const struct Scene scene_crafting = {

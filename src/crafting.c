@@ -349,37 +349,27 @@ u8 crafting_current_recipes_size;
 const struct crafting_Recipe *crafting_current_recipes;
 
 bool crafting_craft(struct Inventory *inventory,
-                    struct crafting_Recipe *recipe) {
-    const u8 result = recipe->result;
+                    const struct crafting_Recipe *recipe) {
+    struct item_Data to_add = {
+        .type = recipe->result,
+        .tool_level = recipe->tool_level
+    };
 
     // add item to the inventory
-    {
-        const struct Item *item = &item_list[result];
-        if(item->class == ITEMCLASS_TOOL) {
-            struct item_Data data = {
-                .type = result,
-                .tool_level = recipe->tool_level
-            };
+    if(item_is_resource(&to_add)) {
+        if(!inventory_add_resource(inventory, to_add.type, 1, 0))
+            return false;
+    } else {
+        if(to_add.type == CHEST_ITEM) {
+            to_add.chest_id = furniture_new_chest_id();
 
-            if(!inventory_add(inventory, &data, 0))
-                return false;
-        } else if(item->class == ITEMCLASS_FURNITURE) {
-            struct item_Data data = { .type = result };
-
-            if(result == CHEST_ITEM) {
-                data.chest_id = furniture_new_chest_id();
-
-                // TODO test if this works
-                if(data.chest_id >= CHEST_LIMIT)
-                    return false;
-            }
-
-            if(!inventory_add(inventory, &data, 0))
-                return false;
-        } else {
-            if(!inventory_add_resource(inventory, result, 1, 0))
+            // TODO test if this works
+            if(to_add.chest_id >= CHEST_LIMIT)
                 return false;
         }
+
+        if(!inventory_add(inventory, &to_add, 0))
+            return false;
     }
 
     // remove the required items

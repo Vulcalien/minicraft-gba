@@ -109,4 +109,12 @@ extern void item_write(struct item_Data *data, u8 palette, u32 x, u32 y);
 extern void item_write_name(struct item_Data *data, u8 palette, u32 x, u32 y);
 extern void item_draw_icon(struct item_Data *data, u32 x, u32 y, bool black_bg);
 
+inline bool item_is_resource(struct item_Data *data) {
+    const struct Item *item = ITEM_S(data);
+
+    return item->class == ITEMCLASS_MATERIAL  ||
+           item->class == ITEMCLASS_PLACEABLE ||
+           item->class == ITEMCLASS_FOOD;
+}
+
 #endif // MINICRAFT_ITEM

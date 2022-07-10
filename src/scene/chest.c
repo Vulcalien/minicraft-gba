@@ -67,22 +67,16 @@ static void chest_tick(void) {
         inventory_remove(inv[0], &removed, chest_selected[chest_window]);
 
         bool could_add;
-        const struct Item *item = ITEM_S(&removed);
-        switch(item->class) {
-            case ITEMCLASS_MATERIAL:
-            case ITEMCLASS_PLACEABLE:
-            case ITEMCLASS_FOOD:
-                could_add = inventory_add_resource(
-                    inv[1],
-                    removed.type, removed.count,
-                    chest_selected[chest_window ^ 1]
-                );
-                break;
-
-            default:
-                could_add = inventory_add(
-                    inv[1], &removed, chest_selected[chest_window ^ 1]
-                );
+        if(item_is_resource(&removed)) {
+            could_add = inventory_add_resource(
+                inv[1],
+                removed.type, removed.count,
+                chest_selected[chest_window ^ 1]
+            );
+        } else {
+            could_add = inventory_add(
+                inv[1], &removed, chest_selected[chest_window ^ 1]
+            );
         }
 
         if(could_add) {

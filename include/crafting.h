@@ -47,6 +47,6 @@ extern u8 crafting_current_recipes_size;
 extern const struct crafting_Recipe *crafting_current_recipes;
 
 extern bool crafting_craft(struct Inventory *inventory,
-                           struct crafting_Recipe *recipe);
+                           const struct crafting_Recipe *recipe);
 
 #endif // MINICRAFT_CRAFTING
