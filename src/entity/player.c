@@ -357,8 +357,9 @@ ETICK(player_tick) {
         for(u32 i = 0; i < 1; i++)
             inventory_add(&player_inventory, &power_glove, 0);
 
-        for(u32 i = 0; i < 7; i++)
-            inventory_add_resource(&player_inventory, i, 1, 0);
+        inventory_add_resource(&player_inventory, STONE_ITEM, 20, 0);
+        inventory_add_resource(&player_inventory, WOOD_ITEM, 20, 0);
+        inventory_add_resource(&player_inventory, BREAD_ITEM, (1 << 16) - 1, 0);
     }
 
     // DEBUG set player hp

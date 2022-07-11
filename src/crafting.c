@@ -355,10 +355,10 @@ bool crafting_craft(struct Inventory *inventory,
         if(!inventory_add_resource(inventory, recipe->result, 1, 0))
             return false;
     } else {
-        struct item_Data to_add = {
-            .type = recipe->result,
-            .tool_level = recipe->tool_level
-        };
+        struct item_Data to_add = { .type = recipe->result };
+
+        if(ITEM_S(&to_add)->class == ITEMCLASS_TOOL)
+            to_add.tool_level = recipe->tool_level;
 
         if(to_add.type == CHEST_ITEM) {
             to_add.chest_id = furniture_new_chest_id();

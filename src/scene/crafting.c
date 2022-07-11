@@ -169,6 +169,60 @@ static void crafting_draw(void) {
         "<", 4,
         craft_x + craft_w - 1, craft_y + 1 + (crafting_selected - item0)
     );
+
+    // draw 'HAVE' item and count
+    {
+        const struct crafting_Recipe *selected_recipe;
+        if(crafting_selected < can_craft_size) {
+            selected_recipe = &crafting_current_recipes[
+                can_craft_recipes[crafting_selected]
+            ];
+        } else {
+            selected_recipe = &crafting_current_recipes[
+                cannot_craft_recipes[crafting_selected - can_craft_size]
+            ];
+        }
+
+        struct item_Data result = {
+            .type = selected_recipe->result,
+            .tool_level = selected_recipe->tool_level
+        };
+        item_draw_icon(&result, have_x + 1, have_y + 1, false);
+
+        u16 count = 0;
+        if(item_is_resource(result.type)) {
+            for(u32 i = 0; i < player_inventory.size; i++) {
+                struct item_Data *item_data = &player_inventory.items[i];
+
+                // Bug in the original game: the possibility that items
+                // might be split in two different slots (due to another
+                // bug in inventory menu) is ignored, so only the first
+                // item's count is checked.
+                if(item_data->type == result.type) {
+                    count = item_data->count;
+                    break;
+                }
+            }
+        } else {
+            for(u32 i = 0; i < player_inventory.size; i++) {
+                struct item_Data *item_data = &player_inventory.items[i];
+
+                // FIXED BUG - Inventory.java:63
+                // all furniture items are considered the same item
+                if(item_data->type == result.type) {
+                    const struct Item *item = ITEM_S(item_data);
+
+                    if(item->class != ITEMCLASS_TOOL ||
+                       item_data->tool_level == result.tool_level)
+                        count++;
+                }
+            }
+        }
+
+        char count_text[6] = { 0 };
+        itoa(count, count_text, 5);
+        screen_write(count_text, 4, have_x + 2, have_y + 1);
+    }
 }
 
 const struct Scene scene_crafting = {
