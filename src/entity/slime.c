@@ -101,3 +101,11 @@ static const struct Entity slime_entity = {
     .is_solid = true,
     .touch_player = slime_touch_player
 };
+
+void mob_slime_die(struct Level *level, struct entity_Data *data) {
+    u8 drop_count = 1 + rand() % 2;
+    for(u32 i = 0; i < drop_count; i++)
+        entity_add_item(level, data->x, data->y, SLIME_ITEM, false);
+
+    // TODO add score
+}

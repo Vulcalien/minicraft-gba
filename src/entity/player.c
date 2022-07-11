@@ -501,3 +501,7 @@ static const struct Entity player_entity = {
 
 #undef MAX_STAMINA
 #undef IS_SWIMMING
+
+void mob_player_die(struct Level *level, struct entity_Data *data) {
+    // TODO player death
+}

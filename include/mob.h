@@ -46,4 +46,9 @@ extern bool mob_move(struct Level *level, struct entity_Data *data,
 extern void mob_hurt(struct Level *level, struct entity_Data *data,
                      u8 damage, u8 knockback_dir);
 
+extern void mob_zombie_die(struct Level *level, struct entity_Data *data);
+extern void mob_slime_die(struct Level *level, struct entity_Data *data);
+extern void mob_air_wizard_die(struct Level *level, struct entity_Data *data);
+extern void mob_player_die(struct Level *level, struct entity_Data *data);
+
 #endif // MINICRAFT_MOB

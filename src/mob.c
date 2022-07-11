@@ -18,13 +18,35 @@
 #include "level.h"
 #include "entity.h"
 #include "player.h"
+#include "item.h"
+
+static inline mob_die(struct Level *level, struct entity_Data *data) {
+    switch(data->type) {
+        case ZOMBIE_ENTITY:
+            mob_zombie_die(level, data);
+            break;
+
+        case SLIME_ENTITY:
+            mob_slime_die(level, data);
+            break;
+
+        case AIR_WIZARD_ENTITY:
+            mob_air_wizard_die(level, data);
+            break;
+
+        case PLAYER_ENTITY:
+            mob_player_die(level, data);
+            break;
+    }
+    data->should_remove = true;
+}
 
 IWRAM_SECTION
 void mob_tick(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
     if(mob_data->hp <= 0)
-        ; // TODO die here or in mob_hurt???
+        mob_die(level, data);
 
     if(mob_data->hurt_time > 0)
         mob_data->hurt_time--;
@@ -73,8 +95,6 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
         return;
 
     mob_data->hp = (mob_data->hp - damage) * (mob_data->hp >= damage);
-    if(mob_data->hp == 0)
-        ; // TODO die here or in mob_tick???
 
     mob_data->hurt_time = 10;
 

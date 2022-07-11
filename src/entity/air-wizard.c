@@ -41,3 +41,7 @@ static const struct Entity air_wizard_entity = {
     .is_solid = true,
     .touch_player = air_wizard_touch_player
 };
+
+void mob_air_wizard_die(struct Level *level, struct entity_Data *data) {
+    // TODO air wizard death
+}
