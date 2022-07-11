@@ -93,7 +93,7 @@ ETICK(item_tick) {
             if(could_add) {
                 data->should_remove = true;
 
-                // TODO increment score
+                score++;
 
                 // TODO play sound
             }

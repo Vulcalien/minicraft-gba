@@ -107,5 +107,9 @@ void mob_slime_die(struct Level *level, struct entity_Data *data) {
     for(u32 i = 0; i < drop_count; i++)
         entity_add_item(level, data->x, data->y, SLIME_ITEM, false);
 
-    // TODO add score
+    struct mob_Data   *mob_data   = (struct mob_Data *)   &data->data;
+    struct slime_Data *slime_data = (struct slime_Data *) &mob_data->data;
+
+    if(level->player)
+        score += 25 * (1 + slime_data->level);
 }

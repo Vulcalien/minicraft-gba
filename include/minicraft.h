@@ -31,6 +31,9 @@
 
 extern u32 tick_count;
 
+extern u32 score;
+
+// TODO move to level.h???
 extern u8 current_level;
 
 // The behavior of right shift for negative values is implementation-dependent

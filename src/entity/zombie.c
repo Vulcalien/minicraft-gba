@@ -111,5 +111,9 @@ void mob_zombie_die(struct Level *level, struct entity_Data *data) {
     for(u32 i = 0; i < drop_count; i++)
         entity_add_item(level, data->x, data->y, CLOTH_ITEM, false);
 
-    // TODO add score
+    struct mob_Data    *mob_data    = (struct mob_Data *)    &data->data;
+    struct zombie_Data *zombie_data = (struct zombie_Data *) &mob_data->data;
+
+    if(level->player)
+        score += 50 * (1 + zombie_data->level);
 }
