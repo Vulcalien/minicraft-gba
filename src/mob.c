@@ -20,7 +20,7 @@
 #include "player.h"
 #include "item.h"
 
-static inline mob_die(struct Level *level, struct entity_Data *data) {
+static inline void mob_die(struct Level *level, struct entity_Data *data) {
     switch(data->type) {
         case ZOMBIE_ENTITY:
             mob_zombie_die(level, data);
