@@ -67,7 +67,7 @@ static void chest_tick(void) {
         inventory_remove(inv[0], &removed, chest_selected[chest_window]);
 
         bool could_add;
-        if(item_is_resource(&removed)) {
+        if(item_is_resource(removed.type)) {
             could_add = inventory_add_resource(
                 inv[1],
                 removed.type, removed.count,

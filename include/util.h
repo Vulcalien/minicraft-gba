@@ -23,4 +23,17 @@ extern void memcpy16(vu16 *dest, const vu16 *src, u32 n);
 extern u16 rand(void);
 extern void srand(u32 new_seed);
 
+inline void itoa(u32 number, char *array, u8 digits) {
+    u32 pos = 0;
+    for(u32 i = 0; i < digits; i++) {
+        u32 digit = number;
+        for(u32 j = 1; j < digits - i; j++)
+            digit /= 10;
+        digit %= 10;
+
+        if(digit != 0 || pos != 0 || i == digits - 1)
+            array[pos++] = '0' + digit;
+    }
+}
+
 #endif // MINICRAFT_UTIL

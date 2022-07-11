@@ -350,16 +350,16 @@ const struct crafting_Recipe *crafting_current_recipes;
 
 bool crafting_craft(struct Inventory *inventory,
                     const struct crafting_Recipe *recipe) {
-    struct item_Data to_add = {
-        .type = recipe->result,
-        .tool_level = recipe->tool_level
-    };
-
     // add item to the inventory
-    if(item_is_resource(&to_add)) {
-        if(!inventory_add_resource(inventory, to_add.type, 1, 0))
+    if(item_is_resource(recipe->result)) {
+        if(!inventory_add_resource(inventory, recipe->result, 1, 0))
             return false;
     } else {
+        struct item_Data to_add = {
+            .type = recipe->result,
+            .tool_level = recipe->tool_level
+        };
+
         if(to_add.type == CHEST_ITEM) {
             to_add.chest_id = furniture_new_chest_id();
 

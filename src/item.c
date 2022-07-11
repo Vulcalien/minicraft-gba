@@ -289,26 +289,13 @@ const struct Item item_list[ITEM_TYPES] = {
 void item_write(struct item_Data *data, u8 palette, u32 x, u32 y) {
     const struct Item *item = ITEM_S(data);
 
-    if(item->class == ITEMCLASS_MATERIAL ||
-       item->class == ITEMCLASS_PLACEABLE ||
-       item->class == ITEMCLASS_FOOD) {
+    if(item_is_resource(data->type)) {
         u16 count = data->count;
         if(count > 999)
             count = 999;
 
         char count_text[4] = { 0 };
-        u8 pos = 0;
-        for(u32 i = 0; i < 3; i++) {
-            u16 digit = count;
-            for(u32 j = 0; j < 2 - i; j++)
-                digit /= 10;
-            digit %= 10;
-
-            if(digit != 0 || pos != 0) {
-                count_text[pos] = '0' + digit;
-                pos++;
-            }
-        }
+        itoa(count, count_text, 3);
         screen_write(count_text, palette + 3, x, y);
 
         screen_write(item->name, palette, x + 3, y);
