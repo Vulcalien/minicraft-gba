@@ -24,11 +24,8 @@
 
 static i8 crafting_selected;
 
-static u8 can_craft_size;
-static u8 can_craft_recipes[16];
-
-static u8 cannot_craft_size;
-static u8 cannot_craft_recipes[16];
+static u8 crafting_sorted_recipes[16];
+static bool crafting_can_craft[16];
 
 static u16 crafting_count(struct Inventory *inventory,
                           u8 item_type, u8 tool_level) {
@@ -62,13 +59,10 @@ static u16 crafting_count(struct Inventory *inventory,
 }
 
 static void crafting_check_craftable(void) {
-    can_craft_size = 0;
-    cannot_craft_size = 0;
-
     for(u32 r = 0; r < crafting_current_recipes_size; r++) {
         const struct crafting_Recipe *recipe = &crafting_current_recipes[r];
 
-        bool can_craft = true;
+        crafting_can_craft[r] = true;
         for(u32 i = 0; i < CRAFTING_MAX_REQUIRED; i++) {
             u8 item_type = recipe->required.items[i];
             u8 count = recipe->required.count[i];
@@ -78,15 +72,10 @@ static void crafting_check_craftable(void) {
 
             u16 has_count = crafting_count(&player_inventory, item_type, 0);
             if(has_count < count) {
-                can_craft = false;
+                crafting_can_craft[r] = false;
                 break;
             }
         }
-
-        if(can_craft)
-            can_craft_recipes[can_craft_size++] = r;
-        else
-            cannot_craft_recipes[cannot_craft_size++] = r;
     }
 }
 
@@ -94,6 +83,15 @@ static void crafting_init(void) {
     crafting_selected = 0;
 
     crafting_check_craftable();
+
+    u32 pos = 0;
+    for(u32 i = 0; i < crafting_current_recipes_size; i++)
+        if(crafting_can_craft[i])
+            crafting_sorted_recipes[pos++] = i;
+
+    for(u32 i = 0; i < crafting_current_recipes_size; i++)
+        if(!crafting_can_craft[i])
+            crafting_sorted_recipes[pos++] = i;
 }
 
 static void crafting_tick(void) {
@@ -111,9 +109,11 @@ static void crafting_tick(void) {
         crafting_selected = 0;
 
     if(INPUT_CLICKED(KEY_A)) {
-        if(crafting_selected < can_craft_size) {
+        u8 recipe_id = crafting_sorted_recipes[crafting_selected];
+
+        if(crafting_can_craft[recipe_id]) {
             const struct crafting_Recipe *recipe = &crafting_current_recipes[
-                can_craft_recipes[crafting_selected]
+                recipe_id
             ];
 
             if(crafting_craft(&player_inventory, recipe))
@@ -153,16 +153,12 @@ static void crafting_draw(void) {
         if(item0 + i >= crafting_current_recipes_size)
             break;
 
-        u8 recipe_id;
+        u8 recipe_id = crafting_sorted_recipes[item0 + i];
         u8 palette;
-
-        if(item0 + i < can_craft_size) {
-            recipe_id = can_craft_recipes[item0 + i];
+        if(crafting_can_craft[recipe_id])
             palette = 4;
-        } else {
-            recipe_id = cannot_craft_recipes[item0 + i - can_craft_size];
+        else
             palette = 5;
-        }
 
         const struct crafting_Recipe *recipe =
             &crafting_current_recipes[recipe_id];
@@ -186,16 +182,8 @@ static void crafting_draw(void) {
         craft_x + craft_w - 1, craft_y + 1 + (crafting_selected - item0)
     );
 
-    const struct crafting_Recipe *selected_recipe;
-    if(crafting_selected < can_craft_size) {
-        selected_recipe = &crafting_current_recipes[
-            can_craft_recipes[crafting_selected]
-        ];
-    } else {
-        selected_recipe = &crafting_current_recipes[
-            cannot_craft_recipes[crafting_selected - can_craft_size]
-        ];
-    }
+    const struct crafting_Recipe *selected_recipe =
+        &crafting_current_recipes[crafting_sorted_recipes[crafting_selected]];
 
     // draw 'HAVE' item and count
     {
