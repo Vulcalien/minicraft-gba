@@ -30,6 +30,37 @@ static u8 can_craft_recipes[16];
 static u8 cannot_craft_size;
 static u8 cannot_craft_recipes[16];
 
+static u16 crafting_count(struct Inventory *inventory,
+                          u8 item_type, u8 tool_level) {
+    if(item_is_resource(item_type)) {
+        for(u32 i = 0; i < inventory->size; i++) {
+            struct item_Data *item_data = &inventory->items[i];
+
+            // Bug in the original game: the possibility that items
+            // might be split in two different slots (due to another
+            // bug in inventory menu) is ignored, so only the first
+            // item's count is checked.
+            if(item_data->type == item_type)
+                return item_data->count;
+        }
+    } else {
+        u16 count = 0;
+        for(u32 i = 0; i < inventory->size; i++) {
+            struct item_Data *item_data = &inventory->items[i];
+
+            // FIXED BUG - Inventory.java:63
+            // all furniture items are considered the same item
+            if(item_data->type == item_type) {
+                if(ITEM_S(item_data)->class != ITEMCLASS_TOOL ||
+                   item_data->tool_level == tool_level)
+                    count++;
+            }
+        }
+        return count;
+    }
+    return 0;
+}
+
 static void crafting_check_craftable(void) {
     can_craft_size = 0;
     cannot_craft_size = 0;
@@ -43,25 +74,10 @@ static void crafting_check_craftable(void) {
             u8 count = recipe->required.count[i];
 
             if(count == 0)
-                continue;
+                break;
 
-            // search for the item
-            bool has_enought = false;
-            for(u32 j = 0; j < player_inventory.size; j++) {
-                struct item_Data *item_data = &player_inventory.items[j];
-
-                // Bug in the original game: the possibility that items
-                // might be split in two different slots (due to another
-                // bug in inventory menu) is ignored, so only the first
-                // item's count is checked.
-                if(item_data->type == item_type) {
-                    if(item_data->count >= count)
-                        has_enought = true;
-                    break;
-                }
-            }
-
-            if(!has_enought) {
+            u16 has_count = crafting_count(&player_inventory, item_type, 0);
+            if(has_count < count) {
                 can_craft = false;
                 break;
             }
@@ -170,58 +186,56 @@ static void crafting_draw(void) {
         craft_x + craft_w - 1, craft_y + 1 + (crafting_selected - item0)
     );
 
+    const struct crafting_Recipe *selected_recipe;
+    if(crafting_selected < can_craft_size) {
+        selected_recipe = &crafting_current_recipes[
+            can_craft_recipes[crafting_selected]
+        ];
+    } else {
+        selected_recipe = &crafting_current_recipes[
+            cannot_craft_recipes[crafting_selected - can_craft_size]
+        ];
+    }
+
     // draw 'HAVE' item and count
     {
-        const struct crafting_Recipe *selected_recipe;
-        if(crafting_selected < can_craft_size) {
-            selected_recipe = &crafting_current_recipes[
-                can_craft_recipes[crafting_selected]
-            ];
-        } else {
-            selected_recipe = &crafting_current_recipes[
-                cannot_craft_recipes[crafting_selected - can_craft_size]
-            ];
-        }
-
         struct item_Data result = {
             .type = selected_recipe->result,
             .tool_level = selected_recipe->tool_level
         };
         item_draw_icon(&result, have_x + 1, have_y + 1, false);
 
-        u16 count = 0;
-        if(item_is_resource(result.type)) {
-            for(u32 i = 0; i < player_inventory.size; i++) {
-                struct item_Data *item_data = &player_inventory.items[i];
-
-                // Bug in the original game: the possibility that items
-                // might be split in two different slots (due to another
-                // bug in inventory menu) is ignored, so only the first
-                // item's count is checked.
-                if(item_data->type == result.type) {
-                    count = item_data->count;
-                    break;
-                }
-            }
-        } else {
-            for(u32 i = 0; i < player_inventory.size; i++) {
-                struct item_Data *item_data = &player_inventory.items[i];
-
-                // FIXED BUG - Inventory.java:63
-                // all furniture items are considered the same item
-                if(item_data->type == result.type) {
-                    const struct Item *item = ITEM_S(item_data);
-
-                    if(item->class != ITEMCLASS_TOOL ||
-                       item_data->tool_level == result.tool_level)
-                        count++;
-                }
-            }
-        }
+        u16 count = crafting_count(
+            &player_inventory, result.type, result.tool_level
+        );
 
         char count_text[6] = { 0 };
         itoa(count, count_text, 5);
         screen_write(count_text, 4, have_x + 2, have_y + 1);
+    }
+
+    // draw 'COST' items and count
+    for(u32 i = 0; i < CRAFTING_MAX_REQUIRED; i++) {
+        u8 item_type = selected_recipe->required.items[i];
+        u8 required_count = selected_recipe->required.count[i];
+
+        if(required_count == 0)
+            break;
+
+        struct item_Data required_item = { .type = item_type };
+        item_draw_icon(&required_item, cost_x + 1, cost_y + 1 + i, false);
+
+        u16 has_count = crafting_count(&player_inventory, item_type, 0);
+        if(has_count > 99)
+            has_count = 99;
+
+        char cost_text[6] = { 0 };
+        itoa(required_count, cost_text, 2);
+        cost_text[1 + (required_count > 9)] = '/';
+        itoa(has_count, cost_text + 2 + (required_count > 9), 2);
+
+        u8 palette = 4 + (has_count < required_count);
+        screen_write(cost_text, palette, cost_x + 2, cost_y + 1 + i);
     }
 }
 
