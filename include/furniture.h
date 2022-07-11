@@ -19,6 +19,7 @@
 #include "minicraft.h"
 
 #include "level.h"
+#include "inventory.h"
 
 #define CHEST_LIMIT (32)
 extern struct Inventory chest_inventories[CHEST_LIMIT];

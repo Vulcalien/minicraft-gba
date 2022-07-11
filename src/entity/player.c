@@ -328,7 +328,7 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
                             OPEN_CRAFTING_MENU(anvil_recipes);
                             break;
                         case CHEST_ENTITY:
-                            furniture_set_opened_chest(data);
+                            furniture_set_opened_chest(e_data);
                             set_scene(&scene_chest, true);
                             break;
 
@@ -348,8 +348,10 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
 ETICK(player_tick) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
-    // DEBUG clear player_inventory
+    // DEBUG initialize
     if(player_tick_time == 0) {
+        mob_data->hp = MAX_HP;
+
         player_inventory.size = 0;
         player_active_item.type = -1;
 
@@ -357,14 +359,13 @@ ETICK(player_tick) {
         for(u32 i = 0; i < 1; i++)
             inventory_add(&player_inventory, &power_glove, 0);
 
-        inventory_add_resource(&player_inventory, STONE_ITEM, 20, 0);
-        inventory_add_resource(&player_inventory, WOOD_ITEM, 20, 0);
-        inventory_add_resource(&player_inventory, BREAD_ITEM, (1 << 16) - 1, 0);
+        /*inventory_add_resource(&player_inventory, GOLD_ORE_ITEM, 30, 0);*/
+        /*inventory_add_resource(&player_inventory, COAL_ITEM, 30, 0);*/
+        /*inventory_add_resource(&player_inventory, STONE_ITEM, 20, 0);*/
+        inventory_add_resource(&player_inventory, WOOD_ITEM, 80, 0);
+        inventory_add_resource(&player_inventory, WORKBENCH_ITEM, 1, 0);
+        /*inventory_add_resource(&player_inventory, BREAD_ITEM, (1 << 16) - 1, 0);*/
     }
-
-    // DEBUG set player hp
-    if(player_tick_time == 0)
-        mob_data->hp = MAX_HP;
 
     player_tick_time++;
 

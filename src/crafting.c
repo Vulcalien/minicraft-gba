@@ -363,7 +363,6 @@ bool crafting_craft(struct Inventory *inventory,
         if(to_add.type == CHEST_ITEM) {
             to_add.chest_id = furniture_new_chest_id();
 
-            // TODO test if this works
             if(to_add.chest_id >= CHEST_LIMIT)
                 return false;
         }
