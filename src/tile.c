@@ -20,18 +20,9 @@
 #include "player.h"
 #include "item.h"
 
-#define TILE(id, palette) ((id) | ((palette) << 12))
-#define TILE_M(id, flip, palette)\
-    ((id) | (flip << 10) | (palette << 12))
-
 #define FTICK(name)\
     IWRAM_SECTION\
     static void name(struct Level *level, u32 xt, u32 yt)
-
-#define FDRAW(name)\
-    IWRAM_SECTION\
-    static void name(struct Level *level, u32 xt, u32 yt,\
-                     u16 tiles[4], u16 tiles2[4])
 
 #define FSTEPPED_ON(name)\
     IWRAM_SECTION\
@@ -42,14 +33,6 @@
     IWRAM_SECTION\
     static void name(struct Level *level, u32 xt, u32 yt,\
                      struct item_Data *item)
-
-// CONNECTS_TO_X
-#define CONNECTS_TO_GRASS(level, xt, yt)\
-    (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.grass)
-#define CONNECTS_TO_SAND(level, xt, yt)\
-    (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.sand)
-#define CONNECTS_TO_LIQUID(level, xt, yt)\
-    (LEVEL_GET_TILE_S((level), (xt), (yt))->connects_to.liquid)
 
 #define GET_PUNCH_DAMAGE() (1 + rand() % 3)
 
@@ -77,33 +60,6 @@ FTICK(grass_tick) {
         LEVEL_SET_TILE(level, xn, yn, GRASS_TILE, 0);
 }
 
-FDRAW(grass_draw) {
-    bool u = CONNECTS_TO_GRASS(level, xt,     yt - 1);
-    bool d = CONNECTS_TO_GRASS(level, xt,     yt + 1);
-    bool l = CONNECTS_TO_GRASS(level, xt - 1, yt    );
-    bool r = CONNECTS_TO_GRASS(level, xt + 1, yt    );
-
-    if(u && l)
-        tiles[0] = TILE(0, 0);
-    else
-        tiles[0] = TILE(4 + u * 7 + l * 4, 0);
-
-    if(u && r)
-        tiles[1] = TILE(1, 0);
-    else
-        tiles[1] = TILE(5 + u * 4 + r * 3, 0);
-
-    if(d && l)
-        tiles[2] = TILE(2, 0);
-    else
-        tiles[2] = TILE(6 + d * 5 + l * 4, 0);
-
-    if(d && r)
-        tiles[3] = TILE(3, 0);
-    else
-        tiles[3] = TILE(7 + d * 2 + r * 3, 0);
-}
-
 FINTERACT(grass_interact) {
     if(item->type == SHOVEL_ITEM) {
         if(player_pay_stamina(4 - item->tool_level)) {
@@ -127,38 +83,6 @@ FINTERACT(grass_interact) {
 }
 
 // Rock
-FDRAW(rock_draw) {
-    bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == ROCK_TILE;
-    bool d = LEVEL_GET_TILE(level, xt,     yt + 1) == ROCK_TILE;
-    bool l = LEVEL_GET_TILE(level, xt - 1, yt    ) == ROCK_TILE;
-    bool r = LEVEL_GET_TILE(level, xt + 1, yt    ) == ROCK_TILE;
-
-    bool ul = LEVEL_GET_TILE(level, xt - 1, yt - 1) == ROCK_TILE;
-    bool dl = LEVEL_GET_TILE(level, xt - 1, yt + 1) == ROCK_TILE;
-    bool ur = LEVEL_GET_TILE(level, xt + 1, yt - 1) == ROCK_TILE;
-    bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == ROCK_TILE;
-
-    if(u && l)
-        tiles[0] = TILE(0 + !ul * 20, 1);
-    else
-        tiles[0] = TILE(12 + u * 7 + l * 4, 1);
-
-    if(u && r)
-        tiles[1] = TILE(1 + !ur * 20, 1);
-    else
-        tiles[1] = TILE(13 + u * 4 + r * 3, 1);
-
-    if(d && l)
-        tiles[2] = TILE(2 + !dl * 20, 1);
-    else
-        tiles[2] = TILE(14 + d * 5 + l * 4, 1);
-
-    if(d && r)
-        tiles[3] = TILE(3 + !dr * 20, 1);
-    else
-        tiles[3] = TILE(15 + d * 2 + r * 3, 1);
-}
-
 FINTERACT(rock_interact) {
     u8 dmg;
     if(item->type == PICK_ITEM && player_pay_stamina(4 - item->tool_level))
@@ -198,81 +122,7 @@ FTICK(water_tick) {
         LEVEL_SET_TILE(level, xn, yn, WATER_TILE, 0);
 }
 
-FDRAW(water_draw) {
-    u32 water_seed = (tick_count + 0x109f77 * xt - 0xab24af3 * yt) / 10 * 0x248f7b13 + 0xc21840c5;
-    u16 water_rand = (water_seed * 0x248f7b13 + 0xc21840c5) >> 16;
-
-    bool u = CONNECTS_TO_LIQUID(level, xt,     yt - 1);
-    bool d = CONNECTS_TO_LIQUID(level, xt,     yt + 1);
-    bool l = CONNECTS_TO_LIQUID(level, xt - 1, yt    );
-    bool r = CONNECTS_TO_LIQUID(level, xt + 1, yt    );
-
-    bool su = !u && CONNECTS_TO_SAND(level, xt,     yt - 1);
-    bool sd = !d && CONNECTS_TO_SAND(level, xt,     yt + 1);
-    bool sl = !l && CONNECTS_TO_SAND(level, xt - 1, yt    );
-    bool sr = !r && CONNECTS_TO_SAND(level, xt + 1, yt    );
-
-    if(u && l)
-        tiles[0] = TILE_M((water_rand >> 0) & 3, (water_rand >> 2) & 3, 2);
-    else
-        tiles[0] = TILE(24 + u * 7 + l * 4, 2 + (su || sl) * 1);
-
-    if(u && r)
-        tiles[1] = TILE_M((water_rand >> 4) & 3, (water_rand >> 6) & 3, 2);
-    else
-        tiles[1] = TILE(25 + u * 4 + r * 3, 2 + (su || sr) * 1);
-
-    if(d && l)
-        tiles[2] = TILE_M((water_rand >> 8) & 3, (water_rand >> 10) & 3, 2);
-    else
-        tiles[2] = TILE(26 + d * 5 + l * 4, 2 + (sd || sl) * 1);
-
-    if(d && r)
-        tiles[3] = TILE_M((water_rand >> 12) & 3, (water_rand >> 14) & 3, 2);
-    else
-        tiles[3] = TILE(27 + d * 2 + r * 3, 2 + (sd || sr) * 1);
-}
-
 // Flower
-FDRAW(flower_draw) {
-    bool u = CONNECTS_TO_GRASS(level, xt,     yt - 1);
-    bool d = CONNECTS_TO_GRASS(level, xt,     yt + 1);
-    bool l = CONNECTS_TO_GRASS(level, xt - 1, yt    );
-    bool r = CONNECTS_TO_GRASS(level, xt + 1, yt    );
-
-    bool shape = LEVEL_GET_DATA(level, xt, yt) & 1;
-
-    if(shape) {
-        if(u && l)
-            tiles[0] = TILE(0, 0);
-        else
-            tiles[0] = TILE(4 + u * 7 + l * 4, 0);
-
-        tiles[1] = TILE(33, 0);
-
-        tiles[2] = TILE(33, 0);
-
-        if(d && r)
-            tiles[3] = TILE(3, 0);
-        else
-            tiles[3] = TILE(7 + d * 2 + r * 3, 0);
-    } else {
-        tiles[0] = TILE(33, 0);
-
-        if(u && r)
-            tiles[1] = TILE(1, 0);
-        else
-            tiles[1] = TILE(5 + u * 4 + r * 3, 0);
-
-        if(d && l)
-            tiles[2] = TILE(2, 0);
-        else
-            tiles[2] = TILE(6 + d * 5 + l * 4, 0);
-
-        tiles[3] = TILE(33, 0);
-    }
-}
-
 FINTERACT(flower_interact) {
     u8 count;
     if(item->type == SHOVEL_ITEM && player_pay_stamina(4 - item->tool_level))
@@ -287,38 +137,6 @@ FINTERACT(flower_interact) {
 }
 
 // Tree
-FDRAW(tree_draw) {
-    bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == TREE_TILE;
-    bool d = LEVEL_GET_TILE(level, xt,     yt + 1) == TREE_TILE;
-    bool l = LEVEL_GET_TILE(level, xt - 1, yt    ) == TREE_TILE;
-    bool r = LEVEL_GET_TILE(level, xt + 1, yt    ) == TREE_TILE;
-
-    bool ul = LEVEL_GET_TILE(level, xt - 1, yt - 1) == TREE_TILE;
-    bool dl = LEVEL_GET_TILE(level, xt - 1, yt + 1) == TREE_TILE;
-    bool ur = LEVEL_GET_TILE(level, xt + 1, yt - 1) == TREE_TILE;
-    bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == TREE_TILE;
-
-    if(u && l && ul)
-        tiles[0] = TILE(38, 0);
-    else
-        tiles[0] = TILE(34, 0);
-
-    if(u && r && ur)
-        tiles[1] = TILE(39, 0);
-    else
-        tiles[1] = TILE(35, 0);
-
-    if(d && l && dl)
-        tiles[2] = TILE(39, 0);
-    else
-        tiles[2] = TILE(36, 0);
-
-    if(d && r && dr)
-        tiles[3] = TILE(38, 0);
-    else
-        tiles[3] = TILE(37, 0);
-}
-
 FINTERACT(tree_interact) {
     u8 dmg;
     if(item->type == AXE_ITEM && player_pay_stamina(4 - item->tool_level))
@@ -349,13 +167,6 @@ FINTERACT(tree_interact) {
 }
 
 // Dirt
-FDRAW(dirt_draw) {
-    tiles[0] = TILE(64, 2);
-    tiles[1] = TILE(65, 2);
-    tiles[2] = TILE(66, 2);
-    tiles[3] = TILE(67, 2);
-}
-
 FINTERACT(dirt_interact) {
     if(item->type == SHOVEL_ITEM) {
         if(player_pay_stamina(4 - item->tool_level)) {
@@ -375,35 +186,6 @@ FINTERACT(dirt_interact) {
 }
 
 // Sand
-FDRAW(sand_draw) {
-    bool u = CONNECTS_TO_SAND(level, xt,     yt - 1);
-    bool d = CONNECTS_TO_SAND(level, xt,     yt + 1);
-    bool l = CONNECTS_TO_SAND(level, xt - 1, yt    );
-    bool r = CONNECTS_TO_SAND(level, xt + 1, yt    );
-
-    bool stepped_on = LEVEL_GET_DATA(level, xt, yt) != 0;
-
-    if(u && l)
-        tiles[0] = TILE(0 + stepped_on * 40, 4);
-    else
-        tiles[0] = TILE(4 + u * 7 + l * 4, 4);
-
-    if(u && r)
-        tiles[1] = TILE(1, 4);
-    else
-        tiles[1] = TILE(5 + u * 4 + r * 3, 4);
-
-    if(d && l)
-        tiles[2] = TILE(2, 4);
-    else
-        tiles[2] = TILE(6 + d * 5 + l * 4, 4);
-
-    if(d && r)
-        tiles[3] = TILE(3 + stepped_on * 37, 4);
-    else
-        tiles[3] = TILE(7 + d * 2 + r * 3, 4);
-}
-
 FSTEPPED_ON(sand_stepped_on) {
     u8 etype = entity_data->type;
     if(etype == ZOMBIE_ENTITY ||
@@ -427,13 +209,6 @@ FINTERACT(sand_interact) {
 }
 
 // Cactus
-FDRAW(cactus_draw) {
-    tiles[0] = TILE(41, 4);
-    tiles[1] = TILE(42, 4);
-    tiles[2] = TILE(43, 4);
-    tiles[3] = TILE(44, 4);
-}
-
 FINTERACT(cactus_interact) {
     u8 dmg = GET_PUNCH_DAMAGE();
 
@@ -453,38 +228,6 @@ FINTERACT(cactus_interact) {
 }
 
 // Hole
-FDRAW(hole_draw) {
-    bool u = CONNECTS_TO_LIQUID(level, xt,     yt - 1);
-    bool d = CONNECTS_TO_LIQUID(level, xt,     yt + 1);
-    bool l = CONNECTS_TO_LIQUID(level, xt - 1, yt    );
-    bool r = CONNECTS_TO_LIQUID(level, xt + 1, yt    );
-
-    bool su = !u && CONNECTS_TO_SAND(level, xt,     yt - 1);
-    bool sd = !d && CONNECTS_TO_SAND(level, xt,     yt + 1);
-    bool sl = !l && CONNECTS_TO_SAND(level, xt - 1, yt    );
-    bool sr = !r && CONNECTS_TO_SAND(level, xt + 1, yt    );
-
-    if(u && l)
-        tiles[0] = TILE(0, 5);
-    else
-        tiles[0] = TILE(24 + u * 7 + l * 4, 5 + (su || sl) * 1);
-
-    if(u && r)
-        tiles[1] = TILE(1, 5);
-    else
-        tiles[1] = TILE(25 + u * 4 + r * 3, 5 + (su || sr) * 1);
-
-    if(d && l)
-        tiles[2] = TILE(2, 5);
-    else
-        tiles[2] = TILE(26 + d * 5 + l * 4, 5 + (sd || sl) * 1);
-
-    if(d && r)
-        tiles[3] = TILE(3, 5);
-    else
-        tiles[3] = TILE(27 + d * 2 + r * 3, 5 + (sd || sr) * 1);
-}
-
 // Tree Sapling
 FTICK(tree_sapling_tick) {
     u8 age = LEVEL_GET_DATA(level, xt, yt) + 1;
@@ -493,15 +236,6 @@ FTICK(tree_sapling_tick) {
         LEVEL_SET_TILE(level, xt, yt, TREE_TILE, 0);
     else
         LEVEL_SET_DATA(level, xt, yt, age);
-}
-
-FDRAW(tree_sapling_draw) {
-    grass_draw(level, xt, yt, tiles, tiles2);
-
-    tiles2[0] = TILE(45, 0);
-    tiles2[1] = TILE(46, 0);
-    tiles2[2] = TILE(47, 0);
-    tiles2[3] = TILE(48, 0);
 }
 
 FINTERACT(tree_sapling_interact) {
@@ -518,15 +252,6 @@ FTICK(cactus_sapling_tick) {
         LEVEL_SET_DATA(level, xt, yt, age);
 }
 
-FDRAW(cactus_sapling_draw) {
-    sand_draw(level, xt, yt, tiles, tiles2);
-
-    tiles2[0] = TILE(45, 0);
-    tiles2[1] = TILE(46, 0);
-    tiles2[2] = TILE(47, 0);
-    tiles2[3] = TILE(48, 0);
-}
-
 FINTERACT(cactus_sapling_interact) {
     LEVEL_SET_TILE(level, xt, yt, SAND_TILE, 0);
 }
@@ -536,13 +261,6 @@ FTICK(farmland_tick) {
     u8 age = LEVEL_GET_DATA(level, xt, yt);
     if(age < 5)
         LEVEL_SET_DATA(level, xt, yt, age + 1);
-}
-
-FDRAW(farmland_draw) {
-    tiles[0] = TILE_M(49, 0x1, 3);
-    tiles[1] = TILE_M(49, 0x0, 3);
-    tiles[2] = TILE_M(49, 0x0, 3);
-    tiles[3] = TILE_M(49, 0x1, 3);
 }
 
 FSTEPPED_ON(farmland_stepped_on) {
@@ -579,16 +297,6 @@ FSTEPPED_ON(wheat_stepped_on) {
         ; // TODO harvest (maybe call wheat_interact)
 }
 
-FDRAW(wheat_draw) {
-    // TODO test if this is accurate
-    u8 age = LEVEL_GET_DATA(level, xt, yt) / 10;
-
-    tiles[0] = TILE_M(50 + age, 0x0, 3);
-    tiles[1] = TILE_M(50 + age, 0x0, 3);
-    tiles[2] = TILE_M(50 + age, 0x1, 3);
-    tiles[3] = TILE_M(50 + age, 0x1, 3);
-}
-
 FINTERACT(wheat_interact) {
     // TODO harvest
 }
@@ -607,55 +315,7 @@ FTICK(lava_tick) {
         LEVEL_SET_TILE(level, xn, yn, LAVA_TILE, 0);
 }
 
-// Stairs Down
-FDRAW(stairs_down_draw) {
-    tiles[0] = TILE(56, 1);
-    tiles[1] = TILE(57, 1);
-    tiles[2] = TILE(58, 1);
-    tiles[3] = TILE(59, 1);
-}
-
-// Stairs Up
-FDRAW(stairs_up_draw) {
-    tiles[0] = TILE(60, 1);
-    tiles[1] = TILE(61, 1);
-    tiles[2] = TILE(62, 1);
-    tiles[3] = TILE(63, 1);
-}
-
 // Cloud
-FDRAW(cloud_draw) {
-    bool u = LEVEL_GET_TILE(level, xt,     yt - 1) != INFINITE_FALL_TILE;
-    bool d = LEVEL_GET_TILE(level, xt,     yt + 1) != INFINITE_FALL_TILE;
-    bool l = LEVEL_GET_TILE(level, xt - 1, yt    ) != INFINITE_FALL_TILE;
-    bool r = LEVEL_GET_TILE(level, xt + 1, yt    ) != INFINITE_FALL_TILE;
-
-    bool ul = LEVEL_GET_TILE(level, xt - 1, yt - 1) != INFINITE_FALL_TILE;
-    bool dl = LEVEL_GET_TILE(level, xt - 1, yt + 1) != INFINITE_FALL_TILE;
-    bool ur = LEVEL_GET_TILE(level, xt + 1, yt - 1) != INFINITE_FALL_TILE;
-    bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) != INFINITE_FALL_TILE;
-
-    if(u && l)
-        tiles[0] = TILE(69 - !ul * 50, 7);
-    else
-        tiles[0] = TILE(12 + u * 7 + l * 4, 7);
-
-    if(u && r)
-        tiles[1] = TILE(68 - !ur * 48, 7);
-    else
-        tiles[1] = TILE(13 + u * 4 + r * 3, 7);
-
-    if(d && l)
-        tiles[2] = TILE(68 - !dl * 47, 7);
-    else
-        tiles[2] = TILE(14 + d * 5 + l * 4, 7);
-
-    if(d && r)
-        tiles[3] = TILE(70 - !dr * 48, 7);
-    else
-        tiles[3] = TILE(15 + d * 2 + r * 3, 7);
-}
-
 FINTERACT(cloud_interact) {
     if(item->type == SHOVEL_ITEM && player_pay_stamina(5)) {
         u8 count = 1 + rand() % 2;
@@ -665,38 +325,6 @@ FINTERACT(cloud_interact) {
 }
 
 // Hard Rock
-FDRAW(hard_rock_draw) {
-    bool u = LEVEL_GET_TILE(level, xt,     yt - 1) == HARD_ROCK_TILE;
-    bool d = LEVEL_GET_TILE(level, xt,     yt + 1) == HARD_ROCK_TILE;
-    bool l = LEVEL_GET_TILE(level, xt - 1, yt    ) == HARD_ROCK_TILE;
-    bool r = LEVEL_GET_TILE(level, xt + 1, yt    ) == HARD_ROCK_TILE;
-
-    bool ul = LEVEL_GET_TILE(level, xt - 1, yt - 1) == HARD_ROCK_TILE;
-    bool dl = LEVEL_GET_TILE(level, xt - 1, yt + 1) == HARD_ROCK_TILE;
-    bool ur = LEVEL_GET_TILE(level, xt + 1, yt - 1) == HARD_ROCK_TILE;
-    bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == HARD_ROCK_TILE;
-
-    if(u && l)
-        tiles[0] = TILE(0 + !ul * 20, 8);
-    else
-        tiles[0] = TILE(12 + u * 7 + l * 4, 8);
-
-    if(u && r)
-        tiles[1] = TILE(1 + !ur * 20, 8);
-    else
-        tiles[1] = TILE(13 + u * 4 + r * 3, 8);
-
-    if(d && l)
-        tiles[2] = TILE(2 + !dl * 20, 8);
-    else
-        tiles[2] = TILE(14 + d * 5 + l * 4, 8);
-
-    if(d && r)
-        tiles[3] = TILE(3 + !dr * 20, 8);
-    else
-        tiles[3] = TILE(15 + d * 2 + r * 3, 8);
-}
-
 FINTERACT(hard_rock_interact) {
     u8 dmg = 0;
     if(item->type == PICK_ITEM && item->tool_level == 4) {
@@ -722,13 +350,6 @@ FINTERACT(hard_rock_interact) {
 }
 
 // Ores + Cloud Cactus
-FDRAW(ore_draw) {
-    tiles[0] = TILE(71, 2);
-    tiles[1] = TILE(72, 2);
-    tiles[2] = TILE(73, 2);
-    tiles[3] = TILE(74, 2);
-}
-
 FINTERACT(ore_interact) {
     u8 dmg = 0;
     if(item->type == PICK_ITEM && player_pay_stamina(6 - item->tool_level)) {
@@ -778,7 +399,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Grass
     {
         .tick = grass_tick,
-        .draw = grass_draw,
 
         .connects_to = {
             .grass = true
@@ -790,7 +410,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Rock
     {
         .tick = damage_recover_tick,
-        .draw = rock_draw,
 
         .is_solid = true,
         .may_pass = -1,
@@ -801,7 +420,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Water
     {
         .tick = water_tick,
-        .draw = water_draw,
 
         .connects_to = {
             .sand   = true,
@@ -815,7 +433,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Flower
     {
         .tick = grass_tick,
-        .draw = flower_draw,
 
         .connects_to = {
             .grass = true
@@ -827,7 +444,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Tree
     {
         .tick = damage_recover_tick,
-        .draw = tree_draw,
 
         .connects_to = {
             .grass = true
@@ -842,7 +458,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Dirt
     {
         .tick = NULL,
-        .draw = dirt_draw,
 
         .interact = dirt_interact
     },
@@ -850,7 +465,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Sand
     {
         .tick = damage_recover_tick,
-        .draw = sand_draw,
 
         .connects_to = {
             .sand = true
@@ -864,7 +478,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Cactus
     {
         .tick = damage_recover_tick,
-        .draw = cactus_draw,
 
         .connects_to = {
             .sand = true
@@ -882,7 +495,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Hole
     {
         .tick = NULL,
-        .draw = hole_draw,
 
         .connects_to = {
             .sand   = true,
@@ -896,7 +508,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Tree Sapling
     {
         .tick = tree_sapling_tick,
-        .draw = tree_sapling_draw,
 
         .connects_to = {
             .grass = true
@@ -908,7 +519,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Cactus Sapling
     {
         .tick = cactus_sapling_tick,
-        .draw = cactus_sapling_draw,
 
         .connects_to = {
             .sand = true
@@ -920,7 +530,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Farmland
     {
         .tick = farmland_tick,
-        .draw = farmland_draw,
 
         .stepped_on = farmland_stepped_on,
 
@@ -930,7 +539,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Wheat
     {
         .tick = wheat_tick,
-        .draw = wheat_draw,
 
         .stepped_on = wheat_stepped_on,
 
@@ -940,7 +548,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Lava
     {
         .tick = lava_tick,
-        .draw = water_draw,
 
         .connects_to = {
             .sand   = true,
@@ -954,19 +561,16 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Stairs Down
     {
         .tick = NULL,
-        .draw = stairs_down_draw
     },
 
     // Stairs Up
     {
         .tick = NULL,
-        .draw = stairs_up_draw
     },
 
     // Infinite Fall
     {
         .tick = NULL,
-        .draw = NULL,
 
         .is_solid = true,
         .may_pass = AIR_WIZARD_ENTITY
@@ -975,7 +579,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Cloud
     {
         .tick = NULL,
-        .draw = cloud_draw,
 
         .interact = cloud_interact
     },
@@ -983,7 +586,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Hard Rock
     {
         .tick = damage_recover_tick,
-        .draw = hard_rock_draw,
 
         .is_solid = true,
         .may_pass = -1,
@@ -994,7 +596,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Iron Ore
     {
         .tick = NULL,
-        .draw = ore_draw,
 
         .is_solid = true,
         .may_pass = -1,
@@ -1008,7 +609,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Gold Ore
     {
         .tick = NULL,
-        .draw = ore_draw,
 
         .is_solid = true,
         .may_pass = -1,
@@ -1022,7 +622,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Gem Ore
     {
         .tick = NULL,
-        .draw = ore_draw,
 
         .is_solid = true,
         .may_pass = -1,
@@ -1036,7 +635,6 @@ const struct Tile tile_list[TILE_TYPES] = {
     // Cloud Cactus
     {
         .tick = NULL,
-        .draw = ore_draw,
 
         .is_solid = true,
         .may_pass = AIR_WIZARD_ENTITY,

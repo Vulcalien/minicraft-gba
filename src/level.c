@@ -19,6 +19,8 @@
 #include "tile.h"
 #include "entity.h"
 
+#include "draw/tiles.c"
+
 EWRAM_BSS_SECTION
 struct Level levels[5];
 
@@ -126,9 +128,7 @@ void level_draw(struct Level *level) {
             u16 tiles[4]  = { 32, 32, 32, 32 };
             u16 tiles2[4] = { 32, 32, 32, 32 };
 
-            const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
-            if(tile->draw)
-                tile->draw(level, xt, yt, tiles, tiles2);
+            draw_tile(level, xt, yt, tiles, tiles2);
 
             // using 32bit writes instead of 16bit writes saves a little time
             vu32 *bg0_tile_0 = (vu32 *) &BG0_TILEMAP[x * 2 + y * 2 * 32];
