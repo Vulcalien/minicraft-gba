@@ -111,14 +111,20 @@ const u16 bg_palette[11 * 16] = {
     // sand
     0x379c, 0x2ed6, 0x2ed6, 0x539c,
 
-    // cactus
-    0x2709, 0x2268, 0x1144,
+    // cactus (1st color)
+    0x2709,
+
+    // sapling (1st color)
+    0x08a2,
+
+    // cactus (2nd and 3rd colors)
+    0x2268, 0x1144,
 
     // unused
-    0, 0,
+    0,
 
-    // GUI window border
-    0x6f18, 0x1021,
+    // sapling (2nd and 3rd colors)
+    0x2268, 0x2709,
 
     // white font - blue bg
     0x7bde, 0x4442,
@@ -165,7 +171,10 @@ const u16 bg_palette[11 * 16] = {
     0x1ce7, 0x0cc6,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+
+    // GUI window border
+    0x6f18, 0x1021,
 
     // light gray font - blue bg
     0x4a52, 0x4442,

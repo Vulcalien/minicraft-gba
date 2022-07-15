@@ -19,7 +19,7 @@
 
 #define FDRAW(name)\
     static inline void name(struct Level *level, u32 xt, u32 yt,\
-                            u16 tiles[4], u16 tiles2[4])
+                            u16 tiles[4])
 
 #define TILE(id, palette) ((id) | ((palette) << 12))
 #define TILE_M(id, flip, palette)\
@@ -199,10 +199,10 @@ FDRAW(tree_draw) {
 }
 
 FDRAW(dirt_draw) {
-    tiles[0] = TILE(64, 2);
-    tiles[1] = TILE(65, 2);
-    tiles[2] = TILE(66, 2);
-    tiles[3] = TILE(67, 2);
+    tiles[0] = TILE(40, 2);
+    tiles[1] = TILE(41, 2);
+    tiles[2] = TILE(42, 2);
+    tiles[3] = TILE(43, 2);
 }
 
 FDRAW(sand_draw) {
@@ -214,7 +214,7 @@ FDRAW(sand_draw) {
     bool stepped_on = LEVEL_GET_DATA(level, xt, yt) != 0;
 
     if(u && l)
-        tiles[0] = TILE(0 + stepped_on * 40, 4);
+        tiles[0] = TILE(0 + stepped_on * 44, 4);
     else
         tiles[0] = TILE(4 + u * 7 + l * 4, 4);
 
@@ -229,16 +229,16 @@ FDRAW(sand_draw) {
         tiles[2] = TILE(6 + d * 5 + l * 4, 4);
 
     if(d && r)
-        tiles[3] = TILE(3 + stepped_on * 37, 4);
+        tiles[3] = TILE(3 + stepped_on * 41, 4);
     else
         tiles[3] = TILE(7 + d * 2 + r * 3, 4);
 }
 
 FDRAW(cactus_draw) {
-    tiles[0] = TILE(41, 4);
-    tiles[1] = TILE(42, 4);
-    tiles[2] = TILE(43, 4);
-    tiles[3] = TILE(44, 4);
+    tiles[0] = TILE(45, 4);
+    tiles[1] = TILE(46, 4);
+    tiles[2] = TILE(47, 4);
+    tiles[3] = TILE(48, 4);
 }
 
 FDRAW(hole_draw) {
@@ -273,11 +273,30 @@ FDRAW(hole_draw) {
         tiles[3] = TILE(27 + d * 2 + r * 3, 5 + (sd || sr) * 1);
 }
 
-FDRAW(sapling_draw) {
-    tiles2[0] = TILE(45, 0);
-    tiles2[1] = TILE(46, 0);
-    tiles2[2] = TILE(47, 0);
-    tiles2[3] = TILE(48, 0);
+FDRAW(tree_sapling_draw) {
+    bool u = CONNECTS_TO_GRASS(level, xt,     yt - 1);
+    bool d = CONNECTS_TO_GRASS(level, xt,     yt + 1);
+    bool l = CONNECTS_TO_GRASS(level, xt - 1, yt    );
+    bool r = CONNECTS_TO_GRASS(level, xt + 1, yt    );
+
+    tiles[0] = TILE(71 + !u + !l * 2, 0);
+    tiles[1] = TILE(75 + !u + !r * 2, 0);
+    tiles[2] = TILE(79 + !d + !l * 2, 0);
+    tiles[3] = TILE(83 + !d + !r * 2, 0);
+}
+
+FDRAW(cactus_sapling_draw) {
+    bool u = CONNECTS_TO_SAND(level, xt,     yt - 1);
+    bool d = CONNECTS_TO_SAND(level, xt,     yt + 1);
+    bool l = CONNECTS_TO_SAND(level, xt - 1, yt    );
+    bool r = CONNECTS_TO_SAND(level, xt + 1, yt    );
+
+    bool stepped_on = LEVEL_GET_DATA(level, xt, yt) != 0;
+
+    tiles[0] = TILE(71 + !u + !l * 2 + (u && l && stepped_on) * 16, 4);
+    tiles[1] = TILE(75 + !u + !r * 2, 4);
+    tiles[2] = TILE(79 + !d + !l * 2, 4);
+    tiles[3] = TILE(83 + !d + !r * 2 + (d && r && stepped_on) * 5, 4);
 }
 
 FDRAW(farmland_draw) {
@@ -311,6 +330,13 @@ FDRAW(stairs_up_draw) {
     tiles[3] = TILE(63, 1);
 }
 
+FDRAW(infinite_fall_draw) {
+    tiles[0] = TILE(32, 0);
+    tiles[1] = TILE(32, 0);
+    tiles[2] = TILE(32, 0);
+    tiles[3] = TILE(32, 0);
+}
+
 FDRAW(cloud_draw) {
     bool u = LEVEL_GET_TILE(level, xt,     yt - 1) != INFINITE_FALL_TILE;
     bool d = LEVEL_GET_TILE(level, xt,     yt + 1) != INFINITE_FALL_TILE;
@@ -323,22 +349,22 @@ FDRAW(cloud_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) != INFINITE_FALL_TILE;
 
     if(u && l)
-        tiles[0] = TILE(69 - !ul * 50, 7);
+        tiles[0] = TILE(65 - !ul * 45, 7);
     else
         tiles[0] = TILE(12 + u * 7 + l * 4, 7);
 
     if(u && r)
-        tiles[1] = TILE(68 - !ur * 48, 7);
+        tiles[1] = TILE(64 - !ur * 43, 7);
     else
         tiles[1] = TILE(13 + u * 4 + r * 3, 7);
 
     if(d && l)
-        tiles[2] = TILE(68 - !dl * 47, 7);
+        tiles[2] = TILE(64 - !dl * 42, 7);
     else
         tiles[2] = TILE(14 + d * 5 + l * 4, 7);
 
     if(d && r)
-        tiles[3] = TILE(70 - !dr * 48, 7);
+        tiles[3] = TILE(66 - !dr * 43, 7);
     else
         tiles[3] = TILE(15 + d * 2 + r * 3, 7);
 }
@@ -376,20 +402,18 @@ FDRAW(hard_rock_draw) {
 }
 
 FDRAW(ore_draw) {
-    tiles[0] = TILE(71, 2);
-    tiles[1] = TILE(72, 2);
-    tiles[2] = TILE(73, 2);
-    tiles[3] = TILE(74, 2);
+    tiles[0] = TILE(67, 2);
+    tiles[1] = TILE(68, 2);
+    tiles[2] = TILE(69, 2);
+    tiles[3] = TILE(70, 2);
 }
 
 #define CALL(function)\
-    function(level, xt, yt, tiles, tiles2)
+    function(level, xt, yt, tiles)
 
 static inline void draw_tile(struct Level *level, u32 xt, u32 yt,
-                             u16 tiles[4], u16 tiles2[4]) {
+                             u16 tiles[4]) {
     switch(LEVEL_GET_TILE(level, xt, yt)) {
-        case TREE_SAPLING_TILE:
-            CALL(sapling_draw);
         case GRASS_TILE:
             CALL(grass_draw);
             break;
@@ -415,8 +439,6 @@ static inline void draw_tile(struct Level *level, u32 xt, u32 yt,
             CALL(dirt_draw);
             break;
 
-        case CACTUS_SAPLING_TILE:
-            CALL(sapling_draw);
         case SAND_TILE:
             CALL(sand_draw);
             break;
@@ -427,6 +449,14 @@ static inline void draw_tile(struct Level *level, u32 xt, u32 yt,
 
         case HOLE_TILE:
             CALL(hole_draw);
+            break;
+
+        case TREE_SAPLING_TILE:
+            CALL(tree_sapling_draw);
+            break;
+
+        case CACTUS_SAPLING_TILE:
+            CALL(cactus_sapling_draw);
             break;
 
         case FARMLAND_TILE:
@@ -443,6 +473,10 @@ static inline void draw_tile(struct Level *level, u32 xt, u32 yt,
 
         case STAIRS_UP_TILE:
             CALL(stairs_up_draw);
+            break;
+
+        case INFINITE_FALL_TILE:
+            CALL(infinite_fall_draw);
             break;
 
         case CLOUD_TILE:

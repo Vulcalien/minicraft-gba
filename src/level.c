@@ -125,19 +125,14 @@ void level_draw(struct Level *level) {
             u32 xt = x + x0;
             u32 yt = y + y0;
 
-            u16 tiles[4]  = { 32, 32, 32, 32 };
-            u16 tiles2[4] = { 32, 32, 32, 32 };
+            u16 tiles[4] = { 0 };
 
-            draw_tile(level, xt, yt, tiles, tiles2);
+            draw_tile(level, xt, yt, tiles);
 
             // using 32bit writes instead of 16bit writes saves a little time
             vu32 *bg0_tile_0 = (vu32 *) &BG0_TILEMAP[x * 2 + y * 2 * 32];
             *(bg0_tile_0)      = (tiles[1] << 16) | tiles[0];
             *(bg0_tile_0 + 16) = (tiles[3] << 16) | tiles[2];
-
-            vu32 *bg1_tile_0 = (vu32 *) &BG1_TILEMAP[x * 2 + y * 2 * 32];
-            *(bg1_tile_0)      = (tiles2[1] << 16) | tiles2[0];
-            *(bg1_tile_0 + 16) = (tiles2[3] << 16) | tiles2[2];
         }
     }
 

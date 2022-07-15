@@ -28,7 +28,7 @@ void generate_levels(void) {
             /*level->data[t] = 0;*/
 
             level->tiles[t] = rand() % TILE_TYPES;
-            level->data[t] = rand();
+            level->data[t] = rand() % 50;
 
             /*level->tiles[t] = 0 + (t % 17 == 0) * 4;*/
             /*level->data[t] = 0;*/

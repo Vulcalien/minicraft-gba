@@ -74,7 +74,7 @@ void screen_init(void) {
     DISPLAY_CONTROL = (0)       | // Video mode
                       (1 << 6)  | // OBJ Character mapping (1 is linear)
                       (1 << 8)  | // Enable BG 0
-                      (1 << 9)  | // Enable BG 1
+                      (0 << 9)  | // Enable BG 1
                       (0 << 10) | // Enable BG 2
                       (1 << 11) | // Enable BG 3
                       (1 << 12);  // Enable OBJ
@@ -86,12 +86,8 @@ void screen_init(void) {
                   (16 << 8) | // Tilemap screen block
                   (0 << 14);  // BG size (0 is 256x256)
 
-    // Level tiles - 2nd layer
-    BG1_CONTROL = (2)       | // BG Priority (0 is highest, 3 is lowest)
-                  (0 << 2)  | // Tileset character block
-                  (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
-                  (17 << 8) | // Tilemap screen block
-                  (0 << 14);  // BG size (0 is 256x256)
+    // ???
+    // BG1_CONTROL = ...
 
     // Light system ???
     // BG2_CONTROL = ...
@@ -171,25 +167,25 @@ void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h) {
     h--;
 
     // draw corners
-    BG3_TILEMAP[(x)     + (y)     * 32] = 88 | (0 << 10) | (4 << 12);
-    BG3_TILEMAP[(x + w) + (y)     * 32] = 88 | (1 << 10) | (4 << 12);
-    BG3_TILEMAP[(x)     + (y + h) * 32] = 88 | (2 << 10) | (4 << 12);
-    BG3_TILEMAP[(x + w) + (y + h) * 32] = 88 | (3 << 10) | (4 << 12);
+    BG3_TILEMAP[(x)     + (y)     * 32] = 88 | (0 << 10) | (6 << 12);
+    BG3_TILEMAP[(x + w) + (y)     * 32] = 88 | (1 << 10) | (6 << 12);
+    BG3_TILEMAP[(x)     + (y + h) * 32] = 88 | (2 << 10) | (6 << 12);
+    BG3_TILEMAP[(x + w) + (y + h) * 32] = 88 | (3 << 10) | (6 << 12);
 
     // draw vertical borders
     for(u32 yi = y + 1; yi <= y + h - 1; yi++) {
-        BG3_TILEMAP[(x)     + yi * 32] = 90 | (0 << 10) | (4 << 12);
-        BG3_TILEMAP[(x + w) + yi * 32] = 90 | (1 << 10) | (4 << 12);
+        BG3_TILEMAP[(x)     + yi * 32] = 90 | (0 << 10) | (6 << 12);
+        BG3_TILEMAP[(x + w) + yi * 32] = 90 | (1 << 10) | (6 << 12);
 
         // draw background
         for(u32 xi = x + 1; xi <= x + w - 1; xi++)
-            BG3_TILEMAP[xi + yi * 32] = 29 | (4 << 12);
+            BG3_TILEMAP[xi + yi * 32] = 29 | (6 << 12);
     }
 
     // draw horizontal borders
     for(u32 xi = x + 1; xi <= x + w - 1; xi++) {
-        BG3_TILEMAP[xi + (y)     * 32] = 89 | (0 << 10) | (4 << 12);
-        BG3_TILEMAP[xi + (y + h) * 32] = 89 | (2 << 10) | (4 << 12);
+        BG3_TILEMAP[xi + (y)     * 32] = 89 | (0 << 10) | (6 << 12);
+        BG3_TILEMAP[xi + (y + h) * 32] = 89 | (2 << 10) | (6 << 12);
     }
 
     screen_write(title, 8, x + 1, y);
