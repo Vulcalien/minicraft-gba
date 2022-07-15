@@ -20,10 +20,6 @@
 #include "player.h"
 #include "item.h"
 
-#define FTICK(name)\
-    IWRAM_SECTION\
-    static void name(struct Level *level, u32 xt, u32 yt)
-
 #define FSTEPPED_ON(name)\
     IWRAM_SECTION\
     static void name(struct Level *level, u32 xt, u32 yt,\
@@ -36,30 +32,7 @@
 
 #define GET_PUNCH_DAMAGE() (1 + rand() % 3)
 
-// DAMAGE RECOVER
-FTICK(damage_recover_tick) {
-    u8 damage = LEVEL_GET_DATA(level, xt, yt);
-    if(damage != 0)
-        LEVEL_SET_DATA(level, xt, yt, damage - 1);
-}
-
 // Grass
-FTICK(grass_tick) {
-    if(rand() % 40 != 0)
-        return;
-
-    i32 xn = xt;
-    i32 yn = yt;
-
-    if(rand() & 1)
-        xn += (rand() & 1) * 2 - 1;
-    else
-        yn += (rand() & 1) * 2 - 1;
-
-    if(LEVEL_GET_TILE(level, xn, yn) == DIRT_TILE)
-        LEVEL_SET_TILE(level, xn, yn, GRASS_TILE, 0);
-}
-
 FINTERACT(grass_interact) {
     if(item->type == SHOVEL_ITEM) {
         if(player_pay_stamina(4 - item->tool_level)) {
@@ -106,20 +79,6 @@ FINTERACT(rock_interact) {
 
     entity_add_smash_particle(level, xt, yt);
     entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
-}
-
-// Water
-FTICK(water_tick) {
-    i32 xn = xt;
-    i32 yn = yt;
-
-    if(rand() & 1)
-        xn += (rand() & 1) * 2 - 1;
-    else
-        yn += (rand() & 1) * 2 - 1;
-
-    if(LEVEL_GET_TILE(level, xn, yn) == HOLE_TILE)
-        LEVEL_SET_TILE(level, xn, yn, WATER_TILE, 0);
 }
 
 // Flower
@@ -227,42 +186,17 @@ FINTERACT(cactus_interact) {
     entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
 }
 
-// Hole
 // Tree Sapling
-FTICK(tree_sapling_tick) {
-    u8 age = LEVEL_GET_DATA(level, xt, yt) + 1;
-
-    if(age > 100)
-        LEVEL_SET_TILE(level, xt, yt, TREE_TILE, 0);
-    else
-        LEVEL_SET_DATA(level, xt, yt, age);
-}
-
 FINTERACT(tree_sapling_interact) {
     LEVEL_SET_TILE(level, xt, yt, GRASS_TILE, 0);
 }
 
 // Cactus Sapling
-FTICK(cactus_sapling_tick) {
-    u8 age = LEVEL_GET_DATA(level, xt, yt) + 1;
-
-    if(age > 100)
-        LEVEL_SET_TILE(level, xt, yt, CACTUS_TILE, 0);
-    else
-        LEVEL_SET_DATA(level, xt, yt, age);
-}
-
 FINTERACT(cactus_sapling_interact) {
     LEVEL_SET_TILE(level, xt, yt, SAND_TILE, 0);
 }
 
 // Farmland
-FTICK(farmland_tick) {
-    u8 age = LEVEL_GET_DATA(level, xt, yt);
-    if(age < 5)
-        LEVEL_SET_DATA(level, xt, yt, age + 1);
-}
-
 FSTEPPED_ON(farmland_stepped_on) {
     if(rand() % 60 != 0)
         return;
@@ -280,15 +214,6 @@ FINTERACT(farmland_interact) {
 }
 
 // Wheat
-FTICK(wheat_tick) {
-    if(rand() & 1)
-        return;
-
-    u8 age = LEVEL_GET_DATA(level, xt, yt);
-    if(age < 50)
-        LEVEL_SET_DATA(level, xt, yt, age + 1);
-}
-
 FSTEPPED_ON(wheat_stepped_on) {
     if(rand() % 60 != 0)
         return;
@@ -299,20 +224,6 @@ FSTEPPED_ON(wheat_stepped_on) {
 
 FINTERACT(wheat_interact) {
     // TODO harvest
-}
-
-// Lava
-FTICK(lava_tick) {
-    i32 xn = xt;
-    i32 yn = yt;
-
-    if(rand() & 1)
-        xn += (rand() & 1) * 2 - 1;
-    else
-        yn += (rand() & 1) * 2 - 1;
-
-    if(LEVEL_GET_TILE(level, xn, yn) == HOLE_TILE)
-        LEVEL_SET_TILE(level, xn, yn, LAVA_TILE, 0);
 }
 
 // Cloud
@@ -398,8 +309,6 @@ IWRAM_RODATA_SECTION
 const struct Tile tile_list[TILE_TYPES] = {
     // Grass
     {
-        .tick = grass_tick,
-
         .connects_to = {
             .grass = true
         },
@@ -409,8 +318,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Rock
     {
-        .tick = damage_recover_tick,
-
         .is_solid = true,
         .may_pass = -1,
 
@@ -419,8 +326,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Water
     {
-        .tick = water_tick,
-
         .connects_to = {
             .sand   = true,
             .liquid = true
@@ -432,8 +337,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Flower
     {
-        .tick = grass_tick,
-
         .connects_to = {
             .grass = true
         },
@@ -443,8 +346,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Tree
     {
-        .tick = damage_recover_tick,
-
         .connects_to = {
             .grass = true
         },
@@ -457,15 +358,11 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Dirt
     {
-        .tick = NULL,
-
         .interact = dirt_interact
     },
 
     // Sand
     {
-        .tick = damage_recover_tick,
-
         .connects_to = {
             .sand = true
         },
@@ -477,8 +374,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Cactus
     {
-        .tick = damage_recover_tick,
-
         .connects_to = {
             .sand = true
         },
@@ -494,8 +389,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Hole
     {
-        .tick = NULL,
-
         .connects_to = {
             .sand   = true,
             .liquid = true,
@@ -507,8 +400,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Tree Sapling
     {
-        .tick = tree_sapling_tick,
-
         .connects_to = {
             .grass = true
         },
@@ -518,8 +409,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Cactus Sapling
     {
-        .tick = cactus_sapling_tick,
-
         .connects_to = {
             .sand = true
         },
@@ -529,8 +418,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Farmland
     {
-        .tick = farmland_tick,
-
         .stepped_on = farmland_stepped_on,
 
         .interact = farmland_interact
@@ -538,8 +425,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Wheat
     {
-        .tick = wheat_tick,
-
         .stepped_on = wheat_stepped_on,
 
         .interact = wheat_interact
@@ -547,8 +432,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Lava
     {
-        .tick = lava_tick,
-
         .connects_to = {
             .sand   = true,
             .liquid = true
@@ -559,34 +442,24 @@ const struct Tile tile_list[TILE_TYPES] = {
     },
 
     // Stairs Down
-    {
-        .tick = NULL,
-    },
+    { 0 },
 
     // Stairs Up
-    {
-        .tick = NULL,
-    },
+    { 0 },
 
     // Infinite Fall
     {
-        .tick = NULL,
-
         .is_solid = true,
         .may_pass = AIR_WIZARD_ENTITY
     },
 
     // Cloud
     {
-        .tick = NULL,
-
         .interact = cloud_interact
     },
 
     // Hard Rock
     {
-        .tick = damage_recover_tick,
-
         .is_solid = true,
         .may_pass = -1,
 
@@ -595,8 +468,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Iron Ore
     {
-        .tick = NULL,
-
         .is_solid = true,
         .may_pass = -1,
 
@@ -608,8 +479,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Gold Ore
     {
-        .tick = NULL,
-
         .is_solid = true,
         .may_pass = -1,
 
@@ -621,8 +490,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Gem Ore
     {
-        .tick = NULL,
-
         .is_solid = true,
         .may_pass = -1,
 
@@ -634,8 +501,6 @@ const struct Tile tile_list[TILE_TYPES] = {
 
     // Cloud Cactus
     {
-        .tick = NULL,
-
         .is_solid = true,
         .may_pass = AIR_WIZARD_ENTITY,
 

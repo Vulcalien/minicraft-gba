@@ -19,6 +19,8 @@
 #include "tile.h"
 #include "entity.h"
 
+#include "tick/tiles.c"
+
 #include "draw/tiles.c"
 
 EWRAM_BSS_SECTION
@@ -60,9 +62,7 @@ void level_tick(struct Level *level) {
         u32 xt = rand() % LEVEL_W;
         u32 yt = rand() % LEVEL_H;
 
-        const struct Tile *tile = LEVEL_GET_TILE_S(level, xt, yt);
-        if(tile->tick)
-            tile->tick(level, xt, yt);
+        tick_tile(level, xt, yt);
     }
 
     for(u32 i = 0; i < ENTITY_CAP; i++) {

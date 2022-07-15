@@ -461,3 +461,5 @@ static inline void draw_tile(struct Level *level, u32 xt, u32 yt,
             break;
     }
 }
+
+#undef CALL

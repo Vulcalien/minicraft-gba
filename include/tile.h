@@ -48,8 +48,6 @@
 #define CLOUD_CACTUS_TILE   (22)
 
 struct Tile {
-    void (*tick)(struct Level *level, u32 xt, u32 yt);
-
     bool is_solid;
     u8 may_pass;
 
