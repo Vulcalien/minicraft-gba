@@ -104,26 +104,23 @@ const u16 bg_palette[11 * 16] = {
     // sand
     0x2ed6, 0x379c,
 
-    // --- palette 4 --- (sand, cactus)
+    // --- palette 4 --- (sand, cactus, sapling)
     // transparent
     0,
 
     // sand
     0x379c, 0x2ed6, 0x2ed6, 0x539c,
 
-    // cactus (1st color)
-    0x2709,
+    // cactus
+    0x1144,
 
     // sapling (1st color)
     0x08a2,
 
-    // cactus (2nd and 3rd colors)
-    0x2268, 0x1144,
-
     // unused
-    0,
+    0, 0, 0,
 
-    // sapling (2nd and 3rd colors)
+    // sapling (2nd and 3rd colors) (shared with cactus)
     0x2268, 0x2709,
 
     // white font - blue bg
