@@ -112,8 +112,13 @@ void level_draw(struct Level *level) {
         level_x_offset = x_offset;
         level_y_offset = y_offset;
 
-        BG0_XOFFSET = BG1_XOFFSET = level_x_offset & 0x0f;
-        BG0_YOFFSET = BG1_YOFFSET = level_y_offset & 0x0f;
+        // level tiles offset
+        BG1_XOFFSET = level_x_offset & 0xf;
+        BG1_YOFFSET = level_y_offset & 0xf;
+
+        // sky background offset
+        BG0_XOFFSET = (level_x_offset >> 2) & 0x7;
+        BG0_YOFFSET = (level_y_offset >> 2) & 0x7;
     }
 
     u32 x0 = level_x_offset >> 4;
@@ -130,9 +135,9 @@ void level_draw(struct Level *level) {
             draw_tile(level, xt, yt, tiles);
 
             // using 32bit writes instead of 16bit writes saves a little time
-            vu32 *bg0_tile_0 = (vu32 *) &BG0_TILEMAP[x * 2 + y * 2 * 32];
-            *(bg0_tile_0)      = (tiles[1] << 16) | tiles[0];
-            *(bg0_tile_0 + 16) = (tiles[3] << 16) | tiles[2];
+            vu32 *tile_0 = (vu32 *) &BG1_TILEMAP[x * 2 + y * 2 * 32];
+            *(tile_0)      = (tiles[1] << 16) | tiles[0];
+            *(tile_0 + 16) = (tiles[3] << 16) | tiles[2];
         }
     }
 

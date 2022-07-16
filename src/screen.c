@@ -70,24 +70,27 @@ static void load_tileset(vu16 *dest, const u8 *tileset, u32 size,
 
 // TODO fix visual glitches at startup
 void screen_init(void) {
-    // TODO enable BG2
     DISPLAY_CONTROL = (0)       | // Video mode
                       (1 << 6)  | // OBJ Character mapping (1 is linear)
-                      (1 << 8)  | // Enable BG 0
-                      (0 << 9)  | // Enable BG 1
+                      (0 << 8)  | // Enable BG 0
+                      (1 << 9)  | // Enable BG 1
                       (0 << 10) | // Enable BG 2
                       (1 << 11) | // Enable BG 3
                       (1 << 12);  // Enable OBJ
 
-    // Level tiles - 1st layer
+    // Sky Background
     BG0_CONTROL = (3)       | // BG Priority (0 is highest, 3 is lowest)
                   (0 << 2)  | // Tileset character block
                   (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
                   (16 << 8) | // Tilemap screen block
                   (0 << 14);  // BG size (0 is 256x256)
 
-    // ???
-    // BG1_CONTROL = ...
+    // Level Tiles
+    BG1_CONTROL = (2)       | // BG Priority (0 is highest, 3 is lowest)
+                  (0 << 2)  | // Tileset character block
+                  (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
+                  (17 << 8) | // Tilemap screen block
+                  (0 << 14);  // BG size (0 is 256x256)
 
     // Light system ???
     // BG2_CONTROL = ...
@@ -131,6 +134,11 @@ void screen_init(void) {
             );
         }
     }
+
+    // set sky background
+    for(u32 y = 0; y <= 18; y++)
+        for(u32 x = 0; x <= 30; x++)
+            BG0_TILEMAP[x + y * 32] = 0 | (9 << 12);
 }
 
 void vsync(void) {
@@ -198,4 +206,11 @@ void screen_set_bg_palette_color(u8 palette, u8 index, u16 color) {
 void screen_load_active_item_palette(u8 palette) {
     memcpy16(BG_PALETTE + 11 * 16, item_palette + 16 * palette, 15);
     screen_set_bg_palette_color(11, 0xf, 0x0421);
+}
+
+void screen_show_sky_background(bool flag) {
+    if(flag)
+        DISPLAY_CONTROL |= (1 << 8);
+    else
+        DISPLAY_CONTROL &= ~(1 << 8);
 }

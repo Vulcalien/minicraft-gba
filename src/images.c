@@ -210,6 +210,13 @@ const u16 bg_palette[11 * 16] = {
 
     // unused
     0, 0,
+
+    // --- palette 9 --- (sky background)
+    // transparent
+    0,
+
+    // sky background
+    0x1144, 0x2168
 };
 
 const u16 sprite_palette[11 * 16] = {

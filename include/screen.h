@@ -44,4 +44,6 @@ extern void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h);
 extern void screen_set_bg_palette_color(u8 palette, u8 index, u16 color);
 extern void screen_load_active_item_palette(u8 palette);
 
+extern void screen_show_sky_background(bool flag);
+
 #endif // MINICRAFT_SCREEN
