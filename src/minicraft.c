@@ -18,6 +18,7 @@
 #include "screen.h"
 #include "input.h"
 #include "scene.h"
+#include "sound.h"
 
 #define PERFORMANCE_CHECK
 
@@ -47,6 +48,8 @@ static void draw(void) {
 int main(void) {
     screen_init();
     set_scene(&scene_start, true);
+
+    sound_init();
 
     // DEBUG: calculate header checksum
     #ifdef GENERATE_CHECKSUM
