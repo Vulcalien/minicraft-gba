@@ -27,6 +27,7 @@ extern const u16 item_palette[4 * 16];
 // once the tileset is complete
 extern const u8 level_tileset[32 * 128];
 extern const u8 gui_tileset[32 * 128];
+extern const u8 light_tileset[32 * 5];
 
 extern const u8 sprite_tileset[32 * 96];
 extern const u8 font_sprite_tileset[32 * 10];

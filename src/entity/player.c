@@ -364,6 +364,7 @@ ETICK(player_tick) {
         /*inventory_add_resource(&player_inventory, STONE_ITEM, 20, 0);*/
         inventory_add_resource(&player_inventory, WOOD_ITEM, 80, 0);
         inventory_add_resource(&player_inventory, WORKBENCH_ITEM, 1, 0);
+        inventory_add_resource(&player_inventory, LANTERN_ITEM, 1, 0);
         /*inventory_add_resource(&player_inventory, BREAD_ITEM, (1 << 16) - 1, 0);*/
     }
 

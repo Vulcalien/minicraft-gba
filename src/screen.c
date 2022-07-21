@@ -74,7 +74,7 @@ void screen_init(void) {
                       (1 << 6)  | // OBJ Character mapping (1 is linear)
                       (0 << 8)  | // Enable BG 0
                       (1 << 9)  | // Enable BG 1
-                      (0 << 10) | // Enable BG 2
+                      (1 << 10) | // Enable BG 2
                       (1 << 11) | // Enable BG 3
                       (1 << 12);  // Enable OBJ
 
@@ -92,8 +92,12 @@ void screen_init(void) {
                   (17 << 8) | // Tilemap screen block
                   (0 << 14);  // BG size (0 is 256x256)
 
-    // Light system ???
-    // BG2_CONTROL = ...
+    // Light system
+    BG2_CONTROL = (1)       | // BG Priority (0 is highest, 3 is lowest)
+                  (1 << 2)  | // Tileset character block
+                  (0 << 7)  | // Color mode (0 is 4bpp with 16/16 palettes)
+                  (18 << 8) | // Tilemap screen block
+                  (0 << 14);  // BG size (0 is 256x256)
 
     // Text and GUI
     BG3_CONTROL = (0)       | // BG Priority (0 is highest, 3 is lowest)
@@ -112,6 +116,7 @@ void screen_init(void) {
     // load tilesets
     LOAD_TILESET(CHAR_BLOCK_0, level_tileset);
     LOAD_TILESET(CHAR_BLOCK_1, gui_tileset);
+    LOAD_TILESET(CHAR_BLOCK_1 + 256 * 32 / 2, light_tileset);
 
     LOAD_TILESET(SPR_TILESET, sprite_tileset);
 

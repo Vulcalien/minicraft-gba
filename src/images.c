@@ -17,6 +17,7 @@
 
 #include "images/level.c"
 #include "images/gui.c"
+#include "images/light.c"
 #include "images/sprites.c"
 #include "images/items.c"
 
