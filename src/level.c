@@ -184,47 +184,6 @@ void level_draw(struct Level *level) {
     }
 
     // TODO draw light from tiles
-
-    for(u32 i = 0; i < ENTITY_CAP; i++) {
-        struct entity_Data *entity_data = &level->entities[i];
-
-        switch(entity_data->type) {
-            case PLAYER_ENTITY:
-            case LANTERN_ENTITY:
-                break;
-
-            default:
-                continue;
-        }
-
-        u32 light = 2 + (entity_data->type == LANTERN_ENTITY ||
-                         player_active_item.type == LANTERN_ITEM) * 6;
-
-        i32 x0 = ((entity_data->x - level_x_offset) >> 3) - 1 - light;
-        i32 y0 = ((entity_data->y - level_y_offset) >> 3) - 1 - light;
-        i32 x1 = ((entity_data->x - level_x_offset) >> 3) + 1 + light - 1;
-        i32 y1 = ((entity_data->y - level_y_offset) >> 3) + 1 + light - 1;
-
-        if(x0 < 0) x0 = 0;
-        if(y0 < 0) y0 = 0;
-        if(x1 >= 30) x1 = 30 - 1;
-        if(y1 >= 20) y1 = 18 - 1;
-
-        for(u32 y = y0; y <= y1; y++) {
-            const i32 yd = (y << 3) + 4 - (entity_data->y - level_y_offset);
-
-            for(u32 x = x0; x <= x1; x++) {
-                const i32 xd = (x << 3) + 4 - (entity_data->x - level_x_offset);
-
-                const u32 d = xd * xd + yd * yd;
-
-                // DEBUG
-                BG2_TILEMAP[x + y * 32] = 260;
-
-                /*BG2_TILEMAP[x + y * 32] = 260 - (d > (light * light * 100)) - (d > (light * light * 80)) - (d > (light * light * 70)) - (d > (light * light * 60));*/
-            }
-        }
-    }
 }
 
 IWRAM_SECTION

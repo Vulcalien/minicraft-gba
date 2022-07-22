@@ -20,6 +20,9 @@
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
 #define VCOUNT          *((vu16 *) 0x04000006)
 
+#define WINDOW_IN  *((vu16 *) 0x04000048)
+#define WINDOW_OUT *((vu16 *) 0x0400004a)
+
 #define CHAR_BLOCK_0 ((vu16 *) 0x06000000)
 #define CHAR_BLOCK_1 ((vu16 *) 0x06004000)
 #define CHAR_BLOCK_2 ((vu16 *) 0x06008000)
@@ -76,7 +79,11 @@ void screen_init(void) {
                       (1 << 9)  | // Enable BG 1
                       (1 << 10) | // Enable BG 2
                       (1 << 11) | // Enable BG 3
-                      (1 << 12);  // Enable OBJ
+                      (1 << 12) | // Enable OBJ
+                      (1 << 15);  // Enable OBJ Window
+
+    // Filter out the light layer when inside OBJ Window
+    WINDOW_OUT = ~(1 << 10);
 
     // Sky Background
     BG0_CONTROL = (3)       | // BG Priority (0 is highest, 3 is lowest)
