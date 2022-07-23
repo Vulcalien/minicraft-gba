@@ -157,8 +157,8 @@ void level_draw(struct Level *level) {
 
         // draw light
         if(true) { // TODO check if level has light
-            if(xr < -64 || xr >= SCREEN_W + 64 ||
-               yr < -64 || yr >= SCREEN_H + 48)
+            if(xr     < -56 || xr     >= SCREEN_W + 56 ||
+               yr - 4 < -56 || yr - 4 >= SCREEN_H + 40)
                 continue;
 
             vu16 *sprite_attribs = OAM + sprites_drawn * 4;
@@ -166,9 +166,9 @@ void level_draw(struct Level *level) {
             switch(data->type) {
                 case PLAYER_ENTITY:
                     if(player_active_item.type != LANTERN_ITEM) {
-                        sprite_attribs[0] = ((data->y - 20 - level_y_offset) & 0xff) |
+                        sprite_attribs[0] = ((yr - 4 - 16) & 0xff) |
                                             (2 << 10);
-                        sprite_attribs[1] = ((data->x - 16 - level_x_offset) & 0x1ff) |
+                        sprite_attribs[1] = ((xr - 16) & 0x1ff) |
                                             (2 << 14);
                         sprite_attribs[2] = 320;
                         break;
@@ -177,9 +177,9 @@ void level_draw(struct Level *level) {
                     // go to the LANTERN_ENTITY case
 
                 case LANTERN_ENTITY:
-                    sprite_attribs[0] = ((data->y - 68 - level_y_offset) & 0xff) |
+                    sprite_attribs[0] = ((yr - 4 - 64) & 0xff) |
                                         (1 << 8) | (1 << 9) | (2 << 10);
-                    sprite_attribs[1] = ((data->x - 64 - level_x_offset) & 0x1ff) |
+                    sprite_attribs[1] = ((xr - 64) & 0x1ff) |
                                         (3 << 14);
                     sprite_attribs[2] = 336;
                     break;
