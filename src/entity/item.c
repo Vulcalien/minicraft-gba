@@ -119,7 +119,7 @@ EDRAW(item_draw) {
                         (is_invisible << 9);
     sprite_attribs[1] = ((data->x - 4 - level_x_offset) & 0x1ff) |
                         (0 << 14);
-    sprite_attribs[2] = (sprite & 0x3ff) | (0 << 10) | (palette << 12);
+    sprite_attribs[2] = (sprite & 0x3ff) | (2 << 10) | (palette << 12);
 }
 
 static const struct Entity item_entity = {

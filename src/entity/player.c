@@ -487,8 +487,7 @@ EDRAW(player_draw) {
     );
     sprite_attribs[1] = ((data->x - 8  - level_x_offset) & 0x1ff) |
                         (flip << 12) | (1 << 14);
-    sprite_attribs[2] = (sprite & 0x3ff) | (0 << 10) | (palette << 12);
-
+    sprite_attribs[2] = (sprite & 0x3ff) | (2 << 10) | (palette << 12);
 }
 
 static const struct Entity player_entity = {
