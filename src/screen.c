@@ -130,6 +130,8 @@ void screen_init(void) {
     LOAD_TILESET_CONVERT(CHAR_BLOCK_1 + 128 * 32 / 2, item_tileset, 0xf);
     LOAD_TILESET(SPR_TILESET + 256 * 32 / 2, item_tileset);
 
+    LOAD_TILESET(SPR_TILESET + 320 * 32 / 2, light_sprite_tileset);
+
     // load font sprites
     for(u32 y = 0; y < 10; y++) {
         for(u32 x = 0; x < 10; x++) {
@@ -151,6 +153,12 @@ void screen_init(void) {
     for(u32 y = 0; y <= 18; y++)
         for(u32 x = 0; x <= 30; x++)
             BG0_TILEMAP[x + y * 32] = 0 | (9 << 12);
+
+    // set lantern light scale matrix
+    OAM[3]  = 128;
+    OAM[7]  = 0;
+    OAM[11] = 0;
+    OAM[15] = 128;
 }
 
 void vsync(void) {

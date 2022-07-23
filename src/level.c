@@ -147,20 +147,60 @@ void level_draw(struct Level *level) {
     // draw entities
     u32 sprites_drawn = 0;
     for(u32 i = 0; i < ENTITY_CAP; i++) {
-        struct entity_Data *entity_data = &level->entities[i];
-        if(entity_data->type >= ENTITY_TYPES)
+        struct entity_Data *data = &level->entities[i];
+        if(data->type >= ENTITY_TYPES)
             continue;
 
         // position relative to top-left of the screen
-        i32 xr = entity_data->x - level_x_offset;
-        i32 yr = entity_data->y - level_y_offset;
+        i32 xr = data->x - level_x_offset;
+        i32 yr = data->y - level_y_offset;
+
+        // draw light
+        if(true) { // TODO check if level has light
+            if(xr < -64 || xr >= SCREEN_W + 64 ||
+               yr < -64 || yr >= SCREEN_H + 48)
+                continue;
+
+            vu16 *sprite_attribs = OAM + sprites_drawn * 4;
+            bool drawn = true;
+            switch(data->type) {
+                case PLAYER_ENTITY:
+                    if(player_active_item.type != LANTERN_ITEM) {
+                        sprite_attribs[0] = ((data->y - 20 - level_y_offset) & 0xff) |
+                                            (2 << 10);
+                        sprite_attribs[1] = ((data->x - 16 - level_x_offset) & 0x1ff) |
+                                            (2 << 14);
+                        sprite_attribs[2] = 320;
+                        break;
+                    }
+                    // else if the item is LANTERN_ITEM
+                    // go to the LANTERN_ENTITY case
+
+                case LANTERN_ENTITY:
+                    sprite_attribs[0] = ((data->y - 68 - level_y_offset) & 0xff) |
+                                        (1 << 8) | (1 << 9) | (2 << 10);
+                    sprite_attribs[1] = ((data->x - 64 - level_x_offset) & 0x1ff) |
+                                        (3 << 14);
+                    sprite_attribs[2] = 336;
+                    break;
+
+                default:
+                    drawn = false;
+            }
+
+            if(drawn) {
+                sprites_drawn++;
+                if(sprites_drawn == 128)
+                    break;
+            }
+        }
 
         if(xr < -16 || xr >= SCREEN_W + 16 ||
            yr < -16 || yr >= SCREEN_H)
             continue;
 
-        const struct Entity *entity = ENTITY_S(entity_data);
-        entity->draw(level, entity_data, OAM + sprites_drawn * 4);
+        const struct Entity *entity = ENTITY_S(data);
+        entity->draw(level, data, OAM + sprites_drawn * 4);
 
         sprites_drawn++;
         if(sprites_drawn == 128)
