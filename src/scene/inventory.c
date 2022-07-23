@@ -39,6 +39,9 @@ static void inventory_init(void) {
         //
         // This is not a duplication bug, however it causes annoyances for
         // crafting. To merge the items, the player can use a chest.
+
+        // FIXME in the original game, the light is updated when a player
+        // puts in the inventory a lantern
         inventory_add(&player_inventory, &player_active_item, 0);
         player_active_item.type = -1;
     }
