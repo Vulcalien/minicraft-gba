@@ -381,7 +381,6 @@ const struct Tile tile_list[TILE_TYPES] = {
         .is_solid = true,
         .may_pass = -1,
 
-        .hurts_on_touch = true,
         .touch_damage = 1,
 
         .interact = cactus_interact
@@ -471,7 +470,6 @@ const struct Tile tile_list[TILE_TYPES] = {
         .is_solid = true,
         .may_pass = -1,
 
-        .hurts_on_touch = true,
         .touch_damage = 3,
 
         .interact = ore_interact
@@ -482,7 +480,6 @@ const struct Tile tile_list[TILE_TYPES] = {
         .is_solid = true,
         .may_pass = -1,
 
-        .hurts_on_touch = true,
         .touch_damage = 3,
 
         .interact = ore_interact
@@ -493,7 +490,6 @@ const struct Tile tile_list[TILE_TYPES] = {
         .is_solid = true,
         .may_pass = -1,
 
-        .hurts_on_touch = true,
         .touch_damage = 3,
 
         .interact = ore_interact
@@ -504,7 +500,6 @@ const struct Tile tile_list[TILE_TYPES] = {
         .is_solid = true,
         .may_pass = AIR_WIZARD_ENTITY,
 
-        .hurts_on_touch = true,
         .touch_damage = 3,
 
         .interact = cloud_cactus_interact
