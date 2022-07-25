@@ -155,46 +155,6 @@ void level_draw(struct Level *level) {
         i32 xr = data->x - level_x_offset;
         i32 yr = data->y - level_y_offset;
 
-        // draw light
-        if(true) { // TODO check if level has light
-            if(xr     < -56 || xr     >= SCREEN_W + 56 ||
-               yr - 4 < -56 || yr - 4 >= SCREEN_H + 40)
-                continue;
-
-            vu16 *sprite_attribs = OAM + sprites_drawn * 4;
-            bool drawn = true;
-            switch(data->type) {
-                case PLAYER_ENTITY:
-                    if(player_active_item.type != LANTERN_ITEM) {
-                        sprite_attribs[0] = ((yr - 4 - 16) & 0xff) |
-                                            (2 << 10);
-                        sprite_attribs[1] = ((xr - 16) & 0x1ff) |
-                                            (2 << 14);
-                        sprite_attribs[2] = 320;
-                        break;
-                    }
-                    // else if the item is LANTERN_ITEM
-                    // go to the LANTERN_ENTITY case
-
-                case LANTERN_ENTITY:
-                    sprite_attribs[0] = ((yr - 4 - 64) & 0xff) |
-                                        (1 << 8) | (1 << 9) | (2 << 10);
-                    sprite_attribs[1] = ((xr - 64) & 0x1ff) |
-                                        (3 << 14);
-                    sprite_attribs[2] = 336;
-                    break;
-
-                default:
-                    drawn = false;
-            }
-
-            if(drawn) {
-                sprites_drawn++;
-                if(sprites_drawn == 128)
-                    break;
-            }
-        }
-
         if(xr < -16 || xr >= SCREEN_W + 16 ||
            yr < -16 || yr >= SCREEN_H)
             continue;
@@ -205,6 +165,30 @@ void level_draw(struct Level *level) {
         sprites_drawn++;
         if(sprites_drawn == 128)
             break;
+
+        // draw player light
+        // TODO check if level has light
+        if(true && data->type == PLAYER_ENTITY) {
+            vu16 *sprite_attribs = OAM + sprites_drawn * 4;
+
+            if(player_active_item.type == LANTERN_ITEM) {
+                sprite_attribs[0] = ((yr - 4 - 64) & 0xff) |
+                                    (1 << 8) | (1 << 9) | (2 << 10);
+                sprite_attribs[1] = ((xr - 64) & 0x1ff) |
+                                    (3 << 14);
+                sprite_attribs[2] = 336;
+            } else {
+                sprite_attribs[0] = ((yr - 4 - 16) & 0xff) |
+                                    (2 << 10);
+                sprite_attribs[1] = ((xr - 16) & 0x1ff) |
+                                    (2 << 14);
+                sprite_attribs[2] = 320;
+            }
+
+            sprites_drawn++;
+            if(sprites_drawn == 128)
+                break;
+        }
     }
 
     // hide remaining sprites
