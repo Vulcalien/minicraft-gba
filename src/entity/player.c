@@ -127,48 +127,31 @@ static inline void player_take_furniture(struct Level *level, struct entity_Data
     i32 x1 = data->x     + ((dir & 1) == 0) * 8 + (dir == 3) * range - (dir == 1) * 4;
     i32 y1 = data->y - 2 + ((dir & 1) == 1) * 8 + (dir == 2) * range - (dir == 0) * 4;
 
-    i32 xt0 = (x0 >> 4) - 1;
-    i32 yt0 = (y0 >> 4) - 1;
-    i32 xt1 = (x1 >> 4) + 1;
-    i32 yt1 = (y1 >> 4) + 1;
+    for(u32 i = 0; i < ENTITY_CAP; i++) {
+        struct entity_Data *e_data = &level->entities[i];
 
-    if(xt0 < 0) xt0 = 0;
-    if(yt0 < 0) yt0 = 0;
-    if(xt1 >= LEVEL_W) xt1 = LEVEL_W - 1;
-    if(yt1 >= LEVEL_H) yt1 = LEVEL_H - 1;
+        switch(e_data->type) {
+            case WORKBENCH_ENTITY:
+            case FURNACE_ENTITY:
+            case OVEN_ENTITY:
+            case ANVIL_ENTITY:
+            case CHEST_ENTITY:
+            case LANTERN_ENTITY:
+                break;
 
-    for(u32 yt = yt0; yt <= yt1; yt++) {
-        for(u32 xt = xt0; xt <= xt1; xt++) {
-            const u32 tile = xt + yt * LEVEL_W;
+            default:
+                continue;
+        };
 
-            for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
-                const u8 entity_id = level_solid_entities[tile][i];
-                struct entity_Data *e_data = &level->entities[entity_id];
+        if(entity_intersects(e_data, x0, y0, x1, y1)) {
+            // add the power glove to the inventory
+            bool could_add = inventory_add(
+                &player_inventory, &player_active_item, 0
+            );
 
-                switch(e_data->type) {
-                    case WORKBENCH_ENTITY:
-                    case FURNACE_ENTITY:
-                    case OVEN_ENTITY:
-                    case ANVIL_ENTITY:
-                    case CHEST_ENTITY:
-                    case LANTERN_ENTITY:
-                        break;
-
-                    default:
-                        continue;
-                };
-
-                if(entity_intersects(e_data, x0, y0, x1, y1)) {
-                    // add the power glove to the inventory
-                    bool could_add = inventory_add(
-                        &player_inventory, &player_active_item, 0
-                    );
-
-                    if(could_add) {
-                        furniture_take(e_data);
-                        return;
-                    }
-                }
+            if(could_add) {
+                furniture_take(e_data);
+                return;
             }
         }
     }
@@ -294,52 +277,35 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
     i32 x1 = data->x     + ((dir & 1) == 0) * 8 + (dir == 3) * range - (dir == 1) * 4;
     i32 y1 = data->y - 2 + ((dir & 1) == 1) * 8 + (dir == 2) * range - (dir == 0) * 4;
 
-    i32 xt0 = (x0 >> 4) - 1;
-    i32 yt0 = (y0 >> 4) - 1;
-    i32 xt1 = (x1 >> 4) + 1;
-    i32 yt1 = (y1 >> 4) + 1;
+    for(u32 i = 0; i < ENTITY_CAP; i++) {
+        struct entity_Data *e_data = &level->entities[i];
 
-    if(xt0 < 0) xt0 = 0;
-    if(yt0 < 0) yt0 = 0;
-    if(xt1 >= LEVEL_W) xt1 = LEVEL_W - 1;
-    if(yt1 >= LEVEL_H) yt1 = LEVEL_H - 1;
+        if(entity_intersects(e_data, x0, y0, x1, y1)) {
+            bool found = true;
+            switch(e_data->type) {
+                case WORKBENCH_ENTITY:
+                    OPEN_CRAFTING_MENU(workbench_recipes);
+                    break;
+                case FURNACE_ENTITY:
+                    OPEN_CRAFTING_MENU(furnace_recipes);
+                    break;
+                case OVEN_ENTITY:
+                    OPEN_CRAFTING_MENU(oven_recipes);
+                    break;
+                case ANVIL_ENTITY:
+                    OPEN_CRAFTING_MENU(anvil_recipes);
+                    break;
+                case CHEST_ENTITY:
+                    furniture_set_opened_chest(e_data);
+                    set_scene(&scene_chest, true);
+                    break;
 
-    for(u32 yt = yt0; yt <= yt1; yt++) {
-        for(u32 xt = xt0; xt <= xt1; xt++) {
-            const u32 tile = xt + yt * LEVEL_W;
+                default:
+                    found = false;
+            };
 
-            for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
-                const u8 entity_id = level_solid_entities[tile][i];
-                struct entity_Data *e_data = &level->entities[entity_id];
-
-                if(entity_intersects(e_data, x0, y0, x1, y1)) {
-                    bool found = true;
-                    switch(e_data->type) {
-                        case WORKBENCH_ENTITY:
-                            OPEN_CRAFTING_MENU(workbench_recipes);
-                            break;
-                        case FURNACE_ENTITY:
-                            OPEN_CRAFTING_MENU(furnace_recipes);
-                            break;
-                        case OVEN_ENTITY:
-                            OPEN_CRAFTING_MENU(oven_recipes);
-                            break;
-                        case ANVIL_ENTITY:
-                            OPEN_CRAFTING_MENU(anvil_recipes);
-                            break;
-                        case CHEST_ENTITY:
-                            furniture_set_opened_chest(e_data);
-                            set_scene(&scene_chest, true);
-                            break;
-
-                        default:
-                            found = false;
-                    };
-
-                    if(found)
-                        return true;
-                }
-            }
+            if(found)
+                return true;
         }
     }
     return false;
