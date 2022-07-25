@@ -155,20 +155,9 @@ void level_draw(struct Level *level) {
         i32 xr = data->x - level_x_offset;
         i32 yr = data->y - level_y_offset;
 
-        if(xr < -16 || xr >= SCREEN_W + 16 ||
-           yr < -16 || yr >= SCREEN_H)
-            continue;
-
-        const struct Entity *entity = ENTITY_S(data);
-        entity->draw(level, data, OAM + sprites_drawn * 4);
-
-        sprites_drawn++;
-        if(sprites_drawn == 128)
-            break;
-
         // draw player light
         // TODO check if level has light
-        if(true && data->type == PLAYER_ENTITY) {
+        if(data->type == PLAYER_ENTITY && true) {
             vu16 *sprite_attribs = OAM + sprites_drawn * 4;
 
             if(player_active_item.type == LANTERN_ITEM) {
@@ -189,6 +178,17 @@ void level_draw(struct Level *level) {
             if(sprites_drawn == 128)
                 break;
         }
+
+        if(xr < -16 || xr >= SCREEN_W + 16 ||
+           yr < -16 || yr >= SCREEN_H)
+            continue;
+
+        const struct Entity *entity = ENTITY_S(data);
+        entity->draw(level, data, OAM + sprites_drawn * 4);
+
+        sprites_drawn++;
+        if(sprites_drawn == 128)
+            break;
     }
 
     // hide remaining sprites
