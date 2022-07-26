@@ -21,6 +21,7 @@
 
 EWRAM_BSS_SECTION
 struct Inventory chest_inventories[CHEST_LIMIT];
+u8 chest_count = 0;
 
 u8 chest_opened_id;
 
@@ -140,10 +141,8 @@ void furniture_set_opened_chest(struct entity_Data *data) {
 }
 
 u8 furniture_new_chest_id(void) {
-    static u8 next_id = 0;
-
-    if(next_id >= CHEST_LIMIT)
+    if(chest_count >= CHEST_LIMIT)
         return -1;
 
-    return next_id++;
+    return chest_count++;
 }

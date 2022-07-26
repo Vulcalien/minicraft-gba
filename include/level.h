@@ -18,8 +18,8 @@
 
 #include "minicraft.h"
 
-#define LEVEL_W (100)
-#define LEVEL_H (100)
+#define LEVEL_W (112)
+#define LEVEL_H (112)
 
 #define ENTITY_CAP (255)
 

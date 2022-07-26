@@ -13,23 +13,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_FURNITURE
-#define MINICRAFT_FURNITURE
-
-#include "minicraft.h"
+#include "storage.h"
 
 #include "level.h"
-#include "inventory.h"
 
-#define CHEST_LIMIT (32)
-extern struct Inventory chest_inventories[CHEST_LIMIT];
-extern u8 chest_count;
+/*
+Storage Layout (128 KB)
 
-extern u8 chest_opened_id;
+120 KB - 5 * level:
+     7 KB - tiles
+    13 KB - data
+     4 KB - entities
 
-extern void furniture_take(struct entity_Data *data);
+3 KB - padding
 
-extern void furniture_set_opened_chest(struct entity_Data *data);
-extern u8 furniture_new_chest_id(void);
+4 KB - chest inventories
+1 KB - player and other data:
+    128 B - inventory
+      3 B - active item
 
-#endif // MINICRAFT_FURNITURE
+      1 B - stamina
+      1 B - stamina recharge delay
+      1 B - invulnerable time
+
+      4 B - score
+
+      1 B - chest count
+ */
+
+void storage_load(void) {
+
+}
+
+void storage_save(void) {
+
+}

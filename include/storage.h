@@ -13,23 +13,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_FURNITURE
-#define MINICRAFT_FURNITURE
+#ifndef MINICRAFT_STORAGE
+#define MINICRAFT_STORAGE
 
 #include "minicraft.h"
 
-#include "level.h"
-#include "inventory.h"
+void storage_load(void);
+void storage_save(void);
 
-#define CHEST_LIMIT (32)
-extern struct Inventory chest_inventories[CHEST_LIMIT];
-extern u8 chest_count;
-
-extern u8 chest_opened_id;
-
-extern void furniture_take(struct entity_Data *data);
-
-extern void furniture_set_opened_chest(struct entity_Data *data);
-extern u8 furniture_new_chest_id(void);
-
-#endif // MINICRAFT_FURNITURE
+#endif // MINICRAFT_STORAGE
