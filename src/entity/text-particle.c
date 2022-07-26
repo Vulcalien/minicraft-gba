@@ -39,7 +39,7 @@ static_assert(sizeof(struct text_Data) == 8, "struct text_Data: wrong size");
 void entity_add_text_particle(struct Level *level, u16 x, u16 y,
                               u8 number, u8 palette) {
     u8 entity_id = level_new_entity(level, TEXT_PARTICLE_ENTITY);
-    if(entity_id >= ENTITY_CAP)
+    if(entity_id >= ENTITY_LIMIT)
         return;
 
     struct entity_Data *data = &level->entities[entity_id];

@@ -83,7 +83,7 @@ int main(void) {
         #ifdef PERFORMANCE_CHECK
         if(tick_count % 15 == 0) {
             u32 entity_count = 0;
-            for(u32 i = 0; i < ENTITY_CAP; i++)
+            for(u32 i = 0; i < ENTITY_LIMIT; i++)
                 if(levels[current_level].entities[i].type < ENTITY_TYPES)
                     entity_count++;
 

@@ -127,7 +127,7 @@ static inline void player_take_furniture(struct Level *level, struct entity_Data
     i32 x1 = data->x     + ((dir & 1) == 0) * 8 + (dir == 3) * range - (dir == 1) * 4;
     i32 y1 = data->y - 2 + ((dir & 1) == 1) * 8 + (dir == 2) * range - (dir == 0) * 4;
 
-    for(u32 i = 0; i < ENTITY_CAP; i++) {
+    for(u32 i = 0; i < ENTITY_LIMIT; i++) {
         struct entity_Data *e_data = &level->entities[i];
 
         switch(e_data->type) {
@@ -277,7 +277,7 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
     i32 x1 = data->x     + ((dir & 1) == 0) * 8 + (dir == 3) * range - (dir == 1) * 4;
     i32 y1 = data->y - 2 + ((dir & 1) == 1) * 8 + (dir == 2) * range - (dir == 0) * 4;
 
-    for(u32 i = 0; i < ENTITY_CAP; i++) {
+    for(u32 i = 0; i < ENTITY_LIMIT; i++) {
         struct entity_Data *e_data = &level->entities[i];
 
         if(entity_intersects(e_data, x0, y0, x1, y1)) {

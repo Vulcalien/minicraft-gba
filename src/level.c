@@ -46,7 +46,7 @@ static inline void insert_solid_entity(u8 xt, u8 yt,
                                        u8 entity_id) {
     const u32 tile = xt + yt * LEVEL_W;
     for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
-        if(level_solid_entities[tile][i] >= ENTITY_CAP) {
+        if(level_solid_entities[tile][i] >= ENTITY_LIMIT) {
             level_solid_entities[tile][i] = entity_id;
             entity_data->solid_id = i;
 
@@ -66,7 +66,7 @@ void level_tick(struct Level *level) {
         tick_tile(level, xt, yt);
     }
 
-    for(u32 i = 0; i < ENTITY_CAP; i++) {
+    for(u32 i = 0; i < ENTITY_LIMIT; i++) {
         struct entity_Data *entity_data = &level->entities[i];
         if(entity_data->type >= ENTITY_TYPES)
             continue;
@@ -146,7 +146,7 @@ void level_draw(struct Level *level) {
 
     // draw entities
     u32 sprites_drawn = 0;
-    for(u32 i = 0; i < ENTITY_CAP; i++) {
+    for(u32 i = 0; i < ENTITY_LIMIT; i++) {
         struct entity_Data *data = &level->entities[i];
         if(data->type >= ENTITY_TYPES)
             continue;
@@ -212,7 +212,7 @@ void level_draw(struct Level *level) {
 
 IWRAM_SECTION
 u8 level_new_entity(struct Level *level, u8 type) {
-    for(u32 i = 0; i < ENTITY_CAP; i++) {
+    for(u32 i = 0; i < ENTITY_LIMIT; i++) {
         struct entity_Data *data = &level->entities[i];
 
         if(data->type >= ENTITY_TYPES) {

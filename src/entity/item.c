@@ -32,7 +32,7 @@ static_assert(
 void entity_add_item(struct Level *level, u16 x, u16 y,
                      u8 item, bool is_tile) {
     u8 entity_id = level_new_entity(level, ITEM_ENTITY);
-    if(entity_id >= ENTITY_CAP)
+    if(entity_id >= ENTITY_LIMIT)
         return;
 
     struct entity_Data *data = &level->entities[entity_id];

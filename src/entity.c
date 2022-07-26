@@ -162,7 +162,7 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
 
             for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
                 const u8 entity_id = level_solid_entities[tile][i];
-                if(entity_id >= ENTITY_CAP)
+                if(entity_id >= ENTITY_LIMIT)
                     continue;
 
                 struct entity_Data *e_data = &level->entities[entity_id];

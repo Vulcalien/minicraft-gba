@@ -21,7 +21,7 @@
 #define LEVEL_W (112)
 #define LEVEL_H (112)
 
-#define ENTITY_CAP (255)
+#define ENTITY_LIMIT (255)
 
 struct entity_Data {
     u8 type;
@@ -42,7 +42,7 @@ struct Level {
     u8  data[LEVEL_W * LEVEL_H];
 
     struct entity_Data *player;
-    struct entity_Data entities[ENTITY_CAP];
+    struct entity_Data entities[ENTITY_LIMIT];
 };
 
 extern struct Level levels[5];

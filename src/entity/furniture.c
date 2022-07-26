@@ -45,7 +45,7 @@ bool entity_add_furniture(struct Level *level, u8 xt, u8 yt,
     u8 entity_id = level_new_entity(
         level, WORKBENCH_ENTITY + (item_data->type - WORKBENCH_ITEM)
     );
-    if(entity_id >= ENTITY_CAP)
+    if(entity_id >= ENTITY_LIMIT)
         return false;
 
     struct entity_Data *data = &level->entities[entity_id];

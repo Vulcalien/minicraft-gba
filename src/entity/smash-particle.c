@@ -25,7 +25,7 @@ static_assert(sizeof(struct smash_Data) == 8, "struct smash_Data: wrong size");
 
 void entity_add_smash_particle(struct Level *level, u8 xt, u8 yt) {
     u8 entity_id = level_new_entity(level, SMASH_PARTICLE_ENTITY);
-    if(entity_id >= ENTITY_CAP)
+    if(entity_id >= ENTITY_LIMIT)
         return;
 
     struct entity_Data *data = &level->entities[entity_id];
