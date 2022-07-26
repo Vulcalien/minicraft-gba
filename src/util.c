@@ -26,8 +26,8 @@ void memcpy16(vu16 *dest, const vu16 *src, u32 n) {
     DMA3_DEST    = (u32) dest;
 
     DMA3_COUNT   = n;
-    DMA3_CONTROL = (0 << 10) | // Transfer type (0 is 16bit, 1 is 32bit)
-                   (1 << 15);  // DMA Enable
+    DMA3_CONTROL = 0 << 10 | // Transfer type (0 is 16bit, 1 is 32bit)
+                   1 << 15;  // DMA Enable
 }
 
 // pseudorandom number generator

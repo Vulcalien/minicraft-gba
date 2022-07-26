@@ -51,9 +51,8 @@ EDRAW(smash_particle_draw) {
     const u8 palette = 0;
 
     sprite_attribs[0] = ((data->y - 8 - level_y_offset) & 0xff);
-    sprite_attribs[1] = ((data->x - 8 - level_x_offset) & 0x1ff) |
-                        (1 << 14);
-    sprite_attribs[2] = (sprite & 0x3ff) | (2 << 10) | (palette << 12);
+    sprite_attribs[1] = ((data->x - 8 - level_x_offset) & 0x1ff) | 1 << 14;
+    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
 }
 
 static const struct Entity smash_particle_entity = {

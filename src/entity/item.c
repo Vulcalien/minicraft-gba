@@ -116,10 +116,9 @@ EDRAW(item_draw) {
 
     // TODO consider zz
     sprite_attribs[0] = ((data->y - 4 - level_y_offset) & 0xff) |
-                        (is_invisible << 9);
-    sprite_attribs[1] = ((data->x - 4 - level_x_offset) & 0x1ff) |
-                        (0 << 14);
-    sprite_attribs[2] = (sprite & 0x3ff) | (2 << 10) | (palette << 12);
+                        is_invisible << 9;
+    sprite_attribs[1] = ((data->x - 4 - level_x_offset) & 0x1ff) | 0 << 14;
+    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
 }
 
 static const struct Entity item_entity = {

@@ -19,10 +19,11 @@
 #define SOUND_CONTROL_X *((vu16 *) 0x04000084)
 
 void sound_init(void) {
-    SOUND_CONTROL_X = (1 << 7); // Enable Sound
+    SOUND_CONTROL_X = 1 << 7; // Enable Sound
 
-    SOUND_CONTROL_H = (1 << 2) | // Channel A Volume (1 is 100%)
-                      (1 << 8) | // Enable Channel A RIGHT
-                      (1 << 9) | // Enable Channel A LEFT
-                      (0 << 10); // Channel A Timer (0 is Timer 0)
+    SOUND_CONTROL_H = 1 << 2 | // Channel A Volume (1 is 100%)
+                      1 << 8 | // Enable Channel A RIGHT
+                      1 << 9 | // Enable Channel A LEFT
+                      0 << 10; // Channel A Timer (0 is Timer 0)
+
 }

@@ -101,10 +101,10 @@ EDRAW(text_particle_draw) {
     const u8 palette = text_data->palette;
 
     sprite_attribs[0] = ((data->y - (text_data->zz / 6) - level_y_offset) & 0xff) |
-                        ((length == 2) << 14);
+                        (length == 2) << 14;
     sprite_attribs[1] = ((data->x - length * 4 - level_x_offset) & 0x1ff) |
-                        (0 << 14);
-    sprite_attribs[2] = (sprite & 0x3ff) | (2 << 10) | (palette << 12);
+                        0 << 14;
+    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
 }
 
 static const struct Entity text_particle_entity = {

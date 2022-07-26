@@ -21,9 +21,9 @@
     static inline void name(struct Level *level, u32 xt, u32 yt,\
                             u16 tiles[4])
 
-#define TILE(id, palette) ((id) | ((palette) << 12))
+#define TILE(id, palette) ((id) | (palette) << 12)
 #define TILE_M(id, flip, palette)\
-    ((id) | (flip << 10) | (palette << 12))
+    ((id) | (flip) << 10 | (palette) << 12)
 
 // CONNECTS_TO_X
 #define CONNECTS_TO_GRASS(level, xt, yt)\

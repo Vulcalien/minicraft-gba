@@ -27,9 +27,9 @@ static void about_draw(void) {
     // clear the screen
     for(u32 y = 0; y < 20; y++) {
         for(u32 x = 0; x < 30; x += 2) {
-            const u16 tile = 29 | (1 << 12);
+            const u16 tile = 29 | 1 << 12;
 
-            *((vu32 *) &BG3_TILEMAP[x + y * 32]) = (tile << 16) | tile;
+            *((vu32 *) &BG3_TILEMAP[x + y * 32]) = tile << 16 | tile;
         }
     }
 

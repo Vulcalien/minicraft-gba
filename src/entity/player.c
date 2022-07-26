@@ -453,8 +453,8 @@ EDRAW(player_draw) {
         (data->y - 11 + IS_SWIMMING(on_tile) * 4 - level_y_offset) & 0xff
     );
     sprite_attribs[1] = ((data->x - 8  - level_x_offset) & 0x1ff) |
-                        (flip << 12) | (1 << 14);
-    sprite_attribs[2] = (sprite & 0x3ff) | (2 << 10) | (palette << 12);
+                        flip << 12 | 1 << 14;
+    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
 }
 
 static const struct Entity player_entity = {

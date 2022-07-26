@@ -84,8 +84,8 @@ EDRAW(zombie_draw) {
 
     sprite_attribs[0] = ((data->y - 11 - level_y_offset) & 0xff);
     sprite_attribs[1] = ((data->x - 8  - level_x_offset) & 0x1ff) |
-                        (flip << 12) | (1 << 14);
-    sprite_attribs[2] = (sprite & 0x3ff) | (2 << 10) | (palette << 12);
+                        flip << 12 | 1 << 14;
+    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
 }
 
 ETOUCH_PLAYER(zombie_touch_player) {
