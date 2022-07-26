@@ -27,7 +27,7 @@
 #define MAX_STAMINA (10)
 
 #define IS_SWIMMING(on_tile)\
-    ((on_tile) == WATER_TILE || (on_tile) == LAVA_TILE)
+    ((on_tile) == LIQUID_TILE)
 
 EWRAM_BSS_SECTION
 struct Inventory player_inventory;
@@ -338,7 +338,8 @@ ETICK(player_tick) {
 
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
 
-    if(on_tile == LAVA_TILE)
+    // TODO determine if liquid is lava or water
+    if(on_tile == LIQUID_TILE && false)
         mob_hurt(level, data, 4, mob_data->dir ^ 2);
 
     mob_tick(level, data);

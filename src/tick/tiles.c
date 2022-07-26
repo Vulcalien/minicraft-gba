@@ -42,7 +42,7 @@ FTICK(grass_tick) {
         LEVEL_SET_TILE(level, xn, yn, GRASS_TILE, 0);
 }
 
-FTICK(water_tick) {
+FTICK(liquid_tick) {
     i32 xn = xt;
     i32 yn = yt;
 
@@ -52,7 +52,7 @@ FTICK(water_tick) {
         yn += (rand() & 1) * 2 - 1;
 
     if(LEVEL_GET_TILE(level, xn, yn) == HOLE_TILE)
-        LEVEL_SET_TILE(level, xn, yn, WATER_TILE, 0);
+        LEVEL_SET_TILE(level, xn, yn, LIQUID_TILE, 0);
 }
 
 FTICK(tree_sapling_tick) {
@@ -88,19 +88,6 @@ FTICK(wheat_tick) {
         LEVEL_SET_DATA(level, xt, yt, age + 1);
 }
 
-FTICK(lava_tick) {
-    i32 xn = xt;
-    i32 yn = yt;
-
-    if(rand() & 1)
-        xn += (rand() & 1) * 2 - 1;
-    else
-        yn += (rand() & 1) * 2 - 1;
-
-    if(LEVEL_GET_TILE(level, xn, yn) == HOLE_TILE)
-        LEVEL_SET_TILE(level, xn, yn, LAVA_TILE, 0);
-}
-
 #define CALL(function)\
     function(level, xt, yt)
 
@@ -119,8 +106,8 @@ static inline void tick_tile(struct Level *level, u32 xt, u32 yt) {
             CALL(grass_tick);
             break;
 
-        case WATER_TILE:
-            CALL(water_tick);
+        case LIQUID_TILE:
+            CALL(liquid_tick);
             break;
 
         case TREE_SAPLING_TILE:
@@ -137,10 +124,6 @@ static inline void tick_tile(struct Level *level, u32 xt, u32 yt) {
 
         case WHEAT_TILE:
             CALL(wheat_tick);
-            break;
-
-        case LAVA_TILE:
-            CALL(lava_tick);
             break;
     }
 }

@@ -67,11 +67,11 @@ const u16 bg_palette[11 * 16] = {
     // dirt (level-specific)
     0x1cea, 0x35b0,
 
-    // --- palette 2 --- (water+dirt, ore/cloud cactus)
+    // --- palette 2 --- (liquid+dirt, ore/cloud cactus)
     // transparent
     0,
 
-    // water
+    // liquid
     0x4442, 0x4d08,
 
     // ore/cloud cactus (level-specific)
@@ -86,11 +86,11 @@ const u16 bg_palette[11 * 16] = {
     // dirt (level-specific)
     0x1cea, 0x35b0,
 
-    // --- palette 3 --- (water+sand, farmland and wheat)
+    // --- palette 3 --- (liquid+sand, farmland and wheat)
     // transparent
     0,
 
-    // water
+    // liquid
     0x4442, 0x4d08,
 
     // farmland (level-specific)

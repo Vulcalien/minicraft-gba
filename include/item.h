@@ -75,7 +75,7 @@ struct Item {
         // ITEMCLASS_PLACEABLE
         struct {
             u8 placed_tile;
-            u8 placeable_on[3];
+            u8 placeable_on[2];
         };
 
         // ITEMCLASS_FOOD

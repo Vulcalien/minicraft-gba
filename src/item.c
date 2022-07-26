@@ -112,7 +112,7 @@ const struct Item item_list[ITEM_TYPES] = {
         .palette = 1,
 
         .placed_tile = FLOWER_TILE,
-        .placeable_on = { GRASS_TILE, -1, -1 }
+        .placeable_on = { GRASS_TILE, -1 }
     },
 
     // Seeds
@@ -122,7 +122,7 @@ const struct Item item_list[ITEM_TYPES] = {
         .palette = 1,
 
         .placed_tile = WHEAT_TILE,
-        .placeable_on = { FARMLAND_TILE, -1, -1 }
+        .placeable_on = { FARMLAND_TILE, -1 }
     },
 
     // Acorn
@@ -132,7 +132,7 @@ const struct Item item_list[ITEM_TYPES] = {
         .palette = 0,
 
         .placed_tile = TREE_SAPLING_TILE,
-        .placeable_on = { GRASS_TILE, -1, -1 }
+        .placeable_on = { GRASS_TILE, -1 }
     },
 
     // Cactus
@@ -142,7 +142,7 @@ const struct Item item_list[ITEM_TYPES] = {
         .palette = 1,
 
         .placed_tile = CACTUS_SAPLING_TILE,
-        .placeable_on = { SAND_TILE, -1, -1 }
+        .placeable_on = { SAND_TILE, -1 }
     },
 
     // Dirt
@@ -152,7 +152,7 @@ const struct Item item_list[ITEM_TYPES] = {
         .palette = 0,
 
         .placed_tile = DIRT_TILE,
-        .placeable_on = { HOLE_TILE, WATER_TILE, LAVA_TILE }
+        .placeable_on = { HOLE_TILE, LIQUID_TILE }
     },
 
     // Sand
@@ -162,7 +162,7 @@ const struct Item item_list[ITEM_TYPES] = {
         .palette = 1,
 
         .placed_tile = SAND_TILE,
-        .placeable_on = { GRASS_TILE, DIRT_TILE, -1 }
+        .placeable_on = { GRASS_TILE, DIRT_TILE }
     },
 
     // Cloud
@@ -172,7 +172,7 @@ const struct Item item_list[ITEM_TYPES] = {
         .palette = 2,
 
         .placed_tile = CLOUD_TILE,
-        .placeable_on = { INFINITE_FALL_TILE, -1, -1 }
+        .placeable_on = { INFINITE_FALL_TILE, -1 }
     },
 
     // -----

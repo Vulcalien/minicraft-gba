@@ -21,11 +21,11 @@
 #include "level.h"
 #include "item.h"
 
-#define TILE_TYPES (23)
+#define TILE_TYPES (22)
 
 #define GRASS_TILE          (0)
 #define ROCK_TILE           (1)
-#define WATER_TILE          (2)
+#define LIQUID_TILE         (2)
 #define FLOWER_TILE         (3)
 #define TREE_TILE           (4)
 #define DIRT_TILE           (5)
@@ -36,16 +36,15 @@
 #define CACTUS_SAPLING_TILE (10)
 #define FARMLAND_TILE       (11)
 #define WHEAT_TILE          (12)
-#define LAVA_TILE           (13)
-#define STAIRS_DOWN_TILE    (14)
-#define STAIRS_UP_TILE      (15)
-#define INFINITE_FALL_TILE  (16)
-#define CLOUD_TILE          (17)
-#define HARD_ROCK_TILE      (18)
-#define IRON_ORE_TILE       (19)
-#define GOLD_ORE_TILE       (20)
-#define GEM_ORE_TILE        (21)
-#define CLOUD_CACTUS_TILE   (22)
+#define STAIRS_DOWN_TILE    (13)
+#define STAIRS_UP_TILE      (14)
+#define INFINITE_FALL_TILE  (15)
+#define CLOUD_TILE          (16)
+#define HARD_ROCK_TILE      (17)
+#define IRON_ORE_TILE       (18)
+#define GOLD_ORE_TILE       (19)
+#define GEM_ORE_TILE        (20)
+#define CLOUD_CACTUS_TILE   (21)
 
 struct Tile {
     bool is_solid;

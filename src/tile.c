@@ -324,7 +324,7 @@ const struct Tile tile_list[TILE_TYPES] = {
         .interact = rock_interact
     },
 
-    // Water
+    // Liquid
     {
         .connects_to = {
             .sand   = true,
@@ -427,17 +427,6 @@ const struct Tile tile_list[TILE_TYPES] = {
         .stepped_on = wheat_stepped_on,
 
         .interact = wheat_interact
-    },
-
-    // Lava
-    {
-        .connects_to = {
-            .sand   = true,
-            .liquid = true
-        },
-
-        .is_solid = true,
-        .may_pass = PLAYER_ENTITY
     },
 
     // Stairs Down
