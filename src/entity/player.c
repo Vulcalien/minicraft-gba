@@ -423,9 +423,9 @@ ETICK(player_tick) {
 
     // DEBUG
     if(INPUT_CLICKED(KEY_L))
-        set_scene(&scene_chest, true);
+        storage_save();
     if(INPUT_CLICKED(KEY_R))
-        set_scene(&scene_crafting, true);
+        storage_load();
 }
 
 EDRAW(player_draw) {

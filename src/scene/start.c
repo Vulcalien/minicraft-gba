@@ -18,12 +18,13 @@
 #include "input.h"
 #include "generator.h"
 #include "screen.h"
+#include "storage.h"
 
 static i8 start_selected;
 static bool start_can_load;
 
 static void start_init(void) {
-    start_can_load = false;
+    start_can_load = true; // DEBUG
 
     if(start_can_load)
         start_selected = 0;
@@ -44,7 +45,10 @@ static void start_tick(void) {
 
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
         if(start_selected == 0) {
-            // TODO load game
+            // TODO srand
+            storage_load();
+
+            set_scene(&scene_game, true);
         } else if(start_selected == 1) {
             // TODO srand
             generate_levels();
