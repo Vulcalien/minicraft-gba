@@ -29,7 +29,9 @@
 /*
 Storage Layout (128 KB)
 
-1 KB - header
+1 KB - header:
+    4 B - game code (ZMCE)
+    1 B - deleted flag
 
 114 KB - 5 * level:
      7056 B - tiles
@@ -132,12 +134,6 @@ void storage_load(void) {
     u16 addr;
 
     switch_bank(0);
-
-    // read header
-    addr = 0;
-    {
-        // TODO ...
-    }
 
     // read levels
     addr = 1 * 1024;
@@ -273,7 +269,14 @@ void storage_save(void) {
     // write header
     addr = 0;
     {
-        // TODO write some header info
+        // game code - ZMCE
+        write_byte(addr++, 'Z');
+        write_byte(addr++, 'M');
+        write_byte(addr++, 'C');
+        write_byte(addr++, 'E');
+
+        // deleted flag ('+' -> not deleted, '-' -> deleted)
+        write_byte(addr++, '+');
     }
 
     // write levels
