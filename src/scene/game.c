@@ -27,6 +27,7 @@ static void game_init(void) {
     current_level = 0;
 
     level = &levels[current_level];
+    level_load(level);
 
     // FIXME this should not be done here, but in game_draw
     // clear the screen (fully transparent)

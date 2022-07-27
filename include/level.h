@@ -54,6 +54,8 @@ extern u8 level_solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
 extern u32 level_x_offset;
 extern u32 level_y_offset;
 
+extern void level_load(struct Level *level);
+
 extern void level_tick(struct Level *level);
 extern void level_draw(struct Level *level);
 

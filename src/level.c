@@ -55,6 +55,19 @@ static inline void insert_solid_entity(u8 xt, u8 yt,
     }
 }
 
+void level_load(struct Level *level) {
+    for(u32 t = 0; t < LEVEL_W * LEVEL_H; t++)
+        for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++)
+            level_solid_entities[t][i] = -1;
+
+    for(u32 i = 0; i < ENTITY_LIMIT; i++) {
+        struct entity_Data *data = &level->entities[i];
+
+        if(data->type < ENTITY_TYPES)
+            level_add_entity(level, i);
+    }
+}
+
 IWRAM_SECTION
 void level_tick(struct Level *level) {
     // TODO try spawn

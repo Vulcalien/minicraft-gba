@@ -119,7 +119,7 @@ static inline void load_inventory(u16 *addr, struct Inventory *inventory) {
         struct item_Data *item = &inventory->items[i];
         load_item(addr, item);
 
-        if(item->type == (u8) -1) {
+        if(item->type >= ITEM_TYPES) {
             inventory->size = i;
             (*addr) += (INVENTORY_SIZE - i - 1) * 3;
             break;
@@ -178,8 +178,6 @@ void storage_load(void) {
 
             for(u32 b = 0; b < sizeof(struct entity_Data); b++)
                 data[b] = FLASH_ROM[addr++];
-
-            // TODO add to solid entities??
         }
     }
 
