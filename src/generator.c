@@ -56,11 +56,4 @@ void generate_levels(void) {
     levels[0].entities[0].x = 40;
     levels[0].entities[0].y = 40;
     levels[0].player = &levels[0].entities[0];
-
-    // DEBUG clear level_solid_entities
-    for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
-        for(u32 j = 0; j < SOLID_ENTITIES_IN_TILE; j++) {
-            level_solid_entities[i][j] = -1;
-        }
-    }
 }

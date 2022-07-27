@@ -60,14 +60,7 @@ bool entity_add_furniture(struct Level *level, u8 xt, u8 yt,
     return true;
 }
 
-// DEBUG
-static u32 counter = 0;
-
 ETICK(furniture_tick) {
-    // DEBUG
-    if(counter++ < 256 * 20)
-        entity_move(level, data, 1, 0);
-
     struct furniture_Data *furn_data = (struct furniture_Data *) &data->data;
 
     entity_move(level, data, furn_data->push_x, furn_data->push_y);
