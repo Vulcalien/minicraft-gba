@@ -66,13 +66,10 @@ static void inventory_tick(void) {
 
     if(INPUT_CLICKED(KEY_A)) {
         inventory_remove(
-            &player_inventory, &player_active_item, inventory_selected
+            &player_inventory,
+            &player_active_item,
+            inventory_selected
         );
-
-        // FIXME VRAM should only be accessed in draw
-        // copy item palette
-        const struct Item *item = ITEM_S(&player_active_item);
-        screen_load_active_item_palette(item->palette);
 
         set_scene(&scene_game, true);
     }
@@ -84,9 +81,9 @@ static void inventory_draw(void) {
     const u8 inv_w = 12;
     const u8 inv_h = 14;
 
-    // clear displayed active item
-    for(u32 x = 20; x < 30; x++)
-        BG3_TILEMAP[x + 18 * 32] = 29;
+    // clear active item area
+    for(u32 x = 20; x < 30; x += 2)
+        *((vu32 *) &BG3_TILEMAP[x + 18 * 32]) = 29 | 29 << 16;
 
     screen_draw_frame("INVENTORY", inv_x, inv_y, inv_w, inv_h);
 

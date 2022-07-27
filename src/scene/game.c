@@ -57,8 +57,8 @@ static void game_draw(void) {
         struct mob_Data *mob_data = (struct mob_Data *) &level->player->data;
 
         for(u32 i = 0; i < 10; i++) {
-            BG3_TILEMAP[i + 18 * 32] = 91 + (mob_data->hp <= i)   | 5 << 12;
-            BG3_TILEMAP[i + 19 * 32] = 93 + (player_stamina <= i) | 5 << 12;
+            BG3_TILEMAP[i + 18 * 32] = (91 + (mob_data->hp <= i))   | 5 << 12;
+            BG3_TILEMAP[i + 19 * 32] = (93 + (player_stamina <= i)) | 5 << 12;
         }
 
         if(player_stamina_recharge_delay != 0 &&
@@ -68,8 +68,16 @@ static void game_draw(void) {
             screen_set_bg_palette_color(5, 0xa, 0x0cc6);
         }
 
+        // clear active item area
+        for(u32 x = 20; x < 30; x += 2)
+            *((vu32 *) &BG3_TILEMAP[x + 18 * 32]) = 29 | 29 << 16;
+
         // draw active item
         if(player_active_item.type < ITEM_TYPES) {
+            // copy item palette
+            const struct Item *item = ITEM_S(&player_active_item);
+            screen_load_active_item_palette(item->palette);
+
             item_draw_icon(&player_active_item, 20, 18, true);
             item_write(&player_active_item, 0, 21, 18);
         }
