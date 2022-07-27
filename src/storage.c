@@ -31,7 +31,6 @@ Storage Layout (128 KB)
 
 1 KB - header:
     4 B - game code (ZMCE)
-    1 B - deleted flag
 
 114 KB - 5 * level:
      7056 B - tiles
@@ -94,6 +93,21 @@ static inline void switch_bank(u32 bank) {
     FLASH_ROM[0x5555] = 0xb0;
 
     FLASH_ROM[0x0000] = bank;
+}
+
+IWRAM_SECTION
+bool storage_check(void) {
+    switch_bank(0);
+
+    // check if game code (ZMCE) is present
+    bool valid = FLASH_ROM[0] == 'Z' &&
+                 FLASH_ROM[1] == 'M' &&
+                 FLASH_ROM[2] == 'C' &&
+                 FLASH_ROM[3] == 'E';
+
+    // TODO validate a checksum
+
+    return valid;
 }
 
 ALWAYS_INLINE
@@ -273,9 +287,6 @@ void storage_save(void) {
         write_byte(addr++, 'M');
         write_byte(addr++, 'C');
         write_byte(addr++, 'E');
-
-        // deleted flag ('+' -> not deleted, '-' -> deleted)
-        write_byte(addr++, '+');
     }
 
     // write levels

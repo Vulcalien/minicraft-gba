@@ -18,6 +18,8 @@
 
 #include "minicraft.h"
 
+bool storage_check(void);
+
 void storage_load(void);
 void storage_save(void);
 

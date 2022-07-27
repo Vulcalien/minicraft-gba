@@ -24,7 +24,7 @@ static i8 start_selected;
 static bool start_can_load;
 
 static void start_init(void) {
-    start_can_load = true; // DEBUG
+    start_can_load = storage_check();
 
     if(start_can_load)
         start_selected = 0;
