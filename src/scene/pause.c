@@ -15,15 +15,27 @@
  */
 #include "scene.h"
 
-const struct Scene *scene = NULL;
+#include "input.h"
+#include "screen.h"
 
-#include "scene/start.c"
-#include "scene/instructions.c"
-#include "scene/about.c"
+static void pause_tick(void) {
+    if(INPUT_CLICKED(KEY_START))
+        set_scene(&scene_game, true);
+}
 
-#include "scene/game.c"
-#include "scene/inventory.c"
-#include "scene/chest.c"
-#include "scene/crafting.c"
+static void pause_draw(void) {
+    const u8 pause_x = 2;
+    const u8 pause_y = 2;
+    const u8 pause_w = 10;
+    const u8 pause_h = 5;
 
-#include "scene/pause.c"
+    screen_draw_frame("PAUSE", pause_x, pause_y, pause_w, pause_h);
+
+    // TODO draw score
+    // TODO save game
+}
+
+const struct Scene scene_pause = {
+    .tick = pause_tick,
+    .draw = pause_draw
+};

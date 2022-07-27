@@ -69,6 +69,7 @@ static void inventory_tick(void) {
             &player_inventory, &player_active_item, inventory_selected
         );
 
+        // FIXME VRAM should only be accessed in draw
         // copy item palette
         const struct Item *item = ITEM_S(&player_active_item);
         screen_load_active_item_palette(item->palette);

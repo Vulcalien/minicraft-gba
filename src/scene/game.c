@@ -22,36 +22,34 @@
 
 struct Level *level;
 
+static bool game_should_refresh = false;
+
 static void game_init(void) {
-    // DEBUG
-    current_level = 0;
+    static u8 last_level = -1;
+    if(last_level != current_level) {
+        last_level = current_level;
 
-    level = &levels[current_level];
-    level_load(level);
+        level = &levels[current_level];
+        level_load(level);
+    }
 
-    // FIXME this should not be done here, but in game_draw
-    // clear the screen (fully transparent)
-    for(u32 y = 0; y < 18; y++)
-        for(u32 x = 0; x < 30; x += 2)
-            *((vu32 *) &BG3_TILEMAP[x + y * 32]) = 0;
-
-    // TODO is this necessary for level transition or useless?
-    // clear two bottom lines
-    /*for(u32 x = 10; x < 30; x++) {*/
-        /*SET_TILE(x, 18, 29, 1);*/
-        /*SET_TILE(x, 19, 29, 1);*/
-    /*}*/
+    game_should_refresh = true;
 }
 
 static void game_tick(void) {
     level_tick(level);
 }
 
-#define SET_TILE(x, y, id, palette)\
-    do {\
-        BG3_TILEMAP[(x) + (y) * 32] = (id) | (palette) << 12;\
-    } while(0)
 static void game_draw(void) {
+    if(game_should_refresh) {
+        game_should_refresh = false;
+
+        // clear the screen (fully transparent)
+        for(u32 y = 0; y < 18; y++)
+            for(u32 x = 0; x < 30; x += 2)
+                *((vu32 *) &BG3_TILEMAP[x + y * 32]) = 0;
+    }
+
     level_draw(level);
 
     // draw hp and stamina
@@ -59,8 +57,8 @@ static void game_draw(void) {
         struct mob_Data *mob_data = (struct mob_Data *) &level->player->data;
 
         for(u32 i = 0; i < 10; i++) {
-            SET_TILE(i, 18, 91 + (mob_data->hp <= i), 5);
-            SET_TILE(i, 19, 93 + (player_stamina <= i), 5);
+            BG3_TILEMAP[i + 18 * 32] = 91 + (mob_data->hp <= i)   | 5 << 12;
+            BG3_TILEMAP[i + 19 * 32] = 93 + (player_stamina <= i) | 5 << 12;
         }
 
         if(player_stamina_recharge_delay != 0 &&
@@ -77,7 +75,6 @@ static void game_draw(void) {
         }
     }
 }
-#undef SET_TILE
 
 const struct Scene scene_game = {
     .init = game_init,
