@@ -236,26 +236,25 @@ static inline void store_item(u16 *addr, struct item_Data *data) {
         write_byte((*addr)++, data->count >> 8);
     } else if(ITEM_S(data)->class == ITEMCLASS_TOOL) {
         write_byte((*addr)++, data->tool_level);
-        write_byte((*addr)++, 0);
+        (*addr)++;
     } else if(data->type == CHEST_ITEM) {
         write_byte((*addr)++, data->chest_id);
-        write_byte((*addr)++, 0);
+        (*addr)++;
     } else {
         write_byte((*addr)++, data->chest_id);
-        write_byte((*addr)++, 0);
+        (*addr)++;
     }
 }
 
 ALWAYS_INLINE
 static inline void store_inventory(u16 *addr, struct Inventory *inventory) {
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
-        if(i < inventory->size) {
-            store_item(addr, &inventory->items[i]);
-        } else {
-            write_byte((*addr)++, -1);
-            write_byte((*addr)++, 0);
-            write_byte((*addr)++, 0);
+        if(i >= inventory->size) {
+            (*addr) += (INVENTORY_SIZE - i) * 3;
+            break;
         }
+
+        store_item(addr, &inventory->items[i]);
     }
 }
 
