@@ -41,6 +41,13 @@ extern void vsync(void);
 extern void screen_write(const char *text, u8 palette, u32 x, u32 y);
 extern void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h);
 
+#define SCREEN_WRITE_NUMBER(number, digits, palette, x, y)\
+    do {\
+        char text[(digits) + 1] = { 0 };\
+        itoa((number), text, (digits));\
+        screen_write(text, (palette), (x), (y));\
+    } while (0)
+
 extern void screen_set_bg_palette_color(u8 palette, u8 index, u16 color);
 extern void screen_load_active_item_palette(u8 palette);
 

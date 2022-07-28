@@ -197,9 +197,7 @@ static void crafting_draw(void) {
             &player_inventory, result.type, result.tool_level
         );
 
-        char count_text[6] = { 0 };
-        itoa(count, count_text, 5);
-        screen_write(count_text, 4, have_x + 2, have_y + 1);
+        SCREEN_WRITE_NUMBER(count, 5, 4, have_x + 2, have_y + 1);
     }
 
     // draw 'COST' items and count

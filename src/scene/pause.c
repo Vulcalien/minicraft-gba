@@ -26,12 +26,17 @@ static void pause_tick(void) {
 static void pause_draw(void) {
     const u8 pause_x = 2;
     const u8 pause_y = 2;
-    const u8 pause_w = 10;
+    const u8 pause_w = 18;
     const u8 pause_h = 5;
 
     screen_draw_frame("PAUSE", pause_x, pause_y, pause_w, pause_h);
 
-    // TODO draw score
+    screen_write("TIME:", 4, pause_x + 1, pause_y + 1);
+    // TODO draw time
+
+    screen_write("SCORE:", 4, pause_x + 1, pause_y + 2);
+    SCREEN_WRITE_NUMBER(score, 10, 8, pause_x + 7, pause_y + 2);
+
     // TODO save game
 }
 

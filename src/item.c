@@ -294,10 +294,7 @@ void item_write(struct item_Data *data, u8 palette, u32 x, u32 y) {
         if(count > 999)
             count = 999;
 
-        char count_text[4] = { 0 };
-        itoa(count, count_text, 3);
-        screen_write(count_text, palette + 3, x, y);
-
+        SCREEN_WRITE_NUMBER(count, 3, palette + 3, x, y);
         screen_write(item->name, palette, x + 3, y);
     } else {
         item_write_name(data, palette, x, y);
