@@ -32,7 +32,9 @@ static void pause_draw(void) {
     screen_draw_frame("PAUSE", pause_x, pause_y, pause_w, pause_h);
 
     screen_write("TIME:", 4, pause_x + 1, pause_y + 1);
-    // TODO draw time
+    // DEBUG
+    static u32 time = 0;
+    screen_write_time(time++, 8, pause_x + 6, pause_y + 1);
 
     screen_write("SCORE:", 4, pause_x + 1, pause_y + 2);
     SCREEN_WRITE_NUMBER(score, 10, 8, pause_x + 7, pause_y + 2);

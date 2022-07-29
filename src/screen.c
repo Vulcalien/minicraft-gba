@@ -219,6 +219,43 @@ void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h) {
     screen_write(title, 8, x + 1, y);
 }
 
+void screen_write_time(u32 time, u8 palette, u32 x, u32 y) {
+    // NOTE this is different from the original game
+
+    u32 seconds = time    / 60;
+    u32 minutes = seconds / 60;
+    u32 hours   = minutes / 60;
+
+    seconds %= 60;
+    minutes %= 60;
+
+    char text[15] = { 0 };
+
+    u8 offset = 0;
+    if(hours > 0) {
+        itoa(hours, text, 5);
+        offset += 1 + (hours > 9)   + (hours > 99) +
+                      (hours > 999) + (hours > 9999);
+        text[offset++] = 'H';
+        text[offset++] = ' ';
+    }
+
+    if(minutes < 10)
+        text[offset++] = '0';
+    itoa(minutes, text + offset, 2);
+    offset += 1 + (minutes > 9);
+    text[offset++] = 'M';
+    text[offset++] = ' ';
+
+    if(seconds < 10)
+        text[offset++] = '0';
+    itoa(seconds, text + offset, 2);
+    offset += 1 + (seconds > 9);
+    text[offset++] = 'S';
+
+    screen_write(text, palette, x, y);
+}
+
 void screen_set_bg_palette_color(u8 palette, u8 index, u16 color) {
     BG_PALETTE[palette * 16 + index] = color;
 }
