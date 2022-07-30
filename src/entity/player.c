@@ -41,6 +41,34 @@ u8 player_invulnerable_time = 0;
 
 static u32 player_tick_time = 0;
 
+void entity_add_player(struct Level *level, u8 xt, u8 yt) {
+    u8 entity_id = level_new_entity(level, PLAYER_ENTITY);
+    if(entity_id >= ENTITY_LIMIT)
+        return;
+
+    struct entity_Data *data  = &level->entities[entity_id];
+    struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    data->x = (xt << 4) + 8;
+    data->y = (yt << 4) + 8;
+
+    mob_data->hp = MAX_HP;
+    mob_data->dir = 2;
+
+    player_inventory.size = 0;
+    player_active_item.type = -1;
+
+    struct item_Data item_to_add;
+
+    item_to_add.type = POWERGLOVE_ITEM;
+    inventory_add(&player_inventory, &item_to_add, 0);
+
+    item_to_add.type = WORKBENCH_ITEM;
+    inventory_add(&player_inventory, &item_to_add, 0);
+
+    level_add_entity(level, entity_id);
+}
+
 static inline void player_hurt_entities(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
@@ -314,26 +342,6 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
 ETICK(player_tick) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
-    // DEBUG initialize
-    if(player_tick_time == 0) {
-        mob_data->hp = MAX_HP;
-
-        player_inventory.size = 0;
-        player_active_item.type = -1;
-
-        struct item_Data power_glove = { .type = POWERGLOVE_ITEM, .count = 1 };
-        for(u32 i = 0; i < 1; i++)
-            inventory_add(&player_inventory, &power_glove, 0);
-
-        /*inventory_add_resource(&player_inventory, GOLD_ORE_ITEM, 30, 0);*/
-        /*inventory_add_resource(&player_inventory, COAL_ITEM, 30, 0);*/
-        /*inventory_add_resource(&player_inventory, STONE_ITEM, 20, 0);*/
-        inventory_add_resource(&player_inventory, WOOD_ITEM, 80, 0);
-        inventory_add_resource(&player_inventory, WORKBENCH_ITEM, 1, 0);
-        inventory_add_resource(&player_inventory, LANTERN_ITEM, 1, 0);
-        /*inventory_add_resource(&player_inventory, BREAD_ITEM, (1 << 16) - 1, 0);*/
-    }
-
     player_tick_time++;
 
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
@@ -470,6 +478,7 @@ static const struct Entity player_entity = {
     .is_solid = true
 };
 
+#undef MAX_HP
 #undef MAX_STAMINA
 #undef IS_SWIMMING
 

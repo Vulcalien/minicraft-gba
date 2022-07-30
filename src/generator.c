@@ -40,6 +40,9 @@ void generate_levels(void) {
         for(u32 i = 0; i < ENTITY_LIMIT; i++)
             level->entities[i].type = -1;
 
+        if(l == 0)
+            entity_add_player(level, 2, 2);
+
         for(u32 i = 1; i < 80; i++) {
             switch(rand() % 2) {
                 case 0:
@@ -57,10 +60,4 @@ void generate_levels(void) {
             }
         }
     }
-
-    // DEBUG adding the player should not be done here
-    levels[0].entities[0].type = 3;
-    levels[0].entities[0].x = 40;
-    levels[0].entities[0].y = 40;
-    levels[0].player = &levels[0].entities[0];
 }
