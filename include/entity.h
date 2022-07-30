@@ -90,7 +90,11 @@ inline bool entity_intersects(struct entity_Data *data,
 
 // entity generators
 
-// ...
+extern void entity_add_zombie(struct Level *level, u8 xt, u8 yt,
+                              u8 lvl, bool add_to_level);
+
+extern void entity_add_slime(struct Level *level, u8 xt, u8 yt,
+                             u8 lvl, bool add_to_level);
 
 extern bool entity_add_furniture(struct Level *level, u8 xt, u8 yt,
                                  struct item_Data *item_data);

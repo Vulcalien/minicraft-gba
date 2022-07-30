@@ -232,8 +232,8 @@ u8 level_new_entity(struct Level *level, u8 type) {
             data->type = type;
 
             // clear entity data
-            for(u32 j = 0; j < sizeof(data->data) / sizeof(u32); j++)
-                *((u32 *) &data->data[j]) = 0;
+            for(u32 b = 0; b < sizeof(data->data); b++)
+                data->data[b] = 0;
 
             return i;
         }

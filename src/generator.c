@@ -17,6 +17,7 @@
 
 #include "level.h"
 #include "tile.h"
+#include "entity.h"
 
 void generate_levels(void) {
     // DEBUG
@@ -30,23 +31,29 @@ void generate_levels(void) {
             level->tiles[t] = rand() % TILE_TYPES;
             level->data[t] = rand() % 50;
 
+            level->tiles[t] = rand() & 1 ? GRASS_TILE : GRASS_TILE;
+
             /*level->tiles[t] = 0 + (t % 17 == 0) * 4;*/
             /*level->data[t] = 0;*/
         }
 
-        for(u32 i = 1; i < ENTITY_LIMIT; i++) {
-            if(i < 0) {
-                level->entities[i].type = 0 + i % 10;
-                if(level->entities[i].type == 3 ||
-                   level->entities[i].type == 2) {
-                    level->entities[i].type = 0;
-                }
+        for(u32 i = 0; i < ENTITY_LIMIT; i++)
+            level->entities[i].type = -1;
 
-                level->entities[i].x = 80 + rand() % 300;
-                level->entities[i].y = 80 + rand() % 300;
-                level->entities[i].data[0] = 10;
-            } else {
-                level->entities[i].type = -1;
+        for(u32 i = 1; i < 80; i++) {
+            switch(rand() % 2) {
+                case 0:
+                    entity_add_zombie(
+                        level, 5 + rand() % 30, 5 + rand() % 30,
+                        rand() % 4, false
+                    );
+                    break;
+                case 1:
+                    entity_add_slime(
+                        level, 5 + rand() % 30, 5 + rand() % 30,
+                        rand() % 4, false
+                    );
+                    break;
             }
         }
     }

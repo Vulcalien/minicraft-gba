@@ -28,6 +28,28 @@ struct zombie_Data {
 
 static_assert(sizeof(struct zombie_Data) == 2, "struct zombie_Data: wrong size");
 
+void entity_add_zombie(struct Level *level, u8 xt, u8 yt,
+                       u8 lvl, bool add_to_level) {
+    u8 entity_id = level_new_entity(level, ZOMBIE_ENTITY);
+    if(entity_id >= ENTITY_LIMIT)
+        return;
+
+    struct entity_Data *data        = &level->entities[entity_id];
+    struct mob_Data    *mob_data    = (struct mob_Data *)    &data->data;
+    struct zombie_Data *zombie_data = (struct zombie_Data *) &mob_data->data;
+
+    data->x = (xt << 4) + 8;
+    data->y = (yt << 4) + 8;
+
+    mob_data->hp = 10 * (1 + lvl) * (1 + lvl);
+    mob_data->dir = 2;
+
+    zombie_data->level = lvl;
+
+    if(add_to_level)
+        level_add_entity(level, entity_id);
+}
+
 ETICK(zombie_tick) {
     struct mob_Data    *mob_data    = (struct mob_Data *)    &data->data;
     struct zombie_Data *zombie_data = (struct zombie_Data *) &mob_data->data;

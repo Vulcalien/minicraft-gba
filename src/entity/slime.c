@@ -28,6 +28,27 @@ struct slime_Data {
 
 static_assert(sizeof(struct slime_Data) == 2, "struct slime_Data: wrong size");
 
+void entity_add_slime(struct Level *level, u8 xt, u8 yt,
+                      u8 lvl, bool add_to_level) {
+    u8 entity_id = level_new_entity(level, SLIME_ENTITY);
+    if(entity_id >= ENTITY_LIMIT)
+        return;
+
+    struct entity_Data *data       = &level->entities[entity_id];
+    struct mob_Data    *mob_data   = (struct mob_Data *)   &data->data;
+    struct slime_Data  *slime_data = (struct slime_Data *) &mob_data->data;
+
+    data->x = (xt << 4) + 8;
+    data->y = (yt << 4) + 8;
+
+    mob_data->hp = 5 * (1 + lvl) * (1 + lvl);
+
+    slime_data->level = lvl;
+
+    if(add_to_level)
+        level_add_entity(level, entity_id);
+}
+
 ETICK(slime_tick) {
     struct mob_Data   *mob_data   = (struct mob_Data *)   &data->data;
     struct slime_Data *slime_data = (struct slime_Data *) &mob_data->data;
