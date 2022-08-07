@@ -21,7 +21,7 @@
 #include "level.h"
 #include "item.h"
 
-#define ENTITY_TYPES (14)
+#define ENTITY_TYPES (16)
 
 #define ZOMBIE_ENTITY     (0)
 #define SLIME_ENTITY      (1)
@@ -38,8 +38,10 @@
 #define ITEM_ENTITY  (10)
 #define SPARK_ENTITY (11)
 
-#define TEXT_PARTICLE_ENTITY  (12)
-#define SMASH_PARTICLE_ENTITY (13)
+#define TEXT_PARTICLE_ENTITY   (12)
+#define SMASH_PARTICLE_ENTITY  (13)
+#define ATTACK_PARTICLE_ENTITY (14)
+#define ITEM_PARTICLE_ENTITY   (15)
 
 #define ETICK(name)\
     IWRAM_SECTION\
@@ -108,5 +110,9 @@ extern void entity_add_text_particle(struct Level *level, u16 x, u16 y,
                                      u8 number, u8 palette);
 
 extern void entity_add_smash_particle(struct Level *level, u8 xt, u8 yt);
+
+extern void entity_add_attack_particle(struct Level *level, u16 x, u16 y,
+                                       u8 dir, u8 time);
+
 
 #endif // MINICRAFT_ENTITIES

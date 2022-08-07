@@ -283,7 +283,10 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
             break;
     };
 
-    // TODO add attack particle, lasting attack_particle_time ticks
+    entity_add_attack_particle(
+        level, data->x, data->y,
+        mob_data->dir, attack_particle_time
+    );
 }
 
 #define OPEN_CRAFTING_MENU(recipe_list)\
