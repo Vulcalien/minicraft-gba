@@ -303,10 +303,10 @@ const u16 sprite_palette[11 * 16] = {
     0,
 
     // zombie/player
-    0x7fff, 0x7fff, 0x7fff,
+    0x7bde, 0x7bde, 0x7bde,
 
     // slime
-    0x7fff,
+    0x7bde,
 
     // water
     0x6273, 0x4d08, 0x4442,
