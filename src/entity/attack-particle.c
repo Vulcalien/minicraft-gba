@@ -61,14 +61,20 @@ EDRAW(attack_particle_draw) {
     const u16 sprite = 96 + (dir & 1) * 2;
     const u8 palette = 5;
 
-    const u8 size = 1 + (dir & 1);
-    const u8 flip = 2 * (dir == 2) + 1 * (dir == 3);
+    const u8 shape = 1 + (dir & 1);
+    const u8 flip  = 2 * (dir == 2) + 1 * (dir == 3);
 
     // TODO adjust position
-    sprite_attribs[0] = ((data->y - 8 - level_y_offset) & 0xff) | size << 14;
-    sprite_attribs[1] = ((data->x - 8 - level_x_offset) & 0x1ff) |
-                        flip << 12 | 0 << 14;
-    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
+    SPRITE(
+        data->x - 8 - level_x_offset, // x
+        data->y - 8 - level_y_offset, // y
+        sprite,  // sprite
+        palette, // palette
+        flip,    // flip
+        shape,   // shape
+        0,       // size
+        0        // disable
+    );
 }
 
 static const struct Entity attack_particle_entity = {

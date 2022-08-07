@@ -73,11 +73,17 @@ ETICK(furniture_tick) {
 
 EDRAW(furniture_draw) {
     const u8 sprite = 68 + 4 * (data->type - WORKBENCH_ENTITY);
-    const u8 palette = 6;
 
-    sprite_attribs[0] = ((data->y - 12 - level_y_offset) & 0xff);
-    sprite_attribs[1] = ((data->x - 8  - level_x_offset) & 0x1ff) | 1 << 14;
-    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
+    SPRITE(
+        data->x - 8 - level_x_offset,  // x
+        data->y - 12 - level_y_offset, // y
+        sprite, // sprite
+        6,      // palette
+        0,      // flip
+        0,      // shape
+        1,      // size
+        0       // disable
+    );
 }
 
 ETOUCH_PLAYER(furniture_touch_player) {

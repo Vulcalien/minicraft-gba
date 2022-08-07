@@ -100,11 +100,16 @@ EDRAW(text_particle_draw) {
     const u16 sprite = 512 + text_data->number * 2 + (length == 1);
     const u8 palette = text_data->palette;
 
-    sprite_attribs[0] = ((data->y - (text_data->zz / 6) - level_y_offset) & 0xff) |
-                        (length == 2) << 14;
-    sprite_attribs[1] = ((data->x - length * 4 - level_x_offset) & 0x1ff) |
-                        0 << 14;
-    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
+    SPRITE(
+        data->x - length * 4 - level_x_offset,          // x
+        data->y - (text_data->zz / 6) - level_y_offset, // y
+        sprite,      // sprite
+        palette,     // palette
+        0,           // flip
+        length == 2, // shape
+        0,           // size
+        0            // disable
+    );
 }
 
 static const struct Entity text_particle_entity = {

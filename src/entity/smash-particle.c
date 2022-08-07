@@ -47,12 +47,16 @@ ETICK(smash_particle_tick) {
 }
 
 EDRAW(smash_particle_draw) {
-    const u16 sprite = 92;
-    const u8 palette = 5;
-
-    sprite_attribs[0] = ((data->y - 8 - level_y_offset) & 0xff);
-    sprite_attribs[1] = ((data->x - 8 - level_x_offset) & 0x1ff) | 1 << 14;
-    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
+    SPRITE(
+        data->x - 8 - level_x_offset, // x
+        data->y - 8 - level_y_offset, // y
+        92, // sprite
+        5,  // palette
+        0,  // flip
+        0,  // shape
+        1,  // size
+        0   // disable
+    );
 }
 
 static const struct Entity smash_particle_entity = {

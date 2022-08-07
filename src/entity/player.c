@@ -460,15 +460,18 @@ EDRAW(player_draw) {
     sprite += IS_SWIMMING(on_tile) * (28 + ((player_tick_time / 8) & 1) * 20);
 
     u8 palette = 4 + (hurt_time > 0) * 1;
-
     u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);
 
-    sprite_attribs[0] = (
-        (data->y - 11 + IS_SWIMMING(on_tile) * 4 - level_y_offset) & 0xff
+    SPRITE(
+        data->x - 8 - level_x_offset,                              // x
+        data->y - 11 + IS_SWIMMING(on_tile) *  4 - level_y_offset, // y
+        sprite,  // sprite
+        palette, // palette
+        flip,    // flip
+        0,       // shape
+        1,       // size
+        0        // disable
     );
-    sprite_attribs[1] = ((data->x - 8  - level_x_offset) & 0x1ff) |
-                        flip << 12 | 1 << 14;
-    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
 }
 
 static const struct Entity player_entity = {

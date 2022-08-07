@@ -104,10 +104,16 @@ EDRAW(zombie_draw) {
 
     u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);
 
-    sprite_attribs[0] = ((data->y - 11 - level_y_offset) & 0xff);
-    sprite_attribs[1] = ((data->x - 8  - level_x_offset) & 0x1ff) |
-                        flip << 12 | 1 << 14;
-    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
+    SPRITE(
+        data->x - 8 - level_x_offset,  // x
+        data->y - 11 - level_y_offset, // y
+        sprite,  // sprite
+        palette, // palette
+        flip,    // flip
+        0,       // shape
+        1,       // size
+        0        // disable
+    );
 }
 
 ETOUCH_PLAYER(zombie_touch_player) {

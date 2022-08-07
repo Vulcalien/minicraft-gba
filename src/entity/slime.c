@@ -99,9 +99,16 @@ EDRAW(slime_draw) {
     u8 palette = (hurt_time > 0)  * 5 +
                  (hurt_time == 0) * slime_data->level;
 
-    sprite_attribs[0] = ((data->y - 11 - level_y_offset) & 0xff);
-    sprite_attribs[1] = ((data->x - 8  - level_x_offset) & 0x1ff) | 1 << 14;
-    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10 | palette << 12;
+    SPRITE(
+        data->x - 8  - level_x_offset, // x
+        data->y - 11 - level_y_offset, // y
+        sprite,  // sprite
+        palette, // palette
+        0,       // flip
+        0,       // shape
+        1,       // size
+        0        // disable
+    );
 }
 
 ETOUCH_PLAYER(slime_touch_player) {
