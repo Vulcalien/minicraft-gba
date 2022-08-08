@@ -126,8 +126,7 @@ extern void entity_add_text_particle(struct Level *level, u16 x, u16 y,
 
 extern void entity_add_smash_particle(struct Level *level, u8 xt, u8 yt);
 
-extern void entity_add_attack_particle(struct Level *level, u16 x, u16 y,
-                                       u8 dir, u8 time);
+extern void entity_add_attack_particle(struct Level *level, u8 time);
 
 
 #endif // MINICRAFT_ENTITIES

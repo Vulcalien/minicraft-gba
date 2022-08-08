@@ -15,6 +15,9 @@
  */
 #include "entity.h"
 
+#include "mob.h"
+#include "tile.h"
+
 struct attack_Data {
     u8 dir;
     u8 time;
@@ -24,8 +27,7 @@ struct attack_Data {
 
 static_assert(sizeof(struct attack_Data) == 8, "struct attack_Data: wrong size");
 
-void entity_add_attack_particle(struct Level *level, u16 x, u16 y,
-                                u8 dir, u8 time) {
+void entity_add_attack_particle(struct Level *level, u8 time) {
     // TODO reuse the same entity if it's already present: there can be only
     // one attack particle at a time
 
@@ -36,21 +38,31 @@ void entity_add_attack_particle(struct Level *level, u16 x, u16 y,
     struct entity_Data *data        = &level->entities[entity_id];
     struct attack_Data *attack_data = (struct attack_Data *) &data->data;
 
-    data->x = x;
-    data->y = y;
-
-    attack_data->dir = dir;
+    attack_data->dir = ((struct mob_Data *) level->player->data)->dir;
     attack_data->time = time;
 
     level_add_entity(level, entity_id);
 }
 
 ETICK(attack_particle_tick) {
+    const struct entity_Data *player = level->player;
+
     struct attack_Data *attack_data = (struct attack_Data *) &data->data;
 
     attack_data->time--;
-    if(attack_data->time == 0)
+    if(attack_data->time == 0 || !player) {
         data->should_remove = true;
+        return;
+    }
+
+    // update position
+    const u8 dir = attack_data->dir;
+
+    data->x = player->x + ((dir == 3) - (dir == 1)) * 8;
+    data->y = player->y + ((dir == 2) - (dir == 0)) * 8 - 3;
+
+    if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
+        data->y += 4;
 }
 
 EDRAW(attack_particle_draw) {
@@ -66,8 +78,8 @@ EDRAW(attack_particle_draw) {
 
     // TODO adjust position
     SPRITE(
-        data->x - 8 - level_x_offset, // x
-        data->y - 8 - level_y_offset, // y
+        data->x - 4 * (1 + ((dir & 1) == 0)) - level_x_offset, // x
+        data->y - 4 * (1 + ((dir & 1) == 1)) - level_y_offset, // y
         sprite,  // sprite
         palette, // palette
         flip,    // flip

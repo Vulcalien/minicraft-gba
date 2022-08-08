@@ -283,10 +283,7 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
             break;
     };
 
-    entity_add_attack_particle(
-        level, data->x, data->y,
-        mob_data->dir, attack_particle_time
-    );
+    entity_add_attack_particle(level, attack_particle_time);
 }
 
 #define OPEN_CRAFTING_MENU(recipe_list)\
@@ -463,8 +460,8 @@ EDRAW(player_draw) {
     u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);
 
     SPRITE(
-        data->x - 8 - level_x_offset,                              // x
-        data->y - 11 + IS_SWIMMING(on_tile) *  4 - level_y_offset, // y
+        data->x - 8 - level_x_offset,                             // x
+        data->y - 11 + IS_SWIMMING(on_tile) * 4 - level_y_offset, // y
         sprite,  // sprite
         palette, // palette
         flip,    // flip
