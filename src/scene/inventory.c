@@ -48,6 +48,8 @@ static void inventory_init(void) {
 }
 
 static void inventory_tick(void) {
+    gametime++;
+
     if(INPUT_CLICKED(KEY_B))
         set_scene(&scene_game, true);
 

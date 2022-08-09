@@ -29,6 +29,7 @@
 
 u32 tick_count = 0;
 
+u32 gametime = 0;
 u32 score = 0;
 
 // DEBUG

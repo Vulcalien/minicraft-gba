@@ -47,6 +47,7 @@ Storage Layout (128 KB)
       1 B - invulnerable time
 
       4 B - score
+      4 B - gametime
 
       1 B - chest count
  */
@@ -207,9 +208,14 @@ void storage_load(void) {
         player_invulnerable_time      = FLASH_ROM[addr++];
 
         score = FLASH_ROM[addr++];
-        score |= FLASH_ROM[addr++] >> 8;
-        score |= FLASH_ROM[addr++] >> 16;
-        score |= FLASH_ROM[addr++] >> 24;
+        score |= FLASH_ROM[addr++] << 8;
+        score |= FLASH_ROM[addr++] << 16;
+        score |= FLASH_ROM[addr++] << 24;
+
+        gametime = FLASH_ROM[addr++];
+        gametime |= FLASH_ROM[addr++] << 8;
+        gametime |= FLASH_ROM[addr++] << 16;
+        gametime |= FLASH_ROM[addr++] << 24;
 
         chest_count = FLASH_ROM[addr++];
     }
@@ -348,6 +354,11 @@ void storage_save(void) {
         write_byte(addr++, score >> 8);
         write_byte(addr++, score >> 16);
         write_byte(addr++, score >> 24);
+
+        write_byte(addr++, gametime);
+        write_byte(addr++, gametime >> 8);
+        write_byte(addr++, gametime >> 16);
+        write_byte(addr++, gametime >> 24);
 
         write_byte(addr++, chest_count);
     }

@@ -31,6 +31,7 @@
 
 extern u32 tick_count;
 
+extern u32 gametime;
 extern u32 score;
 
 // TODO move to level.h???

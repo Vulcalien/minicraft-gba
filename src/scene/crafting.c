@@ -95,6 +95,8 @@ static void crafting_init(void) {
 }
 
 static void crafting_tick(void) {
+    gametime++;
+
     if(INPUT_CLICKED(KEY_B))
         set_scene(&scene_game, true);
 

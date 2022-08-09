@@ -37,6 +37,8 @@ static void chest_init(void) {
 }
 
 static void chest_tick(void) {
+    gametime++;
+
     if(INPUT_CLICKED(KEY_B))
         set_scene(&scene_game, true);
 

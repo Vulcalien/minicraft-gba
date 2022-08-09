@@ -340,6 +340,8 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
 }
 
 ETICK(player_tick) {
+    gametime++;
+
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
     player_tick_time++;
