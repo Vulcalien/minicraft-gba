@@ -110,7 +110,7 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
         entity_add_text_particle(level, data->x, data->y, damage, 0);
 
         struct entity_Data *player = &level->entities[0];
-        if(player < ENTITY_TYPES) {
+        if(player->type < ENTITY_TYPES) {
             i32 xd = player->x - data->x;
             i32 yd = player->y - data->y;
 
