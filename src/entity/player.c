@@ -359,7 +359,13 @@ ETICK(player_tick) {
     static u8 on_stairs_delay = 0;
     if(on_tile == STAIRS_DOWN_TILE || on_tile == STAIRS_UP_TILE) {
         if(on_stairs_delay == 0) {
-            // TODO change level
+            set_scene(&scene_transition, true);
+
+            if(on_tile == STAIRS_DOWN_TILE)
+                current_level--;
+            else
+                current_level++;
+
             on_stairs_delay = 10;
             return;
         }

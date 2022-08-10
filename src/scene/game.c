@@ -20,7 +20,7 @@
 #include "mob.h"
 #include "player.h"
 
-struct Level *level;
+static struct Level *level = NULL;
 
 static bool game_should_refresh = false;
 
@@ -29,11 +29,21 @@ static void game_init(void) {
     if(last_level != current_level) {
         last_level = current_level;
 
+        struct Level *old_level = level;
         level = &levels[current_level];
+
+        // move the player to the new level
+        if(old_level)
+            level->entities[0] = old_level->entities[0];
+
         level_load(level);
+
+        vsync();
+        screen_update_level_specific();
     }
 
-    game_should_refresh = true;
+    if(scene != &scene_transition)
+        game_should_refresh = true;
 }
 
 static void game_tick(void) {

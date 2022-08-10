@@ -52,6 +52,6 @@ extern void screen_write_time(u32 time, u8 palette, u32 x, u32 y);
 extern void screen_set_bg_palette_color(u8 palette, u8 index, u16 color);
 extern void screen_load_active_item_palette(u8 palette);
 
-extern void screen_show_sky_background(bool flag);
+extern void screen_update_level_specific(void);
 
 #endif // MINICRAFT_SCREEN

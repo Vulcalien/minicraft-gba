@@ -265,9 +265,60 @@ void screen_load_active_item_palette(u8 palette) {
     screen_set_bg_palette_color(11, 0xf, 0x0421);
 }
 
-void screen_show_sky_background(bool flag) {
-    if(flag)
+void screen_update_level_specific(void) {
+    // sky background
+    if(current_level == 4)
         DISPLAY_CONTROL |= 1 << 8;
     else
         DISPLAY_CONTROL &= ~(1 << 8);
+
+    // dirt color
+    const u16 dirt_colors[5][2] = {
+        { 0x1ce7, 0x318c },
+        { 0x1ce7, 0x318c },
+        { 0x1ce7, 0x318c },
+        { 0x1cea, 0x35b0 },
+        { -1, -1 }
+    };
+    for(u32 i = 0; i < 6; i++) {
+        if(i == 3)
+            continue;
+
+        screen_set_bg_palette_color(i, 0xe, dirt_colors[current_level][0]);
+        screen_set_bg_palette_color(i, 0xf, dirt_colors[current_level][1]);
+    }
+    screen_set_bg_palette_color(0, 0, dirt_colors[current_level][1]);
+
+    // farmland
+    const u16 farmland_colors[5][2] = {
+        { 0x1cea, 0x1445 },
+        { 0x1cea, 0x1445 },
+        { 0x1cea, 0x1445 },
+        { 0x210e, 0x1869 },
+        { -1, -1 }
+    };
+    screen_set_bg_palette_color(3, 4, farmland_colors[current_level][0]);
+    screen_set_bg_palette_color(3, 5, farmland_colors[current_level][1]);
+
+    // ore/cloud cactus
+    const u16 ore_colors[5][3] = {
+        { 0x733c, 0x44b1, 0x1445 }, // gem
+        { 0x5fbd, 0x2ed6, 0x0cc6 }, // gold
+        { 0x673b, 0x35b0, 0x0844 }, // iron
+        { -1, -1, -1 },
+        { 0x7bde, 0x4a52, 0x1ce7 }  // cloud cactus
+    };
+    screen_set_bg_palette_color(2, 3, ore_colors[current_level][0]);
+    screen_set_bg_palette_color(2, 4, ore_colors[current_level][1]);
+    screen_set_bg_palette_color(2, 5, ore_colors[current_level][2]);
+
+    // liquid
+    const u16 liquid_colors[2][2] = {
+        { 0x14b3, 0x21d7 },
+        { 0x4442, 0x4d08 }
+    };
+    for(u32 i = 2; i < 3; i++) {
+        screen_set_bg_palette_color(i, 1, liquid_colors[current_level > 0][0]);
+        screen_set_bg_palette_color(i, 2, liquid_colors[current_level > 0][1]);
+    }
 }

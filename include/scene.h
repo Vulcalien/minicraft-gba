@@ -31,6 +31,8 @@ extern const struct Scene scene_instructions;
 extern const struct Scene scene_about;
 
 extern const struct Scene scene_game;
+extern const struct Scene scene_transition;
+
 extern const struct Scene scene_inventory;
 extern const struct Scene scene_chest;
 extern const struct Scene scene_crafting;

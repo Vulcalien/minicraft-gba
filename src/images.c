@@ -43,7 +43,7 @@ const u16 bg_palette[11 * 16] = {
     0x7bde, 0x0421,
 
     // dirt (level-specific)
-    0x1cea, 0x35b0,
+    -1, -1,
 
     // --- palette 1 --- (rock, stairs, title)
     // transparent
@@ -65,17 +65,17 @@ const u16 bg_palette[11 * 16] = {
     0x318c, 0x0421,
 
     // dirt (level-specific)
-    0x1cea, 0x35b0,
+    -1, -1,
 
     // --- palette 2 --- (liquid+dirt, ore/cloud cactus)
     // transparent
     0,
 
-    // liquid
-    0x4442, 0x4d08,
+    // liquid (level-specific)
+    -1, -1,
 
     // ore/cloud cactus (level-specific)
-    0x673b, 0x35b0, 0x0844,
+    -1, -1, -1,
 
     // unused
     0, 0, 0, 0, 0, 0,
@@ -84,20 +84,20 @@ const u16 bg_palette[11 * 16] = {
     0x4a52, 0x0421,
 
     // dirt (level-specific)
-    0x1cea, 0x35b0,
+    -1, -1,
 
     // --- palette 3 --- (liquid+sand, farmland and wheat)
     // transparent
     0,
 
-    // liquid
-    0x4442, 0x4d08,
+    // liquid (level-specific)
+    -1, -1,
 
     // unused
     0,
 
     // farmland (level-specific)
-    0x210e, 0x1869,
+    -1, -1,
 
     // wheat
     0x2709, 0x2268, 0x3354, 0x26af, 0x3778, 0x0421,
@@ -131,7 +131,7 @@ const u16 bg_palette[11 * 16] = {
     0x7bde, 0x4442,
 
     // dirt (level-specific)
-    0x1cea, 0x35b0,
+    -1, -1,
 
     // --- palette 5 --- (hole+dirt, hp and stamina)
     // transparent
@@ -162,7 +162,7 @@ const u16 bg_palette[11 * 16] = {
     0x318c, 0x4442,
 
     // dirt (level-specific)
-    0x1cea, 0x35b0,
+    -1, -1,
 
     // --- palette 6 --- (hole+sand)
     // transparent
