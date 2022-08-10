@@ -93,8 +93,11 @@ const u16 bg_palette[11 * 16] = {
     // liquid
     0x4442, 0x4d08,
 
+    // unused
+    0,
+
     // farmland (level-specific)
-    0x35b0, 0x210e, 0x1869,
+    0x210e, 0x1869,
 
     // wheat
     0x2709, 0x2268, 0x3354, 0x26af, 0x3778, 0x0421,
