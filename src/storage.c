@@ -49,6 +49,7 @@ Storage Layout (128 KB)
       4 B - score
       4 B - gametime
 
+      1 B - current level
       1 B - chest count
  */
 
@@ -217,6 +218,7 @@ void storage_load(void) {
         gametime |= FLASH_ROM[addr++] << 16;
         gametime |= FLASH_ROM[addr++] << 24;
 
+        current_level = FLASH_ROM[addr++];
         chest_count = FLASH_ROM[addr++];
     }
 }
@@ -360,6 +362,7 @@ void storage_save(void) {
         write_byte(addr++, gametime >> 16);
         write_byte(addr++, gametime >> 24);
 
+        write_byte(addr++, current_level);
         write_byte(addr++, chest_count);
     }
 }
