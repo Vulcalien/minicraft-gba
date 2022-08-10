@@ -53,8 +53,9 @@ static void game_draw(void) {
     level_draw(level);
 
     // draw hp and stamina
-    if(level->player) {
-        struct mob_Data *mob_data = (struct mob_Data *) &level->player->data;
+    struct entity_Data *player = &level->entities[0];
+    if(player->type < ENTITY_TYPES) {
+        struct mob_Data *mob_data = (struct mob_Data *) &player->data;
 
         for(u32 i = 0; i < 10; i++) {
             BG3_TILEMAP[i + 18 * 32] = (91 + (mob_data->hp <= i))   | 5 << 12;

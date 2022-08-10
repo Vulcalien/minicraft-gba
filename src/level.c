@@ -109,9 +109,10 @@ void level_tick(struct Level *level) {
 
 IWRAM_SECTION
 void level_draw(struct Level *level) {
-    if(level->player) {
-        i32 x_offset = level->player->x - SCREEN_W / 2;
-        i32 y_offset = level->player->y - SCREEN_H / 2;
+    struct entity_Data *player = &level->entities[0];
+    if(player->type < ENTITY_TYPES) {
+        i32 x_offset = player->x - SCREEN_W / 2;
+        i32 y_offset = player->y - SCREEN_H / 2;
         // TODO in the original, it's (SCREEN_H - 8) for y_offset
 
         if(x_offset < 16) x_offset = 16;
@@ -225,7 +226,7 @@ void level_draw(struct Level *level) {
 
 IWRAM_SECTION
 u8 level_new_entity(struct Level *level, u8 type) {
-    for(u32 i = 0; i < ENTITY_LIMIT; i++) {
+    for(u32 i = 1; i < ENTITY_LIMIT; i++) {
         struct entity_Data *data = &level->entities[i];
 
         if(data->type >= ENTITY_TYPES) {
@@ -254,7 +255,4 @@ void level_add_entity(struct Level *level, u8 entity_id) {
 
         insert_solid_entity(xt, yt, data, entity_id);
     }
-
-    if(data->type == PLAYER_ENTITY)
-        level->player = data;
 }

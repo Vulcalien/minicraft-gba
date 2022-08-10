@@ -109,9 +109,10 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
     } else {
         entity_add_text_particle(level, data->x, data->y, damage, 0);
 
-        if(level->player) {
-            i32 xd = level->player->x - data->x;
-            i32 yd = level->player->y - data->y;
+        struct entity_Data *player = &level->entities[0];
+        if(player < ENTITY_TYPES) {
+            i32 xd = player->x - data->x;
+            i32 yd = player->y - data->y;
 
             if(xd * xd + yd * yd < 80 * 80)
                 ; // TODO mob hurt sound

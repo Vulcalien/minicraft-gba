@@ -75,7 +75,8 @@ ETICK(item_tick) {
         data->solid_id--;
 
     // check if player can take
-    if(data->solid_id == 0 && level->player) {
+    struct entity_Data *player = &level->entities[0];
+    if(data->solid_id == 0 && player->type < ENTITY_TYPES) {
         const struct Entity *entity = ENTITY_S(data);
 
         i32 x0 = data->x - entity->xr;
@@ -83,7 +84,7 @@ ETICK(item_tick) {
         i32 x1 = data->x + entity->xr;
         i32 y1 = data->y + entity->yr;
 
-        if(entity_intersects(level->player, x0, y0, x1, y1)) {
+        if(entity_intersects(player, x0, y0, x1, y1)) {
             bool could_add = inventory_add_resource(
                 &player_inventory,
                 item_entity_data->item_type, 1,

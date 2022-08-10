@@ -65,9 +65,10 @@ ETICK(slime_tick) {
         slime_data->xm = (rand() % 3) - 1;
         slime_data->ym = (rand() % 3) - 1;
 
-        if(level->player) {
-            i32 xd = level->player->x - data->x;
-            i32 yd = level->player->y - data->y;
+        struct entity_Data *player = &level->entities[0];
+        if(player->type < ENTITY_TYPES) {
+            i32 xd = player->x - data->x;
+            i32 yd = player->y - data->y;
 
             if(xd * xd + yd * yd < 50 * 50) {
                 if(xd != 0)
@@ -137,6 +138,7 @@ void mob_slime_die(struct Level *level, struct entity_Data *data) {
     struct mob_Data   *mob_data   = (struct mob_Data *)   &data->data;
     struct slime_Data *slime_data = (struct slime_Data *) &mob_data->data;
 
-    if(level->player)
+    struct entity_Data *player = &level->entities[0];
+    if(player->type < ENTITY_TYPES)
         score += 25 * (1 + slime_data->level);
 }

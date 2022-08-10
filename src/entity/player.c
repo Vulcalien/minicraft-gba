@@ -42,12 +42,10 @@ u8 player_invulnerable_time = 0;
 static u32 player_tick_time = 0;
 
 void entity_add_player(struct Level *level, u8 xt, u8 yt) {
-    u8 entity_id = level_new_entity(level, PLAYER_ENTITY);
-    if(entity_id >= ENTITY_LIMIT)
-        return;
-
-    struct entity_Data *data  = &level->entities[entity_id];
+    struct entity_Data *data  = &level->entities[0];
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    data->type = PLAYER_ENTITY;
 
     data->x = (xt << 4) + 8;
     data->y = (yt << 4) + 8;
@@ -66,7 +64,7 @@ void entity_add_player(struct Level *level, u8 xt, u8 yt) {
     item_to_add.type = WORKBENCH_ITEM;
     inventory_add(&player_inventory, &item_to_add, 0);
 
-    level_add_entity(level, entity_id);
+    level_add_entity(level, 0);
 }
 
 static inline void player_hurt_entities(struct Level *level, struct entity_Data *data) {

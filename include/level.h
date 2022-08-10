@@ -41,7 +41,6 @@ struct Level {
     u8 tiles[LEVEL_W * LEVEL_H];
     u8  data[LEVEL_W * LEVEL_H];
 
-    struct entity_Data *player;
     struct entity_Data entities[ENTITY_LIMIT];
 };
 

@@ -38,14 +38,16 @@ void entity_add_attack_particle(struct Level *level, u8 time) {
     struct entity_Data *data        = &level->entities[entity_id];
     struct attack_Data *attack_data = (struct attack_Data *) &data->data;
 
-    attack_data->dir = ((struct mob_Data *) level->player->data)->dir;
+    struct entity_Data *player = &level->entities[0];
+
+    attack_data->dir = ((struct mob_Data *) player->data)->dir;
     attack_data->time = time;
 
     level_add_entity(level, entity_id);
 }
 
 ETICK(attack_particle_tick) {
-    const struct entity_Data *player = level->player;
+    const struct entity_Data *player = &level->entities[0];
 
     struct attack_Data *attack_data = (struct attack_Data *) &data->data;
 
