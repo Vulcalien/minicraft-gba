@@ -346,8 +346,7 @@ ETICK(player_tick) {
 
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
 
-    // TODO determine if liquid is lava or water
-    if(on_tile == LIQUID_TILE && false)
+    if(on_tile == LIQUID_TILE && current_level == 0)
         mob_hurt(level, data, 4, mob_data->dir ^ 2);
 
     mob_tick(level, data);
