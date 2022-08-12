@@ -169,6 +169,7 @@ void level_draw(struct Level *level) {
         i32 xr = data->x - level_x_offset;
         i32 yr = data->y - level_y_offset;
 
+        /*
         // draw player light
         // TODO check if level has light
         if(data->type == PLAYER_ENTITY && true) {
@@ -192,6 +193,7 @@ void level_draw(struct Level *level) {
             if(sprites_drawn == 128)
                 break;
         }
+        */
 
         if(xr < -16 || xr >= SCREEN_W + 16 ||
            yr < -16 || yr >= SCREEN_H)
@@ -210,18 +212,6 @@ void level_draw(struct Level *level) {
         vu16 *sprite_attribs = OAM + i * 4;
         sprite_attribs[0] = 1 << 9;
     }
-
-    // clear light
-    {
-        // TODO determine is level has light
-        u16 tile = 256 | (0 << 12);
-
-        for(u32 y = 0; y < 18; y++)
-            for(u32 x = 0; x < 30; x += 2)
-                *((vu32 *) &BG2_TILEMAP[x + y * 32]) = (tile << 16) | tile;
-    }
-
-    // TODO draw light from tiles
 }
 
 IWRAM_SECTION
