@@ -33,6 +33,9 @@ u8 level_solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
 u32 level_x_offset = 0;
 u32 level_y_offset = 0;
 
+EWRAM_BSS_SECTION
+static u8 entities_to_render[128];
+
 static inline void remove_solid_entity(u8 xt, u8 yt,
                                        struct entity_Data *entity_data,
                                        u8 entity_id) {
@@ -107,8 +110,7 @@ void level_tick(struct Level *level) {
     }
 }
 
-IWRAM_SECTION
-void level_draw(struct Level *level) {
+static inline void update_offset(struct Level *level) {
     struct entity_Data *player = &level->entities[0];
     if(player->type < ENTITY_TYPES) {
         i32 x_offset = player->x - SCREEN_W / 2;
@@ -135,11 +137,9 @@ void level_draw(struct Level *level) {
         BG0_XOFFSET = (level_x_offset >> 2) & 0x7;
         BG0_YOFFSET = (level_y_offset >> 2) & 0x7;
     }
+}
 
-    u32 x0 = level_x_offset >> 4;
-    u32 y0 = level_y_offset >> 4;
-
-    // draw level tiles
+static inline void draw_tiles(struct Level *level, u32 x0, u32 y0) {
     for(u32 y = 0; y <= 9; y++) {
         for(u32 x = 0; x <= 15; x++) {
             u32 xt = x + x0;
@@ -155,11 +155,10 @@ void level_draw(struct Level *level) {
             *(tile_0 + 16) = (tiles[3] << 16) | tiles[2];
         }
     }
+}
 
-    // TODO in the original game, entities are sorted by y before rendering
-
-    // draw entities
-    u32 sprites_drawn = 0;
+static inline void draw_entities(struct Level *level) {
+    u32 to_render_size = 0;
     for(u32 i = 0; i < ENTITY_LIMIT; i++) {
         struct entity_Data *data = &level->entities[i];
         if(data->type >= ENTITY_TYPES)
@@ -168,6 +167,37 @@ void level_draw(struct Level *level) {
         // position relative to top-left of the screen
         i32 xr = data->x - level_x_offset;
         i32 yr = data->y - level_y_offset;
+
+        if(xr < -16 || xr >= SCREEN_W + 16 ||
+           yr < -16 || yr >= SCREEN_H)
+            continue;
+
+        entities_to_render[to_render_size++] = i;
+        if(to_render_size == 128)
+            break;
+    }
+
+    // TODO in the original game, entities are sorted by y before rendering
+
+    for(u32 i = 0; i < to_render_size; i++) {
+        struct entity_Data *data = &level->entities[entities_to_render[i]];
+
+        const struct Entity *entity = ENTITY_S(data);
+        entity->draw(level, data, OAM + i * 4);
+    }
+
+    // hide remaining sprites
+    for(u32 i = to_render_size; i < 128; i++) {
+        vu16 *sprite_attribs = OAM + i * 4;
+        sprite_attribs[0] = 1 << 9;
+    }
+}
+
+IWRAM_SECTION
+void level_draw(struct Level *level) {
+    update_offset(level);
+    draw_tiles(level, level_x_offset >> 4, level_y_offset >> 4);
+    draw_entities(level);
 
         /*
         // draw player light
@@ -194,24 +224,6 @@ void level_draw(struct Level *level) {
                 break;
         }
         */
-
-        if(xr < -16 || xr >= SCREEN_W + 16 ||
-           yr < -16 || yr >= SCREEN_H)
-            continue;
-
-        const struct Entity *entity = ENTITY_S(data);
-        entity->draw(level, data, OAM + sprites_drawn * 4);
-
-        sprites_drawn++;
-        if(sprites_drawn == 128)
-            break;
-    }
-
-    // hide remaining sprites
-    for(u32 i = sprites_drawn; i < 128; i++) {
-        vu16 *sprite_attribs = OAM + i * 4;
-        sprite_attribs[0] = 1 << 9;
-    }
 }
 
 IWRAM_SECTION
