@@ -254,12 +254,21 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
     const u8 item_class = (player_active_item.type < ITEM_TYPES) ?
                           ITEM_S(&player_active_item)->class : -1;
 
-    u8 attack_particle_time = 10;
+    // add particles before the action: the item could change
+    {
+        u8 attack_particle_time;
+        if(item_class == (u8) -1 || item_class == ITEMCLASS_TOOL)
+            attack_particle_time = 5;
+        else
+            attack_particle_time = 10;
+
+        entity_add_item_particle(level, attack_particle_time);
+        entity_add_attack_particle(level, attack_particle_time);
+    }
+
     switch(item_class) {
         case (u8) -1:
         case ITEMCLASS_TOOL:
-            attack_particle_time = 5;
-
             player_hurt_entities(level, data);
             player_hurt_tile(level, data);
             break;
@@ -280,8 +289,6 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
             player_place_furniture(level, data);
             break;
     };
-
-    entity_add_attack_particle(level, attack_particle_time);
 }
 
 #define OPEN_CRAFTING_MENU(recipe_list)\

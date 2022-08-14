@@ -19,6 +19,7 @@
 #include "minicraft.h"
 
 #include "inventory.h"
+#include "item.h"
 
 extern struct Inventory player_inventory;
 extern struct item_Data player_active_item;
