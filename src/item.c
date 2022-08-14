@@ -318,19 +318,13 @@ void item_write_name(struct item_Data *data, u8 palette, u32 x, u32 y) {
     }
 }
 
-#define SET_TILE(x, y, id, palette)\
-    do {\
-        BG3_TILEMAP[(x) + (y) * 32] = (id) |\
-                                      ((palette) << 12);\
-    } while(0)
-
 void item_draw_icon(struct item_Data *data, u32 x, u32 y, bool black_bg) {
     const struct Item *item = ITEM_S(data);
 
-    const u8 tile = data->type +
-                    (item->class == ITEMCLASS_TOOL) * (data->tool_level * 5);
-
+    const u16 tile = 128 + data->type +
+                     (item->class == ITEMCLASS_TOOL) * (data->tool_level * 5);
     const u8 palette = (black_bg == false) * (12 + item->palette) +
                        (black_bg == true) * 11;
-    SET_TILE(x, y, 128 + tile, palette);
+
+    BG3_TILEMAP[x + y * 32] = tile | palette << 12;
 }

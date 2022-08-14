@@ -26,9 +26,6 @@
 #define MAX_HP      (10)
 #define MAX_STAMINA (10)
 
-#define IS_SWIMMING(on_tile)\
-    ((on_tile) == LIQUID_TILE)
-
 EWRAM_BSS_SECTION
 struct Inventory player_inventory;
 
@@ -395,7 +392,7 @@ ETICK(player_tick) {
     if(player_stamina_recharge_delay == 0) {
         stamina_recharge++;
 
-        if(IS_SWIMMING(on_tile))
+        if(on_tile == LIQUID_TILE)
             stamina_recharge = 0;
 
         // FIXED BUG - Player.java:78-79
@@ -409,7 +406,7 @@ ETICK(player_tick) {
         }
     }
 
-    if(IS_SWIMMING(on_tile) && player_tick_time % 60 == 0) {
+    if(on_tile == LIQUID_TILE && player_tick_time % 60 == 0) {
         if(player_stamina > 0)
             player_stamina--;
         else
@@ -422,8 +419,7 @@ ETICK(player_tick) {
 
     if((player_stamina_recharge_delay & 1) == 0) {
         static u8 swim_move_flag = 0;
-        if(IS_SWIMMING(on_tile))
-            swim_move_flag ^= 1;
+        swim_move_flag ^= (on_tile == LIQUID_TILE);
 
         if(!swim_move_flag)
             mob_move(level, data, xm, ym);
@@ -466,14 +462,15 @@ EDRAW(player_draw) {
     sprite += (dir & 1) * (
         ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4)
     );
-    sprite += IS_SWIMMING(on_tile) * (28 + ((player_tick_time / 8) & 1) * 20);
+    sprite += (on_tile == LIQUID_TILE) *
+              (28 + ((player_tick_time / 8) & 1) * 20);
 
     u8 palette = 4 + (hurt_time > 0) * 1;
     u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);
 
     SPRITE(
-        data->x - 8 - level_x_offset,                             // x
-        data->y - 11 + IS_SWIMMING(on_tile) * 4 - level_y_offset, // y
+        data->x - 8 - level_x_offset,                                 // x
+        data->y - 11 + (on_tile == LIQUID_TILE) * 4 - level_y_offset, // y
         sprite,  // sprite
         palette, // palette
         flip,    // flip
@@ -495,7 +492,6 @@ static const struct Entity player_entity = {
 
 #undef MAX_HP
 #undef MAX_STAMINA
-#undef IS_SWIMMING
 
 void mob_player_die(struct Level *level, struct entity_Data *data) {
     // TODO player death
