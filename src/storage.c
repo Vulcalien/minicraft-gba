@@ -22,7 +22,7 @@
 #include "item.h"
 #include "player.h"
 
-#define ALWAYS_INLINE __attribute__((always_inline))
+#define NO_INLINE __attribute__((noinline))
 
 #define FLASH_ROM ((vu8 *) 0x0e000000)
 
@@ -88,7 +88,6 @@ static_assert(
     "chest storage size should be 12 KB"
 );
 
-ALWAYS_INLINE
 static inline void switch_bank(u32 bank) {
     FLASH_ROM[0x5555] = 0xaa;
     FLASH_ROM[0x2aaa] = 0x55;
@@ -97,13 +96,12 @@ static inline void switch_bank(u32 bank) {
     FLASH_ROM[0x0000] = bank;
 }
 
-ALWAYS_INLINE
-static inline u8 read_byte(u16 addr) {
+IWRAM_SECTION NO_INLINE
+static u8 read_byte(u16 addr) {
     // TODO make sure only LDRB is used
     return FLASH_ROM[addr];
 }
 
-EWRAM_SECTION
 bool storage_check(void) {
     switch_bank(0);
 
@@ -118,7 +116,6 @@ bool storage_check(void) {
     return valid;
 }
 
-ALWAYS_INLINE
 static inline void load_item(u16 *addr, struct item_Data *data) {
     data->type = FLASH_ROM[(*addr)++];
 
@@ -137,7 +134,6 @@ static inline void load_item(u16 *addr, struct item_Data *data) {
     }
 }
 
-ALWAYS_INLINE
 static inline void load_inventory(u16 *addr, struct Inventory *inventory) {
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
         struct item_Data *item = &inventory->items[i];
@@ -151,7 +147,6 @@ static inline void load_inventory(u16 *addr, struct Inventory *inventory) {
     }
 }
 
-EWRAM_SECTION
 void storage_load(void) {
     u16 addr;
 
@@ -229,7 +224,6 @@ void storage_load(void) {
     }
 }
 
-ALWAYS_INLINE
 static inline void erase_chip(void) {
     FLASH_ROM[0x5555] = 0xaa;
     FLASH_ROM[0x2aaa] = 0x55;
@@ -243,8 +237,8 @@ static inline void erase_chip(void) {
     while(read_byte(0x0000) != 0xff);
 }
 
-ALWAYS_INLINE
-static inline void write_byte(u16 addr, u8 byte) {
+IWRAM_SECTION NO_INLINE
+static void write_byte(u16 addr, u8 byte) {
     FLASH_ROM[0x5555] = 0xaa;
     FLASH_ROM[0x2aaa] = 0x55;
     FLASH_ROM[0x5555] = 0xa0;
@@ -256,7 +250,6 @@ static inline void write_byte(u16 addr, u8 byte) {
     while(read_byte(addr) != byte);
 }
 
-ALWAYS_INLINE
 static inline void store_item(u16 *addr, struct item_Data *data) {
     write_byte((*addr)++, data->type);
 
@@ -275,7 +268,6 @@ static inline void store_item(u16 *addr, struct item_Data *data) {
     }
 }
 
-ALWAYS_INLINE
 static inline void store_inventory(u16 *addr, struct Inventory *inventory) {
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
         if(i >= inventory->size) {
@@ -287,7 +279,6 @@ static inline void store_inventory(u16 *addr, struct Inventory *inventory) {
     }
 }
 
-EWRAM_SECTION
 void storage_save(void) {
     u16 addr;
 
