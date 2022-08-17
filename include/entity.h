@@ -107,10 +107,10 @@ inline bool entity_intersects(struct entity_Data *data,
 
 // entity generators
 
-extern void entity_add_zombie(struct Level *level, u8 xt, u8 yt,
+extern void entity_add_zombie(struct Level *level, u16 x, u16 y,
                               u8 lvl, bool add_to_level);
 
-extern void entity_add_slime(struct Level *level, u8 xt, u8 yt,
+extern void entity_add_slime(struct Level *level, u16 x, u16 y,
                              u8 lvl, bool add_to_level);
 
 extern void entity_add_player(struct Level *level, u8 xt, u8 yt);

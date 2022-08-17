@@ -28,7 +28,7 @@ struct slime_Data {
 
 static_assert(sizeof(struct slime_Data) == 2, "struct slime_Data: wrong size");
 
-void entity_add_slime(struct Level *level, u8 xt, u8 yt,
+void entity_add_slime(struct Level *level, u16 x, u16 y,
                       u8 lvl, bool add_to_level) {
     u8 entity_id = level_new_entity(level, SLIME_ENTITY);
     if(entity_id >= ENTITY_LIMIT)
@@ -38,8 +38,8 @@ void entity_add_slime(struct Level *level, u8 xt, u8 yt,
     struct mob_Data    *mob_data   = (struct mob_Data *)   &data->data;
     struct slime_Data  *slime_data = (struct slime_Data *) &mob_data->data;
 
-    data->x = (xt << 4) + 8;
-    data->y = (yt << 4) + 8;
+    data->x = x;
+    data->y = y;
 
     mob_data->hp = 5 * (1 + lvl) * (1 + lvl);
 
@@ -70,12 +70,17 @@ ETICK(slime_tick) {
             i32 xd = player->x - data->x;
             i32 yd = player->y - data->y;
 
-            if(xd * xd + yd * yd < 50 * 50) {
+            u32 dist = xd * xd + yd * yd;
+
+            if(dist < 50 * 50) {
                 if(xd != 0)
                     slime_data->xm = (xd > 0) - (xd < 0);
 
                 if(yd != 0)
                     slime_data->ym = (yd > 0) - (yd < 0);
+            } else if(dist >= DESPAWN_DISTANCE) {
+                data->should_remove = true;
+                return;
             }
         }
 

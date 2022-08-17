@@ -43,21 +43,7 @@ void generate_levels(void) {
         if(l == 0)
             entity_add_player(level, 2, 2);
 
-        for(u32 i = 1; i < 80; i++) {
-            switch(rand() % 2) {
-                case 0:
-                    entity_add_zombie(
-                        level, 5 + rand() % 30, 5 + rand() % 30,
-                        rand() % 4, false
-                    );
-                    break;
-                case 1:
-                    entity_add_slime(
-                        level, 5 + rand() % 30, 5 + rand() % 30,
-                        rand() % 4, false
-                    );
-                    break;
-            }
-        }
+        for(u32 i = 1; i < 1000; i++)
+            level_try_spawn(level, l);
     }
 }

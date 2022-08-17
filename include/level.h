@@ -21,6 +21,8 @@
 #define LEVEL_W (112)
 #define LEVEL_H (112)
 
+#define DESPAWN_DISTANCE ((16 * 32) * (16 * 32))
+
 #define ENTITY_LIMIT (255)
 
 struct entity_Data {
@@ -83,5 +85,7 @@ extern void level_draw(struct Level *level);
 extern u8 level_new_entity(struct Level *level, u8 type);
 
 extern void level_add_entity(struct Level *level, u8 entity_id);
+
+extern void level_try_spawn(struct Level *level, u8 level_index);
 
 #endif // MINICRAFT_LEVEL

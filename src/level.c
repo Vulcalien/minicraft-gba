@@ -111,7 +111,7 @@ static inline void tick_entities(struct Level *level) {
 
 IWRAM_SECTION
 void level_tick(struct Level *level) {
-    // TODO try spawn
+    level_try_spawn(level, current_level);
 
     tick_tiles(level);
     tick_entities(level);
@@ -261,4 +261,56 @@ void level_add_entity(struct Level *level, u8 entity_id) {
 
         insert_solid_entity(xt, yt, data, entity_id);
     }
+}
+
+IWRAM_SECTION
+void level_try_spawn(struct Level *level, u8 level_index) {
+    u8 xt = rand() % LEVEL_W;
+    u8 yt = rand() % LEVEL_H;
+
+    if(LEVEL_GET_TILE_S(level, xt, yt)->is_solid)
+        return;
+
+    u16 x = (xt << 4) + 8;
+    u16 y = (yt << 4) + 8;
+
+    struct entity_Data *player = &level->entities[0];
+    if(player->type < ENTITY_TYPES) {
+        i32 xd = player->x - x;
+        i32 yd = player->y - y;
+
+        u32 dist = xd * xd + yd * yd;
+
+        if(dist < 80 * 80 || dist >= DESPAWN_DISTANCE)
+            return;
+    }
+
+    u32 r = (4 + (level_index == 3) * 4) * 16;
+
+    i32 x0 = x - r;
+    i32 y0 = y - r;
+    i32 x1 = x + r;
+    i32 y1 = y + r;
+
+    for(u32 i = 0; i < ENTITY_LIMIT; i++) {
+        struct entity_Data *e_data = &level->entities[i];
+        if(e_data->type >= ENTITY_TYPES)
+            continue;
+
+        if(entity_intersects(e_data, x0, y0, x1, y1))
+            return;
+    }
+
+    u8 entity_level;
+    if(level_index == 3)
+        entity_level = 0;
+    else if(level_index == 4)
+        entity_level = 3;
+    else
+        entity_level = rand() % (4 - level_index);
+
+    if(rand() & 1)
+        entity_add_slime(level, x, y, entity_level, true);
+    else
+        entity_add_zombie(level, x, y, entity_level, true);
 }
