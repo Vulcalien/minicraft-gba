@@ -19,6 +19,7 @@
 #include "types.h"
 #include "util.h"
 
+#define EWRAM_SECTION        __attribute__((section(".ewram")))
 #define EWRAM_BSS_SECTION    __attribute__((section(".bss.ewram")))
 #define IWRAM_SECTION        __attribute__((section(".iwram")))
 #define IWRAM_RODATA_SECTION __attribute__((section(".rodata_iwram")))

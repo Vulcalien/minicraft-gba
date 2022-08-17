@@ -97,15 +97,21 @@ static inline void switch_bank(u32 bank) {
     FLASH_ROM[0x0000] = bank;
 }
 
-IWRAM_SECTION
+ALWAYS_INLINE
+static inline u8 read_byte(u16 addr) {
+    // TODO make sure only LDRB is used
+    return FLASH_ROM[addr];
+}
+
+EWRAM_SECTION
 bool storage_check(void) {
     switch_bank(0);
 
     // check if game code (ZMCE) is present
-    bool valid = FLASH_ROM[0] == 'Z' &&
-                 FLASH_ROM[1] == 'M' &&
-                 FLASH_ROM[2] == 'C' &&
-                 FLASH_ROM[3] == 'E';
+    bool valid = read_byte(0) == 'Z' &&
+                 read_byte(1) == 'M' &&
+                 read_byte(2) == 'C' &&
+                 read_byte(3) == 'E';
 
     // TODO validate a checksum
 
@@ -117,13 +123,13 @@ static inline void load_item(u16 *addr, struct item_Data *data) {
     data->type = FLASH_ROM[(*addr)++];
 
     if(item_is_resource(data->type)) {
-        data->count  = FLASH_ROM[(*addr)++];
-        data->count |= FLASH_ROM[(*addr)++] >> 8;
+        data->count  = read_byte((*addr)++);
+        data->count |= read_byte((*addr)++) >> 8;
     } else if(ITEM_S(data)->class == ITEMCLASS_TOOL) {
-        data->tool_level = FLASH_ROM[(*addr)++];
+        data->tool_level = read_byte((*addr)++);
         (*addr)++;
     } else if(data->type == CHEST_ITEM) {
-        data->chest_id = FLASH_ROM[(*addr)++];
+        data->chest_id = read_byte((*addr)++);
         (*addr)++;
     } else {
         (*addr)++;
@@ -145,7 +151,7 @@ static inline void load_inventory(u16 *addr, struct Inventory *inventory) {
     }
 }
 
-IWRAM_SECTION
+EWRAM_SECTION
 void storage_load(void) {
     u16 addr;
 
@@ -161,7 +167,7 @@ void storage_load(void) {
             u8 bytes[9];
 
             for(u32 i = 0; i < sizeof(bytes); i++)
-                bytes[i] = FLASH_ROM[addr++];
+                bytes[i] = read_byte(addr++);
 
             for(u32 i = 0; i < 8; i++) {
                 u16 two_tiles = bytes[i]     << (i + 1) |
@@ -176,7 +182,7 @@ void storage_load(void) {
 
         // read data
         for(u32 t = 0; t < LEVEL_W * LEVEL_H; t++) {
-            level->data[t] = FLASH_ROM[addr++];
+            level->data[t] = read_byte(addr++);
 
             // 64 KB is hit when writing tile data for the third level
             // causing an overflow: switch bank
@@ -189,7 +195,7 @@ void storage_load(void) {
             u8 *data = (u8 *) &level->entities[i];
 
             for(u32 b = 0; b < sizeof(struct entity_Data); b++)
-                data[b] = FLASH_ROM[addr++];
+                data[b] = read_byte(addr++);
         }
     }
 
@@ -204,22 +210,22 @@ void storage_load(void) {
         load_inventory(&addr, &player_inventory);
         load_item(&addr, &player_active_item);
 
-        player_stamina                = FLASH_ROM[addr++];
-        player_stamina_recharge_delay = FLASH_ROM[addr++];
-        player_invulnerable_time      = FLASH_ROM[addr++];
+        player_stamina                = read_byte(addr++);
+        player_stamina_recharge_delay = read_byte(addr++);
+        player_invulnerable_time      = read_byte(addr++);
 
-        score = FLASH_ROM[addr++];
-        score |= FLASH_ROM[addr++] << 8;
-        score |= FLASH_ROM[addr++] << 16;
-        score |= FLASH_ROM[addr++] << 24;
+        score =  read_byte(addr++);
+        score |= read_byte(addr++) << 8;
+        score |= read_byte(addr++) << 16;
+        score |= read_byte(addr++) << 24;
 
-        gametime = FLASH_ROM[addr++];
-        gametime |= FLASH_ROM[addr++] << 8;
-        gametime |= FLASH_ROM[addr++] << 16;
-        gametime |= FLASH_ROM[addr++] << 24;
+        gametime =  read_byte(addr++);
+        gametime |= read_byte(addr++) << 8;
+        gametime |= read_byte(addr++) << 16;
+        gametime |= read_byte(addr++) << 24;
 
-        current_level = FLASH_ROM[addr++];
-        chest_count = FLASH_ROM[addr++];
+        current_level = read_byte(addr++);
+        chest_count = read_byte(addr++);
     }
 }
 
@@ -234,7 +240,7 @@ static inline void erase_chip(void) {
     FLASH_ROM[0x5555] = 0x10;
 
     // TODO setup a timeout
-    while(FLASH_ROM[0x0000] != 0xff);
+    while(read_byte(0x0000) != 0xff);
 }
 
 ALWAYS_INLINE
@@ -243,10 +249,11 @@ static inline void write_byte(u16 addr, u8 byte) {
     FLASH_ROM[0x2aaa] = 0x55;
     FLASH_ROM[0x5555] = 0xa0;
 
+    // TODO make sure only STRB is used
     FLASH_ROM[addr] = byte;
 
     // TODO setup a timeout
-    while(FLASH_ROM[addr] != byte);
+    while(read_byte(addr) != byte);
 }
 
 ALWAYS_INLINE
@@ -280,7 +287,7 @@ static inline void store_inventory(u16 *addr, struct Inventory *inventory) {
     }
 }
 
-IWRAM_SECTION
+EWRAM_SECTION
 void storage_save(void) {
     u16 addr;
 
