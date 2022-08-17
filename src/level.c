@@ -71,17 +71,16 @@ void level_load(struct Level *level) {
     }
 }
 
-IWRAM_SECTION
-void level_tick(struct Level *level) {
-    // TODO try spawn
-
+static inline void tick_tiles(struct Level *level) {
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 50; i++) {
         u32 xt = rand() % LEVEL_W;
         u32 yt = rand() % LEVEL_H;
 
         tick_tile(level, xt, yt);
     }
+}
 
+static inline void tick_entities(struct Level *level) {
     for(u32 i = 0; i < ENTITY_LIMIT; i++) {
         struct entity_Data *entity_data = &level->entities[i];
         if(entity_data->type >= ENTITY_TYPES)
@@ -108,6 +107,14 @@ void level_tick(struct Level *level) {
             }
         }
     }
+}
+
+IWRAM_SECTION
+void level_tick(struct Level *level) {
+    // TODO try spawn
+
+    tick_tiles(level);
+    tick_entities(level);
 }
 
 static inline void update_offset(struct Level *level) {
