@@ -32,8 +32,7 @@ u32 tick_count = 0;
 u32 gametime = 0;
 u32 score = 0;
 
-// DEBUG
-u8 current_level = 0;
+u8 current_level = 3;
 
 static void tick(void) {
     input_tick();
