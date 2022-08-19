@@ -278,7 +278,7 @@ void screen_update_level_specific(void) {
         { 0x1ce7, 0x318c },
         { 0x1ce7, 0x318c },
         { 0x1cea, 0x35b0 },
-        { -1, -1 }
+        { -1,     0x6318 }
     };
     for(u32 i = 0; i < 6; i++) {
         if(i == 3)
