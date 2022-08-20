@@ -419,7 +419,11 @@ ETICK(player_tick) {
 
     if((player_stamina_recharge_delay & 1) == 0) {
         static u8 swim_move_flag = 0;
-        swim_move_flag ^= (on_tile == LIQUID_TILE);
+
+        if(on_tile == LIQUID_TILE)
+            swim_move_flag ^= 1;
+        else
+            swim_move_flag = 0;
 
         if(!swim_move_flag)
             mob_move(level, data, xm, ym);
