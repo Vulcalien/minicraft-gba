@@ -75,6 +75,7 @@ static void load_tileset(vu16 *dest, const u8 *tileset, u32 size,
 void screen_init(void) {
     DISPLAY_CONTROL = 0       | // Video mode
                       1 << 6  | // OBJ Character mapping (1 is linear)
+                      1 << 7  | // Forced Blank
                       0 << 8  | // Enable BG 0
                       1 << 9  | // Enable BG 1
                       0 << 10 | // Enable BG 2
@@ -159,6 +160,9 @@ void screen_init(void) {
     OAM[7]  = 0;
     OAM[11] = 0;
     OAM[15] = 128;
+
+    // disable forced blank
+    DISPLAY_CONTROL &= ~(1 << 7);
 }
 
 void vsync(void) {
