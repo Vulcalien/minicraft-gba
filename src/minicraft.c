@@ -47,7 +47,7 @@ static void draw(void) {
 
 int main(void) {
     screen_init();
-    set_scene(&scene_start, true);
+    set_scene(&scene_prestart, false);
 
     sound_init();
 

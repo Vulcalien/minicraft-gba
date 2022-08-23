@@ -26,6 +26,8 @@ struct Scene {
 
 extern const struct Scene *scene;
 
+extern const struct Scene scene_prestart;
+
 extern const struct Scene scene_start;
 extern const struct Scene scene_instructions;
 extern const struct Scene scene_about;

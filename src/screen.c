@@ -161,6 +161,13 @@ void screen_init(void) {
     OAM[11] = 0;
     OAM[15] = 128;
 
+    // prepare prescreen
+    screen_set_bg_palette_color(9, 0xc, 0x7fff);
+    screen_set_bg_palette_color(9, 0xd, 0x7fff);
+    for(u32 y = 0; y < 20; y++)
+        for(u32 x = 0; x < 30; x++)
+            BG3_TILEMAP[x + y * 32] = 29 | 9 << 12;
+
     // disable forced blank
     DISPLAY_CONTROL &= ~(1 << 7);
 }

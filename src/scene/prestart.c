@@ -15,19 +15,30 @@
  */
 #include "scene.h"
 
-const struct Scene *scene = NULL;
+#include "screen.h"
 
-#include "scene/prestart.c"
+static u16 prestart_counter = 0;
 
-#include "scene/start.c"
-#include "scene/instructions.c"
-#include "scene/about.c"
+static void prestart_tick(void) {
+    prestart_counter++;
 
-#include "scene/game.c"
-#include "scene/transition.c"
+    if(prestart_counter == 0x20 + 2 * 60)
+        set_scene(&scene_start, true);
+}
 
-#include "scene/inventory.c"
-#include "scene/chest.c"
-#include "scene/crafting.c"
+static void prestart_draw(void) {
+    if(prestart_counter < 0x20) {
+        u8 val = 0x20 - prestart_counter;
+        u16 color = val << 10 | val << 5 | val;
 
-#include "scene/pause.c"
+        screen_set_bg_palette_color(9, 0xd, color);
+    }
+
+    // TODO copyright info, original author...?
+    screen_write("TEST", 9, 10, 10);
+}
+
+const struct Scene scene_prestart = {
+    .tick = prestart_tick,
+    .draw = prestart_draw
+};
