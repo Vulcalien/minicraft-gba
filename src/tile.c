@@ -154,15 +154,13 @@ FSTEPPED_ON(sand_stepped_on) {
 }
 
 FINTERACT(sand_interact) {
-    if(item->type == SHOVEL_ITEM) {
-        if(player_pay_stamina(4 - item->tool_level)) {
-            entity_add_item(level, xt, yt, SAND_ITEM, true);
+    if(item->type == SHOVEL_ITEM && player_pay_stamina(4 - item->tool_level)) {
+        entity_add_item(level, xt, yt, SAND_ITEM, true);
 
-            LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+        LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
 
-            // no sound after digging sand
-            // might be a bug in the original game
-        }
+        // no sound after digging sand
+        // might be a bug in the original game
     }
 }
 
@@ -205,24 +203,43 @@ FSTEPPED_ON(farmland_stepped_on) {
 }
 
 FINTERACT(farmland_interact) {
-    if(item->type == SHOVEL_ITEM) {
-        if(player_pay_stamina(4 - item->tool_level)) {
-            LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
-        }
-    }
+    if(item->type == SHOVEL_ITEM && player_pay_stamina(4 - item->tool_level))
+        LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
 }
 
 // Wheat
+static inline void wheat_harvest(struct Level *level, u32 xt, u32 yt) {
+    if(rand() & 1)
+        entity_add_item(level, xt, yt, SEEDS_ITEM, true);
+
+    u8 age = LEVEL_GET_DATA(level, xt, yt);
+    if(age >= 40) {
+        u8 count;
+        if(age == 50)
+            count = 2 + rand() % 3;
+        else
+            count = 1 + rand() % 2;
+
+        for(u32 i = 0; i < count; i++)
+            entity_add_item(level, xt, yt, WHEAT_ITEM, true);
+    }
+
+    LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+}
+
 FSTEPPED_ON(wheat_stepped_on) {
     if(rand() % 60 != 0)
         return;
 
     if(LEVEL_GET_DATA(level, xt, yt) >= 2)
-        ; // TODO harvest (maybe call wheat_interact)
+        wheat_harvest(level, xt, yt);
 }
 
 FINTERACT(wheat_interact) {
-    // TODO harvest
+    if(item->type == SHOVEL_ITEM && player_pay_stamina(4 - item->tool_level))
+        LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
+    else
+        wheat_harvest(level, xt, yt);
 }
 
 // Cloud
