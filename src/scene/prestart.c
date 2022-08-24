@@ -34,8 +34,27 @@ static void prestart_draw(void) {
         screen_set_bg_palette_color(9, 0xd, color);
     }
 
-    // TODO copyright info, original author...?
-    screen_write("TEST", 9, 10, 10);
+    screen_write(
+        "MINICRAFT WAS MADE BY MARKUS\n"
+        "PERSSON FOR THE 22'ND LUDUM\n"
+        "DARE COMPETITION IN DECEMBER\n"
+        "2011.\n"
+        "\n"
+        "THIS DEMAKE OF THE GAME WAS\n"
+        "MADE BY VULCALIEN.\n"
+        "\n"
+        "THE ARTWORK AND SOUNDS WERE\n"
+        "MADE BY MARKUS PERSSON.\n"
+        "\n"
+        "\n"
+        "COPYRIGHT 2022 VULCALIEN\n"
+        "\n"
+        "THIS IS FREE SOFTWARE\n"
+        "RELEASED UNDER THE\n"
+        "GNU GENERAL PUBLIC LICENSE\n"
+        "EITHER VERSION 3 OR LATER",
+        9, 1, 1
+    );
 }
 
 const struct Scene scene_prestart = {
