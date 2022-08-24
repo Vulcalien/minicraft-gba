@@ -139,62 +139,64 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
     }
 
     // solid entity collision
-    xt0--;
-    yt0--;
-    xt1++;
-    yt1++;
+    if(data->type != ITEM_ENTITY) {
+        xt0--;
+        yt0--;
+        xt1++;
+        yt1++;
 
-    if(xt0 < 0) xt0 = 0;
-    if(yt0 < 0) yt0 = 0;
-    if(xt1 >= LEVEL_W) xt1 = LEVEL_W - 1;
-    if(yt1 >= LEVEL_H) yt1 = LEVEL_H - 1;
+        if(xt0 < 0) xt0 = 0;
+        if(yt0 < 0) yt0 = 0;
+        if(xt1 >= LEVEL_W) xt1 = LEVEL_W - 1;
+        if(yt1 >= LEVEL_H) yt1 = LEVEL_H - 1;
 
-    i32 xo0 = data->x - entity->xr;
-    i32 yo0 = data->y - entity->yr;
-    i32 xo1 = data->x + entity->xr;
-    i32 yo1 = data->y + entity->yr;
+        i32 xo0 = data->x - entity->xr;
+        i32 yo0 = data->y - entity->yr;
+        i32 xo1 = data->x + entity->xr;
+        i32 yo1 = data->y + entity->yr;
 
-    i32 x0 = data->x + xm - entity->xr;
-    i32 y0 = data->y + ym - entity->yr;
-    i32 x1 = data->x + xm + entity->xr;
-    i32 y1 = data->y + ym + entity->yr;
+        i32 x0 = data->x + xm - entity->xr;
+        i32 y0 = data->y + ym - entity->yr;
+        i32 x1 = data->x + xm + entity->xr;
+        i32 y1 = data->y + ym + entity->yr;
 
-    bool blocked_by_entity = false;
-    for(u32 yt = yt0; yt <= yt1; yt++) {
-        for(u32 xt = xt0; xt <= xt1; xt++) {
-            const u32 tile = xt + yt * LEVEL_W;
+        bool blocked_by_entity = false;
+        for(u32 yt = yt0; yt <= yt1; yt++) {
+            for(u32 xt = xt0; xt <= xt1; xt++) {
+                const u32 tile = xt + yt * LEVEL_W;
 
-            for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
-                const u8 entity_id = level_solid_entities[tile][i];
-                if(entity_id >= ENTITY_LIMIT)
-                    continue;
+                for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
+                    const u8 entity_id = level_solid_entities[tile][i];
+                    if(entity_id >= ENTITY_LIMIT)
+                        continue;
 
-                struct entity_Data *e_data = &level->entities[entity_id];
+                    struct entity_Data *e_data = &level->entities[entity_id];
 
-                if(e_data == data)
-                    continue;
+                    if(e_data == data)
+                        continue;
 
-                if(entity_intersects(e_data, x0, y0, x1, y1)) {
-                    if(!blocked_by_entity &&
-                       !entity_intersects(e_data, xo0, yo0, xo1, yo1)) {
-                        blocked_by_entity = true;
-                    }
+                    if(entity_intersects(e_data, x0, y0, x1, y1)) {
+                        if(!blocked_by_entity &&
+                           !entity_intersects(e_data, xo0, yo0, xo1, yo1)) {
+                            blocked_by_entity = true;
+                        }
 
-                    // touch player
-                    if(data->type == PLAYER_ENTITY) {
-                        const struct Entity *entity = ENTITY_S(e_data);
-                        entity->touch_player(level, e_data, data);
-                    } else if(e_data->type == PLAYER_ENTITY) {
-                        const struct Entity *entity = ENTITY_S(data);
-                        entity->touch_player(level, data, e_data);
+                        // touch player
+                        if(data->type == PLAYER_ENTITY) {
+                            const struct Entity *entity = ENTITY_S(e_data);
+                            entity->touch_player(level, e_data, data);
+                        } else if(e_data->type == PLAYER_ENTITY) {
+                            const struct Entity *entity = ENTITY_S(data);
+                            entity->touch_player(level, data, e_data);
+                        }
                     }
                 }
             }
         }
-    }
 
-    if(blocked_by_entity)
-        return false;
+        if(blocked_by_entity)
+            return false;
+    }
 
     data->x += xm;
     data->y += ym;

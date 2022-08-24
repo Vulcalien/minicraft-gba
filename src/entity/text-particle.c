@@ -74,6 +74,7 @@ ETICK(text_particle_tick) {
     text_data->yy += text_data->yv;
 
     // FIXME can go out of bounds: data->x and y are u16
+    // note: is it really a problem if that happens?
     data->x += (text_data->xx / 64);
     data->y += (text_data->yy / 64);
 

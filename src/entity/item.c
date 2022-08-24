@@ -21,7 +21,17 @@ struct item_entity_Data {
     u16 item_type : 6;
     u16 time : 10;
 
-    u8 unused[6];
+    // 64 xx = 1 x
+    // 64 yy = 1 y
+    //  6 zz = 1 z
+    i8 xx;
+    i8 yy;
+    i8 zz;
+
+    // velocity
+    i8 xv;
+    i8 yv;
+    i8 zv;
 };
 
 static_assert(
@@ -47,7 +57,11 @@ void entity_add_item(struct Level *level, u16 x, u16 y,
         data->y = y - 5 + rand() % 11;
     }
 
-    // TODO set xx, yy, zz, xa, ya, za
+    item_entity_data->xv = rand() % 59 - 29;
+    item_entity_data->yv = rand() % 39 - 19;
+
+    item_entity_data->zz = 2;
+    item_entity_data->zv = 6 + rand() % 4;
 
     item_entity_data->item_type = item;
     item_entity_data->time = 60 * 10 + rand() % 60;
@@ -101,7 +115,30 @@ ETICK(item_tick) {
         }
     }
 
-    // TODO item entity movement
+    // FIXME the behavior is very different compared to the original game
+    // movement
+    item_entity_data->xx += item_entity_data->xv;
+    item_entity_data->yy += item_entity_data->yv;
+
+    item_entity_data->zz += item_entity_data->zv;
+    if(item_entity_data->zz < 0) {
+        item_entity_data->zz = 0;
+
+        item_entity_data->zv /= -2;
+
+        item_entity_data->xv = item_entity_data->xv * 3 / 5;
+        item_entity_data->yv = item_entity_data->yv * 3 / 5;
+    }
+    item_entity_data->zv--;
+
+    entity_move(
+        level, data,
+        item_entity_data->xx / 64,
+        item_entity_data->yy / 64
+    );
+
+    item_entity_data->xx %= 64;
+    item_entity_data->yy %= 64;
 }
 
 EDRAW(item_draw) {
@@ -115,10 +152,9 @@ EDRAW(item_draw) {
     const u8 is_invisible = (item_entity_data->time < 60 * 2) &&
                             (((item_entity_data->time / 6) & 1) == 0);
 
-    // TODO consider zz
     SPRITE(
-        data->x - 4 - level_x_offset, // x
-        data->y - 4 - level_y_offset, // y
+        data->x - 4 - level_x_offset,                              // x
+        data->y - 4 - (item_entity_data->zz / 6) - level_y_offset, // y
         sprite,      // sprite
         palette,     // palette
         0,           // flip
