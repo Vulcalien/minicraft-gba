@@ -26,7 +26,6 @@
                      struct entity_Data *entity_data)
 
 #define FINTERACT(name)\
-    IWRAM_SECTION\
     static void name(struct Level *level, u32 xt, u32 yt,\
                      struct item_Data *item)
 
@@ -260,7 +259,7 @@ FINTERACT(hard_rock_interact) {
     entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
 }
 
-// Ores + Cloud Cactus
+// Ores
 FINTERACT(ore_interact) {
     u8 dmg = 0;
     if(item->type == PICK_ITEM && player_pay_stamina(6 - item->tool_level)) {
@@ -289,6 +288,7 @@ FINTERACT(ore_interact) {
     entity_add_text_particle(level, (xt << 4) + 8, (yt << 4) + 8, dmg, 0);
 }
 
+// Cloud Cactus
 FINTERACT(cloud_cactus_interact) {
     u8 dmg = 0;
     if(item->type == PICK_ITEM && player_pay_stamina(6 - item->tool_level)) {
