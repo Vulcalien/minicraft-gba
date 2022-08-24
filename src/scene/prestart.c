@@ -52,7 +52,7 @@ static void prestart_draw(void) {
         "THIS IS FREE SOFTWARE\n"
         "RELEASED UNDER THE\n"
         "GNU GENERAL PUBLIC LICENSE\n"
-        "EITHER VERSION 3 OR LATER",
+        "EITHER VERSION 3 OR LATER.",
         9, 1, 1
     );
 }
