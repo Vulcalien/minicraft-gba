@@ -71,7 +71,6 @@ static void load_tileset(vu16 *dest, const u8 *tileset, u32 size,
 #define LOAD_PALETTE(dest, palette)\
     memcpy16(dest, palette, sizeof(palette) / sizeof(u16))
 
-// TODO fix visual glitches at startup
 void screen_init(void) {
     DISPLAY_CONTROL = 0       | // Video mode
                       1 << 6  | // OBJ Character mapping (1 is linear)
@@ -167,6 +166,10 @@ void screen_init(void) {
     for(u32 y = 0; y < 20; y++)
         for(u32 x = 0; x < 30; x++)
             BG3_TILEMAP[x + y * 32] = 29 | 9 << 12;
+
+    // hide all sprites
+    for(u32 i = 0; i < 128; i++)
+        OAM[i * 4] = 1 << 9;
 
     // disable forced blank
     DISPLAY_CONTROL &= ~(1 << 7);
