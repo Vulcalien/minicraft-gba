@@ -43,7 +43,6 @@ void input_tick(void) {
             press_time[i] = 0;
 
             // set i-th bit to 1
-            /*input_keys_clicked &= ~(1 << i);*/
             input_keys_clicked |= (1 << i);
         }
     }

@@ -45,12 +45,12 @@ static void start_tick(void) {
 
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
         if(start_selected == 0) {
-            // TODO srand
+            srand(tick_count);
             storage_load();
 
             set_scene(&scene_game, true);
         } else if(start_selected == 1) {
-            // TODO srand
+            srand(tick_count);
             generate_levels();
 
             set_scene(&scene_game, true);
