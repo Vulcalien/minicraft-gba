@@ -1,7 +1,7 @@
 #include "images.h"
 
 /* This artwork was made by Markus Persson in December 2011 */
-const u8 level_tileset[32 * 128] = {
+const u8 level_tileset[32 * 89] = {
     // generic ground 0
     0x11, 0x11, 0x11, 0x11,
     0x11, 0x11, 0x11, 0x11,

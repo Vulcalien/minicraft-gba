@@ -1,7 +1,7 @@
 #include "images.h"
 
 /* This artwork was made by Markus Persson in December 2011 */
-const u8 gui_tileset[32 * 128] = {
+const u8 gui_tileset[32 * 95] = {
     // Fully transparent
     0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00,
