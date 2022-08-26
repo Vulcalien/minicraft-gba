@@ -44,6 +44,9 @@ ETICK(furniture_particle_tick) {
     const struct entity_Data *player = &level->entities[0];
     data->x = player->x;
     data->y = player->y - 15;
+
+    if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
+        data->y += 4;
 }
 
 EDRAW(furniture_particle_draw) {
