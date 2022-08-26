@@ -40,12 +40,13 @@ void entity_add_item_particle(struct Level *level, u8 time) {
     if(player_active_item.type >= ITEM_TYPES)
         return;
 
-    // TODO reuse the same entity if it's already present: there can be only
-    // one item particle at a time
+    static u8 entity_id = 0; // entity 0 can never be an item particle
 
-    u8 entity_id = level_new_entity(level, ITEM_PARTICLE_ENTITY);
-    if(entity_id >= ENTITY_LIMIT)
-        return;
+    if(level->entities[entity_id].type != ITEM_PARTICLE_ENTITY) {
+        entity_id = level_new_entity(level, ITEM_PARTICLE_ENTITY);
+        if(entity_id >= ENTITY_LIMIT)
+            return;
+    }
 
     struct entity_Data *data = &level->entities[entity_id];
     struct item_particle_Data *item_particle_data =

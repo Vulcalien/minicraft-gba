@@ -28,12 +28,13 @@ struct attack_Data {
 static_assert(sizeof(struct attack_Data) == 8, "struct attack_Data: wrong size");
 
 void entity_add_attack_particle(struct Level *level, u8 time) {
-    // TODO reuse the same entity if it's already present: there can be only
-    // one attack particle at a time
+    static u8 entity_id = 0; // entity 0 can never be an attack particle
 
-    u8 entity_id = level_new_entity(level, ATTACK_PARTICLE_ENTITY);
-    if(entity_id >= ENTITY_LIMIT)
-        return;
+    if(level->entities[entity_id].type != ATTACK_PARTICLE_ENTITY) {
+        entity_id = level_new_entity(level, ATTACK_PARTICLE_ENTITY);
+        if(entity_id >= ENTITY_LIMIT)
+            return;
+    }
 
     struct entity_Data *data        = &level->entities[entity_id];
     struct attack_Data *attack_data = (struct attack_Data *) &data->data;
