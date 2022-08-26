@@ -93,5 +93,7 @@ EDRAW(attack_particle_draw) {
 
 static const struct Entity attack_particle_entity = {
     .tick = attack_particle_tick,
-    .draw = attack_particle_draw
+    .draw = attack_particle_draw,
+
+    .follow_player_through_levels = true
 };

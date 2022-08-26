@@ -72,7 +72,7 @@ ETICK(furniture_tick) {
 }
 
 EDRAW(furniture_draw) {
-    const u8 sprite = 68 + 4 * (data->type - WORKBENCH_ENTITY);
+    const u16 sprite = 68 + 4 * (data->type - WORKBENCH_ENTITY);
 
     SPRITE(
         data->x - 8 - level_x_offset,  // x

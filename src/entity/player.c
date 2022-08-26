@@ -413,6 +413,10 @@ ETICK(player_tick) {
             mob_hurt(level, data, 1, mob_data->dir ^ 2);
     }
 
+    // try adding furniture particle (if it already exists, this does nothing)
+    if(ITEM_S(&player_active_item)->class == ITEMCLASS_FURNITURE)
+        entity_add_furniture_particle(level);
+
     // movement
     i32 xm = (INPUT_DOWN(KEY_RIGHT) != 0) - (INPUT_DOWN(KEY_LEFT) != 0);
     i32 ym = (INPUT_DOWN(KEY_DOWN)  != 0) - (INPUT_DOWN(KEY_UP)   != 0);
