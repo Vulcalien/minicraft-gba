@@ -62,6 +62,14 @@ static void start_tick(void) {
     }
 }
 
+#define START_WRITE(text, highlight, x, y) do {\
+    screen_write((text), 1 - ((highlight) == true), (x), (y));\
+\
+    if(highlight) {\
+        screen_write(">", 0, (x) - 2, (y));\
+        screen_write("<", 0, (x) + sizeof(text), (y));\
+    }\
+} while(0)
 static void start_draw(void) {
     // clear the screen
     for(u32 y = 0; y < 20; y++)
@@ -77,14 +85,13 @@ static void start_draw(void) {
     }
 
     if(start_can_load)
-        screen_write("LOAD GAME", 0 + (start_selected != 0) * 1, 10, 9);
-    screen_write("NEW  GAME", 0 + (start_selected != 1) * 1, 10, 10);
+        START_WRITE("LOAD GAME", start_selected == 0, 10, 9);
+    START_WRITE("NEW  GAME", start_selected == 1, 10, 10);
 
-    screen_write("HOW TO PLAY", 0 + (start_selected != 2) * 1, 9, 12);
-    screen_write("ABOUT",       0 + (start_selected != 3) * 1, 12, 13);
-
-    // TODO draw arrows
+    START_WRITE("HOW TO PLAY", start_selected == 2, 9, 12);
+    START_WRITE("ABOUT", start_selected == 3, 12, 13);
 }
+#undef START_WRITE
 
 const struct Scene scene_start = {
     .init = start_init,
