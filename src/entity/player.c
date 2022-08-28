@@ -461,14 +461,19 @@ EDRAW(player_draw) {
 
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
 
-    u16 sprite = (dir == 0) * 4 +
-                 (dir == 2) * 0 +
-                 (dir & 1)  * 8;
+    u16 sprite = (dir == 0) * 12 +
+                 (dir == 2) * 8  +
+                 (dir & 1)  * 16;
     sprite += (dir & 1) * (
         ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4)
     );
+
+    // swimming
     sprite += (on_tile == LIQUID_TILE) *
-              (28 + ((player_tick_time / 8) & 1) * 20);
+              (20 + ((player_tick_time / 8) & 1) * 20);
+
+    // carrying furniture
+    sprite += (ITEM_S(&player_active_item)->class == ITEMCLASS_FURNITURE) * 60;
 
     u8 palette = 4 + (hurt_time > 0) * 1;
     u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);

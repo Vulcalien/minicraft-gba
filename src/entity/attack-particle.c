@@ -73,7 +73,7 @@ EDRAW(attack_particle_draw) {
 
     const u8 dir = attack_data->dir;
 
-    const u16 sprite = 96 + (dir & 1) * 2;
+    const u16 sprite = 156 + (dir & 1) * 2;
     const u8 palette = 5;
 
     const u8 shape = 1 + (dir & 1);

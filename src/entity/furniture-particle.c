@@ -50,7 +50,7 @@ ETICK(furniture_particle_tick) {
 }
 
 EDRAW(furniture_particle_draw) {
-    const u16 sprite = 68 + 4 * (player_active_item.type - WORKBENCH_ITEM);
+    const u16 sprite = 128 + 4 * (player_active_item.type - WORKBENCH_ITEM);
 
     SPRITE(
         data->x - 8 - level_x_offset, // x

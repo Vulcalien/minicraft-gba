@@ -99,7 +99,7 @@ EDRAW(slime_draw) {
     struct mob_Data   *mob_data   = (struct mob_Data *)   &data->data;
     struct slime_Data *slime_data = (struct slime_Data *) &mob_data->data;
 
-    u16 sprite = 20 + (slime_data->jump_time > 0) * 4;
+    u16 sprite = 0 + (slime_data->jump_time > 0) * 4;
 
     const u8 hurt_time = mob_data->hurt_time;
     u8 palette = (hurt_time > 0)  * 5 +
