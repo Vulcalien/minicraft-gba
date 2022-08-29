@@ -20,6 +20,7 @@
 
 extern void sound_init(void);
 
-extern void sound_play(const u8 *sound, u32 length);
+#define SOUND_PLAY(sound) sound_play(sound, sizeof(sound))
+extern void sound_play(const u8 *sound, u16 length);
 
 #endif // MINICRAFT_SOUND

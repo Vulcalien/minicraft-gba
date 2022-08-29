@@ -38,9 +38,6 @@
 #define TIMER2_RELOAD  *((vu16 *) 0x04000108)
 #define TIMER2_CONTROL *((vu16 *) 0x0400010a)
 
-#define TIMER3_RELOAD  *((vu16 *) 0x0400010c)
-#define TIMER3_CONTROL *((vu16 *) 0x0400010e)
-
 void sound_init(void) {
     SOUND_CONTROL_X = 1 << 7; // Enable Sound
 
@@ -51,34 +48,36 @@ void sound_init(void) {
                       0 << 10 | // Channel A Timer (0 is Timer 0)
                       1 << 12 | // Enable Channel B RIGHT
                       1 << 13 | // Enable Channel B LEFT
-                      1 << 14;  // Channel B Timer (1 is Timer 1)
+                      0 << 14;  // Channel B Timer (0 is Timer 0)
 
     DMA1_DEST = FIFO_A;
     DMA2_DEST = FIFO_B;
 
-    DMA1_CONTROL = DMA2_CONTROL = 2 << 5  | // Dest Address Control (2 is Fixed)
-                                  1 << 9  | // DMA repeat
-                                  1 << 10 | // Transfer type (1 is 32bit)
-                                  3 << 12;  // Start Timing (3 is FIFO)
-
-    TIMER0_RELOAD = TIMER1_RELOAD = 65536 - 1024;
+    TIMER0_RELOAD = 65536 - 1;
 }
 
-void sound_play(const u8 *sound, u32 length) {
+void sound_play(const u8 *sound, u16 length) {
+    const u16 dma_value = 2 << 5  | // Dest Address Control (2 is Fixed)
+                          1 << 9  | // DMA repeat
+                          1 << 10 | // Transfer type (1 is 32bit)
+                          3 << 12 | // Start Timing (3 is FIFO)
+                          1 << 15;  // DMA Enable
+
     static u8 channel_flag = 0;
     channel_flag ^= 1;
 
     if(channel_flag) {
         // Channel A
         DMA1_SOURCE = (u32) sound;
-        DMA1_CONTROL |= 1 << 15;
 
-        TIMER0_CONTROL = 1 << 7;
+        DMA1_CONTROL = dma_value;
     } else {
         // Channel B
         DMA2_SOURCE = (u32) sound;
-        DMA2_CONTROL |= 1 << 15;
 
-        TIMER1_CONTROL = 1 << 7;
+        DMA2_CONTROL = dma_value;
     }
+
+    TIMER0_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
+                     1 << 7;  // Timer Start
 }
