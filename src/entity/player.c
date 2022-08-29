@@ -246,7 +246,7 @@ static inline void player_place_furniture(struct Level *level, struct entity_Dat
 static inline void player_attack(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
-    mob_data->walk_dist ^= 8;
+    mob_data->walk_dist += 8;
 
     const u8 item_class = (player_active_item.type < ITEM_TYPES) ?
                           ITEM_S(&player_active_item)->class : -1;
