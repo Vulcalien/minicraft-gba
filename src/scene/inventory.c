@@ -22,6 +22,7 @@
 #include "player.h"
 
 static i8 inventory_selected;
+static bool inventory_should_render_game = false;
 
 static void inventory_init(void) {
     inventory_selected = 0;
@@ -40,11 +41,11 @@ static void inventory_init(void) {
         // This is not a duplication bug, however it causes annoyances for
         // crafting. To merge the items, the player can use a chest.
 
-        // FIXME in the original game, the light is updated when a player
-        // puts in the inventory a lantern
         inventory_add(&player_inventory, &player_active_item, 0);
         player_active_item.type = -1;
     }
+
+    inventory_should_render_game = true;
 }
 
 static void inventory_tick(void) {
@@ -78,14 +79,15 @@ static void inventory_tick(void) {
 }
 
 static void inventory_draw(void) {
+    if(inventory_should_render_game) {
+        scene_game.draw();
+        inventory_should_render_game = false;
+    }
+
     const u8 inv_x = 9;
     const u8 inv_y = 2;
     const u8 inv_w = 12;
     const u8 inv_h = 14;
-
-    // clear active item area
-    for(u32 x = 20; x < 30; x += 2)
-        *((vu32 *) &BG3_TILEMAP[x + 18 * 32]) = 29 | 29 << 16;
 
     screen_draw_frame("INVENTORY", inv_x, inv_y, inv_w, inv_h);
 
