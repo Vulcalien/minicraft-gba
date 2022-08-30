@@ -19,6 +19,7 @@
 #include "entity.h"
 #include "player.h"
 #include "item.h"
+#include "sound.h"
 
 #define FSTEPPED_ON(name)\
     IWRAM_SECTION\
@@ -40,7 +41,7 @@ FINTERACT(grass_interact) {
 
             LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
 
-            // TODO play sound
+            SOUND_PLAY(sound_monster_hurt);
         }
     } else if(item->type == HOE_ITEM) {
         if(player_pay_stamina(4 - item->tool_level)) {
@@ -49,7 +50,7 @@ FINTERACT(grass_interact) {
             if(rand() % 5 == 0)
                 entity_add_item(level, xt, yt, SEEDS_ITEM, true);
 
-            // TODO play sound
+            SOUND_PLAY(sound_monster_hurt);
         }
     }
 }
@@ -132,13 +133,13 @@ FINTERACT(dirt_interact) {
 
             LEVEL_SET_TILE(level, xt, yt, HOLE_TILE, 0);
 
-            // TODO play sound
+            SOUND_PLAY(sound_monster_hurt);
         }
     } else if(item->type == HOE_ITEM) {
         if(player_pay_stamina(4 - item->tool_level)) {
             LEVEL_SET_TILE(level, xt, yt, FARMLAND_TILE, 0);
 
-            // TODO play sound
+            SOUND_PLAY(sound_monster_hurt);
         }
     }
 }

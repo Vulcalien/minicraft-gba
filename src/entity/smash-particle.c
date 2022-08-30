@@ -15,6 +15,8 @@
  */
 #include "entity.h"
 
+#include "sound.h"
+
 struct smash_Data {
     u8 time;
 
@@ -24,6 +26,8 @@ struct smash_Data {
 static_assert(sizeof(struct smash_Data) == 8, "struct smash_Data: wrong size");
 
 void entity_add_smash_particle(struct Level *level, u8 xt, u8 yt) {
+    SOUND_PLAY(sound_monster_hurt);
+
     u8 entity_id = level_new_entity(level, SMASH_PARTICLE_ENTITY);
     if(entity_id >= ENTITY_LIMIT)
         return;
@@ -34,8 +38,6 @@ void entity_add_smash_particle(struct Level *level, u8 xt, u8 yt) {
     data->y = (yt << 4) + 8;
 
     level_add_entity(level, entity_id);
-
-    // TODO emit sound???
 }
 
 ETICK(smash_particle_tick) {

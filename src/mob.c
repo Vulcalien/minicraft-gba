@@ -19,6 +19,7 @@
 #include "entity.h"
 #include "player.h"
 #include "item.h"
+#include "sound.h"
 
 static inline void mob_die(struct Level *level, struct entity_Data *data) {
     switch(data->type) {
@@ -105,7 +106,7 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
         player_invulnerable_time = 30;
 
         entity_add_text_particle(level, data->x, data->y, damage, 1);
-        // TODO player hurt sound
+        SOUND_PLAY(sound_player_hurt);
     } else {
         entity_add_text_particle(level, data->x, data->y, damage, 0);
 
@@ -115,7 +116,7 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
             i32 yd = player->y - data->y;
 
             if(xd * xd + yd * yd < 80 * 80)
-                ; // TODO mob hurt sound
+                SOUND_PLAY(sound_monster_hurt);
         }
     }
 }

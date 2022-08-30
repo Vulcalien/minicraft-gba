@@ -21,6 +21,7 @@
 #include "item.h"
 #include "crafting.h"
 #include "player.h"
+#include "sound.h"
 
 static i8 crafting_selected;
 
@@ -118,8 +119,11 @@ static void crafting_tick(void) {
                 recipe_id
             ];
 
-            if(crafting_craft(&player_inventory, recipe))
+            if(crafting_craft(&player_inventory, recipe)) {
                 crafting_check_craftable();
+
+                SOUND_PLAY(sound_craft);
+            }
         }
     }
 }

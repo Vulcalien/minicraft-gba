@@ -19,6 +19,7 @@
 #include "generator.h"
 #include "screen.h"
 #include "storage.h"
+#include "sound.h"
 
 static i8 start_selected;
 static bool start_can_load;
@@ -45,11 +46,15 @@ static void start_tick(void) {
 
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
         if(start_selected == 0) {
+            SOUND_PLAY(sound_start);
+
             srand(tick_count);
             storage_load();
 
             set_scene(&scene_game, true);
         } else if(start_selected == 1) {
+            SOUND_PLAY(sound_start);
+
             srand(tick_count);
             generate_levels();
 

@@ -16,6 +16,7 @@
 #include "entity.h"
 
 #include "inventory.h"
+#include "sound.h"
 
 struct item_entity_Data {
     u16 item_type : 6;
@@ -110,7 +111,7 @@ ETICK(item_tick) {
 
                 score++;
 
-                // TODO play sound
+                SOUND_PLAY(sound_pickup);
             }
         }
     }
