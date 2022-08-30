@@ -21,6 +21,7 @@
 #define FIFO_A (0x040000a0)
 #define FIFO_B (0x040000a4)
 
+// DMA
 #define DMA1_SOURCE  *((vu32 *) 0x040000bc)
 #define DMA1_DEST    *((vu32 *) 0x040000c0)
 #define DMA1_CONTROL *((vu16 *) 0x040000c6)
@@ -29,6 +30,7 @@
 #define DMA2_DEST    *((vu32 *) 0x040000cc)
 #define DMA2_CONTROL *((vu16 *) 0x040000d2)
 
+// Timers
 #define TIMER0_RELOAD  *((vu16 *) 0x04000100)
 #define TIMER0_CONTROL *((vu16 *) 0x04000102)
 
@@ -37,6 +39,29 @@
 
 #define TIMER2_RELOAD  *((vu16 *) 0x04000108)
 #define TIMER2_CONTROL *((vu16 *) 0x0400010a)
+
+// Interrupt
+#define IME *((vu32 *) 0x04000208)
+#define IE  *((vu16 *) 0x04000200)
+#define IF  *((vu16 *) 0x04000202)
+
+#define INTERRUPT_HANDLER *((vu32 *) 0x03fffffc)
+
+IWRAM_SECTION
+static void interrupt_handler(void) {
+    // TODO remove { ?
+    if(IF == 1 << 4) { // Timer 1
+        TIMER1_CONTROL = 0;
+        DMA1_CONTROL = 0;
+
+        IF = 1 << 4;
+    } else if(IF == 1 << 5) { // Timer 2
+        TIMER2_CONTROL = 0;
+        DMA2_CONTROL = 0;
+
+        IF = 1 << 5;
+    }
+}
 
 void sound_init(void) {
     SOUND_CONTROL_X = 1 << 7; // Enable Sound
@@ -54,6 +79,14 @@ void sound_init(void) {
     DMA2_DEST = FIFO_B;
 
     TIMER0_RELOAD = 65536 - 1;
+
+    // enable interrupts
+    INTERRUPT_HANDLER = (u32) &interrupt_handler;
+
+    IE = 1 << 4 | // Timer 1
+         1 << 5;  // Timer 2
+
+    IME = 1;
 }
 
 void sound_play(const u8 *sound, u16 length) {
@@ -69,13 +102,21 @@ void sound_play(const u8 *sound, u16 length) {
     if(channel_flag) {
         // Channel A
         DMA1_SOURCE = (u32) sound;
-
         DMA1_CONTROL = dma_value;
+
+        TIMER1_RELOAD = 65536 - length;
+        TIMER1_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
+                         1 << 6 | // Timer IRQ Enable
+                         1 << 7;  // Timer Start
     } else {
         // Channel B
         DMA2_SOURCE = (u32) sound;
-
         DMA2_CONTROL = dma_value;
+
+        TIMER2_RELOAD = 65536 - length;
+        TIMER2_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
+                         1 << 6 | // Timer IRQ Enable
+                         1 << 7;  // Timer Start
     }
 
     TIMER0_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
