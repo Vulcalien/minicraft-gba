@@ -49,7 +49,6 @@
 
 IWRAM_SECTION
 static void interrupt_handler(void) {
-    // TODO remove { ?
     if(IF == 1 << 4) { // Timer 1
         TIMER1_CONTROL = 0;
         DMA1_CONTROL = 0;
@@ -89,6 +88,7 @@ void sound_init(void) {
     IME = 1;
 }
 
+IWRAM_SECTION
 void sound_play(const u8 *sound, u16 length) {
     const u16 dma_value = 2 << 5  | // Dest Address Control (2 is Fixed)
                           1 << 9  | // DMA repeat
