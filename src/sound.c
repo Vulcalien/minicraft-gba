@@ -49,17 +49,21 @@
 
 IWRAM_SECTION
 static void interrupt_handler(void) {
-    if(IF == 1 << 4) { // Timer 1
+    IME = 0;
+
+    if(IF & (1 << 4)) { // Timer 1
         TIMER1_CONTROL = 0;
         DMA1_CONTROL = 0;
 
         IF = 1 << 4;
-    } else if(IF == 1 << 5) { // Timer 2
+    } else if(IF & (1 << 5)) { // Timer 2
         TIMER2_CONTROL = 0;
         DMA2_CONTROL = 0;
 
         IF = 1 << 5;
     }
+
+    IME = 1;
 }
 
 void sound_init(void) {
