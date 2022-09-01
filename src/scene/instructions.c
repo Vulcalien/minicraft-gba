@@ -31,7 +31,6 @@ static void instructions_draw(void) {
 
     screen_write("HOW TO PLAY", 0, 9, 1);
 
-    // TODO instructions to save the game
     screen_write(
         "MOVE YOUR CHARACTER USING\n"
         "THE DPAD.\n"
@@ -44,7 +43,11 @@ static void instructions_draw(void) {
         "INVENTORY TO EQUIP IT.\n"
         "\n"
         "KILL THE AIR WIZARD TO WIN\n"
-        "THE GAME!",
+        "THE GAME!\n"
+        "\n"
+        "\n"
+        "PRESS START TO PAUSE AND TO\n"
+        "SAVE THE GAME.",
         2, 1, 3
     );
 }

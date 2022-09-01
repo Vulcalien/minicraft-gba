@@ -443,13 +443,7 @@ ETICK(player_tick) {
     }
 
     if(INPUT_CLICKED(KEY_START))
-        set_scene(&scene_pause, false);
-
-    // DEBUG
-    if(INPUT_CLICKED(KEY_L))
-        storage_save();
-    if(INPUT_CLICKED(KEY_R))
-        storage_load();
+        set_scene(&scene_pause, true);
 }
 
 EDRAW(player_draw) {
