@@ -82,6 +82,8 @@ void sound_init(void) {
     DMA2_DEST = FIFO_B;
 
     TIMER0_RELOAD = 65536 - 1;
+    TIMER0_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
+                     1 << 7;  // Timer Start
 
     // enable interrupts
     INTERRUPT_HANDLER = (u32) &interrupt_handler;
@@ -91,6 +93,8 @@ void sound_init(void) {
 
     IME = 1;
 }
+
+// FIXME fix pop at the end of sounds
 
 IWRAM_SECTION
 void sound_play(const u8 *sound, u16 length) {
@@ -122,7 +126,4 @@ void sound_play(const u8 *sound, u16 length) {
                          1 << 6 | // Timer IRQ Enable
                          1 << 7;  // Timer Start
     }
-
-    TIMER0_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
-                     1 << 7;  // Timer Start
 }
