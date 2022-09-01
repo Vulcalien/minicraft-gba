@@ -26,13 +26,13 @@ extern void sound_play(const u8 *sound, u16 length);
 // Sound effects
 extern const u8 sound_start[1804];
 
-extern const u8 sound_pickup[510];
-extern const u8 sound_craft[1762];
+extern const u8 sound_pickup[512];
+extern const u8 sound_craft[1764];
 
 extern const u8 sound_monster_hurt[876];
 extern const u8 sound_player_hurt[888];
 
-extern const u8 sound_player_death[13605];
-extern const u8 sound_boss_death[17291];
+extern const u8 sound_player_death[13608];
+extern const u8 sound_boss_death[17292];
 
 #endif // MINICRAFT_SOUND
