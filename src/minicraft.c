@@ -34,14 +34,14 @@ u32 score = 0;
 
 u8 current_level = 3;
 
-static void tick(void) {
+static inline void tick(void) {
     input_tick();
     scene->tick();
 
     tick_count++;
 }
 
-static void draw(void) {
+static inline void draw(void) {
     scene->draw();
 }
 
@@ -50,16 +50,6 @@ int main(void) {
     set_scene(&scene_prestart, false);
 
     sound_init();
-
-    // DEBUG: calculate header checksum
-    #ifdef GENERATE_CHECKSUM
-        u8 checksum = 0;
-        for(u32 i = 0xa0; i <= 0xbc; i++)
-            checksum -= ((vu8 *) 0x8000000)[i];
-
-        checksum -= 0x19;
-        ((vu8 *) 0x0e000000)[0] = checksum;
-    #endif
 
     while(true) {
         tick();
