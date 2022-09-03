@@ -147,9 +147,9 @@ static inline void update_offset(struct Level *level) {
 }
 
 static inline void draw_tiles(struct Level *level, u32 x0, u32 y0) {
-    for(u32 t = 0; t < 10 * 16; t++) {
-        u16 x = t % 16;
-        u16 y = t / 16;
+    for(u32 t = 0; t < 16 * 10; t++) {
+        const u16 x = t % 16;
+        const u16 y = t / 16;
 
         u16 tiles[4] = { 0 };
 
