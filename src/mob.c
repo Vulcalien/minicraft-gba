@@ -59,13 +59,9 @@ bool mob_move(struct Level *level, struct entity_Data *data,
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
     if(mob_data->knockback.val > 0) {
-        i32 xk = 0;
-        i32 yk = 0;
-
-        if     (mob_data->knockback.dir == 0) yk--;
-        else if(mob_data->knockback.dir == 1) xk--;
-        else if(mob_data->knockback.dir == 2) yk++;
-        else if(mob_data->knockback.dir == 3) xk++;
+        const u8 dir = mob_data->knockback.dir;
+        i32 xk = (dir == 3) - (dir == 1);
+        i32 yk = (dir == 2) - (dir == 0);
 
         entity_move2(level, data, xk, yk);
         mob_data->knockback.val--;
