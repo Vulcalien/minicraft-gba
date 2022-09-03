@@ -147,17 +147,18 @@ static inline void update_offset(struct Level *level) {
 }
 
 static inline void draw_tiles(struct Level *level, u32 x0, u32 y0) {
-    for(u32 y = 0; y <= 9; y++) {
-        for(u32 x = 0; x <= 15; x++) {
-            u16 tiles[4] = { 0 };
+    for(u32 t = 0; t < 10 * 16; t++) {
+        u16 x = t % 16;
+        u16 y = t / 16;
 
-            draw_tile(level, x + x0, y + y0, tiles);
+        u16 tiles[4] = { 0 };
 
-            // using 32bit writes instead of 16bit writes saves a little time
-            vu32 *tile_0 = (vu32 *) &BG1_TILEMAP[x * 2 + y * 2 * 32];
-            *(tile_0)      = (tiles[1] << 16) | tiles[0];
-            *(tile_0 + 16) = (tiles[3] << 16) | tiles[2];
-        }
+        draw_tile(level, x + x0, y + y0, tiles);
+
+        // using 32bit writes instead of 16bit writes saves a little time
+        vu32 *tile_0 = (vu32 *) &BG1_TILEMAP[x * 2 + y * 2 * 32];
+        *(tile_0)      = (tiles[1] << 16) | tiles[0];
+        *(tile_0 + 16) = (tiles[3] << 16) | tiles[2];
     }
 }
 
