@@ -282,7 +282,13 @@ const u16 sprite_palette[7 * 16] = {
     0x4dad,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0,
+
+    // air wizard 1
+    0x0844, 0x14b3, 0x4279, 0x7bde,
+
+    // unused
+    0, 0, 0, 0,
 
     // --- palette 4 --- (player)
     // transparent
@@ -297,8 +303,11 @@ const u16 sprite_palette[7 * 16] = {
     // water
     0x6273, 0x4d08, 0x4442,
 
+    // air wizard 2
+    0x14b3, 0x0844, 0x4279, 0x7bde,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0,
 
     // --- palette 5 --- (mob damaged)
     // transparent
@@ -313,8 +322,11 @@ const u16 sprite_palette[7 * 16] = {
     // water
     0x6273, 0x4d08, 0x4442,
 
+    // air wizard
+    0x7bde, 0x7bde, 0x7bde, 0x7bde,
+
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0,
 
     // --- palette 6 --- (furniture)
     // transparent

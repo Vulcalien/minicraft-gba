@@ -25,8 +25,7 @@ extern const u16 item_palette[4 * 16];
 extern const u8 level_tileset[32 * 89];
 extern const u8 gui_tileset[32 * 95];
 
-// TODO adjust sprite_tileset size
-extern const u8 sprite_tileset[32 * 160];
+extern const u8 sprite_tileset[32 * 180];
 extern const u8 font_sprite_tileset[32 * 10];
 
 extern const u8 light_tileset[32 * 5];
