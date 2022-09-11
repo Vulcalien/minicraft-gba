@@ -97,10 +97,7 @@ EDRAW(zombie_draw) {
     const u8 walk_dist = mob_data->walk_dist;
     const u8 hurt_time = mob_data->hurt_time;
 
-    u16 sprite = (dir == 0) * 12 +
-                 (dir == 2) * 8 +
-                 (dir & 1)  * 16;
-
+    u16 sprite = 8 + (dir == 0) * 4 + (dir & 1) * 8;
     sprite += (dir & 1) * (
         ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4)
     );

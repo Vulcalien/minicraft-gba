@@ -451,13 +451,10 @@ EDRAW(player_draw) {
 
     const u8 dir = mob_data->dir;
     const u8 walk_dist = mob_data->walk_dist;
-    const u8 hurt_time = mob_data->hurt_time;
 
     u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
 
-    u16 sprite = (dir == 0) * 12 +
-                 (dir == 2) * 8  +
-                 (dir & 1)  * 16;
+    u16 sprite = 8 + (dir == 0) * 4 + (dir & 1) * 8;
     sprite += (dir & 1) * (
         ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4)
     );
@@ -469,7 +466,7 @@ EDRAW(player_draw) {
     // carrying furniture
     sprite += (ITEM_S(&player_active_item)->class == ITEMCLASS_FURNITURE) * 60;
 
-    u8 palette = 4 + (hurt_time > 0) * 1;
+    u8 palette = 4 + (mob_data->hurt_time > 0) * 1;
     u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);
 
     SPRITE(
