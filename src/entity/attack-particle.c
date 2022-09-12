@@ -53,7 +53,7 @@ ETICK(attack_particle_tick) {
     struct attack_Data *attack_data = (struct attack_Data *) &data->data;
 
     attack_data->time--;
-    if(attack_data->time == 0 || !player) {
+    if(attack_data->time == 0 || player->type >= ENTITY_TYPES) {
         data->should_remove = true;
         return;
     }
@@ -79,7 +79,6 @@ EDRAW(attack_particle_draw) {
     const u8 shape = 1 + (dir & 1);
     const u8 flip  = 2 * (dir == 2) + 1 * (dir == 3);
 
-    // TODO adjust position
     SPRITE(
         data->x - 4 * (1 + ((dir & 1) == 0)) - level_x_offset, // x
         data->y - 4 * (1 + ((dir & 1) == 1)) - level_y_offset, // y

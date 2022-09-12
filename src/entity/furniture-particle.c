@@ -33,7 +33,10 @@ void entity_add_furniture_particle(struct Level *level) {
 }
 
 ETICK(furniture_particle_tick) {
-    if(player_active_item.type >= ITEM_TYPES ||
+    const struct entity_Data *player = &level->entities[0];
+
+    if(player->type >= ENTITY_TYPES ||
+       player_active_item.type >= ITEM_TYPES ||
        ITEM_S(&player_active_item)->class != ITEMCLASS_FURNITURE) {
         data->should_remove = true;
         furniture_particle_last_removed = true;
@@ -41,7 +44,6 @@ ETICK(furniture_particle_tick) {
     }
 
     // update position
-    const struct entity_Data *player = &level->entities[0];
     data->x = player->x;
     data->y = player->y - 15;
 

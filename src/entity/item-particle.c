@@ -74,7 +74,7 @@ ETICK(item_particle_tick) {
         (struct item_particle_Data *) &data->data;
 
     item_particle_data->time--;
-    if(item_particle_data->time == 0 || !player) {
+    if(item_particle_data->time == 0 || player->type >= ENTITY_TYPES) {
         data->should_remove = true;
         return;
     }

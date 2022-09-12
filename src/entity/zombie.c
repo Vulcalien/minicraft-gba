@@ -22,8 +22,9 @@ struct zombie_Data {
     i8 ym : 2;
 
     u8 level : 2;
-    u8 random_walk_time : 6;
     u8 move_flag : 1;
+
+    u8 random_walk_time;
 };
 
 static_assert(sizeof(struct zombie_Data) == 2, "struct zombie_Data: wrong size");
