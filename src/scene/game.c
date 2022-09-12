@@ -34,8 +34,11 @@ static void game_init(void) {
 
         // move the player to the new level
         if(old_level) {
-            level->entities[0] = old_level->entities[0];
-            // TODO maybe call level_add_entity ???
+            struct entity_Data *new_player = &level->entities[0];
+
+            *new_player = old_level->entities[0];
+            new_player->x = (new_player->x & 0xfff0) + 8;
+            new_player->y = (new_player->y & 0xfff0) + 8;
 
             // move entities that follow player through levels
             for(u32 i = 1; i < ENTITY_LIMIT; i++) {
@@ -44,19 +47,20 @@ static void game_init(void) {
                     continue;
 
                 const struct Entity *entity = ENTITY_S(old_data);
-                if(entity->follow_player_through_levels) {
-                    // find the new entity_id
-                    for(u32 j = 1; j < ENTITY_LIMIT; j++) {
-                        struct entity_Data *new_data = &level->entities[j];
+                if(!entity->follow_player_through_levels)
+                    continue;
 
-                        if(new_data->type >= ENTITY_TYPES) {
-                            *new_data = *old_data;
-                            old_data->type = -1;
-                            break;
+                // find the new entity_id
+                for(u32 j = 1; j < ENTITY_LIMIT; j++) {
+                    struct entity_Data *new_data = &level->entities[j];
 
-                            // since all entities that follow the player are
-                            // non-solid, do not call level_add_entity
-                        }
+                    if(new_data->type >= ENTITY_TYPES) {
+                        *new_data = *old_data;
+                        old_data->type = -1;
+                        break;
+
+                        // since all entities that follow the player are
+                        // non-solid, do not call level_add_entity
                     }
                 }
             }
