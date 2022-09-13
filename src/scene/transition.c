@@ -19,34 +19,38 @@
 #include "screen.h"
 
 static u8 transition_time;
+static u8 transition_old_level;
 
 static void transition_init(void) {
     transition_time = 0;
+    transition_old_level = current_level;
 }
 
 static void transition_tick(void) {
     gametime++;
 
     transition_time++;
-    if(transition_time == 15)
+    if(transition_time == 17)
         scene_game.init();
-    else if(transition_time == 30)
+    else if(transition_time == 31)
         set_scene(&scene_game, true);
 }
 
+IWRAM_SECTION
 static void transition_draw(void) {
-    // FIXME very incorrect
+    scene_game.draw();
+
     for(u32 y = 0; y < 20; y++) {
         for(u32 x = 0; x < 30; x++) {
-            i32 dd = (y + x % 2 * 2 + x / 3) - transition_time;
-            if(dd > -30 && dd < 0)
-                BG3_TILEMAP[x + y * 32] = 0;
-            else
-                BG3_TILEMAP[x + y * 32] = 29;
+            i32 dd = (y + x % 2 * 2 + x / 3) - transition_time * 2;
+
+            u16 ydraw = transition_old_level < current_level ? y : 19 - y;
+            if(dd > -33 && dd < 0)
+                BG3_TILEMAP[x + ydraw * 32] = 29;
+            else if(ydraw < 18)
+                BG3_TILEMAP[x + ydraw * 32] = 0;
         }
     }
-
-    scene_game.draw();
 }
 
 const struct Scene scene_transition = {
