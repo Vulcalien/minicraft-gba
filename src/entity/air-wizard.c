@@ -14,18 +14,118 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "entity.h"
+#include "air-wizard.h"
 
 #include "mob.h"
 
-static u32 air_wizard_tick_time = 0;
+struct wizard_Data {
+    i8 xm : 2;
+    i8 ym : 2;
 
-ETICK(air_wizard_tick) {
+    u8 move_flag : 2;
+    u8 attack_type : 2;
+
+    u8 random_walk_time;
+};
+
+static_assert(
+    sizeof(struct wizard_Data) == 2, "struct wizard_Data: wrong size"
+);
+
+// TODO store/load these values
+u8 air_wizard_attack_delay = 0;
+u8 air_wizard_attack_time  = 0;
+
+void entity_add_air_wizard(struct Level *level) {
+    u8 entity_id = level_new_entity(level, AIR_WIZARD_ENTITY);
+    if(entity_id >= ENTITY_LIMIT)
+        return;
+
+    struct entity_Data *data  = &level->entities[entity_id];
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
-    air_wizard_tick_time++;
+    data->x = (LEVEL_W << 4) / 2;
+    data->y = (LEVEL_W << 4) / 2;
+
+    mob_data->hp = 2000;
+    mob_data->dir = 2;
+}
+
+ETICK(air_wizard_tick) {
+    struct mob_Data    *mob_data    = (struct mob_Data *) &data->data;
+    struct wizard_Data *wizard_data = (struct wizard_Data *) &mob_data->data;
+
     mob_tick(level, data);
 
-    // TODO ...
+    // spin
+    if(air_wizard_attack_delay > 0) {
+        // TODO this looks very bad
+        mob_data->dir = ((air_wizard_attack_delay - 45) / 4) % 4;
+        mob_data->dir = ((mob_data->dir * 2) % 4) + (mob_data->dir / 2);
+        if(air_wizard_attack_delay < 45)
+            mob_data->dir = 0;
+
+        air_wizard_attack_delay--;
+        if(air_wizard_attack_delay == 0) {
+            air_wizard_attack_time = 120;
+            wizard_data->attack_type = (mob_data->hp < 1000) +
+                                       (mob_data->hp < 200);
+        }
+        return;
+    }
+
+    if(air_wizard_attack_time > 0) {
+        air_wizard_attack_time--;
+        // TODO attack
+        return;
+    }
+
+    struct entity_Data *player = &level->entities[0];
+    if(player->type < ENTITY_TYPES && wizard_data->random_walk_time == 0) {
+        i32 xd = player->x - data->x;
+        i32 yd = player->y - data->y;
+
+        u32 dist = xd * xd + yd * yd;
+
+        if(dist < 32 * 32) {
+            // run away
+            wizard_data->xm = (xd < 0) - (xd > 0);
+            wizard_data->ym = (yd < 0) - (yd > 0);
+        } else if(dist > 80 * 80) {
+            // come closer
+            wizard_data->xm = (xd > 0) - (xd < 0);
+            wizard_data->ym = (yd > 0) - (yd < 0);
+        }
+    }
+
+    wizard_data->move_flag++;
+    bool move_result = mob_move(
+        level, data,
+        wizard_data->xm * (wizard_data->move_flag != 0),
+        wizard_data->ym * (wizard_data->move_flag != 0)
+    );
+
+    if(!move_result || rand() % 100 == 0) {
+        wizard_data->random_walk_time = 30;
+        wizard_data->xm = (rand() % 3) - 1;
+        wizard_data->ym = (rand() % 3) - 1;
+    }
+
+    if(wizard_data->random_walk_time > 0) {
+        wizard_data->random_walk_time--;
+
+        if(player->type < ENTITY_TYPES && wizard_data->random_walk_time == 0) {
+            i32 xd = player->x - data->x;
+            i32 yd = player->y - data->y;
+
+            u32 dist = xd * xd + yd * yd;
+
+            if(air_wizard_attack_delay == 0 && air_wizard_attack_time == 0 &&
+               dist < 50 * 50               && rand() % 4 == 0) {
+                air_wizard_attack_delay = 120;
+            }
+        }
+    }
 }
 
 EDRAW(air_wizard_draw) {
@@ -40,14 +140,17 @@ EDRAW(air_wizard_draw) {
         ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4)
     );
 
+    static u32 damage_animation = 0;
+    damage_animation++;
+
     u8 palette = 3;
     if(hurt_time > 0) {
         palette = 5;
     } else if(mob_data->hp < 200) {
-        if((air_wizard_tick_time / 3) & 1)
+        if((damage_animation / 3) & 1)
             palette = 4;
     } else if(mob_data->hp < 1000) {
-        if((air_wizard_tick_time / 50) & 1)
+        if((damage_animation / 50) & 1)
             palette = 4;
     }
 

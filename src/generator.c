@@ -183,5 +183,6 @@ void generate_levels(void) {
     }
 
     entity_add_player(&levels[3], 30, 62);
+    entity_add_air_wizard(&levels[4]);
 }
 #endif

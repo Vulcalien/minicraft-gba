@@ -28,6 +28,7 @@ static inline void game_move_player(struct Level *old_level,
                                     struct Level *new_level) {
     struct entity_Data *new_player = &new_level->entities[0];
 
+    // FIXME adjusting the player position doesn't move player entities
     *new_player = old_level->entities[0];
     new_player->x = (new_player->x & 0xfff0) + 8;
     new_player->y = (new_player->y & 0xfff0) + 8;

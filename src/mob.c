@@ -18,6 +18,7 @@
 #include "level.h"
 #include "entity.h"
 #include "player.h"
+#include "air-wizard.h"
 #include "item.h"
 #include "sound.h"
 
@@ -104,6 +105,11 @@ void mob_hurt(struct Level *level, struct entity_Data *data,
         entity_add_text_particle(level, data->x, data->y, damage, 1);
         SOUND_PLAY(sound_player_hurt);
     } else {
+        if(data->type == AIR_WIZARD_ENTITY) {
+            if(air_wizard_attack_delay == 0 && air_wizard_attack_time == 0)
+                air_wizard_attack_delay = 120;
+        }
+
         entity_add_text_particle(level, data->x, data->y, damage, 0);
 
         struct entity_Data *player = &level->entities[0];
