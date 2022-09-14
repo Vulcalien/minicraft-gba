@@ -20,53 +20,57 @@
 #include "mob.h"
 #include "player.h"
 
-static struct Level *level = NULL;
+static struct Level *game_level = NULL;
 
 static bool game_should_refresh = false;
+
+static inline void game_move_player(struct Level *old_level,
+                                    struct Level *new_level) {
+    struct entity_Data *new_player = &new_level->entities[0];
+
+    *new_player = old_level->entities[0];
+    new_player->x = (new_player->x & 0xfff0) + 8;
+    new_player->y = (new_player->y & 0xfff0) + 8;
+
+    // move entities that follow player through levels
+    for(u32 i = 1; i < ENTITY_LIMIT; i++) {
+        struct entity_Data *old_data = &old_level->entities[i];
+        if(old_data->type >= ENTITY_TYPES)
+            continue;
+
+        const struct Entity *entity = ENTITY_S(old_data);
+        if(!entity->follow_player_through_levels)
+            continue;
+
+        // find the new entity_id
+        for(u32 j = 1; j < ENTITY_LIMIT; j++) {
+            struct entity_Data *new_data = &new_level->entities[j];
+
+            if(new_data->type >= ENTITY_TYPES) {
+                *new_data = *old_data;
+                old_data->type = -1;
+                break;
+
+                // since all entities that follow the player are
+                // non-solid, do not call level_add_entity
+            }
+        }
+    }
+}
 
 static void game_init(void) {
     static u8 last_level = -1;
     if(last_level != current_level) {
         last_level = current_level;
 
-        struct Level *old_level = level;
-        level = &levels[current_level];
+        struct Level *old_level = game_level;
+        game_level = &levels[current_level];
 
         // move the player to the new level
-        if(old_level) {
-            struct entity_Data *new_player = &level->entities[0];
+        if(old_level)
+            game_move_player(old_level, game_level);
 
-            *new_player = old_level->entities[0];
-            new_player->x = (new_player->x & 0xfff0) + 8;
-            new_player->y = (new_player->y & 0xfff0) + 8;
-
-            // move entities that follow player through levels
-            for(u32 i = 1; i < ENTITY_LIMIT; i++) {
-                struct entity_Data *old_data = &old_level->entities[i];
-                if(old_data->type >= ENTITY_TYPES)
-                    continue;
-
-                const struct Entity *entity = ENTITY_S(old_data);
-                if(!entity->follow_player_through_levels)
-                    continue;
-
-                // find the new entity_id
-                for(u32 j = 1; j < ENTITY_LIMIT; j++) {
-                    struct entity_Data *new_data = &level->entities[j];
-
-                    if(new_data->type >= ENTITY_TYPES) {
-                        *new_data = *old_data;
-                        old_data->type = -1;
-                        break;
-
-                        // since all entities that follow the player are
-                        // non-solid, do not call level_add_entity
-                    }
-                }
-            }
-        }
-
-        level_load(level);
+        level_load(game_level);
 
         vsync();
         screen_update_level_specific();
@@ -77,7 +81,7 @@ static void game_init(void) {
 }
 
 static void game_tick(void) {
-    level_tick(level);
+    level_tick(game_level);
 }
 
 static void game_draw(void) {
@@ -90,10 +94,10 @@ static void game_draw(void) {
                 *((vu32 *) &BG3_TILEMAP[x + y * 32]) = 0;
     }
 
-    level_draw(level);
+    level_draw(game_level);
 
     // draw hp and stamina
-    struct entity_Data *player = &level->entities[0];
+    struct entity_Data *player = &game_level->entities[0];
     if(player->type < ENTITY_TYPES) {
         struct mob_Data *mob_data = (struct mob_Data *) &player->data;
 
