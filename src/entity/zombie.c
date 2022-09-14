@@ -27,10 +27,11 @@ struct zombie_Data {
     u8 random_walk_time;
 };
 
-static_assert(sizeof(struct zombie_Data) == 2, "struct zombie_Data: wrong size");
+static_assert(
+    sizeof(struct zombie_Data) == 2, "struct zombie_Data: wrong size"
+);
 
-void entity_add_zombie(struct Level *level, u16 x, u16 y,
-                       u8 lvl, bool add_to_level) {
+void entity_add_zombie(struct Level *level, u16 x, u16 y, u8 lvl) {
     u8 entity_id = level_new_entity(level, ZOMBIE_ENTITY);
     if(entity_id >= ENTITY_LIMIT)
         return;
@@ -47,8 +48,7 @@ void entity_add_zombie(struct Level *level, u16 x, u16 y,
 
     zombie_data->level = lvl;
 
-    if(add_to_level)
-        level_add_entity(level, entity_id);
+    level_add_entity(level, entity_id);
 }
 
 ETICK(zombie_tick) {

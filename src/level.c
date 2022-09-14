@@ -311,7 +311,7 @@ void level_try_spawn(struct Level *level, u8 level_index) {
         entity_level = rand() % (4 - level_index);
 
     if(rand() & 1)
-        entity_add_slime(level, x, y, entity_level, true);
+        entity_add_slime(level, x, y, entity_level);
     else
-        entity_add_zombie(level, x, y, entity_level, true);
+        entity_add_zombie(level, x, y, entity_level);
 }

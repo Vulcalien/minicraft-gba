@@ -60,8 +60,6 @@ void entity_add_player(struct Level *level, u8 xt, u8 yt) {
 
     item_to_add.type = WORKBENCH_ITEM;
     inventory_add(&player_inventory, &item_to_add, 0);
-
-    level_add_entity(level, 0);
 }
 
 static inline void player_hurt_entities(struct Level *level, struct entity_Data *data) {
