@@ -59,11 +59,10 @@ ETICK(air_wizard_tick) {
 
     // spin
     if(air_wizard_attack_delay > 0) {
-        // TODO this looks very bad
-        mob_data->dir = ((air_wizard_attack_delay - 45) / 4) % 4;
-        mob_data->dir = ((mob_data->dir * 2) % 4) + (mob_data->dir / 2);
         if(air_wizard_attack_delay < 45)
-            mob_data->dir = 0;
+            mob_data->dir = 2;
+        else
+            mob_data->dir = 3 - ((air_wizard_attack_delay - 41) / 4) % 4;
 
         air_wizard_attack_delay--;
         if(air_wizard_attack_delay == 0) {
@@ -120,9 +119,9 @@ ETICK(air_wizard_tick) {
 
             u32 dist = xd * xd + yd * yd;
 
-            if(air_wizard_attack_delay == 0 && air_wizard_attack_time == 0 &&
-               dist < 50 * 50               && rand() % 4 == 0) {
-                air_wizard_attack_delay = 120;
+            if(air_wizard_attack_delay == 0 && air_wizard_attack_time == 0) {
+                if(dist < 50 * 50 && rand() % 4 == 0)
+                    air_wizard_attack_delay = 120;
             }
         }
     }
