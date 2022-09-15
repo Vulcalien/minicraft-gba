@@ -223,7 +223,7 @@ const u16 bg_palette[10 * 16] = {
 };
 
 const u16 sprite_palette[7 * 16] = {
-    // --- palette 0 --- (zombie and slime - level 1)
+    // --- palette 0 --- (zombie and slime - level 1, red font)
     // transparent
     0,
 
@@ -239,7 +239,7 @@ const u16 sprite_palette[7 * 16] = {
     // unused
     0, 0, 0, 0, 0, 0, 0, 0, 0,
 
-    // --- palette 1 --- (zombie and slime - level 2)
+    // --- palette 1 --- (zombie and slime - level 2, purple font)
     // transparent
     0,
 
@@ -255,7 +255,7 @@ const u16 sprite_palette[7 * 16] = {
     // unused
     0, 0, 0, 0, 0, 0, 0, 0, 0,
 
-    // --- palette 2 --- (zombie and slime - level 3)
+    // --- palette 2 --- (zombie and slime - level 3, green font)
     // transparent
     0,
 
@@ -271,7 +271,7 @@ const u16 sprite_palette[7 * 16] = {
     // unused
     0, 0, 0, 0, 0, 0, 0, 0, 0,
 
-    // --- palette 3 --- (zombie and slime - level 4)
+    // --- palette 3 --- (zombie and slime - level 4, air wizard 1)
     // transparent
     0,
 
@@ -290,7 +290,7 @@ const u16 sprite_palette[7 * 16] = {
     // unused
     0, 0, 0, 0,
 
-    // --- palette 4 --- (player)
+    // --- palette 4 --- (player, air wizard 2, spark)
     // transparent
     0,
 
@@ -306,8 +306,11 @@ const u16 sprite_palette[7 * 16] = {
     // air wizard 2
     0x14b3, 0x0844, 0x4279, 0x7bde,
 
+    // spark
+    0x7bde, 0x0421,
+
     // unused
-    0, 0, 0, 0,
+    0, 0,
 
     // --- palette 5 --- (mob damaged)
     // transparent
@@ -349,6 +352,9 @@ const u16 sprite_palette[7 * 16] = {
 
     // lantern
     0x7bde,
+
+    // unused
+    0, 0
 };
 
 const u16 item_palette[4 * 16] = {
