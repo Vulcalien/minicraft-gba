@@ -15,10 +15,66 @@
  */
 #include "entity.h"
 
+struct spark_Data {
+    u16 time;
+
+    // 64 xx = 1 x
+    // 64 yy = 1 y
+    i16 xx;
+    i16 yy;
+
+    // velocity
+    i8 xv;
+    i8 yv;
+};
+
+static_assert(sizeof(struct spark_Data) == 8, "struct spark_Data: wrong size");
+
 ETICK(spark_tick) {
+    struct spark_Data *spark_data = (struct spark_Data *) &data->data;
+
+    spark_data->time--;
+    if(spark_data->time == 0) {
+        data->should_remove = true;
+        return;
+    }
+
+    // movement
+    spark_data->xx += spark_data->xv;
+    spark_data->yy += spark_data->yv;
+
+    // FIXME can go out of bounds: data->x and y are u16
+    // note: is it really a problem if that happens?
+    data->x += (spark_data->xx / 64);
+    data->y += (spark_data->yy / 64);
+
+    spark_data->xx %= 64;
+    spark_data->yy %= 64;
+
+    // TODO damage
 }
 
 EDRAW(spark_draw) {
+    struct spark_Data *spark_data = (struct spark_Data *) &data->data;
+
+    // TODO test if this is faster:
+    //      if(!is_invisible)
+    //          sprite = ...
+    const u16 sprite = 180 + (rand() % 16) * 2;
+
+    const u8 is_invisible = (spark_data->time < 60 * 2) &&
+                            (((spark_data->time / 6) & 1) == 0);
+
+    SPRITE(
+        data->x - 4 - level_x_offset, // x
+        data->y - 8 - level_y_offset, // y
+        sprite,      // sprite
+        0,           // palette TODO
+        0,           // flip
+        2,           // shape
+        0,           // size
+        is_invisible // disable
+    );
 }
 
 static const struct Entity spark_entity = {

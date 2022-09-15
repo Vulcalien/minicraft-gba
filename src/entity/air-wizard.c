@@ -66,7 +66,7 @@ ETICK(air_wizard_tick) {
 
         air_wizard_attack_delay--;
         if(air_wizard_attack_delay == 0) {
-            air_wizard_attack_time = 120;
+            air_wizard_attack_time = 60 * 2;
             wizard_data->attack_type = (mob_data->hp < 1000) +
                                        (mob_data->hp < 200);
         }
@@ -121,7 +121,7 @@ ETICK(air_wizard_tick) {
 
             if(air_wizard_attack_delay == 0 && air_wizard_attack_time == 0) {
                 if(dist < 50 * 50 && rand() % 4 == 0)
-                    air_wizard_attack_delay = 120;
+                    air_wizard_attack_delay = 60 * 2;
             }
         }
     }
