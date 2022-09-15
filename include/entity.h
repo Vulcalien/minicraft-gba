@@ -120,6 +120,8 @@ extern bool entity_add_furniture(struct Level *level, u8 xt, u8 yt,
 
 extern void entity_add_item(struct Level *level, u16 x, u16 y,
                             u8 item, bool is_tile);
+extern void entity_add_spark(struct Level *level, u16 x, u16 y,
+                             i8 xv, i8 yv);
 
 extern void entity_add_text_particle(struct Level *level, u16 x, u16 y,
                                      u8 number, u8 palette);

@@ -76,6 +76,10 @@ ETICK(air_wizard_tick) {
     if(air_wizard_attack_time > 0) {
         air_wizard_attack_time--;
         // TODO attack
+
+        // DEBUG
+        entity_add_spark(level, data->x, data->y, rand() % 21 - 10, rand() % 21 - 10);
+
         return;
     }
 

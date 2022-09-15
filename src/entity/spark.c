@@ -30,6 +30,27 @@ struct spark_Data {
 
 static_assert(sizeof(struct spark_Data) == 8, "struct spark_Data: wrong size");
 
+void entity_add_spark(struct Level *level, u16 x, u16 y,
+                      i8 xv, i8 yv) {
+    u8 entity_id = level_new_entity(level, SPARK_ENTITY);
+    if(entity_id >= ENTITY_LIMIT)
+        return;
+
+    struct entity_Data *data = &level->entities[entity_id];
+    struct spark_Data *spark_data = (struct spark_Data *) &data->data;
+
+    data->x = x;
+    data->y = y;
+
+    spark_data->xv = xv;
+    spark_data->yv = yv;
+
+    // TODO maybe reduce this to reduce entity count?
+    spark_data->time = 60 * 10 + (rand() % 30);
+
+    level_add_entity(level, entity_id);
+}
+
 ETICK(spark_tick) {
     struct spark_Data *spark_data = (struct spark_Data *) &data->data;
 
@@ -69,7 +90,7 @@ EDRAW(spark_draw) {
         data->x - 4 - level_x_offset, // x
         data->y - 8 - level_y_offset, // y
         sprite,      // sprite
-        0,           // palette TODO
+        4,           // palette
         0,           // flip
         2,           // shape
         0,           // size
