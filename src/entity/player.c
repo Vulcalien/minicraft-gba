@@ -98,7 +98,7 @@ static inline void player_hurt_entities(struct Level *level, struct entity_Data 
 
                     default:
                         continue;
-                };
+                }
 
                 if(entity_intersects(e_data, x0, y0, x1, y1)) {
                     u8 damage = 1 + rand() % 3;
@@ -162,7 +162,7 @@ static inline void player_take_furniture(struct Level *level, struct entity_Data
 
             default:
                 continue;
-        };
+        }
 
         if(entity_intersects(e_data, x0, y0, x1, y1)) {
             // add the power glove to the inventory
@@ -283,7 +283,7 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
         case ITEMCLASS_FURNITURE:
             player_place_furniture(level, data);
             break;
-    };
+    }
 }
 
 #define OPEN_CRAFTING_MENU(recipe_list)\
@@ -330,7 +330,7 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
 
                 default:
                     found = false;
-            };
+            }
 
             if(found)
                 return true;

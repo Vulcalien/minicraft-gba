@@ -15,6 +15,8 @@
  */
 #include "entity.h"
 
+#include "mob.h"
+
 struct spark_Data {
     u16 time;
 
@@ -72,15 +74,39 @@ ETICK(spark_tick) {
     spark_data->xx %= 64;
     spark_data->yy %= 64;
 
-    // TODO damage
+    // hurt mobs
+    const u16 x = data->x;
+    const u16 y = data->y;
+
+    u16 xt = (x >> 4);
+    u16 yt = (y >> 4);
+
+    if(xt < LEVEL_W && yt < LEVEL_H) {
+        u8 *solid_entities = level_solid_entities[xt + yt * LEVEL_W];
+
+        for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++) {
+            struct entity_Data *e_data = &level->entities[solid_entities[i]];
+            struct mob_Data *mob_data = (struct mob_Data *) &e_data->data;
+
+            switch(e_data->type) {
+                case ZOMBIE_ENTITY:
+                case SLIME_ENTITY:
+                case PLAYER_ENTITY:
+                    break;
+
+                default:
+                    continue;
+            }
+
+            if(entity_intersects(e_data, x, y, x, y))
+                mob_hurt(level, e_data, 1, mob_data->dir ^ 2);
+        }
+    }
 }
 
 EDRAW(spark_draw) {
     struct spark_Data *spark_data = (struct spark_Data *) &data->data;
 
-    // TODO test if this is faster:
-    //      if(!is_invisible)
-    //          sprite = ...
     const u16 sprite = 180 + (rand() % 16) * 2;
 
     const u8 is_invisible = (spark_data->time < 60 * 2) &&
