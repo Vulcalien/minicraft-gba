@@ -79,7 +79,7 @@ ETICK(air_wizard_tick) {
         // approximated sin and cos functions: PI = 1024
         u32 angle = air_wizard_attack_time * 81; // 81 = 1024 / (3.14... / 0.25)
         if(air_wizard_attack_time & 1)
-            angle = 2048 - (angle % 2049);
+            angle = 2048 - (angle % 2048);
 
         // sin and cos: 0 to 64
         i32 sin = ((angle % 1024) / 64) * (16 - (angle % 1024) / 64);
