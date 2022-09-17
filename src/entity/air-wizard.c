@@ -75,10 +75,28 @@ ETICK(air_wizard_tick) {
 
     if(air_wizard_attack_time > 0) {
         air_wizard_attack_time--;
-        // TODO attack
 
-        // DEBUG
-        entity_add_spark(level, data->x, data->y, rand() % 21 - 10, rand() % 21 - 10);
+        // approximated sin and cos functions: PI = 1024
+        u32 angle = air_wizard_attack_time * 81; // 81 = 1024 / (3.14... / 0.25)
+        if(air_wizard_attack_time & 1)
+            angle = 2048 - (angle % 2049);
+
+        // sin and cos: 0 to 64
+        i32 sin = ((angle % 1024) / 64) * (16 - (angle % 1024) / 64);
+        if((angle % 2048) > 1024)
+            sin *= -1;
+
+        angle += 512; // add half PI
+        i32 cos = ((angle % 1024) / 64) * (16 - (angle % 1024) / 64);
+        if((angle % 2048) > 1024)
+            cos *= -1;
+
+        // speed: 256 = 100%
+        u32 speed = 179 + wizard_data->attack_type * 51;
+        entity_add_spark(
+            level, data->x, data->y,
+            cos * speed / 256, sin * speed / 256
+        );
 
         return;
     }
