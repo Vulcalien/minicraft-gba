@@ -31,9 +31,12 @@ static void about_draw(void) {
 
     screen_write("ABOUT MINICRAFT FOR GBA", 0, 3, 1);
 
-    // TODO say more stuff
     screen_write(
-        "THIS IS A GAME BOY ADVANCE\nPORT OF THE GAME MINICRAFT.",
+        "THIS GBA DEMAKE OF MINICRAFT\n"
+        "WAS MADE BY VULCALIEN.\n"
+        "\n"
+        "I'VE ALWAYS LOVED MINICRAFT.\n"
+        "IT HELPED ME LEARN TO CODE.",
         2, 1, 3
     );
 
