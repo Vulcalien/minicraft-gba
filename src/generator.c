@@ -41,8 +41,10 @@ void generate_levels(void) {
         for(u32 i = 0; i < ENTITY_LIMIT; i++)
             level->entities[i].type = -1;
 
-        if(l == 0)
+        if(l == 3) {
             entity_add_player(level, 2, 2);
+            entity_add_air_wizard(level);
+        }
 
         for(u32 i = 1; i < 1000; i++)
             level_try_spawn(level, l);

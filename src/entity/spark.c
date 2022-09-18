@@ -47,7 +47,6 @@ void entity_add_spark(struct Level *level, u16 x, u16 y,
     spark_data->xv = xv;
     spark_data->yv = yv;
 
-    // TODO maybe reduce this to reduce entity count?
     spark_data->time = 60 * 10 + (rand() % 30);
 
     level_add_entity(level, entity_id);
@@ -73,6 +72,19 @@ ETICK(spark_tick) {
 
     spark_data->xx %= 64;
     spark_data->yy %= 64;
+
+    // despawn if too far
+    struct entity_Data *player = &level->entities[0];
+    if(player->type < ENTITY_TYPES) {
+        i32 xd = player->x - data->x;
+        i32 yd = player->y - data->y;
+
+        u32 dist = xd * xd + yd * yd;
+        if(dist >= (10 * 32) * (10 * 32)) {
+            data->should_remove = true;
+            return;
+        }
+    }
 
     // hurt mobs
     const u16 x = data->x;
