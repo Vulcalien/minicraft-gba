@@ -21,7 +21,7 @@
 #define LEVEL_W (112)
 #define LEVEL_H (112)
 
-#define DESPAWN_DISTANCE ((16 * 32) * (16 * 32))
+#define DESPAWN_DISTANCE ((32 * 16) * (32 * 16))
 
 #define ENTITY_LIMIT (255)
 

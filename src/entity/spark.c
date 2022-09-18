@@ -80,7 +80,7 @@ ETICK(spark_tick) {
         i32 yd = player->y - data->y;
 
         u32 dist = xd * xd + yd * yd;
-        if(dist >= (10 * 32) * (10 * 32)) {
+        if(dist >= (20 * 16) * (20 * 16)) {
             data->should_remove = true;
             return;
         }
