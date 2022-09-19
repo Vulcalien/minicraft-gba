@@ -65,7 +65,7 @@ void entity_add_item(struct Level *level, u16 x, u16 y,
     item_entity_data->zv = 6 + rand() % 4;
 
     item_entity_data->item_type = item;
-    item_entity_data->time = 60 * 10 + rand() % 60;
+    item_entity_data->time = 10 * 60 + rand() % 60;
 
     // use solid_id to store the take delay
     data->solid_id = 30;
@@ -150,7 +150,7 @@ EDRAW(item_draw) {
     const u16 sprite = 256 + item_entity_data->item_type;
     const u8 palette = 12 + item->palette;
 
-    const u8 is_invisible = (item_entity_data->time < 60 * 2) &&
+    const u8 is_invisible = (item_entity_data->time < 2 * 60) &&
                             (((item_entity_data->time / 6) & 1) == 0);
 
     SPRITE(

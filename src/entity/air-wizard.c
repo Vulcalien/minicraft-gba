@@ -17,6 +17,8 @@
 #include "air-wizard.h"
 
 #include "mob.h"
+#include "player.h"
+#include "sound.h"
 
 struct wizard_Data {
     i8 xm : 2;
@@ -66,7 +68,7 @@ ETICK(air_wizard_tick) {
 
         air_wizard_attack_delay--;
         if(air_wizard_attack_delay == 0) {
-            air_wizard_attack_time = 60 * 2;
+            air_wizard_attack_time = 2 * 60;
             wizard_data->attack_type = (mob_data->hp < 1000) +
                                        (mob_data->hp < 200);
         }
@@ -143,7 +145,7 @@ ETICK(air_wizard_tick) {
 
             if(air_wizard_attack_delay == 0 && air_wizard_attack_time == 0) {
                 if(dist < 50 * 50 && rand() % 4 == 0)
-                    air_wizard_attack_delay = 60 * 2;
+                    air_wizard_attack_delay = 2 * 60;
             }
         }
     }
@@ -206,5 +208,12 @@ static const struct Entity air_wizard_entity = {
 };
 
 void mob_air_wizard_die(struct Level *level, struct entity_Data *data) {
-    // TODO air wizard death
+    struct entity_Data *player = &level->entities[0];
+    if(player->type < ENTITY_TYPES) {
+        score += 1000;
+
+        player_invulnerable_time = 5 * 60;
+        // TODO set won scene
+    }
+    SOUND_PLAY(sound_boss_death);
 }

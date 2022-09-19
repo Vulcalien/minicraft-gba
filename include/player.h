@@ -27,7 +27,7 @@ extern struct item_Data player_active_item;
 extern u8 player_stamina;
 extern u8 player_stamina_recharge_delay;
 
-extern u8 player_invulnerable_time;
+extern u16 player_invulnerable_time;
 
 inline bool player_pay_stamina(u8 amount) {
     if(player_stamina >= amount) {

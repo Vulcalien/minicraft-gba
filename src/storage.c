@@ -44,7 +44,7 @@ Storage Layout (128 KB)
 
       1 B - stamina
       1 B - stamina recharge delay
-      1 B - invulnerable time
+      2 B - invulnerable time
 
       4 B - score
       4 B - gametime
@@ -207,7 +207,9 @@ void storage_load(void) {
 
         player_stamina                = read_byte(addr++);
         player_stamina_recharge_delay = read_byte(addr++);
-        player_invulnerable_time      = read_byte(addr++);
+
+        player_invulnerable_time  = read_byte(addr++);
+        player_invulnerable_time |= read_byte(addr++) << 8;
 
         score =  read_byte(addr++);
         score |= read_byte(addr++) << 8;
@@ -348,7 +350,9 @@ void storage_save(void) {
 
         write_byte(addr++, player_stamina);
         write_byte(addr++, player_stamina_recharge_delay);
+
         write_byte(addr++, player_invulnerable_time);
+        write_byte(addr++, player_invulnerable_time >> 8);
 
         write_byte(addr++, score);
         write_byte(addr++, score >> 8);

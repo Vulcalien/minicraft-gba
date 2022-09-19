@@ -22,6 +22,7 @@
 #include "furniture.h"
 #include "scene.h"
 #include "crafting.h"
+#include "sound.h"
 
 #define MAX_HP      (10)
 #define MAX_STAMINA (10)
@@ -34,7 +35,7 @@ struct item_Data player_active_item;
 u8 player_stamina = MAX_STAMINA;
 u8 player_stamina_recharge_delay = 0;
 
-u8 player_invulnerable_time = 0;
+u16 player_invulnerable_time = 0;
 
 static u32 player_tick_time = 0;
 
@@ -491,5 +492,6 @@ static const struct Entity player_entity = {
 #undef MAX_STAMINA
 
 void mob_player_die(struct Level *level, struct entity_Data *data) {
-    // TODO player death
+    // TODO set dead scene
+    SOUND_PLAY(sound_player_death);
 }

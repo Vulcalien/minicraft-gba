@@ -47,7 +47,7 @@ void entity_add_spark(struct Level *level, u16 x, u16 y,
     spark_data->xv = xv;
     spark_data->yv = yv;
 
-    spark_data->time = 60 * 10 + (rand() % 30);
+    spark_data->time = 10 * 60 + (rand() % 30);
 
     level_add_entity(level, entity_id);
 }
@@ -121,7 +121,7 @@ EDRAW(spark_draw) {
 
     const u16 sprite = 180 + (rand() % 16) * 2;
 
-    const u8 is_invisible = (spark_data->time < 60 * 2) &&
+    const u8 is_invisible = (spark_data->time < 2 * 60) &&
                             (((spark_data->time / 6) & 1) == 0);
 
     SPRITE(
