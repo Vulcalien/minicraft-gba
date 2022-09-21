@@ -18,6 +18,7 @@
 
 #include "mob.h"
 #include "player.h"
+#include "scene.h"
 #include "sound.h"
 
 struct wizard_Data {
@@ -213,7 +214,7 @@ void mob_air_wizard_die(struct Level *level, struct entity_Data *data) {
         score += 1000;
 
         player_invulnerable_time = 5 * 60;
-        // TODO set won scene
+        scene_win_timer = 3 * 60;
     }
     SOUND_PLAY(sound_boss_death);
 }

@@ -492,6 +492,6 @@ static const struct Entity player_entity = {
 #undef MAX_STAMINA
 
 void mob_player_die(struct Level *level, struct entity_Data *data) {
-    // TODO set dead scene
+    scene_death_timer = 60;
     SOUND_PLAY(sound_player_death);
 }

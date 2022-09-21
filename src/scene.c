@@ -31,3 +31,9 @@ const struct Scene *scene = NULL;
 #include "scene/crafting.c"
 
 #include "scene/pause.c"
+
+#include "scene/death.c"
+#include "scene/win.c"
+
+u16 scene_death_timer = 0;
+u16 scene_win_timer = 0;

@@ -82,6 +82,18 @@ static void game_init(void) {
 }
 
 static void game_tick(void) {
+    if(scene_death_timer > 0) {
+        scene_death_timer--;
+        if(scene_death_timer == 0)
+            set_scene(&scene_death, true);
+    }
+
+    if(scene_win_timer > 0) {
+        scene_win_timer--;
+        if(scene_win_timer == 0)
+            set_scene(&scene_win, true);
+    }
+
     level_tick(game_level);
 }
 

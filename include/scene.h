@@ -41,6 +41,12 @@ extern const struct Scene scene_crafting;
 
 extern const struct Scene scene_pause;
 
+extern const struct Scene scene_death;
+extern const struct Scene scene_win;
+
+extern u16 scene_death_timer;
+extern u16 scene_win_timer;
+
 inline void set_scene(const struct Scene *new_scene, bool should_init) {
     scene = new_scene;
 
