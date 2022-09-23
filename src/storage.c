@@ -21,6 +21,7 @@
 #include "inventory.h"
 #include "item.h"
 #include "player.h"
+#include "air-wizard.h"
 
 #define NO_INLINE __attribute__((noinline))
 
@@ -51,6 +52,9 @@ Storage Layout (128 KB)
 
       1 B - current level
       1 B - chest count
+
+      1 B - air wizard attack delay
+      1 B - air wizard attack time
  */
 
 #define LEVEL_COUNT (sizeof(levels) / sizeof(struct Level))
@@ -223,6 +227,9 @@ void storage_load(void) {
 
         current_level = read_byte(addr++);
         chest_count = read_byte(addr++);
+
+        air_wizard_attack_delay = read_byte(addr++);
+        air_wizard_attack_time = read_byte(addr++);
     }
 }
 
@@ -366,5 +373,8 @@ void storage_save(void) {
 
         write_byte(addr++, current_level);
         write_byte(addr++, chest_count);
+
+        write_byte(addr++, air_wizard_attack_delay);
+        write_byte(addr++, air_wizard_attack_time);
     }
 }

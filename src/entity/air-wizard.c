@@ -35,9 +35,8 @@ static_assert(
     sizeof(struct wizard_Data) == 2, "struct wizard_Data: wrong size"
 );
 
-// TODO store/load these values
-u8 air_wizard_attack_delay = 0;
-u8 air_wizard_attack_time  = 0;
+u8 air_wizard_attack_delay;
+u8 air_wizard_attack_time;
 
 void entity_add_air_wizard(struct Level *level) {
     u8 entity_id = level_new_entity(level, AIR_WIZARD_ENTITY);
@@ -52,6 +51,9 @@ void entity_add_air_wizard(struct Level *level) {
 
     mob_data->hp = 2000;
     mob_data->dir = 2;
+
+    air_wizard_attack_delay = 0;
+    air_wizard_attack_time = 0;
 }
 
 ETICK(air_wizard_tick) {
