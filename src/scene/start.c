@@ -17,6 +17,7 @@
 
 #include "input.h"
 #include "generator.h"
+#include "furniture.h"
 #include "screen.h"
 #include "storage.h"
 #include "sound.h"
@@ -57,6 +58,15 @@ static void start_tick(void) {
 
             srand(tick_count);
             generate_levels();
+
+            gametime = 0;
+            score = 0;
+
+            current_level = 3;
+
+            chest_count = 0;
+            for(u32 i = 0; i < CHEST_LIMIT; i++)
+                chest_inventories[i].size = 0;
 
             set_scene(&scene_game, 3);
         } else if(start_selected == 2) {

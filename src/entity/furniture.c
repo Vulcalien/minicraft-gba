@@ -21,7 +21,7 @@
 
 EWRAM_BSS_SECTION
 struct Inventory chest_inventories[CHEST_LIMIT];
-u8 chest_count = 0;
+u8 chest_count;
 
 u8 chest_opened_id;
 

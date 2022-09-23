@@ -32,10 +32,10 @@ struct Inventory player_inventory;
 
 struct item_Data player_active_item;
 
-u8 player_stamina = MAX_STAMINA;
-u8 player_stamina_recharge_delay = 0;
+u8 player_stamina;
+u8 player_stamina_recharge_delay;
 
-u16 player_invulnerable_time = 0;
+u16 player_invulnerable_time;
 
 static u32 player_tick_time = 0;
 
@@ -51,8 +51,14 @@ void entity_add_player(struct Level *level, u8 xt, u8 yt) {
     mob_data->hp = MAX_HP;
     mob_data->dir = 2;
 
+    // initialize global variables
     player_inventory.size = 0;
     player_active_item.type = -1;
+
+    player_stamina = MAX_STAMINA;
+    player_stamina_recharge_delay = 0;
+
+    player_invulnerable_time = 0;
 
     struct item_Data item_to_add;
 

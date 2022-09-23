@@ -29,10 +29,10 @@
 
 u32 tick_count = 0;
 
-u32 gametime = 0;
-u32 score = 0;
+u32 gametime;
+u32 score;
 
-u8 current_level = 3;
+u8 current_level;
 
 static inline void tick(void) {
     input_tick();
