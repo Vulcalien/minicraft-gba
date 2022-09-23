@@ -293,7 +293,7 @@ static inline void player_attack(struct Level *level, struct entity_Data *data) 
         crafting_current_recipes_size =\
             sizeof(recipe_list) / sizeof(struct crafting_Recipe);\
 \
-        set_scene(&scene_crafting, true);\
+        set_scene(&scene_crafting, 1);\
     } while(0)
 
 static inline bool player_use(struct Level *level, struct entity_Data *data) {
@@ -326,7 +326,7 @@ static inline bool player_use(struct Level *level, struct entity_Data *data) {
                     break;
                 case CHEST_ENTITY:
                     furniture_set_opened_chest(e_data);
-                    set_scene(&scene_chest, true);
+                    set_scene(&scene_chest, 1);
                     break;
 
                 default:
@@ -359,7 +359,7 @@ ETICK(player_tick) {
     static u8 on_stairs_delay = 0;
     if(on_tile == STAIRS_DOWN_TILE || on_tile == STAIRS_UP_TILE) {
         if(on_stairs_delay == 0) {
-            set_scene(&scene_transition, true);
+            set_scene(&scene_transition, 1);
 
             if(on_tile == STAIRS_DOWN_TILE)
                 current_level--;
@@ -436,11 +436,11 @@ ETICK(player_tick) {
 
     if(INPUT_CLICKED(KEY_B)) {
         if(!player_use(level, data))
-            set_scene(&scene_inventory, true);
+            set_scene(&scene_inventory, 1);
     }
 
     if(INPUT_CLICKED(KEY_START))
-        set_scene(&scene_pause, true);
+        set_scene(&scene_pause, 1);
 }
 
 EDRAW(player_draw) {

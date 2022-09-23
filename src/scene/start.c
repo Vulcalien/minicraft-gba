@@ -24,7 +24,7 @@
 static i8 start_selected;
 static bool start_can_load;
 
-static void start_init(void) {
+static void start_init(u8 flags) {
     start_can_load = storage_check();
 
     if(start_can_load)
@@ -51,18 +51,18 @@ static void start_tick(void) {
             srand(tick_count);
             storage_load();
 
-            set_scene(&scene_game, true);
+            set_scene(&scene_game, 3);
         } else if(start_selected == 1) {
             SOUND_PLAY(sound_start);
 
             srand(tick_count);
             generate_levels();
 
-            set_scene(&scene_game, true);
+            set_scene(&scene_game, 3);
         } else if(start_selected == 2) {
-            set_scene(&scene_instructions, false);
+            set_scene(&scene_instructions, 0);
         } else if(start_selected == 3) {
-            set_scene(&scene_about, false);
+            set_scene(&scene_about, 0);
         }
     }
 }

@@ -21,7 +21,7 @@
 static u8 transition_time;
 static u8 transition_old_level;
 
-static void transition_init(void) {
+static void transition_init(u8 flags) {
     transition_time = 0;
     transition_old_level = current_level;
 }
@@ -31,9 +31,9 @@ static void transition_tick(void) {
 
     transition_time++;
     if(transition_time == 17)
-        scene_game.init();
+        scene_game.init(3);
     else if(transition_time == 31)
-        set_scene(&scene_game, true);
+        set_scene(&scene_game, 1);
 }
 
 IWRAM_SECTION

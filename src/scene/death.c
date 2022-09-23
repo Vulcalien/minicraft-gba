@@ -20,7 +20,7 @@
 
 static u8 death_time;
 
-static void death_init(void) {
+static void death_init(u8 flags) {
     death_time = 0;
 }
 
@@ -28,7 +28,7 @@ static void death_tick(void) {
     death_time++;
     if(death_time > 60) {
         if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B))
-            ; // TODO clear BSS? reset game somehow?
+            set_scene(&scene_start, 1);
     }
 }
 

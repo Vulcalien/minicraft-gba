@@ -27,7 +27,7 @@ static u8 chest_window;
 
 static struct Inventory *chest_inventory;
 
-static void chest_init(void) {
+static void chest_init(u8 flags) {
     chest_selected[0] = 0;
     chest_selected[1] = 0;
 
@@ -40,7 +40,7 @@ static void chest_tick(void) {
     gametime++;
 
     if(INPUT_CLICKED(KEY_B))
-        set_scene(&scene_game, true);
+        set_scene(&scene_game, 1);
 
     if(INPUT_CLICKED(KEY_LEFT))
         chest_window = 0;

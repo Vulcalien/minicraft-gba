@@ -20,7 +20,7 @@
 
 static u8 win_time;
 
-static void win_init(void) {
+static void win_init(u8 flags) {
     win_time = 0;
 }
 
@@ -28,7 +28,7 @@ static void win_tick(void) {
     win_time++;
     if(win_time > 60) {
         if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B))
-            set_scene(&scene_game, true);
+            set_scene(&scene_game, 1);
     }
 }
 

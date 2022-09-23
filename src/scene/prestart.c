@@ -23,7 +23,7 @@ static void prestart_tick(void) {
     prestart_counter++;
 
     if(prestart_counter == 0x20 + 2 * 60)
-        set_scene(&scene_start, true);
+        set_scene(&scene_start, 1);
 }
 
 static void prestart_draw(void) {

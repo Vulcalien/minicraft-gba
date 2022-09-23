@@ -24,7 +24,7 @@
 static i8 inventory_selected;
 static bool inventory_should_render_game = false;
 
-static void inventory_init(void) {
+static void inventory_init(u8 flags) {
     inventory_selected = 0;
 
     if(player_active_item.type < ITEM_TYPES) {
@@ -52,7 +52,7 @@ static void inventory_tick(void) {
     gametime++;
 
     if(INPUT_CLICKED(KEY_B))
-        set_scene(&scene_game, true);
+        set_scene(&scene_game, 1);
 
     if(player_inventory.size == 0)
         return;
@@ -74,7 +74,7 @@ static void inventory_tick(void) {
             inventory_selected
         );
 
-        set_scene(&scene_game, true);
+        set_scene(&scene_game, 1);
     }
 }
 

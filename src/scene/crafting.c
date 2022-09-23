@@ -80,7 +80,7 @@ static void crafting_check_craftable(void) {
     }
 }
 
-static void crafting_init(void) {
+static void crafting_init(u8 flags) {
     crafting_selected = 0;
 
     crafting_check_craftable();
@@ -99,7 +99,7 @@ static void crafting_tick(void) {
     gametime++;
 
     if(INPUT_CLICKED(KEY_B))
-        set_scene(&scene_game, true);
+        set_scene(&scene_game, 1);
 
     if(INPUT_CLICKED(KEY_UP))
         crafting_selected--;

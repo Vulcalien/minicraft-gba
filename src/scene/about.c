@@ -20,7 +20,7 @@
 
 static void about_tick(void) {
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B))
-        set_scene(&scene_start, false);
+        set_scene(&scene_start, 0);
 }
 
 static void about_draw(void) {

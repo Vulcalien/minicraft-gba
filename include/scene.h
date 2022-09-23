@@ -19,7 +19,7 @@
 #include "minicraft.h"
 
 struct Scene {
-    void (*init)(void);
+    void (*init)(u8 flags);
     void (*tick)(void);
     void (*draw)(void);
 };
@@ -47,11 +47,11 @@ extern const struct Scene scene_win;
 extern u16 scene_death_timer;
 extern u16 scene_win_timer;
 
-inline void set_scene(const struct Scene *new_scene, bool should_init) {
+inline void set_scene(const struct Scene *new_scene, u8 init_flags) {
     scene = new_scene;
 
-    if(should_init && scene->init)
-        scene->init();
+    if((init_flags & 1) && scene->init)
+        scene->init(init_flags);
 }
 
 #endif // MINICRAFT_SCENE

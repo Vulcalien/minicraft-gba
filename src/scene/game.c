@@ -59,11 +59,8 @@ static inline void game_move_player(struct Level *old_level,
     }
 }
 
-static void game_init(void) {
-    static u8 last_level = -1;
-    if(last_level != current_level) {
-        last_level = current_level;
-
+static void game_init(u8 flags) {
+    if(flags & 2) {
         struct Level *old_level = game_level;
         game_level = &levels[current_level];
 
@@ -85,13 +82,13 @@ static void game_tick(void) {
     if(scene_death_timer > 0) {
         scene_death_timer--;
         if(scene_death_timer == 0)
-            set_scene(&scene_death, true);
+            set_scene(&scene_death, 1);
     }
 
     if(scene_win_timer > 0) {
         scene_win_timer--;
         if(scene_win_timer == 0)
-            set_scene(&scene_win, true);
+            set_scene(&scene_win, 1);
     }
 
     level_tick(game_level);

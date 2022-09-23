@@ -25,7 +25,7 @@ static u8 pause_answer_selected;
 
 static bool pause_should_save = false;
 
-static void pause_init(void) {
+static void pause_init(u8 flags) {
     pause_ask_overwrite = false;
 }
 
@@ -39,7 +39,7 @@ static void pause_tick(void) {
     }
 
     if(INPUT_CLICKED(KEY_START))
-        set_scene(&scene_game, true);
+        set_scene(&scene_game, 1);
 
     if(INPUT_CLICKED(KEY_A)) {
         if(pause_ask_overwrite) {
