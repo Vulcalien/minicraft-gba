@@ -51,6 +51,13 @@ void entity_add_player(struct Level *level, u8 xt, u8 yt) {
     mob_data->hp = MAX_HP;
     mob_data->dir = 2;
 
+    // manually clear mob_data because 'level_new_entity' is not called
+    mob_data->knockback.val = 0;
+    mob_data->knockback.dir = 0;
+
+    mob_data->walk_dist = 0;
+    mob_data->hurt_time = 0;
+
     // initialize global variables
     player_inventory.size = 0;
     player_active_item.type = -1;
