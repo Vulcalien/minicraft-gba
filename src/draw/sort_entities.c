@@ -30,10 +30,11 @@ static inline u32 partition(struct Level *level, u8 *entities,
 
     u32 j = low;
     for(u32 i = low; i < high; i++) {
-        if(VAL(i) >= pivot_value) {
+        if(VAL(i) > pivot_value)
             swap(&entities[i], &entities[j]);
+
+        if(VAL(i) >= pivot_value)
             j++;
-        }
     }
 
     swap(&entities[j], &entities[high]);
