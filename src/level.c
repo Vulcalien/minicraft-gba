@@ -23,6 +23,7 @@
 #include "tick/tiles.c"
 
 #include "draw/tiles.c"
+#include "draw/sort_entities.c"
 
 EWRAM_BSS_SECTION
 struct Level levels[5];
@@ -182,7 +183,7 @@ static inline void draw_entities(struct Level *level) {
             break;
     }
 
-    // TODO in the original game, entities are sorted by y before rendering
+    sort_entities(level, entities_to_render, 0, to_render_size - 1);
 
     for(u32 i = 0; i < to_render_size; i++) {
         struct entity_Data *data = &level->entities[entities_to_render[i]];

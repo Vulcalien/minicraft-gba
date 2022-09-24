@@ -45,7 +45,7 @@ ETICK(furniture_particle_tick) {
 
     // update position
     data->x = player->x;
-    data->y = player->y - 15;
+    data->y = player->y + 1;
 
     if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
         data->y += 4;
@@ -55,8 +55,8 @@ EDRAW(furniture_particle_draw) {
     const u16 sprite = 148 + 4 * (player_active_item.type - WORKBENCH_ITEM);
 
     SPRITE(
-        data->x - 8 - level_x_offset, // x
-        data->y - 8 - level_y_offset, // y
+        data->x - 8  - level_x_offset, // x
+        data->y - 24 - level_y_offset, // y
         sprite, // sprite
         6,      // palette
         0,      // flip
