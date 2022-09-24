@@ -102,7 +102,6 @@ static inline void switch_bank(u32 bank) {
 
 IWRAM_SECTION NO_INLINE
 static u8 read_byte(u16 addr) {
-    // TODO make sure only LDRB is used
     return FLASH_ROM[addr];
 }
 
@@ -242,7 +241,6 @@ static inline void erase_chip(void) {
     FLASH_ROM[0x2aaa] = 0x55;
     FLASH_ROM[0x5555] = 0x10;
 
-    // TODO setup a timeout
     while(read_byte(0x0000) != 0xff);
 }
 
@@ -252,10 +250,8 @@ static void write_byte(u16 addr, u8 byte) {
     FLASH_ROM[0x2aaa] = 0x55;
     FLASH_ROM[0x5555] = 0xa0;
 
-    // TODO make sure only STRB is used
     FLASH_ROM[addr] = byte;
 
-    // TODO setup a timeout
     while(read_byte(addr) != byte);
 }
 
