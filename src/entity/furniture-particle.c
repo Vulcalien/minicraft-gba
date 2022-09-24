@@ -44,6 +44,8 @@ ETICK(furniture_particle_tick) {
     }
 
     // update position
+    // add 1 to the y so that when the sprite is
+    // sorted, it is always on top of the player
     data->x = player->x;
     data->y = player->y + 1;
 
