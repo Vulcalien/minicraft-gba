@@ -59,19 +59,21 @@ ETICK(attack_particle_tick) {
     }
 
     // update position
-    const u8 dir = attack_data->dir;
-
-    data->x = player->x + ((dir == 3) - (dir == 1)) * 8;
-    data->y = player->y + ((dir == 2) - (dir == 0)) * 8;
-
-    if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
-        data->y += 4;
+    data->x = player->x;
+    data->y = player->y;
 }
 
 EDRAW(attack_particle_draw) {
     struct attack_Data *attack_data = (struct attack_Data *) &data->data;
 
     const u8 dir = attack_data->dir;
+
+    u16 x = data->x - 4 + ((dir == 3) - (dir == 1)) * 8 - ((dir & 1) == 0) * 4;
+    u16 y = data->y - 7 + ((dir == 2) - (dir == 0)) * 8 - ((dir & 1) == 1) * 4;
+
+    const struct entity_Data *player = &level->entities[0];
+    if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
+        y += 4;
 
     const u16 sprite = 176 + (dir & 1) * 2;
     const u8 palette = 5;
@@ -80,8 +82,8 @@ EDRAW(attack_particle_draw) {
     const u8 flip  = 2 * (dir == 2) + 1 * (dir == 3);
 
     SPRITE(
-        data->x - 4 - 4 * ((dir & 1) == 0) - level_x_offset, // x
-        data->y - 7 - 4 * ((dir & 1) == 1) - level_y_offset, // y
+        x - level_x_offset, // x
+        y - level_y_offset, // y
         sprite,  // sprite
         palette, // palette
         flip,    // flip

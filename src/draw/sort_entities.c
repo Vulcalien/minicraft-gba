@@ -15,7 +15,7 @@
  */
 #include "level.h"
 
-// quicksort implementation
+// reverse quicksort implementation
 
 static inline void swap(u8 *a, u8 *b) {
     if(*a == *b)
@@ -34,11 +34,10 @@ static inline u32 partition(struct Level *level, u8 *entities,
     u32 j = low;
     for(u32 i = low; i < high; i++) {
         const u16 val = VAL(i);
-        if(val > pivot_value)
+        if(val >= pivot_value) {
             swap(&entities[i], &entities[j]);
-
-        if(val >= pivot_value)
             j++;
+        }
     }
 
     swap(&entities[j], &entities[high]);

@@ -80,27 +80,31 @@ ETICK(item_particle_tick) {
     }
 
     // update position
-    const u8 dir = item_particle_data->dir;
-
     // add 1 to the y so that when the sprite is sorted,
     // it is always on top of the attack particle
-    data->x = player->x + ((dir == 3) - (dir == 1)) * 8;
-    data->y = player->y + ((dir == 2) - (dir == 0)) * 8 + 1;
-
-    if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
-        data->y += 4;
+    data->x = player->x;
+    data->y = player->y + 1;
 }
 
 EDRAW(item_particle_draw) {
     struct item_particle_Data *item_particle_data =
         (struct item_particle_Data *) &data->data;
 
+    const u8 dir = item_particle_data->dir;
+
+    u16 x = data->x - 4 + ((dir == 3) - (dir == 1)) * 8;
+    u16 y = data->y - 8 + ((dir == 2) - (dir == 0)) * 8;
+
+    const struct entity_Data *player = &level->entities[0];
+    if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
+        y += 4;
+
     const u16 sprite = item_particle_data->sprite;
     const u8 palette = item_particle_data->palette;
 
     SPRITE(
-        data->x - 4 - level_x_offset, // x
-        data->y - 8 - level_y_offset, // y
+        x - level_x_offset, // x
+        y - level_y_offset, // y
         sprite,  // sprite
         palette, // palette
         0,       // flip

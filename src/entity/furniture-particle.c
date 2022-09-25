@@ -44,21 +44,26 @@ ETICK(furniture_particle_tick) {
     }
 
     // update position
-    // add 1 to the y so that when the sprite is
+    // add 2 to the y so that when the sprite is
     // sorted, it is always on top of the player
+    // and the attack particle
     data->x = player->x;
-    data->y = player->y + 1;
-
-    if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
-        data->y += 4;
+    data->y = player->y + 2;
 }
 
 EDRAW(furniture_particle_draw) {
     const u16 sprite = 148 + 4 * (player_active_item.type - WORKBENCH_ITEM);
 
+    u16 x = data->x - 8;
+    u16 y = data->y - 25;
+
+    const struct entity_Data *player = &level->entities[0];
+    if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
+        y += 4;
+
     SPRITE(
-        data->x - 8  - level_x_offset, // x
-        data->y - 24 - level_y_offset, // y
+        x - level_x_offset, // x
+        y - level_y_offset, // y
         sprite, // sprite
         6,      // palette
         0,      // flip
