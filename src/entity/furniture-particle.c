@@ -45,8 +45,8 @@ ETICK(furniture_particle_tick) {
 
     // update position
     // add 2 to the y so that when the sprite is
-    // sorted, it is always on top of the player
-    // and the attack particle
+    // sorted, it is always on top of the player,
+    // the attack particle and the item particle
     data->x = player->x;
     data->y = player->y + 2;
 }
