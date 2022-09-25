@@ -82,8 +82,10 @@ ETICK(item_particle_tick) {
     // update position
     const u8 dir = item_particle_data->dir;
 
+    // add 1 to the y so that when the sprite is sorted,
+    // it is always on top of the attack particle
     data->x = player->x + ((dir == 3) - (dir == 1)) * 8;
-    data->y = player->y + ((dir == 2) - (dir == 0)) * 8 - 3;
+    data->y = player->y + ((dir == 2) - (dir == 0)) * 8 + 1;
 
     if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
         data->y += 4;
@@ -98,7 +100,7 @@ EDRAW(item_particle_draw) {
 
     SPRITE(
         data->x - 4 - level_x_offset, // x
-        data->y - 4 - level_y_offset, // y
+        data->y - 8 - level_y_offset, // y
         sprite,  // sprite
         palette, // palette
         0,       // flip

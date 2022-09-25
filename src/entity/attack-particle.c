@@ -62,7 +62,7 @@ ETICK(attack_particle_tick) {
     const u8 dir = attack_data->dir;
 
     data->x = player->x + ((dir == 3) - (dir == 1)) * 8;
-    data->y = player->y + ((dir == 2) - (dir == 0)) * 8 - 3;
+    data->y = player->y + ((dir == 2) - (dir == 0)) * 8;
 
     if(LEVEL_GET_TILE(level, player->x >> 4, player->y >> 4) == LIQUID_TILE)
         data->y += 4;
@@ -80,8 +80,8 @@ EDRAW(attack_particle_draw) {
     const u8 flip  = 2 * (dir == 2) + 1 * (dir == 3);
 
     SPRITE(
-        data->x - 4 * (1 + ((dir & 1) == 0)) - level_x_offset, // x
-        data->y - 4 * (1 + ((dir & 1) == 1)) - level_y_offset, // y
+        data->x - 4 - 4 * ((dir & 1) == 0) - level_x_offset, // x
+        data->y - 7 - 4 * ((dir & 1) == 1) - level_y_offset, // y
         sprite,  // sprite
         palette, // palette
         flip,    // flip
