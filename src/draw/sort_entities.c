@@ -18,22 +18,26 @@
 // quicksort implementation
 
 static inline void swap(u8 *a, u8 *b) {
-    u8 temp = *a;
-    *a = *b;
-    *b = temp;
+    if(*a == *b)
+        return;
+
+    *a = *a ^ *b;
+    *b = *a ^ *b;
+    *a = *a ^ *b;
 }
 
 #define VAL(id) (level->entities[entities[(id)]].y)
 static inline u32 partition(struct Level *level, u8 *entities,
                             i32 low, i32 high) {
-    const u32 pivot_value = VAL(high);
+    const u16 pivot_value = VAL(high);
 
     u32 j = low;
     for(u32 i = low; i < high; i++) {
-        if(VAL(i) > pivot_value)
+        const u16 val = VAL(i);
+        if(val > pivot_value)
             swap(&entities[i], &entities[j]);
 
-        if(VAL(i) >= pivot_value)
+        if(val >= pivot_value)
             j++;
     }
 
