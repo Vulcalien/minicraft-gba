@@ -197,6 +197,10 @@ static inline void set(i8 *values, u32 x, u32 y, i8 val) {
     values[(x % LEVEL_W) + (y % LEVEL_H) * LEVEL_W] = val;
 }
 
+static inline i32 variation(u32 step_size) {
+    return rand() % (step_size * 2 + 1) - step_size;
+}
+
 static i8 *noise(i8 *values, u32 feature_size) {
     for(u32 y = 0; y < LEVEL_H; y += feature_size)
         for(u32 x = 0; x < LEVEL_W; x += feature_size)
@@ -220,13 +224,13 @@ static i8 *noise(i8 *values, u32 feature_size) {
                 i8 c = get(values, x, y + step_size);
                 i8 d = get(values, x + step_size, y + step_size);
 
-                i8 e = (a + b + c + d) / 4 + (rand() % 5 - 2);
+                i8 e = (a + b + c + d) / 4 + variation(step_size);
 
                 i8 f = get(values, x + half_step, y - half_step);
                 i8 g = get(values, x - half_step, y + half_step);
 
-                i8 h = (a + b + e + f) / 4 + (rand() % 5 - 2);
-                i8 i = (a + c + e + g) / 4 + (rand() % 5 - 2);
+                i8 h = (a + b + e + f) / 4 + variation(step_size);
+                i8 i = (a + c + e + g) / 4 + variation(step_size);
 
                 set(values, x + half_step, y + half_step, e);
                 set(values, x + half_step, y, h);
