@@ -294,7 +294,7 @@ void screen_update_level_specific(void) {
         { 0x1cea, 0x35b0 },
         { -1,     0x6318 }
     };
-    for(u32 i = 0; i < 6; i++) {
+    for(u32 i = 0; i <= 5; i++) {
         if(i == 3)
             continue;
 
@@ -331,7 +331,7 @@ void screen_update_level_specific(void) {
         { 0x14b3, 0x21d7 },
         { 0x4442, 0x4d08 }
     };
-    for(u32 i = 2; i < 3; i++) {
+    for(u32 i = 2; i <= 3; i++) {
         screen_set_bg_palette_color(i, 1, liquid_colors[current_level > 0][0]);
         screen_set_bg_palette_color(i, 2, liquid_colors[current_level > 0][1]);
     }
