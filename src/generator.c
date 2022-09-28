@@ -190,15 +190,18 @@ void generate_levels(void) {
 #else
 
 static inline i8 get(i8 *values, u32 x, u32 y) {
-    return values[(x % LEVEL_W) + (y % LEVEL_H) * LEVEL_W];
+    if(x >= LEVEL_W || y >= LEVEL_H)
+        return 0;
+    return values[x + y * LEVEL_W];
 }
 
 static inline void set(i8 *values, u32 x, u32 y, i8 val) {
-    values[(x % LEVEL_W) + (y % LEVEL_H) * LEVEL_W] = val;
+    if(x < LEVEL_W && y < LEVEL_H)
+        values[x + y * LEVEL_W] = val;
 }
 
 static inline i32 variation(u32 step_size) {
-    return rand() % (step_size * 2 + 1) - step_size;
+    return rand() % (step_size * 3 + 1) - step_size * 3 / 2;
 }
 
 static i8 *noise(i8 *values, u32 feature_size) {
