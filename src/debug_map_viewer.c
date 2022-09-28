@@ -52,6 +52,10 @@ int main(void) {
                 displayed_level = 0;
         }
 
+        if(INPUT_CLICKED(KEY_START)) {
+            generate_levels();
+        }
+
         struct Level *level = &levels[displayed_level];
         for(u32 y = 0; y < LEVEL_H; y++) {
             for(u32 x = 0; x < LEVEL_W; x++) {
@@ -60,6 +64,9 @@ int main(void) {
                     case GRASS_TILE:
                         color = 0x03e0;
                         break;
+                    case SAND_TILE:
+                        color = 0x1ab9;
+                        break;
                     case FLOWER_TILE:
                         color = 0x1b66;
                         break;
@@ -67,6 +74,7 @@ int main(void) {
                         color = 0x7c00;
                         break;
                     case TREE_TILE:
+                    case CACTUS_TILE:
                         color = 0x01e0;
                         break;
                     case ROCK_TILE:
