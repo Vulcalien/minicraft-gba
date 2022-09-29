@@ -249,7 +249,7 @@ static inline u32 abs(i32 val) {
     return (val ^ mask) + (mask & 1);
 }
 
-static void generate_top(void) {
+static inline void generate_top(void) {
     struct Level *level = &levels[3];
 
     i8 *noise1 = noise((i8 *) &levels[0].data, 32);
@@ -356,7 +356,7 @@ static void generate_top(void) {
     }
 }
 
-static void generate_sky(void) {
+static inline void generate_sky(void) {
     struct Level *level = &levels[4];
 
     i8 *noise1 = noise((i8 *) &levels[0].data, 8);
@@ -402,7 +402,7 @@ static void generate_sky(void) {
     }
 }
 
-static void generate_data(void) {
+static inline void generate_data(void) {
     for(u32 l = 0; l < 5; l++)
         for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++)
             levels[l].data[i] = 0;
@@ -415,11 +415,19 @@ static void generate_data(void) {
     }
 }
 
+static inline void clear_entities(void) {
+    for(u32 l = 0; l < 5; l++)
+        for(u32 i = 1; i < ENTITY_LIMIT; i++)
+            levels[l].entities[i].type = -1;
+}
+
 void generate_levels(void) {
     generate_top();
     generate_sky();
 
     generate_data();
+
+    clear_entities();
 }
 
 #endif
