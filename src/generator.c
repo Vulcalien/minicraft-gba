@@ -249,6 +249,66 @@ static inline u32 abs(i32 val) {
     return (val ^ mask) + (mask & 1);
 }
 
+static inline void generate_underground(u32 lvl) {
+    struct Level *level = &levels[lvl];
+
+    i8 *noise1 = noise((i8 *) &levels[0].data, 32);
+    i8 *noise2 = noise((i8 *) &levels[1].data, 32);
+
+    i8 *mnoise1 = noise((i8 *) &levels[2].data, 16);
+    i8 *mnoise2 = noise((i8 *) &levels[3].data, 16);
+    i8 *mnoise3 = noise((i8 *) &levels[4].data, 16);
+
+    i8 *nnoise1 = noise((i8 *) level_solid_entities + 1 * (LEVEL_W * LEVEL_H), 16);
+    i8 *nnoise2 = noise((i8 *) level_solid_entities + 2 * (LEVEL_W * LEVEL_H), 16);
+    i8 *nnoise3 = noise((i8 *) level_solid_entities + 3 * (LEVEL_W * LEVEL_H), 16);
+
+    i8 *wnoise3 = noise((i8 *) level_solid_entities + 4 * (LEVEL_W * LEVEL_H), 16);
+
+    for(u32 y = 0; y < LEVEL_H; y++) {
+        for(u32 x = 0; x < LEVEL_W; x++) {
+            u32 i = x + y * LEVEL_W;
+
+            i32 val = abs(noise1[i] - noise2[i]) * 3 - 256;
+            i32 mval = abs(abs(mnoise1[i] - mnoise2[i]) - mnoise3[i]) * 3 - 256;
+            i32 nval = abs(abs(nnoise1[i] - nnoise2[i]) - nnoise3[i]) * 3 - 256;
+            i32 wval = abs(nval - wnoise3[i]) * 3 - 256;
+
+            // distance from center
+            u32 xd = abs(x - LEVEL_W / 2) * 256 / LEVEL_W;
+            u32 yd = abs(y - LEVEL_H / 2) * 256 / LEVEL_H;
+
+            u32 dist = (xd >= yd) * xd + (xd < yd) * yd;
+            dist = dist * dist * dist * dist / (128 * 128 * 128);
+            dist = dist * dist * dist * dist / (128 * 128 * 128);
+            val += 128 - dist * 20;
+
+            if(val > -256 && wval < 384 * (lvl != 2) - 256)
+                level->tiles[i] = LIQUID_TILE;
+            else if(val > -256 && (mval < -218 || nval < -179))
+                level->tiles[i] = DIRT_TILE;
+            else
+                level->tiles[i] = ROCK_TILE;
+        }
+    }
+
+    // add ores
+    for(u32 i = 0; i < LEVEL_W * LEVEL_H / 400; i++) {
+        // center of the ores
+        u32 xc = rand() % LEVEL_W;
+        u32 yc = rand() % LEVEL_H;
+
+        for(u32 j = 0; j < 30; j++) {
+            i32 xt = xc + rand() % 9 - 4;
+            i32 yt = yc + rand() % 9 - 4;
+
+            if(xt >= 2 && xt < LEVEL_W - 2 && yt >= 2 && yt < LEVEL_H - 2)
+                if(level->tiles[xt + yt * LEVEL_W] == ROCK_TILE)
+                    level->tiles[xt + yt * LEVEL_W] = (GEM_ORE_TILE - lvl);
+        }
+    }
+}
+
 static inline void generate_top(void) {
     struct Level *level = &levels[3];
 
@@ -422,6 +482,9 @@ static inline void clear_entities(void) {
 }
 
 void generate_levels(void) {
+    generate_underground(0);
+    generate_underground(1);
+    generate_underground(2);
     generate_top();
     generate_sky();
 
