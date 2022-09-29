@@ -48,8 +48,7 @@ struct Level {
 
 extern struct Level levels[5];
 
-// TODO might want to increase this
-#define SOLID_ENTITIES_IN_TILE (4)
+#define SOLID_ENTITIES_IN_TILE (8)
 extern u8 level_solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
 
 extern u32 level_x_offset;
