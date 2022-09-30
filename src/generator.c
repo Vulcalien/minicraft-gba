@@ -153,8 +153,8 @@ void generate_levels(void) {
 
         u32 count = 0;
         while(count < 3) {
-            u16 xt = rand() % LEVEL_W;
-            u16 yt = rand() % LEVEL_H;
+            u32 xt = rand() % LEVEL_W;
+            u32 yt = rand() % LEVEL_H;
 
             if(xt < 3 || xt >= LEVEL_W - 3 ||
                yt < 3 || yt >= LEVEL_H - 3)
@@ -616,10 +616,24 @@ static inline void generate_data(void) {
     }
 }
 
-static inline void clear_entities(void) {
+static inline void generate_entities(void) {
+    // clear all entities
     for(u32 l = 0; l < 5; l++)
         for(u32 i = 1; i < ENTITY_LIMIT; i++)
             levels[l].entities[i].type = -1;
+
+    // spawn player
+    while(true) {
+        u32 i = rand() % (LEVEL_W * LEVEL_H);
+
+        if(levels[3].tiles[i] == GRASS_TILE) {
+            entity_add_player(&levels[3], i % LEVEL_W, i / LEVEL_W);
+            return;
+        }
+    }
+
+    // spawn air wizard
+    entity_add_air_wizard(&levels[4]);
 }
 
 void generate_levels(void) {
@@ -630,10 +644,9 @@ void generate_levels(void) {
     while(!generate_sky());
 
     generate_stairs_up();
-
     generate_data();
 
-    clear_entities();
+    generate_entities();
 }
 
 #endif
