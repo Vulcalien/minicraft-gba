@@ -584,6 +584,25 @@ static inline bool generate_sky(void) {
     return cloud_count >= 1750 && stairs_count >= 2;
 }
 
+static inline void generate_stairs_up(void) {
+    for(u32 l = 0; l < 4; l++) {
+        for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
+            if(levels[l + 1].tiles[i] == STAIRS_DOWN_TILE) {
+                u8 border_tile = l == 3 ? HARD_ROCK_TILE : DIRT_TILE;
+
+                // clear area around
+                const u32 xt = i % LEVEL_W;
+                const u32 yt = i / LEVEL_W;
+                for(u32 y = yt - 1; y <= yt + 1; y++)
+                    for(u32 x = xt - 1; x <= xt + 1; x++)
+                        levels[l].tiles[x + y * LEVEL_W] = border_tile;
+
+                levels[l].tiles[i] = STAIRS_UP_TILE;
+            }
+        }
+    }
+}
+
 static inline void generate_data(void) {
     for(u32 l = 0; l < 5; l++)
         for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++)
@@ -609,6 +628,8 @@ void generate_levels(void) {
     while(!generate_underground(2));
     while(!generate_top());
     while(!generate_sky());
+
+    generate_stairs_up();
 
     generate_data();
 
