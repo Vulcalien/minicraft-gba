@@ -98,6 +98,13 @@ int main(void) {
                     case CLOUD_CACTUS_TILE:
                         color = 0x56b5;
                         break;
+
+                    case STAIRS_DOWN_TILE:
+                        color = 0x7c1f;
+                        break;
+                    case STAIRS_UP_TILE:
+                        color = 0x7fe0;
+                        break;
                 }
 
                 VRAM[(64 + x) + (24 + y) * 240] = color;

@@ -250,8 +250,13 @@ static inline u32 abs(i32 val) {
     return (val ^ mask) + (mask & 1);
 }
 
-static inline void generate_underground(u32 lvl) {
+static inline bool generate_underground(u32 lvl) {
     struct Level *level = &levels[lvl];
+
+    u32 rock_count   = 0;
+    u32 dirt_count   = 0;
+    u32 ore_count    = 0;
+    u32 stairs_count = 0;
 
     i8 *noise1 = noise((i8 *) &levels[0].data, 32);
     i8 *noise2 = noise((i8 *) &levels[1].data, 32);
@@ -284,12 +289,15 @@ static inline void generate_underground(u32 lvl) {
             dist = dist * dist * dist * dist / (128 * 128 * 128);
             val += 128 - dist * 20;
 
-            if(val > -256 && wval < 384 * (lvl != 2) - 256)
+            if(val > -256 && wval < 384 * (lvl != 2) - 256) {
                 level->tiles[i] = LIQUID_TILE;
-            else if(val > -256 && (mval < -218 || nval < -179))
+            } else if(val > -256 && (mval < -218 || nval < -179)) {
                 level->tiles[i] = DIRT_TILE;
-            else
+                dirt_count++;
+            } else {
                 level->tiles[i] = ROCK_TILE;
+                rock_count++;
+            }
         }
     }
 
@@ -303,15 +311,53 @@ static inline void generate_underground(u32 lvl) {
             i32 xt = xc + rand() % 9 - 4;
             i32 yt = yc + rand() % 9 - 4;
 
-            if(xt >= 2 && xt < LEVEL_W - 2 && yt >= 2 && yt < LEVEL_H - 2)
-                if(level->tiles[xt + yt * LEVEL_W] == ROCK_TILE)
+            if(xt >= 2 && xt < LEVEL_W - 2 && yt >= 2 && yt < LEVEL_H - 2) {
+                if(level->tiles[xt + yt * LEVEL_W] == ROCK_TILE) {
                     level->tiles[xt + yt * LEVEL_W] = (GEM_ORE_TILE - lvl);
+
+                    ore_count++;
+                    rock_count--;
+                }
+            }
         }
     }
+
+    // add stairs down
+    if(lvl != 0) {
+        for(u32 i = 0; i < LEVEL_W * LEVEL_H / 100; i++) {
+            u32 xt = 10 + rand() % (LEVEL_W - 20);
+            u32 yt = 10 + rand() % (LEVEL_H - 20);
+
+            // check if there is rock all around
+            for(u32 y = yt - 1; y <= yt + 1; y++)
+                for(u32 x = xt - 1; x <= xt + 1; x++)
+                    if(level->tiles[x + y * LEVEL_W] != ROCK_TILE)
+                        goto continue_stairs_down;
+
+            level->tiles[xt + yt * LEVEL_W] = STAIRS_DOWN_TILE;
+
+            stairs_count++;
+            rock_count--;
+
+            if(stairs_count >= 4)
+                break;
+
+            continue_stairs_down:;
+        }
+    }
+
+    return rock_count >= 100 && dirt_count >= 100 && ore_count >= 20 &&
+           (stairs_count >= 2 || lvl == 0);
 }
 
-static inline void generate_top(void) {
+static inline bool generate_top(void) {
     struct Level *level = &levels[3];
+
+    u32 rock_count   = 0;
+    u32 grass_count  = 0;
+    u32 sand_count   = 0;
+    u32 tree_count   = 0;
+    u32 stairs_count = 0;
 
     i8 *noise1 = noise((i8 *) &levels[0].data, 32);
     i8 *noise2 = noise((i8 *) &levels[1].data, 32);
@@ -336,12 +382,15 @@ static inline void generate_top(void) {
             dist = dist * dist * dist * dist / (128 * 128 * 128);
             val += 128 - dist * 20;
 
-            if(val < -64)
+            if(val < -64) {
                 level->tiles[i] = LIQUID_TILE;
-            else if(val > 64 && mval < -192)
+            } else if(val > 64 && mval < -192) {
                 level->tiles[i] = ROCK_TILE;
-            else
+                rock_count++;
+            } else {
                 level->tiles[i] = GRASS_TILE;
+                grass_count++;
+            }
         }
     }
 
@@ -367,8 +416,12 @@ static inline void generate_top(void) {
                         if(xt < 0 || xt >= LEVEL_W)
                             continue;
 
-                        if(level->tiles[xt + yt * LEVEL_W] == GRASS_TILE)
+                        if(level->tiles[xt + yt * LEVEL_W] == GRASS_TILE) {
                             level->tiles[xt + yt * LEVEL_W] = SAND_TILE;
+
+                            sand_count++;
+                            grass_count--;
+                        }
                     }
                 }
             }
@@ -385,9 +438,14 @@ static inline void generate_top(void) {
             i32 xt = xc + rand() % 29 - 14;
             i32 yt = yc + rand() % 29 - 14;
 
-            if(xt >= 0 && xt < LEVEL_W && yt >= 0 && yt < LEVEL_H)
-                if(level->tiles[xt + yt * LEVEL_W] == GRASS_TILE)
+            if(xt >= 0 && xt < LEVEL_W && yt >= 0 && yt < LEVEL_H) {
+                if(level->tiles[xt + yt * LEVEL_W] == GRASS_TILE) {
                     level->tiles[xt + yt * LEVEL_W] = TREE_TILE;
+
+                    tree_count++;
+                    grass_count--;
+                }
+            }
         }
     }
 
@@ -401,9 +459,13 @@ static inline void generate_top(void) {
             i32 xt = xc + rand() % 9 - 4;
             i32 yt = yc + rand() % 9 - 4;
 
-            if(xt >= 0 && xt < LEVEL_W && yt >= 0 && yt < LEVEL_H)
-                if(level->tiles[xt + yt * LEVEL_W] == GRASS_TILE)
+            if(xt >= 0 && xt < LEVEL_W && yt >= 0 && yt < LEVEL_H) {
+                if(level->tiles[xt + yt * LEVEL_W] == GRASS_TILE) {
                     level->tiles[xt + yt * LEVEL_W] = FLOWER_TILE;
+
+                    grass_count--;
+                }
+            }
         }
     }
 
@@ -412,13 +474,45 @@ static inline void generate_top(void) {
         u32 xt = rand() % LEVEL_W;
         u32 yt = rand() % LEVEL_H;
 
-        if(level->tiles[xt + yt * LEVEL_W] == SAND_TILE)
+        if(level->tiles[xt + yt * LEVEL_W] == SAND_TILE) {
             level->tiles[xt + yt * LEVEL_W] = CACTUS_TILE;
+
+            sand_count--;
+        }
     }
+
+    // add stairs down
+    for(u32 i = 0; i < LEVEL_W * LEVEL_H / 100; i++) {
+        u32 xt = 1 + rand() % (LEVEL_W - 2);
+        u32 yt = 1 + rand() % (LEVEL_H - 2);
+
+        // check if there is rock all around
+        for(u32 y = yt - 1; y <= yt + 1; y++)
+            for(u32 x = xt - 1; x <= xt + 1; x++)
+                if(level->tiles[x + y * LEVEL_W] != ROCK_TILE)
+                    goto continue_stairs_down;
+
+        level->tiles[xt + yt * LEVEL_W] = STAIRS_DOWN_TILE;
+
+        stairs_count++;
+        rock_count--;
+
+        if(stairs_count >= 4)
+            break;
+
+        continue_stairs_down:;
+    }
+
+    return rock_count >= 100 && grass_count >= 100 &&
+           sand_count >= 100 && tree_count  >= 100 &&
+           stairs_count >= 2;
 }
 
-static inline void generate_sky(void) {
+static inline bool generate_sky(void) {
     struct Level *level = &levels[4];
+
+    u32 cloud_count  = 0;
+    u32 stairs_count = 0;
 
     i8 *noise1 = noise((i8 *) &levels[0].data, 8);
     i8 *noise2 = noise((i8 *) &levels[1].data, 8);
@@ -439,10 +533,12 @@ static inline void generate_sky(void) {
             val = -val - 282;
             val += 128 - dist * 20;
 
-            if(val < -32)
+            if(val < -32) {
                 level->tiles[i] = INFINITE_FALL_TILE;
-            else
+            } else {
                 level->tiles[i] = CLOUD_TILE;
+                cloud_count++;
+            }
         }
     }
 
@@ -458,9 +554,34 @@ static inline void generate_sky(void) {
                     goto continue_cloud_cactus;
 
         level->tiles[xt + yt * LEVEL_W] = CLOUD_CACTUS_TILE;
+        cloud_count--;
 
         continue_cloud_cactus:;
     }
+
+    // add stairs down
+    for(u32 i = 0; i < LEVEL_W * LEVEL_H / 100; i++) {
+        u32 xt = 1 + rand() % (LEVEL_W - 2);
+        u32 yt = 1 + rand() % (LEVEL_H - 2);
+
+        // check if there is cloud all around
+        for(u32 y = yt - 1; y <= yt + 1; y++)
+            for(u32 x = xt - 1; x <= xt + 1; x++)
+                if(level->tiles[x + y * LEVEL_W] != CLOUD_TILE)
+                    goto continue_stairs_down;
+
+        level->tiles[xt + yt * LEVEL_W] = STAIRS_DOWN_TILE;
+
+        stairs_count++;
+        cloud_count--;
+
+        if(stairs_count >= 4)
+            break;
+
+        continue_stairs_down:;
+    }
+
+    return cloud_count >= 1750 && stairs_count >= 2;
 }
 
 static inline void generate_data(void) {
@@ -483,11 +604,11 @@ static inline void clear_entities(void) {
 }
 
 void generate_levels(void) {
-    generate_underground(0);
-    generate_underground(1);
-    generate_underground(2);
-    generate_top();
-    generate_sky();
+    while(!generate_underground(0));
+    while(!generate_underground(1));
+    while(!generate_underground(2));
+    while(!generate_top());
+    while(!generate_sky());
 
     generate_data();
 
