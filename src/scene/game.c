@@ -28,10 +28,13 @@ static inline void game_move_player(struct Level *old_level,
                                     struct Level *new_level) {
     struct entity_Data *new_player = &new_level->entities[0];
 
-    // FIXME adjusting the player position doesn't move player entities
+    // adjust position
     *new_player = old_level->entities[0];
-    new_player->x = (new_player->x & 0xfff0) + 8;
-    new_player->y = (new_player->y & 0xfff0) + 8;
+    u16 old_player_x = new_player->x;
+    u16 old_player_y = new_player->y;
+
+    new_player->x = (old_player_x & 0xfff0) + 8;
+    new_player->y = (old_player_y & 0xfff0) + 8;
 
     // move entities that follow player through levels
     for(u32 i = 1; i < ENTITY_LIMIT; i++) {
@@ -50,6 +53,10 @@ static inline void game_move_player(struct Level *old_level,
             if(new_data->type >= ENTITY_TYPES) {
                 *new_data = *old_data;
                 old_data->type = -1;
+
+                // adjust position
+                new_data->x += new_player->x - old_player_x;
+                new_data->y += new_player->y - old_player_y;
                 break;
 
                 // since all entities that follow the player are
