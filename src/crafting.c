@@ -19,7 +19,6 @@
 #include "item.h"
 #include "furniture.h"
 
-// TODO check all the values
 const struct crafting_Recipe workbench_recipes[WORKBENCH_RECIPES] = {
     // Furniture
 
