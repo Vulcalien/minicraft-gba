@@ -29,6 +29,7 @@ u32 score;
 
 u8 current_level;
 
+static bool performance_debug = false;
 static u16 tick_vcount;
 static u16 draw_vcount;
 
@@ -39,6 +40,8 @@ static inline void tick(void) {
     tick_count++;
 
     tick_vcount = VCOUNT;
+    if(INPUT_DOWN(KEY_L) && INPUT_DOWN(KEY_R) && INPUT_CLICKED(KEY_SELECT))
+        performance_debug = !performance_debug;
 }
 
 static inline void draw(void) {
@@ -79,7 +82,7 @@ int main(void) {
         vsync();
         draw();
 
-        if(tick_count % 15 == 0)
+        if(performance_debug && tick_count % 15 == 0)
             draw_performance();
     }
     return 0;
