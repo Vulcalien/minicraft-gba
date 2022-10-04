@@ -203,7 +203,7 @@ static void crafting_draw(void) {
             &player_inventory, result.type, result.tool_level
         );
 
-        SCREEN_WRITE_NUMBER(count, 5, 4, have_x + 2, have_y + 1);
+        SCREEN_WRITE_NUMBER(count, 10, 5, false, 4, have_x + 2, have_y + 1);
     }
 
     // draw 'COST' items and count
@@ -222,9 +222,9 @@ static void crafting_draw(void) {
             has_count = 99;
 
         char cost_text[6] = { 0 };
-        itoa(required_count, cost_text, 2);
+        itoa(required_count, 10, cost_text, 2, false);
         cost_text[1 + (required_count > 9)] = '/';
-        itoa(has_count, cost_text + 2 + (required_count > 9), 2);
+        itoa(has_count, 10, cost_text + 2 + (required_count > 9), 2, false);
 
         u8 palette = 4 + (has_count < required_count);
         screen_write(cost_text, palette, cost_x + 2, cost_y + 1 + i);

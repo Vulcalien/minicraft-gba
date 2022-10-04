@@ -18,7 +18,6 @@
 #include "images.h"
 
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
-#define VCOUNT          *((vu16 *) 0x04000006)
 
 #define WINDOW_IN  *((vu16 *) 0x04000048)
 #define WINDOW_OUT *((vu16 *) 0x0400004a)
@@ -247,24 +246,20 @@ void screen_write_time(u32 time, u8 palette, u32 x, u32 y) {
 
     u8 offset = 0;
     if(hours > 0) {
-        itoa(hours, text, 5);
+        itoa(hours, 10, text, 5, false);
         offset += 1 + (hours > 9)   + (hours > 99) +
                       (hours > 999) + (hours > 9999);
         text[offset++] = 'H';
         text[offset++] = ' ';
     }
 
-    if(minutes < 10)
-        text[offset++] = '0';
-    itoa(minutes, text + offset, 2);
-    offset += 1 + (minutes > 9);
+    itoa(minutes, 10, text + offset, 2, true);
+    offset += 2;
     text[offset++] = 'M';
     text[offset++] = ' ';
 
-    if(seconds < 10)
-        text[offset++] = '0';
-    itoa(seconds, text + offset, 2);
-    offset += 1 + (seconds > 9);
+    itoa(seconds, 10, text + offset, 2, true);
+    offset += 2;
     text[offset++] = 'S';
 
     screen_write(text, palette, x, y);

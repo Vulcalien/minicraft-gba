@@ -21,6 +21,8 @@
 #define SCREEN_W (240)
 #define SCREEN_H (160)
 
+#define VCOUNT *((vu16 *) 0x04000006)
+
 #define BG0_TILEMAP ((vu16 *) 0x06008000)
 #define BG1_TILEMAP ((vu16 *) 0x06008800)
 #define BG2_TILEMAP ((vu16 *) 0x06009000)
@@ -42,10 +44,10 @@ extern void screen_write(const char *text, u8 palette, u32 x, u32 y);
 extern void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h);
 extern void screen_write_time(u32 time, u8 palette, u32 x, u32 y);
 
-#define SCREEN_WRITE_NUMBER(number, digits, palette, x, y)\
+#define SCREEN_WRITE_NUMBER(number, radix, digits, zero_fill, palette, x, y)\
     do {\
         char text[(digits) + 1] = { 0 };\
-        itoa((number), text, (digits));\
+        itoa((number), (radix), text, (digits), (zero_fill));\
         screen_write(text, (palette), (x), (y));\
     } while (0)
 

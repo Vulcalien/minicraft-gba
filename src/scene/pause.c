@@ -84,7 +84,7 @@ static void pause_draw(void) {
     screen_write_time(gametime, 8, pause_x + 6, pause_y + 1);
 
     screen_write("SCORE:", 4, pause_x + 1, pause_y + 2);
-    SCREEN_WRITE_NUMBER(score, 10, 8, pause_x + 7, pause_y + 2);
+    SCREEN_WRITE_NUMBER(score, 10, 10, false, 8, pause_x + 7, pause_y + 2);
 
     if(pause_should_save) {
         screen_write("SAVING...", 4, pause_x + 5, pause_y + 5);

@@ -45,7 +45,7 @@ static void death_draw(void) {
     screen_write_time(gametime, 8, death_x + 6, death_y + 2);
 
     screen_write("SCORE:", 4, death_x + 1, death_y + 3);
-    SCREEN_WRITE_NUMBER(score, 10, 8, death_x + 7, death_y + 3);
+    SCREEN_WRITE_NUMBER(score, 10, 10, false, 8, death_x + 7, death_y + 3);
 
     screen_write("PRESS A TO LOSE", 6, death_x + 1, death_y + 5);
 }
