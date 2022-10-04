@@ -19,13 +19,8 @@
 #include "input.h"
 #include "scene.h"
 #include "sound.h"
-
-#define PERFORMANCE_CHECK
-
-#ifdef PERFORMANCE_CHECK
-    #include "level.h"
-    #include "entity.h"
-#endif
+#include "level.h"
+#include "entity.h"
 
 u32 tick_count = 0;
 
@@ -34,15 +29,42 @@ u32 score;
 
 u8 current_level;
 
+static u16 tick_vcount;
+static u16 draw_vcount;
+
 static inline void tick(void) {
     input_tick();
     scene->tick();
 
     tick_count++;
+
+    tick_vcount = VCOUNT;
 }
 
 static inline void draw(void) {
     scene->draw();
+
+    draw_vcount = VCOUNT;
+}
+
+static inline void draw_performance(void) {
+    SCREEN_WRITE_NUMBER(tick_vcount, 16, 2, true, 0, 0, 0);
+    SCREEN_WRITE_NUMBER(draw_vcount, 16, 2, true, 0, 0, 1);
+
+    // count entities
+    u32 entity_count = 0;
+    for(u32 i = 0; i < ENTITY_LIMIT; i++)
+        if(levels[current_level].entities[i].type < ENTITY_TYPES)
+            entity_count++;
+
+    // count sprites
+    u32 sprite_count = 0;
+    for(u32 i = 0; i < 128; i++)
+        if((OAM[i * 4] & (1 << 9)) == 0)
+            sprite_count++;
+
+    SCREEN_WRITE_NUMBER(entity_count, 16, 2, true, 0, 28, 0);
+    SCREEN_WRITE_NUMBER(sprite_count, 16, 2, true, 0, 28, 1);
 }
 
 int main(void) {
@@ -54,62 +76,11 @@ int main(void) {
     while(true) {
         tick();
 
-        #ifdef PERFORMANCE_CHECK
-        if(tick_count % 15 == 0) {
-            u8 vcount = *((vu8 *) 0x04000006);
-            for(u32 x = 0; x < 2; x++) {
-                char c[2] = { '\0', '\0' };
-
-                u8 hex_digit = (vcount >> 4 * (1 - x)) & 0x0f;
-                c[0] = hex_digit +
-                       (hex_digit <  0xa) * '0' +
-                       (hex_digit >= 0xa) * ('A' - 0xa);
-
-                screen_write(c, 0, x, 0);
-            }
-        }
-        #endif
-
-        #ifdef PERFORMANCE_CHECK
-        if(tick_count % 15 == 0) {
-            u32 entity_count = 0;
-            for(u32 i = 0; i < ENTITY_LIMIT; i++)
-                if(levels[current_level].entities[i].type < ENTITY_TYPES)
-                    entity_count++;
-
-            char c[3] = { '\0', '\0', '\0' };
-            if((entity_count >> 4) < 10)
-                c[0] = '0' + (entity_count >> 4);
-            else
-                c[0] = 'A' + (entity_count >> 4) - 10;
-
-            if((entity_count & 0x0f) < 10)
-                c[1] = '0' + (entity_count & 0x0f);
-            else
-                c[1] = 'A' + (entity_count & 0x0f) - 10;
-
-            screen_write(c, 0, 28, 0);
-        }
-        #endif
-
         vsync();
         draw();
 
-        #ifdef PERFORMANCE_CHECK
-        if(tick_count % 15 == 0) {
-            u8 vcount = *((vu8 *) 0x04000006);
-            for(u32 x = 0; x < 2; x++) {
-                char c[2] = { '\0', '\0' };
-
-                u8 hex_digit = (vcount >> 4 * (1 - x)) & 0x0f;
-                c[0] = hex_digit +
-                       (hex_digit <  0xa) * '0' +
-                       (hex_digit >= 0xa) * ('A' - 0xa);
-
-                screen_write(c, 0, x, 1);
-            }
-        }
-        #endif
+        if(tick_count % 15 == 0)
+            draw_performance();
     }
     return 0;
 }
