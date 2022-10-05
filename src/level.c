@@ -147,10 +147,13 @@ static inline void update_offset(struct Level *level) {
     }
 }
 
-static inline void draw_tiles(struct Level *level, u32 x0, u32 y0) {
+static inline void draw_tiles(struct Level *level) {
+    const u32 x0 = level_x_offset >> 4;
+    const u32 y0 = level_y_offset >> 4;
+
     for(u32 t = 0; t < 16 * 10; t++) {
-        const u16 x = t % 16;
-        const u16 y = t / 16;
+        const u32 x = t % 16;
+        const u32 y = t / 16;
 
         u16 tiles[4] = { 0 };
 
@@ -202,7 +205,7 @@ static inline void draw_entities(struct Level *level) {
 IWRAM_SECTION
 void level_draw(struct Level *level) {
     update_offset(level);
-    draw_tiles(level, level_x_offset >> 4, level_y_offset >> 4);
+    draw_tiles(level);
     draw_entities(level);
 
         /*
