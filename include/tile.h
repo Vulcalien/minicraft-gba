@@ -65,9 +65,6 @@ struct Tile {
     } connects_to;
 };
 
-#define TYPE_S(id)\
-    (&tile_list[id])
-
 extern const struct Tile tile_list[TILE_TYPES];
 
 #endif // MINICRAFT_TILE

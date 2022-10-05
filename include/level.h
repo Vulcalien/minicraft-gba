@@ -61,24 +61,24 @@ extern void level_draw(struct Level *level);
 
 #define LEVEL_GET_TILE(level, xt, yt)\
     (((xt) < 0 || (xt) >= LEVEL_W || (yt) < 0 || (yt) >= LEVEL_H) ?\
-        ROCK_TILE : level->tiles[(xt) + (yt) * LEVEL_W])
+        ROCK_TILE : (level)->tiles[(xt) + (yt) * LEVEL_W])
 #define LEVEL_SET_TILE(level, xt, yt, val, data_val) do {\
     if((xt) >= 0 && (xt) < LEVEL_W && (yt) >= 0 && (yt) < LEVEL_H) {\
-        level->tiles[(xt) + (yt) * LEVEL_W] = val;\
-        level->data[(xt) + (yt) * LEVEL_W]  = data_val;\
+        (level)->tiles[(xt) + (yt) * LEVEL_W] = (val);\
+        (level)->data[(xt) + (yt) * LEVEL_W]  = (data_val);\
     }\
 } while(0)
 
 // returns 'struct Tile *' instead of the ID
 #define LEVEL_GET_TILE_S(level, xt, yt)\
-    (TYPE_S(LEVEL_GET_TILE(level, xt, yt)))
+    (&tile_list[LEVEL_GET_TILE((level), (xt), (yt))])
 
 #define LEVEL_GET_DATA(level, xt, yt)\
     (((xt) < 0 || (xt) >= LEVEL_W || (yt) < 0 || (yt) >= LEVEL_H) ?\
-        0 : level->data[(xt) + (yt) * LEVEL_W])
+        0 : (level)->data[(xt) + (yt) * LEVEL_W])
 #define LEVEL_SET_DATA(level, xt, yt, val) do {\
     if((xt) >= 0 && (xt) < LEVEL_W && (yt) >= 0 && (yt) < LEVEL_H)\
-        level->data[(xt) + (yt) * LEVEL_W] = val;\
+        (level)->data[(xt) + (yt) * LEVEL_W] = (val);\
 } while(0)
 
 extern u8 level_new_entity(struct Level *level, u8 type);
