@@ -486,9 +486,16 @@ static inline void draw_tile(struct Level *level, u32 xt, u32 yt,
             CALL(hard_rock_draw);
             break;
 
+        // single cases are slightly faster
         case IRON_ORE_TILE:
+            CALL(ore_draw);
+            break;
         case GOLD_ORE_TILE:
+            CALL(ore_draw);
+            break;
         case GEM_ORE_TILE:
+            CALL(ore_draw);
+            break;
         case CLOUD_CACTUS_TILE:
             CALL(ore_draw);
             break;
