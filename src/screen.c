@@ -281,6 +281,12 @@ void screen_update_level_specific(void) {
     else
         DISPLAY_CONTROL &= ~(1 << 8);
 
+    // light layer
+    if(current_level < 3)
+        DISPLAY_CONTROL |= 1 << 10;
+    else
+        DISPLAY_CONTROL &= ~(1 << 10);
+
     // dirt color
     const u16 dirt_colors[5][2] = {
         { 0x1ce7, 0x318c },
