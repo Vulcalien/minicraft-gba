@@ -137,9 +137,9 @@ static inline void update_offset(struct Level *level) {
         level_x_offset = x_offset;
         level_y_offset = y_offset;
 
-        // level tiles offset
-        BG1_XOFFSET = level_x_offset & 0xf;
-        BG1_YOFFSET = level_y_offset & 0xf;
+        // level tiles and light offset
+        BG1_XOFFSET = BG2_XOFFSET = level_x_offset & 0xf;
+        BG1_YOFFSET = BG2_YOFFSET = level_y_offset & 0xf;
 
         // sky background offset
         BG0_XOFFSET = (level_x_offset >> 2) & 0x7;
@@ -157,7 +157,7 @@ static inline void draw_tiles(struct Level *level) {
 
         u16 tiles[4] = { 0 };
 
-        draw_tile(level, x + x0, y + y0, tiles);
+        draw_tile(level, x0 + x, y0 + y, tiles);
 
         // using 32bit writes instead of 16bit writes saves a little time
         vu32 *tile_0 = (vu32 *) &BG1_TILEMAP[x * 2 + y * 2 * 32];
