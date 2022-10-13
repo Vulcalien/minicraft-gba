@@ -170,8 +170,11 @@ static inline void draw_tiles(struct Level *level) {
     }
 }
 
-// FIXME flickering
-static inline void draw_lantern_light(struct Level *level, i32 xr, i32 yr) {
+static inline void draw_lantern_light(struct Level *level,
+                                      struct entity_Data *data) {
+    i32 xr = (data->x >> 3) - (level_x_offset >> 3);
+    i32 yr = (data->y >> 3) - (level_y_offset >> 3);
+
     i32 xl0 = xr - 6;
     i32 yl0 = yr - 6;
     i32 xl1 = xr + 6;
@@ -230,7 +233,7 @@ static inline void draw_entities(struct Level *level) {
 
         // draw lantern light
         if(current_level < 3 && data->type == LANTERN_ENTITY)
-            draw_lantern_light(level, xr >> 3, yr >> 3);
+            draw_lantern_light(level, data);
 
         if(xr < -16 || xr >= SCREEN_W + 16 ||
            yr < -16 || yr >= SCREEN_H)
