@@ -170,6 +170,34 @@ static inline void draw_tiles(struct Level *level) {
     }
 }
 
+// FIXME flickering
+static inline void draw_lantern_light(struct Level *level, i32 xr, i32 yr) {
+    i32 xl0 = xr - 6;
+    i32 yl0 = yr - 6;
+    i32 xl1 = xr + 6;
+    i32 yl1 = yr + 6;
+
+    if(xl1 < 0 || yl1 < 0)
+        return;
+
+    if(xl0 < 0) xl0 = 0;
+    if(yl0 < 0) yl0 = 0;
+    if(xl1 >= 32) xl1 = 32 - 1;
+    if(yl1 >= 20) yl1 = 20 - 1;
+
+    for(u32 yl = yl0; yl <= yl1; yl++) {
+        u32 yd = (yl - yr) * (yl - yr);
+
+        for(u32 xl = xl0; xl <= xl1; xl++) {
+            u32 xd = (xl - xr) * (xl - xr);
+
+            u32 val = 256 + (xd + yd <= 46) + (xd + yd <= 30);
+            if(BG2_TILEMAP[xl + yl * 32] < val)
+                BG2_TILEMAP[xl + yl * 32] = val;
+        }
+   }
+}
+
 static inline void draw_player_light(struct Level *level,
                                      vu16 *sprite_attribs) {
     struct entity_Data *player = &level->entities[0];
@@ -199,6 +227,10 @@ static inline void draw_entities(struct Level *level) {
         // position relative to top-left of the screen
         i32 xr = data->x - level_x_offset;
         i32 yr = data->y - level_y_offset;
+
+        // draw lantern light
+        if(current_level < 3 && data->type == LANTERN_ENTITY)
+            draw_lantern_light(level, xr >> 3, yr >> 3);
 
         if(xr < -16 || xr >= SCREEN_W + 16 ||
            yr < -16 || yr >= SCREEN_H)
