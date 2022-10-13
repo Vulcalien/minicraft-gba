@@ -137,13 +137,17 @@ static inline void update_offset(struct Level *level) {
         level_x_offset = x_offset;
         level_y_offset = y_offset;
 
-        // level tiles and light offset
-        BG1_XOFFSET = BG2_XOFFSET = level_x_offset & 0xf;
-        BG1_YOFFSET = BG2_YOFFSET = level_y_offset & 0xf;
+        // level tiles offset
+        BG1_XOFFSET = level_x_offset & 0xf;
+        BG1_YOFFSET = level_y_offset & 0xf;
 
         // sky background offset
         BG0_XOFFSET = (level_x_offset >> 2) & 0x7;
         BG0_YOFFSET = (level_y_offset >> 2) & 0x7;
+
+        // light offset
+        BG2_XOFFSET = level_x_offset & 0x7;
+        BG2_YOFFSET = level_y_offset & 0x7;
     }
 }
 
