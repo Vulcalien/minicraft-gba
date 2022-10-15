@@ -147,7 +147,7 @@ EDRAW(item_draw) {
         (struct item_entity_Data *) &data->data;
     const struct Item *item = &item_list[item_entity_data->item_type];
 
-    const u16 sprite = 256 + item_entity_data->item_type;
+    const u16 sprite = 192 + item_entity_data->item_type;
     const u8 palette = 12 + item->palette;
 
     const u8 is_invisible = (item_entity_data->time < 2 * 60) &&

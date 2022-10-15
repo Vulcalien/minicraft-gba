@@ -60,7 +60,7 @@ void entity_add_item_particle(struct Level *level, u8 time) {
     // set sprite and palette
     const struct Item *item = ITEM_S(&player_active_item);
 
-    item_particle_data->sprite = 256 + player_active_item.type +
+    item_particle_data->sprite = 192 + player_active_item.type +
         (item->class == ITEMCLASS_TOOL) * (player_active_item.tool_level * 5);
     item_particle_data->palette = 12 + item->palette;
 
