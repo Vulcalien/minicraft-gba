@@ -206,13 +206,13 @@ static inline void draw_player_light(struct Level *level,
     struct entity_Data *player = &level->entities[0];
 
     if(player_active_item.type == LANTERN_ITEM) {
-        sprite_attribs[0] = ((player->y - level_y_offset - 4 - 64) & 0xff) |
+        sprite_attribs[0] = ((player->y - level_y_offset - 3 - 64) & 0xff) |
                             (1 << 8) | (1 << 9) | (2 << 10);
         sprite_attribs[1] = ((player->x - level_x_offset - 64) & 0x1ff) |
                             (3 << 14);
         sprite_attribs[2] = 272;
     } else {
-        sprite_attribs[0] = ((player->y - level_y_offset - 4 - 16) & 0xff) |
+        sprite_attribs[0] = ((player->y - level_y_offset - 3 - 16) & 0xff) |
                             (2 << 10);
         sprite_attribs[1] = ((player->x - level_x_offset - 16) & 0x1ff) |
                             (2 << 14);
