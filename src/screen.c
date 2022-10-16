@@ -132,20 +132,18 @@ void screen_init(void) {
     LOAD_TILESET(SPR_TILESET + 256 * 32 / 2, light_sprite_tileset);
 
     // load font sprites
-    for(u32 y = 0; y < 10; y++) {
-        for(u32 x = 0; x < 10; x++) {
-            load_tileset(
-                SPR_TILESET + (512 + y * 20 + x * 2) * 32 / 2,
-                &font_sprite_tileset[y * 32],
-                32 / 2, 0
-            );
+    for(u32 i = 0; i <= 51; i++) {
+        load_tileset(
+            SPR_TILESET + (512 + i * 2) * 32 / 2,
+            font_sprite_tileset + (i / 10) * 32,
+            32 / 2, 0
+        );
 
-            load_tileset(
-                SPR_TILESET + (512 + y * 20 + x * 2 + 1) * 32 / 2,
-                &font_sprite_tileset[x * 32],
-                32 / 2, 0
-            );
-        }
+        load_tileset(
+            SPR_TILESET + (512 + i * 2 + 1) * 32 / 2,
+            font_sprite_tileset + (i % 10) * 32,
+            32 / 2, 0
+        );
     }
 
     // set sky background
