@@ -166,32 +166,31 @@ static inline void draw_tiles(struct Level *level) {
     }
 }
 
-// TODO maybe it is off-center?
 static inline void draw_lantern_light(struct Level *level,
                                       struct entity_Data *data) {
-    i32 xr = (data->x >> 3) - ((level_x_offset >> 3) & ~1);
-    i32 yr = (data->y >> 3) - ((level_y_offset >> 3) & ~1);
+    i32 xr = ((data->x + 4) >> 3) - ((level_x_offset >> 3) & ~1);
+    i32 yr = ((data->y + 4) >> 3) - ((level_y_offset >> 3) & ~1);
 
-    i32 xl0 = xr - 6;
-    i32 yl0 = yr - 6;
-    i32 xl1 = xr + 6;
-    i32 yl1 = yr + 6;
+    i32 xl0 = xr - 7;
+    i32 yl0 = yr - 7;
+    i32 xl1 = xr + 7;
+    i32 yl1 = yr + 7;
 
     if(xl1 < 0 || yl1 < 0)
         return;
 
     if(xl0 < 0) xl0 = 0;
     if(yl0 < 0) yl0 = 0;
-    if(xl1 >= 32) xl1 = 32 - 1;
-    if(yl1 >= 20) yl1 = 20 - 1;
+    if(xl1 > 32) xl1 = 32;
+    if(yl1 > 20) yl1 = 20;
 
-    for(u32 yl = yl0; yl <= yl1; yl++) {
-        u32 yd = (yl - yr) * (yl - yr);
+    for(u32 yl = yl0; yl < yl1; yl++) {
+        u32 yd = (yl - yr + (yl >= yr)) * (yl - yr + (yl >= yr));
 
-        for(u32 xl = xl0; xl <= xl1; xl++) {
-            u32 xd = (xl - xr) * (xl - xr);
+        for(u32 xl = xl0; xl < xl1; xl++) {
+            u32 xd = (xl - xr + (xl >= xr)) * (xl - xr + (xl >= xr));
 
-            u32 val = 256 + (xd + yd <= 46) + (xd + yd <= 30);
+            u32 val = 256 + (xd + yd <= 66) + (xd + yd <= 46);
             if(BG2_TILEMAP[xl + yl * 32] < val)
                 BG2_TILEMAP[xl + yl * 32] = val;
         }
