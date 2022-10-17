@@ -166,6 +166,7 @@ static inline void draw_tiles(struct Level *level) {
     }
 }
 
+// FIXME sometimes draws one tile lower
 static inline void draw_lantern_light(struct Level *level,
                                       struct entity_Data *data) {
     i32 xr = ((data->x + 4) >> 3) - ((level_x_offset >> 3) & ~1);
@@ -271,7 +272,7 @@ static inline void clear_light(void) {
         BG2_TILEMAP[i] = 256;
 }
 
-// FIXME very laggy
+// FIXME sometimes draws one tile lower
 static inline void draw_lava_light(struct Level *level) {
     const u32 x0 = level_x_offset >> 4;
     const u32 y0 = level_y_offset >> 4;
@@ -279,6 +280,14 @@ static inline void draw_lava_light(struct Level *level) {
     for(i32 y = -2; y < 10 + 2; y++) {
         for(i32 x = -2; x < 16 + 2; x++) {
             if(LEVEL_GET_TILE(level, x0 + x, y0 + y) != LIQUID_TILE)
+                continue;
+
+            // skip if surrounded by other lava (8 times out of 9)
+            if(((x0 + x) % 3 != 0 || (y0 + y) % 3 != 0) &&
+               LEVEL_GET_TILE(level, x0 + x - 1, y0 + y) == LIQUID_TILE &&
+               LEVEL_GET_TILE(level, x0 + x, y0 + y - 1) == LIQUID_TILE &&
+               LEVEL_GET_TILE(level, x0 + x + 1, y0 + y) == LIQUID_TILE &&
+               LEVEL_GET_TILE(level, x0 + x, y0 + y + 1) == LIQUID_TILE)
                 continue;
 
             i32 xr = x * 2 + 1;
