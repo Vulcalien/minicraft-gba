@@ -194,7 +194,7 @@ static inline void draw_lantern_light(struct Level *level,
             if(BG2_TILEMAP[xl + yl * 32] < val)
                 BG2_TILEMAP[xl + yl * 32] = val;
         }
-   }
+    }
 }
 
 static inline void draw_player_light(struct Level *level,
@@ -271,6 +271,44 @@ static inline void clear_light(void) {
         BG2_TILEMAP[i] = 256;
 }
 
+// FIXME very laggy
+static inline void draw_lava_light(struct Level *level) {
+    const u32 x0 = level_x_offset >> 4;
+    const u32 y0 = level_y_offset >> 4;
+
+    for(i32 y = -2; y < 10 + 2; y++) {
+        for(i32 x = -2; x < 16 + 2; x++) {
+            if(LEVEL_GET_TILE(level, x0 + x, y0 + y) != LIQUID_TILE)
+                continue;
+
+            i32 xr = x * 2 + 1;
+            i32 yr = y * 2 + 1;
+
+            i32 xl0 = xr - 5;
+            i32 yl0 = yr - 5;
+            u32 xl1 = xr + 5;
+            u32 yl1 = yr + 5;
+
+            if(xl0 < 0) xl0 = 0;
+            if(yl0 < 0) yl0 = 0;
+            if(xl1 >= 32) xl1 = 32;
+            if(yl1 >= 20) yl1 = 20;
+
+            for(u32 yl = yl0; yl < yl1; yl++) {
+                u32 yd = (yl - yr + (yl >= yr)) * (yl - yr + (yl >= yr));
+
+                for(u32 xl = xl0; xl < xl1; xl++) {
+                    u32 xd = (xl - xr + (xl >= xr)) * (xl - xr + (xl >= xr));
+
+                    u32 val = 256 + (xd + yd <= 34) + (xd + yd <= 24);
+                    if(BG2_TILEMAP[xl + yl * 32] < val)
+                        BG2_TILEMAP[xl + yl * 32] = val;
+                }
+            }
+        }
+    }
+}
+
 IWRAM_SECTION
 void level_draw(struct Level *level) {
     update_offset(level);
@@ -280,6 +318,9 @@ void level_draw(struct Level *level) {
 
     draw_tiles(level);
     draw_entities(level);
+
+    if(current_level == 0)
+        draw_lava_light(level);
 }
 
 IWRAM_SECTION
