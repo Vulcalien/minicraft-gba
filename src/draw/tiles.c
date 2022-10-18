@@ -93,18 +93,18 @@ FDRAW(rock_draw) {
 }
 
 FDRAW(liquid_draw) {
-    u32 liquid_seed = (tick_count + 0x109f77 * xt - 0xab24af3 * yt) / 10 * 0x248f7b13 + 0xc21840c5;
-    u16 liquid_rand = (liquid_seed * 0x248f7b13 + 0xc21840c5) >> 16;
+    u32 liquid_rand = (tick_count + 0x109f77 * xt - 0xab24af3 * yt) / 10;
+    liquid_rand = (liquid_rand * 0x248f7b13 + 0xc21840c5) >> 16;
 
     bool u = CONNECTS_TO_LIQUID(level, xt,     yt - 1);
     bool d = CONNECTS_TO_LIQUID(level, xt,     yt + 1);
     bool l = CONNECTS_TO_LIQUID(level, xt - 1, yt    );
     bool r = CONNECTS_TO_LIQUID(level, xt + 1, yt    );
 
-    bool su = !u && CONNECTS_TO_SAND(level, xt,     yt - 1);
-    bool sd = !d && CONNECTS_TO_SAND(level, xt,     yt + 1);
-    bool sl = !l && CONNECTS_TO_SAND(level, xt - 1, yt    );
-    bool sr = !r && CONNECTS_TO_SAND(level, xt + 1, yt    );
+    bool su = !u & CONNECTS_TO_SAND(level, xt,     yt - 1);
+    bool sd = !d & CONNECTS_TO_SAND(level, xt,     yt + 1);
+    bool sl = !l & CONNECTS_TO_SAND(level, xt - 1, yt    );
+    bool sr = !r & CONNECTS_TO_SAND(level, xt + 1, yt    );
 
     if(u && l)
         tiles[0] = TILE_M((liquid_rand >> 0) & 3, (liquid_rand >> 2) & 3, 2);
@@ -247,10 +247,10 @@ FDRAW(hole_draw) {
     bool l = CONNECTS_TO_LIQUID(level, xt - 1, yt    );
     bool r = CONNECTS_TO_LIQUID(level, xt + 1, yt    );
 
-    bool su = !u && CONNECTS_TO_SAND(level, xt,     yt - 1);
-    bool sd = !d && CONNECTS_TO_SAND(level, xt,     yt + 1);
-    bool sl = !l && CONNECTS_TO_SAND(level, xt - 1, yt    );
-    bool sr = !r && CONNECTS_TO_SAND(level, xt + 1, yt    );
+    bool su = !u & CONNECTS_TO_SAND(level, xt,     yt - 1);
+    bool sd = !d & CONNECTS_TO_SAND(level, xt,     yt + 1);
+    bool sl = !l & CONNECTS_TO_SAND(level, xt - 1, yt    );
+    bool sr = !r & CONNECTS_TO_SAND(level, xt + 1, yt    );
 
     if(u && l)
         tiles[0] = TILE(0, 5);

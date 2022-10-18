@@ -65,7 +65,6 @@ bool entity_move(struct Level *level, struct entity_Data *data,
     if(xm == 0 && ym == 0)
         return true;
 
-    // TODO surely this logic can be improved
     bool stopped = true;
     if(xm != 0 && entity_move2(level, data, xm, 0))
         stopped = false;

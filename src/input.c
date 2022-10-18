@@ -20,6 +20,7 @@
 u16 input_keys_down    = 0;
 u16 input_keys_clicked = 0;
 
+THUMB
 void input_tick(void) {
     input_keys_down = KEY_INPUT;
 

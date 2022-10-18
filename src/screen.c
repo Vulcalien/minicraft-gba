@@ -181,6 +181,7 @@ void vsync(void) {
     asm volatile ("swi 0x05 << 16");
 }
 
+IWRAM_SECTION
 void screen_write(const char *text, u8 palette, u32 x, u32 y) {
     const u32 x0 = x;
 
@@ -205,6 +206,7 @@ void screen_write(const char *text, u8 palette, u32 x, u32 y) {
     }
 }
 
+THUMB
 void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h) {
     w--;
     h--;
