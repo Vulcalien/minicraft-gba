@@ -18,11 +18,13 @@
 #include "input.h"
 #include "screen.h"
 
+THUMB
 static void instructions_tick(void) {
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B))
         set_scene(&scene_start, 0);
 }
 
+THUMB
 static void instructions_draw(void) {
     // clear the screen
     for(u32 y = 0; y < 20; y++)

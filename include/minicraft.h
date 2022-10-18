@@ -19,6 +19,8 @@
 #include "types.h"
 #include "util.h"
 
+#define THUMB __attribute__((target("thumb")))
+
 #define EWRAM_SECTION        __attribute__((section(".ewram")))
 #define EWRAM_BSS_SECTION    __attribute__((section(".bss.ewram")))
 #define IWRAM_SECTION        __attribute__((section(".iwram")))

@@ -19,6 +19,7 @@
 
 static u16 prestart_counter = 0;
 
+THUMB
 static void prestart_tick(void) {
     prestart_counter++;
 
@@ -26,6 +27,7 @@ static void prestart_tick(void) {
         set_scene(&scene_start, 1);
 }
 
+THUMB
 static void prestart_draw(void) {
     if(prestart_counter < 0x20) {
         u8 val = 0x20 - prestart_counter;

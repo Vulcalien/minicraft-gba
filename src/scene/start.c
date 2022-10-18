@@ -25,6 +25,7 @@
 static i8 start_selected;
 static bool start_can_load;
 
+THUMB
 static void start_init(u8 flags) {
     start_can_load = storage_check();
 
@@ -34,6 +35,7 @@ static void start_init(u8 flags) {
         start_selected = 1;
 }
 
+THUMB
 static void start_tick(void) {
     if(INPUT_CLICKED(KEY_UP))
         start_selected--;
@@ -85,6 +87,8 @@ static void start_tick(void) {
         screen_write("<", 0, (x) + sizeof(text), (y));\
     }\
 } while(0)
+
+THUMB
 static void start_draw(void) {
     // clear the screen
     for(u32 y = 0; y < 20; y++)
