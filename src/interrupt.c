@@ -21,13 +21,21 @@
 #define IE  *((vu16 *) 0x04000200)
 #define IF  *((vu16 *) 0x04000202)
 
-#define INTERRUPT_HANDLER *((vu32 *) 0x03fffffc)
+#define IF_BIOS *((vu16 *) 0x03007ff8)
 
+#define INTERRUPT_HANDLER *((vu32 *) 0x03007ffc)
+
+#define VBLANK  (1 << 0)
 #define TIMER_1 (1 << 4)
 #define TIMER_2 (1 << 5)
 
 IWRAM_SECTION
 static void interrupt_handler(void) {
+    if(IF & VBLANK) {
+        IF_BIOS |= VBLANK;
+        IF = VBLANK;
+    }
+
     if(IF & TIMER_1) {
         sound_interrupt(1);
         IF = TIMER_1;
@@ -42,8 +50,7 @@ static void interrupt_handler(void) {
 void interrupt_enable(void) {
     INTERRUPT_HANDLER = (u32) &interrupt_handler;
 
-    IE = 1 << 4 | // Timer 1
-         1 << 5;  // Timer 2
+    IE = VBLANK | TIMER_1 | TIMER_2;
 
     IME = 1;
 }

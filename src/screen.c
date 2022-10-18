@@ -18,6 +18,7 @@
 #include "images.h"
 
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
+#define DISPLAY_STATUS  *((vu16 *) 0x04000004)
 
 #define WINDOW_IN  *((vu16 *) 0x04000048)
 #define WINDOW_OUT *((vu16 *) 0x0400004a)
@@ -168,13 +169,16 @@ void screen_init(void) {
     for(u32 i = 0; i < 128; i++)
         OAM[i * 4] = 1 << 9;
 
+    // enable V-Blank IRQ
+    DISPLAY_STATUS = (1 << 3);
+
     // disable forced blank
     DISPLAY_CONTROL &= ~(1 << 7);
 }
 
+IWRAM_SECTION
 void vsync(void) {
-    while(VCOUNT >= SCREEN_H);
-    while(VCOUNT < SCREEN_H);
+    asm volatile ("swi 0x05 << 16");
 }
 
 void screen_write(const char *text, u8 palette, u32 x, u32 y) {
