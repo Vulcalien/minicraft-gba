@@ -13,28 +13,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_SOUND
-#define MINICRAFT_SOUND
+#ifndef MINICRAFT_INTERRUPT
+#define MINICRAFT_INTERRUPT
 
 #include "minicraft.h"
 
-extern void sound_init(void);
+extern void interrupt_enable(void);
 
-#define SOUND_PLAY(sound) sound_play(sound, sizeof(sound))
-extern void sound_play(const u8 *sound, u16 length);
-
-extern void sound_interrupt(u32 timer);
-
-// Sound effects
-extern const u8 sound_start[1804];
-
-extern const u8 sound_pickup[512];
-extern const u8 sound_craft[1764];
-
-extern const u8 sound_monster_hurt[876];
-extern const u8 sound_player_hurt[888];
-
-extern const u8 sound_player_death[13608];
-extern const u8 sound_boss_death[17292];
-
-#endif // MINICRAFT_SOUND
+#endif // MINICRAFT_INTERRUPT

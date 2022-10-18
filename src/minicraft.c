@@ -21,6 +21,7 @@
 #include "sound.h"
 #include "level.h"
 #include "entity.h"
+#include "interrupt.h"
 
 u32 tick_count = 0;
 
@@ -74,6 +75,7 @@ int main(void) {
     screen_init();
     set_scene(&scene_prestart, 0);
 
+    interrupt_enable();
     sound_init();
 
     while(true) {

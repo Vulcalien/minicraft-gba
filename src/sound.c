@@ -40,30 +40,15 @@
 #define TIMER2_RELOAD  *((vu16 *) 0x04000108)
 #define TIMER2_CONTROL *((vu16 *) 0x0400010a)
 
-// Interrupt
-#define IME *((vu32 *) 0x04000208)
-#define IE  *((vu16 *) 0x04000200)
-#define IF  *((vu16 *) 0x04000202)
-
-#define INTERRUPT_HANDLER *((vu32 *) 0x03fffffc)
-
 IWRAM_SECTION
-static void interrupt_handler(void) {
-    IME = 0;
-
-    if(IF & (1 << 4)) { // Timer 1
+void sound_interrupt(u32 timer) {
+    if(timer == 1) { // Timer 1
         TIMER1_CONTROL = 0;
         DMA1_CONTROL = 0;
-
-        IF = 1 << 4;
-    } else if(IF & (1 << 5)) { // Timer 2
+    } else if(timer == 2) { // Timer 2
         TIMER2_CONTROL = 0;
         DMA2_CONTROL = 0;
-
-        IF = 1 << 5;
     }
-
-    IME = 1;
 }
 
 void sound_init(void) {
@@ -84,14 +69,6 @@ void sound_init(void) {
     TIMER0_RELOAD = 65536 - 1;
     TIMER0_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
                      1 << 7;  // Timer Start
-
-    // enable interrupts
-    INTERRUPT_HANDLER = (u32) &interrupt_handler;
-
-    IE = 1 << 4 | // Timer 1
-         1 << 5;  // Timer 2
-
-    IME = 1;
 }
 
 // FIXME fix pop at the end of sounds

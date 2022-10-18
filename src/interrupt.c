@@ -13,28 +13,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_SOUND
-#define MINICRAFT_SOUND
+#include "interrupt.h"
 
-#include "minicraft.h"
+#include "sound.h"
 
-extern void sound_init(void);
+#define IME *((vu32 *) 0x04000208)
+#define IE  *((vu16 *) 0x04000200)
+#define IF  *((vu16 *) 0x04000202)
 
-#define SOUND_PLAY(sound) sound_play(sound, sizeof(sound))
-extern void sound_play(const u8 *sound, u16 length);
+#define INTERRUPT_HANDLER *((vu32 *) 0x03fffffc)
 
-extern void sound_interrupt(u32 timer);
+#define TIMER_1 (1 << 4)
+#define TIMER_2 (1 << 5)
 
-// Sound effects
-extern const u8 sound_start[1804];
+IWRAM_SECTION
+static void interrupt_handler(void) {
+    if(IF & TIMER_1) {
+        sound_interrupt(1);
+        IF = TIMER_1;
+    }
 
-extern const u8 sound_pickup[512];
-extern const u8 sound_craft[1764];
+    if(IF & TIMER_2) {
+        sound_interrupt(2);
+        IF = TIMER_2;
+    }
+}
 
-extern const u8 sound_monster_hurt[876];
-extern const u8 sound_player_hurt[888];
+void interrupt_enable(void) {
+    INTERRUPT_HANDLER = (u32) &interrupt_handler;
 
-extern const u8 sound_player_death[13608];
-extern const u8 sound_boss_death[17292];
+    IE = 1 << 4 | // Timer 1
+         1 << 5;  // Timer 2
 
-#endif // MINICRAFT_SOUND
+    IME = 1;
+}
