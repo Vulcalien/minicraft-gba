@@ -25,6 +25,8 @@
 
 #define VRAM ((vu16 *) 0x06000000)
 
+// To use the map viewer, just include this source file in minicraft.c
+
 int main(void) {
     DISPLAY_CONTROL = 3 << 0  | // Video mode
                       1 << 10;  // Enable BG 2
@@ -110,3 +112,5 @@ int main(void) {
         }
     }
 }
+
+#define main __main__
