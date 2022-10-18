@@ -122,8 +122,7 @@ static inline void update_offset(struct Level *level) {
     struct entity_Data *player = &level->entities[0];
     if(player->type < ENTITY_TYPES) {
         i32 x_offset = player->x - SCREEN_W / 2;
-        i32 y_offset = player->y - SCREEN_H / 2;
-        // TODO in the original, it's (SCREEN_H - 8) for y_offset
+        i32 y_offset = player->y - SCREEN_H / 2 + 4;
 
         if(x_offset < 16) x_offset = 16;
         if(y_offset < 16) y_offset = 16;
