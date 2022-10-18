@@ -15,8 +15,6 @@
  */
 #include "minicraft.h"
 
-#if false
-
 #include "level.h"
 #include "tile.h"
 #include "generator.h"
@@ -112,5 +110,3 @@ int main(void) {
         }
     }
 }
-
-#endif
