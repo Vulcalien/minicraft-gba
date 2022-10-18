@@ -38,8 +38,8 @@ CPPFLAGS := -Iinclude -MMD -MP
 CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
             -Wall -pedantic
 
-LDFLAGS := -Llib -Tlnkscript -nostartfiles
-LDLIBS  := -lm
+LDFLAGS := -Tlnkscript -nostartfiles
+LDLIBS  :=
 # =============================
 
 OBJ_EXT := .o
