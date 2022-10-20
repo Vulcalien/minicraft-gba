@@ -227,7 +227,7 @@ static inline void draw_entities(struct Level *level) {
         i32 yr = data->y - level_y_offset;
 
         // draw lantern light
-        if(current_level < 3 && data->type == LANTERN_ENTITY)
+        if(level < &levels[3] && data->type == LANTERN_ENTITY)
             draw_lantern_light(level, data);
 
         if(xr < -16 || xr >= SCREEN_W + 16 ||
@@ -249,7 +249,7 @@ static inline void draw_entities(struct Level *level) {
     }
 
     // draw player light
-    if(current_level < 3) {
+    if(level < &levels[3]) {
         // if there are 128 sprites, just overwrite the last one
         if(to_render_size == 128)
             to_render_size--;
@@ -319,13 +319,13 @@ IWRAM_SECTION
 void level_draw(struct Level *level) {
     update_offset(level);
 
-    if(current_level < 3)
+    if(level < &levels[3])
         clear_light();
 
     draw_tiles(level);
     draw_entities(level);
 
-    if(current_level == 0)
+    if(level == &levels[0])
         draw_lava_light(level);
 }
 
