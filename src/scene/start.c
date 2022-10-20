@@ -54,7 +54,7 @@ static void start_tick(void) {
             srand(tick_count);
             storage_load();
 
-            set_scene(&scene_game, 3);
+            set_scene(&scene_game, 7);
         } else if(start_selected == 1) {
             SOUND_PLAY(sound_start);
 
@@ -70,7 +70,7 @@ static void start_tick(void) {
             for(u32 i = 0; i < CHEST_LIMIT; i++)
                 chest_inventories[i].size = 0;
 
-            set_scene(&scene_game, 3);
+            set_scene(&scene_game, 7);
         } else if(start_selected == 2) {
             set_scene(&scene_instructions, 0);
         } else if(start_selected == 3) {

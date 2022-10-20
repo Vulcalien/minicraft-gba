@@ -72,7 +72,7 @@ static void game_init(u8 flags) {
         game_level = &levels[current_level];
 
         // move the player to the new level
-        if(old_level)
+        if(old_level && !(flags & 4))
             game_move_player(old_level, game_level);
 
         level_load(game_level);
