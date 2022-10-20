@@ -458,7 +458,7 @@ static inline void generate_entities(void) {
 
         if(levels[3].tiles[i] == GRASS_TILE) {
             entity_add_player(&levels[3], i % LEVEL_W, i / LEVEL_W);
-            return;
+            break;
         }
     }
 
