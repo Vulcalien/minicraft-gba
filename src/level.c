@@ -165,7 +165,6 @@ static inline void draw_tiles(struct Level *level) {
     }
 }
 
-// FIXME sometimes draws one tile lower
 static inline void draw_lantern_light(struct Level *level,
                                       struct entity_Data *data) {
     i32 xr = ((data->x + 4) >> 3) - ((level_x_offset >> 3) & ~1);
@@ -184,10 +183,10 @@ static inline void draw_lantern_light(struct Level *level,
     if(xl1 > 32) xl1 = 32;
     if(yl1 > 20) yl1 = 20;
 
-    for(u32 yl = yl0; yl < yl1; yl++) {
+    for(i32 yl = yl0; yl < yl1; yl++) {
         u32 yd = (yl - yr + (yl >= yr)) * (yl - yr + (yl >= yr));
 
-        for(u32 xl = xl0; xl < xl1; xl++) {
+        for(i32 xl = xl0; xl < xl1; xl++) {
             u32 xd = (xl - xr + (xl >= xr)) * (xl - xr + (xl >= xr));
 
             u32 val = 256 + (xd + yd <= 66) + (xd + yd <= 46);
@@ -271,7 +270,6 @@ static inline void clear_light(void) {
         BG2_TILEMAP[i] = 256;
 }
 
-// FIXME sometimes draws one tile lower
 static inline void draw_lava_light(struct Level *level) {
     const u32 x0 = level_x_offset >> 4;
     const u32 y0 = level_y_offset >> 4;
@@ -294,18 +292,18 @@ static inline void draw_lava_light(struct Level *level) {
 
             i32 xl0 = xr - 5;
             i32 yl0 = yr - 5;
-            u32 xl1 = xr + 5;
-            u32 yl1 = yr + 5;
+            i32 xl1 = xr + 5;
+            i32 yl1 = yr + 5;
 
             if(xl0 < 0) xl0 = 0;
             if(yl0 < 0) yl0 = 0;
-            if(xl1 >= 32) xl1 = 32;
-            if(yl1 >= 20) yl1 = 20;
+            if(xl1 > 32) xl1 = 32;
+            if(yl1 > 20) yl1 = 20;
 
-            for(u32 yl = yl0; yl < yl1; yl++) {
+            for(i32 yl = yl0; yl < yl1; yl++) {
                 u32 yd = (yl - yr + (yl >= yr)) * (yl - yr + (yl >= yr));
 
-                for(u32 xl = xl0; xl < xl1; xl++) {
+                for(i32 xl = xl0; xl < xl1; xl++) {
                     u32 xd = (xl - xr + (xl >= xr)) * (xl - xr + (xl >= xr));
 
                     u32 val = 256 + (xd + yd <= 34) + (xd + yd <= 24);
