@@ -205,13 +205,13 @@ static inline void draw_player_light(struct Level *level,
                             (1 << 8) | (1 << 9) | (2 << 10);
         sprite_attribs[1] = ((player->x - level_x_offset - 64) & 0x1ff) |
                             (3 << 14);
-        sprite_attribs[2] = 272;
+        sprite_attribs[2] = 336;
     } else {
         sprite_attribs[0] = ((player->y - level_y_offset - 3 - 16) & 0xff) |
                             (2 << 10);
         sprite_attribs[1] = ((player->x - level_x_offset - 16) & 0x1ff) |
                             (2 << 14);
-        sprite_attribs[2] = 256;
+        sprite_attribs[2] = 320;
     }
 }
 

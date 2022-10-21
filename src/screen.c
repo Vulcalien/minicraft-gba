@@ -128,9 +128,9 @@ void screen_init(void) {
     LOAD_TILESET(SPR_TILESET, sprite_tileset);
 
     LOAD_TILESET_CONVERT(CHAR_BLOCK_1 + 128 * 32 / 2, item_tileset, 0xf);
-    LOAD_TILESET(SPR_TILESET + 192 * 32 / 2, item_tileset);
+    LOAD_TILESET(SPR_TILESET + 256 * 32 / 2, item_tileset);
 
-    LOAD_TILESET(SPR_TILESET + 256 * 32 / 2, light_sprite_tileset);
+    LOAD_TILESET(SPR_TILESET + 320 * 32 / 2, light_sprite_tileset);
 
     // load font sprites
     for(u32 i = 0; i <= 51; i++) {
