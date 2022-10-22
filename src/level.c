@@ -196,22 +196,57 @@ static inline void draw_lantern_light(struct Level *level,
     }
 }
 
-static inline void draw_player_light(struct Level *level,
-                                     vu16 *sprite_attribs) {
+static inline void draw_player_light(struct Level *level, u32 *to_render_size) {
     struct entity_Data *player = &level->entities[0];
 
     if(player_active_item.type == LANTERN_ITEM) {
+        // overwrite the last 4 sprites if necessary
+        if(*to_render_size > 128 - 4)
+            *to_render_size = 128 - 4;
+        vu16 *sprite_attribs = OAM + *to_render_size * 4;
+
+        // top-left
         sprite_attribs[0] = ((player->y - level_y_offset - 3 - 64) & 0xff) |
-                            (1 << 8) | (1 << 9) | (2 << 10);
+                            (2 << 10);
         sprite_attribs[1] = ((player->x - level_x_offset - 64) & 0x1ff) |
                             (3 << 14);
         sprite_attribs[2] = 336;
+
+        // top-right
+        sprite_attribs[4] = ((player->y - level_y_offset - 3 - 64) & 0xff) |
+                            (2 << 10);
+        sprite_attribs[5] = ((player->x - level_x_offset) & 0x1ff) |
+                            (3 << 14);
+        sprite_attribs[6] = 400;
+
+        // bottom-left
+        sprite_attribs[8] = ((player->y - level_y_offset - 3) & 0xff) |
+                            (2 << 10);
+        sprite_attribs[9] = ((player->x - level_x_offset - 64) & 0x1ff) |
+                            (3 << 14);
+        sprite_attribs[10] = 464;
+
+        // bottom-right
+        sprite_attribs[12] = ((player->y - level_y_offset - 3) & 0xff) |
+                             (2 << 10);
+        sprite_attribs[13] = ((player->x - level_x_offset) & 0x1ff) |
+                             (3 << 14);
+        sprite_attribs[14] = 528;
+
+        *to_render_size += 4;
     } else {
+        // overwrite the last sprite if necessary
+        if(*to_render_size > 128 - 1)
+            *to_render_size = 128 - 1;
+        vu16 *sprite_attribs = OAM + *to_render_size * 4;
+
         sprite_attribs[0] = ((player->y - level_y_offset - 3 - 16) & 0xff) |
                             (2 << 10);
         sprite_attribs[1] = ((player->x - level_x_offset - 16) & 0x1ff) |
                             (2 << 14);
         sprite_attribs[2] = 320;
+
+        *to_render_size += 1;
     }
 }
 
@@ -249,14 +284,8 @@ static inline void draw_entities(struct Level *level) {
     }
 
     // draw player light
-    if(level < &levels[3]) {
-        // if there are 128 sprites, just overwrite the last one
-        if(to_render_size == 128)
-            to_render_size--;
-
-        draw_player_light(level, OAM + to_render_size * 4);
-        to_render_size++;
-    }
+    if(level < &levels[3])
+        draw_player_light(level, &to_render_size);
 
     // hide remaining sprites
     for(u32 i = to_render_size; i < 128; i++) {

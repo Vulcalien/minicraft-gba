@@ -29,7 +29,7 @@ extern const u8 sprite_tileset[32 * 212];
 extern const u8 font_sprite_tileset[32 * 10];
 
 extern const u8 light_tileset[32 * 3];
-extern const u8 light_sprite_tileset[32 * 80];
+extern const u8 light_sprite_tileset[32 * 272];
 
 extern const u8 item_tileset[32 * 53];
 

@@ -135,13 +135,13 @@ void screen_init(void) {
     // load font sprites
     for(u32 i = 0; i <= 51; i++) {
         load_tileset(
-            SPR_TILESET + (512 + i * 2) * 32 / 2,
+            SPR_TILESET + (640 + i * 2) * 32 / 2,
             font_sprite_tileset + (i / 10) * 32,
             32 / 2, 0
         );
 
         load_tileset(
-            SPR_TILESET + (512 + i * 2 + 1) * 32 / 2,
+            SPR_TILESET + (640 + i * 2 + 1) * 32 / 2,
             font_sprite_tileset + (i % 10) * 32,
             32 / 2, 0
         );
@@ -151,12 +151,6 @@ void screen_init(void) {
     for(u32 y = 0; y <= 18; y++)
         for(u32 x = 0; x <= 30; x++)
             BG0_TILEMAP[x + y * 32] = 0 | 9 << 12;
-
-    // set lantern light scale matrix
-    OAM[3]  = 128;
-    OAM[7]  = 0;
-    OAM[11] = 0;
-    OAM[15] = 128;
 
     // prepare prescreen
     screen_set_bg_palette_color(9, 0xc, 0x7fff);
