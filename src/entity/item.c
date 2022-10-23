@@ -145,13 +145,15 @@ ETICK(item_tick) {
 EDRAW(item_draw) {
     struct item_entity_Data *item_entity_data =
         (struct item_entity_Data *) &data->data;
+
+    if(item_entity_data->time < 2 * 60)
+        if(((item_entity_data->time / 6) & 1) == 0)
+            return 0;
+
     const struct Item *item = &item_list[item_entity_data->item_type];
 
     const u16 sprite = 256 + item_entity_data->item_type;
     const u8 palette = 12 + item->palette;
-
-    const u8 is_invisible = (item_entity_data->time < 2 * 60) &&
-                            (((item_entity_data->time / 6) & 1) == 0);
 
     SPRITE(
         data->x - 4 - level_x_offset,                              // x
@@ -160,8 +162,7 @@ EDRAW(item_draw) {
         palette,     // palette
         0,           // flip
         0,           // shape
-        0,           // size
-        is_invisible // disable
+        0            // size
     );
 
     return 1;

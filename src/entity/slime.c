@@ -110,8 +110,7 @@ EDRAW(slime_draw) {
         palette, // palette
         0,       // flip
         0,       // shape
-        1,       // size
-        0        // disable
+        1        // size
     );
 
     return 1;

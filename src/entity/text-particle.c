@@ -108,8 +108,7 @@ EDRAW(text_particle_draw) {
         palette,     // palette
         0,           // flip
         length == 2, // shape
-        0,           // size
-        0            // disable
+        0            // size
     );
 
     return 1;

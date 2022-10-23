@@ -115,8 +115,7 @@ EDRAW(zombie_draw) {
         palette, // palette
         flip,    // flip
         0,       // shape
-        1,       // size
-        0        // disable
+        1        // size
     );
 
     return 1;

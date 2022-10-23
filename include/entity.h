@@ -82,10 +82,9 @@ struct Entity {
 
 extern const struct Entity entity_list[ENTITY_TYPES];
 
-#define SPRITE(x, y, sprite, palette, flip, shape, size, disable)\
+#define SPRITE(x, y, sprite, palette, flip, shape, size)\
     do {\
         OAM[used_sprites * 4 + 0] = ((y)       & 0xff)       |\
-                                    ((disable) & 0x1)  << 9  |\
                                     ((shape)   & 0x3)  << 14;\
 \
         OAM[used_sprites * 4 + 1] = ((x)    & 0x1ff)       |\

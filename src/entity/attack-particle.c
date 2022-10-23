@@ -88,8 +88,7 @@ EDRAW(attack_particle_draw) {
         palette, // palette
         flip,    // flip
         shape,   // shape
-        0,       // size
-        0        // disable
+        0        // size
     );
 
     // TODO remove this file

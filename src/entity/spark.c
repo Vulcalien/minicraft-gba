@@ -119,10 +119,11 @@ ETICK(spark_tick) {
 EDRAW(spark_draw) {
     struct spark_Data *spark_data = (struct spark_Data *) &data->data;
 
-    const u16 sprite = 180 + (rand() % 16) * 2;
+    if(spark_data->time < 2 * 60)
+        if(((spark_data->time / 6) & 1) == 0)
+            return 0;
 
-    const u8 is_invisible = (spark_data->time < 2 * 60) &&
-                            (((spark_data->time / 6) & 1) == 0);
+    const u16 sprite = 180 + (rand() % 16) * 2;
 
     SPRITE(
         data->x - 4 - level_x_offset, // x
@@ -131,8 +132,7 @@ EDRAW(spark_draw) {
         4,           // palette
         0,           // flip
         2,           // shape
-        0,           // size
-        is_invisible // disable
+        0            // size
     );
 
     return 1;

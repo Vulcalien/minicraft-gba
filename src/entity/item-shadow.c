@@ -79,8 +79,7 @@ EDRAW(item_shadow_draw) {
         7,      // palette
         0,      // flip
         0,      // shape
-        0,      // size
-        0       // disable TODO it needs to, unless removed before
+        0       // size
     );
 
     // TODO remove this file

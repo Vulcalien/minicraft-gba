@@ -109,8 +109,7 @@ EDRAW(item_particle_draw) {
         palette, // palette
         0,       // flip
         0,       // shape
-        0,       // size
-        0        // disable
+        0        // size
     );
 
     // TODO remove this file
