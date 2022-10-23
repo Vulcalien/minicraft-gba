@@ -35,35 +35,6 @@ static inline void game_move_player(struct Level *old_level,
 
     new_player->x = (old_player_x & 0xfff0) + 8;
     new_player->y = (old_player_y & 0xfff0) + 8;
-
-    // move entities that follow player through levels
-    for(u32 i = 1; i < ENTITY_LIMIT; i++) {
-        struct entity_Data *old_data = &old_level->entities[i];
-        if(old_data->type >= ENTITY_TYPES)
-            continue;
-
-        const struct Entity *entity = ENTITY_S(old_data);
-        if(!entity->follow_player_through_levels)
-            continue;
-
-        // find the new entity_id
-        for(u32 j = 1; j < ENTITY_LIMIT; j++) {
-            struct entity_Data *new_data = &new_level->entities[j];
-
-            if(new_data->type >= ENTITY_TYPES) {
-                *new_data = *old_data;
-                old_data->type = -1;
-
-                // adjust position
-                new_data->x += new_player->x - old_player_x;
-                new_data->y += new_player->y - old_player_y;
-                break;
-
-                // since all entities that follow the player are
-                // non-solid, do not call level_add_entity
-            }
-        }
-    }
 }
 
 static void game_init(u8 flags) {

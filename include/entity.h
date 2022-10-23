@@ -22,7 +22,7 @@
 #include "item.h"
 #include "screen.h"
 
-#define ENTITY_TYPES (17)
+#define ENTITY_TYPES (14)
 
 #define ZOMBIE_ENTITY     (0)
 #define SLIME_ENTITY      (1)
@@ -41,9 +41,6 @@
 
 #define TEXT_PARTICLE_ENTITY      (12)
 #define SMASH_PARTICLE_ENTITY     (13)
-#define ATTACK_PARTICLE_ENTITY    (14)
-#define ITEM_PARTICLE_ENTITY      (15)
-#define FURNITURE_PARTICLE_ENTITY (16)
 
 #define ETICK(name)\
     IWRAM_SECTION\
@@ -71,8 +68,6 @@ struct Entity {
     bool is_solid;
     void (*touch_player)(struct Level *level, struct entity_Data *data,
                          struct entity_Data *player);
-
-    bool follow_player_through_levels;
 };
 
 #define ENTITY_S(data)\
@@ -128,6 +123,5 @@ extern void entity_add_text_particle(struct Level *level, u16 x, u16 y,
 extern void entity_add_smash_particle(struct Level *level, u8 xt, u8 yt);
 extern void entity_add_attack_particle(struct Level *level, u8 time);
 extern void entity_add_item_particle(struct Level *level, u8 time);
-extern void entity_add_furniture_particle(struct Level *level);
 
 #endif // MINICRAFT_ENTITIES

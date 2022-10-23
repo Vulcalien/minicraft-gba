@@ -27,6 +27,14 @@
 #define MAX_HP      (10)
 #define MAX_STAMINA (10)
 
+struct player_Data {
+    u16 attack_item : 6;
+    u16 attack_item_tool_level : 4;
+
+    u16 attack_time : 4;
+    u16 attack_dir : 2;
+};
+
 EWRAM_BSS_SECTION
 struct Inventory player_inventory;
 
@@ -42,6 +50,7 @@ static u32 player_tick_time = 0;
 void entity_add_player(struct Level *level, u8 xt, u8 yt) {
     struct entity_Data *data  = &level->entities[0];
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+    struct player_Data *player_data = (struct player_Data *) &mob_data->data;
 
     data->type = PLAYER_ENTITY;
 
@@ -57,6 +66,12 @@ void entity_add_player(struct Level *level, u8 xt, u8 yt) {
 
     mob_data->walk_dist = 0;
     mob_data->hurt_time = 0;
+
+    // clear player_data
+    player_data->attack_item = 0;
+
+    player_data->attack_time = 0;
+    player_data->attack_dir = 0;
 
     // initialize global variables
     player_inventory.size = 0;
@@ -257,23 +272,23 @@ static inline void player_place_furniture(struct Level *level, struct entity_Dat
 
 static inline void player_attack(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+    struct player_Data *player_data = (struct player_Data *) &mob_data->data;
 
     mob_data->walk_dist += 8;
 
     const u8 item_class = (player_active_item.type < ITEM_TYPES) ?
                           ITEM_S(&player_active_item)->class : -1;
 
-    // add particles before the action: the item could change
-    {
-        u8 attack_particle_time;
-        if(item_class == (u8) -1 || item_class == ITEMCLASS_TOOL)
-            attack_particle_time = 5;
-        else
-            attack_particle_time = 10;
+    // set attack item before the action: the item could change
+    player_data->attack_item = player_active_item.type;
+    player_data->attack_item_tool_level = player_active_item.tool_level;
 
-        entity_add_item_particle(level, attack_particle_time);
-        entity_add_attack_particle(level, attack_particle_time);
-    }
+    player_data->attack_dir = mob_data->dir;
+
+    if(item_class == (u8) -1 || item_class == ITEMCLASS_TOOL)
+        player_data->attack_time = 5;
+    else
+        player_data->attack_time = 10;
 
     switch(item_class) {
         case (u8) -1:
@@ -357,6 +372,7 @@ ETICK(player_tick) {
     gametime++;
 
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+    struct player_Data *player_data = (struct player_Data *) &mob_data->data;
 
     const u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
     if(on_tile == LIQUID_TILE && current_level == 0)
@@ -367,6 +383,9 @@ ETICK(player_tick) {
 
     if(player_invulnerable_time > 0)
         player_invulnerable_time--;
+
+    if(player_data->attack_time > 0)
+        player_data->attack_time--;
 
     // check if on stairs
     static u8 on_stairs_delay = 0;
@@ -423,10 +442,6 @@ ETICK(player_tick) {
             mob_hurt(level, data, 1, mob_data->dir ^ 2);
     }
 
-    // try adding furniture particle (if it already exists, this does nothing)
-    if(ITEM_S(&player_active_item)->class == ITEMCLASS_FURNITURE)
-        entity_add_furniture_particle(level);
-
     // movement
     i32 xm = (INPUT_DOWN(KEY_RIGHT) != 0) - (INPUT_DOWN(KEY_LEFT) != 0);
     i32 ym = (INPUT_DOWN(KEY_DOWN)  != 0) - (INPUT_DOWN(KEY_UP)   != 0);
@@ -456,32 +471,117 @@ ETICK(player_tick) {
         set_scene(&scene_pause, 1);
 }
 
+static inline void draw_furniture(u16 x, u16 y, u32 used_sprites) {
+    const u16 sprite = 148 + 4 * (player_active_item.type - WORKBENCH_ITEM);
+
+    SPRITE(
+        x - 8  - level_x_offset, // x
+        y - 20 - level_y_offset, // y
+        sprite, // sprite
+        6,      // palette
+        0,      // flip
+        0,      // shape
+        1       // size
+    );
+}
+
+static inline void draw_attack(u16 x, u16 y, struct player_Data *player_data,
+                               u32 used_sprites) {
+    const u16 dir = player_data->attack_dir;
+
+    x += -4 + ((dir == 3) - (dir == 1)) * 8 - ((dir & 1) == 0) * 4;
+    y += -4 + ((dir == 2) - (dir == 0)) * 8 - ((dir & 1) == 1) * 4;
+
+    const u16 sprite = 176 + (dir & 1) * 2;
+    const u8 shape = 1 + (dir & 1);
+    const u8 flip = 2 * (dir == 2) + 1 * (dir == 3);
+
+    SPRITE(
+        x - level_x_offset, // x
+        y - level_y_offset, // y
+        sprite,  // sprite
+        5,       // palette
+        flip,    // flip
+        shape,   // shape
+        0        // size
+    );
+}
+
+static inline void draw_item(u16 x, u16 y, struct player_Data *player_data,
+                             u32 used_sprites) {
+    const u16 item_type = player_data->attack_item;
+    const u16 item_tool_level = player_data->attack_item_tool_level;
+    const u16 dir = player_data->attack_dir;
+
+    x += -4 + ((dir == 3) - (dir == 1)) * 8;
+    y += -4 + ((dir == 2) - (dir == 0)) * 8;
+
+    const struct Item *item = &item_list[item_type];
+
+    u16 sprite = 256 + item_type +
+        (item->class == ITEMCLASS_TOOL) * (item_tool_level * 5);
+    u8 palette = 12 + item->palette;
+
+    SPRITE(
+        x - level_x_offset, // x
+        y - level_y_offset, // y
+        sprite,  // sprite
+        palette, // palette
+        0,       // flip
+        0,       // shape
+        0        // size
+    );
+}
+
 EDRAW(player_draw) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+    struct player_Data *player_data = (struct player_Data *) &mob_data->data;
 
     const u8 dir = mob_data->dir;
     const u8 walk_dist = mob_data->walk_dist;
 
-    u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
+    u16 x = data->x;
+    u16 y = data->y - 3;
 
     u16 sprite = 8 + (dir == 0) * 4 + (dir & 1) * 8;
-    sprite += (dir & 1) * (
-        ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4)
-    );
-
-    // swimming
-    sprite += (on_tile == LIQUID_TILE) *
-              (20 + ((player_tick_time / 8) & 1) * 20);
-
-    // carrying furniture
-    sprite += (ITEM_S(&player_active_item)->class == ITEMCLASS_FURNITURE) * 60;
-
-    u8 palette = 4 + (mob_data->hurt_time > 0) * 1;
+    u8 palette = 4 + (mob_data->hurt_time > 0);
     u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);
 
+    if(dir & 1)
+        sprite += ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4);
+
+    bool should_draw_furniture = false;
+    if(player_active_item.type < ITEM_TYPES) {
+        if(ITEM_S(&player_active_item)->class == ITEMCLASS_FURNITURE) {
+            should_draw_furniture = true;
+            sprite += 60;
+        }
+    }
+
+    // check if swimming
+    if(LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4) == LIQUID_TILE) {
+        y += 4;
+        sprite += 20 + ((player_tick_time >> 3) & 1) * 20;
+    }
+
+    // draw furniture
+    if(should_draw_furniture && used_sprites < 128 - 1)
+        draw_furniture(x, y, used_sprites++);
+
+    // draw attack item
+    bool should_draw_item = (player_data->attack_time > 0) &&
+                            (player_data->attack_item < ITEM_TYPES);
+    if(should_draw_item && used_sprites < 128 - 1)
+        draw_item(x, y, player_data, used_sprites++);
+
+    // draw attack
+    bool should_draw_attack = (player_data->attack_time > 0);
+    if(should_draw_attack && used_sprites < 128 - 1)
+        draw_attack(x, y, player_data, used_sprites++);
+
     SPRITE(
-        data->x - 8 - level_x_offset,                                 // x
-        data->y - 11 + (on_tile == LIQUID_TILE) * 4 - level_y_offset, // y
+        x - 8 - level_x_offset, // x
+        y - 8 - level_y_offset, // y
         sprite,  // sprite
         palette, // palette
         flip,    // flip
@@ -489,7 +589,7 @@ EDRAW(player_draw) {
         1        // size
     );
 
-    return 1;
+    return 1 + should_draw_furniture + should_draw_attack + should_draw_item;
 }
 
 static const struct Entity player_entity = {
