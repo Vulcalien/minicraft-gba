@@ -219,10 +219,13 @@ const u16 bg_palette[10 * 16] = {
     0,
 
     // sky background
-    0x1144, 0x2168
+    0x1144, 0x2168,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-const u16 sprite_palette[7 * 16] = {
+const u16 sprite_palette[8 * 16] = {
     // --- palette 0 --- (zombie and slime - level 1, red font)
     // transparent
     0,
@@ -354,7 +357,16 @@ const u16 sprite_palette[7 * 16] = {
     0x7bde,
 
     // unused
-    0, 0
+    0, 0,
+
+    // --- palette 7 --- (item shadow)
+    // transparent
+    0,
+
+    // shadow
+    0x0421, 0x0421, 0x0421, 0x0421, 0x0421,
+    0x0421, 0x0421, 0x0421, 0x0421, 0x0421,
+    0x0421, 0x0421, 0x0421, 0x0421, 0x0421
 };
 
 const u16 item_palette[4 * 16] = {

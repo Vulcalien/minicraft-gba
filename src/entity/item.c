@@ -72,7 +72,7 @@ void entity_add_item(struct Level *level, u16 x, u16 y,
 
     level_add_entity(level, entity_id);
 
-    // TODO add entity shadow particle
+    entity_add_item_shadow(level, data, item);
 }
 
 ETICK(item_tick) {
