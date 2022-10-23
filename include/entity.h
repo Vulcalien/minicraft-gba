@@ -22,7 +22,7 @@
 #include "item.h"
 #include "screen.h"
 
-#define ENTITY_TYPES (18)
+#define ENTITY_TYPES (17)
 
 #define ZOMBIE_ENTITY     (0)
 #define SLIME_ENTITY      (1)
@@ -44,8 +44,6 @@
 #define ATTACK_PARTICLE_ENTITY    (14)
 #define ITEM_PARTICLE_ENTITY      (15)
 #define FURNITURE_PARTICLE_ENTITY (16)
-
-#define ITEM_SHADOW_ENTITY (17)
 
 #define ETICK(name)\
     IWRAM_SECTION\
@@ -131,8 +129,5 @@ extern void entity_add_smash_particle(struct Level *level, u8 xt, u8 yt);
 extern void entity_add_attack_particle(struct Level *level, u8 time);
 extern void entity_add_item_particle(struct Level *level, u8 time);
 extern void entity_add_furniture_particle(struct Level *level);
-
-extern void entity_add_item_shadow(struct Level *level,
-                                   struct entity_Data *item_entity, u8 item);
 
 #endif // MINICRAFT_ENTITIES

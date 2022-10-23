@@ -35,8 +35,6 @@
 #include "entity/item-particle.c"
 #include "entity/furniture-particle.c"
 
-#include "entity/item-shadow.c"
-
 IWRAM_RODATA_SECTION
 const struct Entity entity_list[ENTITY_TYPES] = {
     zombie_entity,
@@ -58,9 +56,7 @@ const struct Entity entity_list[ENTITY_TYPES] = {
     smash_particle_entity,
     attack_particle_entity,
     item_particle_entity,
-    furniture_particle_entity,
-
-    item_shadow_entity
+    furniture_particle_entity
 };
 
 IWRAM_SECTION

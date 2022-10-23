@@ -71,8 +71,6 @@ void entity_add_item(struct Level *level, u16 x, u16 y,
     data->solid_id = 30;
 
     level_add_entity(level, entity_id);
-
-    entity_add_item_shadow(level, data, item);
 }
 
 ETICK(item_tick) {
@@ -165,7 +163,22 @@ EDRAW(item_draw) {
         0            // size
     );
 
-    return 1;
+    bool should_draw_shadow = (item_entity_data->zz != 0);
+    if(should_draw_shadow && used_sprites < 128 - 1) {
+        used_sprites++;
+
+        SPRITE(
+            data->x - 4 - level_x_offset, // x
+            data->y - 4 - level_y_offset, // y
+            sprite,      // sprite
+            7,           // palette
+            0,           // flip
+            0,           // shape
+            0            // size
+        );
+    }
+
+    return 1 + should_draw_shadow;
 }
 
 static const struct Entity item_entity = {
