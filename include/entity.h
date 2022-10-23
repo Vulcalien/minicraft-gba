@@ -20,6 +20,7 @@
 
 #include "level.h"
 #include "item.h"
+#include "screen.h"
 
 #define ENTITY_TYPES (18)
 
@@ -52,8 +53,8 @@
 
 #define EDRAW(name)\
     IWRAM_SECTION\
-    static void name(struct Level *level, struct entity_Data *data,\
-                     vu16 *sprite_attribs)
+    static u32 name(struct Level *level, struct entity_Data *data,\
+                    u32 used_sprites)
 
 #define ETOUCH_PLAYER(name)\
     static void name(struct Level *level, struct entity_Data *data,\
@@ -62,8 +63,8 @@
 struct Entity {
     void (*tick)(struct Level *level, struct entity_Data *data);
 
-    void (*draw)(struct Level *level, struct entity_Data *data,
-                 vu16 *sprite_attribs);
+    u32 (*draw)(struct Level *level, struct entity_Data *data,
+                u32 used_sprites);
 
     // entity radius
     u8 xr;
@@ -83,17 +84,17 @@ extern const struct Entity entity_list[ENTITY_TYPES];
 
 #define SPRITE(x, y, sprite, palette, flip, shape, size, disable)\
     do {\
-        sprite_attribs[0] = ((y)       & 0xff)       |\
-                            ((disable) & 0x1)  << 9  |\
-                            ((shape)   & 0x3)  << 14;\
+        OAM[used_sprites * 4 + 0] = ((y)       & 0xff)       |\
+                                    ((disable) & 0x1)  << 9  |\
+                                    ((shape)   & 0x3)  << 14;\
 \
-        sprite_attribs[1] = ((x)    & 0x1ff)       |\
-                            ((flip) & 0x3)   << 12 |\
-                            ((size) & 0x3)   << 14;\
+        OAM[used_sprites * 4 + 1] = ((x)    & 0x1ff)       |\
+                                    ((flip) & 0x3)   << 12 |\
+                                    ((size) & 0x3)   << 14;\
 \
-        sprite_attribs[2] = ((sprite)  & 0x3ff)       |\
-                            ((2)       & 0x3)   << 10 |\
-                            ((palette) & 0xf)   << 12;\
+        OAM[used_sprites * 4 + 2] = ((sprite)  & 0x3ff)       |\
+                                    ((2)       & 0x3)   << 10 |\
+                                    ((palette) & 0xf)   << 12;\
     } while(0)
 
 extern bool entity_move(struct Level *level, struct entity_Data *data,

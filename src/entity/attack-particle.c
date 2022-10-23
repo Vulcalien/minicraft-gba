@@ -91,6 +91,9 @@ EDRAW(attack_particle_draw) {
         0,       // size
         0        // disable
     );
+
+    // TODO remove this file
+    return 1;
 }
 
 static const struct Entity attack_particle_entity = {

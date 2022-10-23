@@ -111,6 +111,8 @@ EDRAW(text_particle_draw) {
         0,           // size
         0            // disable
     );
+
+    return 1;
 }
 
 static const struct Entity text_particle_entity = {

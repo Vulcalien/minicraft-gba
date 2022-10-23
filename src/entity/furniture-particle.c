@@ -71,6 +71,9 @@ EDRAW(furniture_particle_draw) {
         1,      // size
         0       // disable
     );
+
+    // TODO remove this file
+    return 1;
 }
 
 static const struct Entity furniture_particle_entity = {

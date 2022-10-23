@@ -192,6 +192,8 @@ EDRAW(air_wizard_draw) {
         1,       // size
         0        // disable
     );
+
+    return 1;
 }
 
 ETOUCH_PLAYER(air_wizard_touch_player) {

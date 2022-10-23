@@ -82,6 +82,9 @@ EDRAW(item_shadow_draw) {
         0,      // size
         0       // disable TODO it needs to, unless removed before
     );
+
+    // TODO remove this file
+    return 1;
 }
 
 static const struct Entity item_shadow_entity = {

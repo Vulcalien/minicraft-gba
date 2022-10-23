@@ -84,6 +84,8 @@ EDRAW(furniture_draw) {
         1,      // size
         0       // disable
     );
+
+    return 1;
 }
 
 ETOUCH_PLAYER(furniture_touch_player) {

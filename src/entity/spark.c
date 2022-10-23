@@ -134,6 +134,8 @@ EDRAW(spark_draw) {
         0,           // size
         is_invisible // disable
     );
+
+    return 1;
 }
 
 static const struct Entity spark_entity = {

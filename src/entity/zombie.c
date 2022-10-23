@@ -118,6 +118,8 @@ EDRAW(zombie_draw) {
         1,       // size
         0        // disable
     );
+
+    return 1;
 }
 
 ETOUCH_PLAYER(zombie_touch_player) {

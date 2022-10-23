@@ -196,14 +196,14 @@ static inline void draw_lantern_light(struct Level *level,
     }
 }
 
-static inline void draw_player_light(struct Level *level, u32 *to_render_size) {
+static inline void draw_player_light(struct Level *level, u32 *used_sprites) {
     struct entity_Data *player = &level->entities[0];
 
     if(player_active_item.type == LANTERN_ITEM) {
         // overwrite the last 4 sprites if necessary
-        if(*to_render_size > 128 - 4)
-            *to_render_size = 128 - 4;
-        vu16 *sprite_attribs = OAM + *to_render_size * 4;
+        if(*used_sprites > 128 - 4)
+            *used_sprites = 128 - 4;
+        vu16 *sprite_attribs = OAM + *used_sprites * 4;
 
         // top-left
         sprite_attribs[0] = ((player->y - level_y_offset - 3 - 64) & 0xff) |
@@ -233,12 +233,12 @@ static inline void draw_player_light(struct Level *level, u32 *to_render_size) {
                              (3 << 14);
         sprite_attribs[14] = 528;
 
-        *to_render_size += 4;
+        *used_sprites += 4;
     } else {
         // overwrite the last sprite if necessary
-        if(*to_render_size > 128 - 1)
-            *to_render_size = 128 - 1;
-        vu16 *sprite_attribs = OAM + *to_render_size * 4;
+        if(*used_sprites > 128 - 1)
+            *used_sprites = 128 - 1;
+        vu16 *sprite_attribs = OAM + *used_sprites * 4;
 
         sprite_attribs[0] = ((player->y - level_y_offset - 3 - 16) & 0xff) |
                             (2 << 10);
@@ -246,7 +246,7 @@ static inline void draw_player_light(struct Level *level, u32 *to_render_size) {
                             (2 << 14);
         sprite_attribs[2] = 320;
 
-        *to_render_size += 1;
+        *used_sprites += 1;
     }
 }
 
@@ -276,19 +276,20 @@ static inline void draw_entities(struct Level *level) {
 
     sort_entities(level, entities_to_render, 0, to_render_size - 1);
 
-    for(u32 i = 0; i < to_render_size; i++) {
+    u32 used_sprites = 0;
+    for(u32 i = 0; i < to_render_size && used_sprites < 128; i++) {
         struct entity_Data *data = &level->entities[entities_to_render[i]];
 
         const struct Entity *entity = ENTITY_S(data);
-        entity->draw(level, data, OAM + i * 4);
+        used_sprites += entity->draw(level, data, used_sprites);
     }
 
     // draw player light
     if(level < &levels[3])
-        draw_player_light(level, &to_render_size);
+        draw_player_light(level, &used_sprites);
 
     // hide remaining sprites
-    for(u32 i = to_render_size; i < 128; i++) {
+    for(u32 i = used_sprites; i < 128; i++) {
         vu16 *sprite_attribs = OAM + i * 4;
         sprite_attribs[0] = 1 << 9;
     }
