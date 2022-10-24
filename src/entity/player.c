@@ -415,20 +415,16 @@ ETICK(player_tick) {
     // stamina
     static u8 stamina_recharge = 0;
 
-    // TODO ugly code
-    if(player_stamina_recharge_delay == 0 &&
-       player_stamina == 0 &&
-       stamina_recharge == 0)
-        player_stamina_recharge_delay = 40;
-
-    if(player_stamina_recharge_delay > 0)
+    if(player_stamina_recharge_delay > 0) {
         player_stamina_recharge_delay--;
-
-    if(player_stamina_recharge_delay == 0) {
-        stamina_recharge++;
+    } else {
+        if(player_stamina == 0 && stamina_recharge == 0)
+            player_stamina_recharge_delay = 38;
 
         if(on_tile == LIQUID_TILE)
             stamina_recharge = 0;
+        else
+            stamina_recharge++;
 
         // FIXED BUG - Player.java:78-79
         // after using stamina, the first recovered point

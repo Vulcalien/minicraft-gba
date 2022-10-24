@@ -114,8 +114,6 @@ bool storage_check(void) {
                  read_byte(2) == 'C' &&
                  read_byte(3) == 'E';
 
-    // TODO validate a checksum
-
     return valid;
 }
 
