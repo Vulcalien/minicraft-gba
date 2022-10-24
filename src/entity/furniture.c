@@ -37,7 +37,8 @@ struct furniture_Data {
 };
 
 static_assert(
-    sizeof(struct furniture_Data) == 8, "struct furniture_Data: wrong size"
+    sizeof(struct furniture_Data) == 8,
+    "struct furniture_Data: wrong size"
 );
 
 bool entity_add_furniture(struct Level *level, u8 xt, u8 yt,

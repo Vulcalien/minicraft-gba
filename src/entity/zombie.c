@@ -28,7 +28,8 @@ struct zombie_Data {
 };
 
 static_assert(
-    sizeof(struct zombie_Data) == 2, "struct zombie_Data: wrong size"
+    sizeof(struct zombie_Data) == 2,
+    "struct zombie_Data: wrong size"
 );
 
 void entity_add_zombie(struct Level *level, u16 x, u16 y, u8 lvl) {

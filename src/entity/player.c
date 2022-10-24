@@ -35,6 +35,11 @@ struct player_Data {
     u16 attack_dir : 2;
 };
 
+static_assert(
+    sizeof(struct player_Data) == 2,
+    "struct player_Data: wrong size"
+);
+
 EWRAM_BSS_SECTION
 struct Inventory player_inventory;
 
@@ -69,6 +74,7 @@ void entity_add_player(struct Level *level, u8 xt, u8 yt) {
 
     // clear player_data
     player_data->attack_item = 0;
+    player_data->attack_item_tool_level = 0;
 
     player_data->attack_time = 0;
     player_data->attack_dir = 0;

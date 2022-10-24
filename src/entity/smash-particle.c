@@ -53,10 +53,10 @@ EDRAW(smash_particle_draw) {
         data->x - 8 - level_x_offset, // x
         data->y - 8 - level_y_offset, // y
         172, // sprite
-        5,  // palette
-        0,  // flip
-        0,  // shape
-        1   // size
+        5,   // palette
+        0,   // flip
+        0,   // shape
+        1    // size
     );
 
     return 1;

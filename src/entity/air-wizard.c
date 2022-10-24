@@ -32,7 +32,8 @@ struct wizard_Data {
 };
 
 static_assert(
-    sizeof(struct wizard_Data) == 2, "struct wizard_Data: wrong size"
+    sizeof(struct wizard_Data) == 2,
+    "struct wizard_Data: wrong size"
 );
 
 u8 air_wizard_attack_delay;
