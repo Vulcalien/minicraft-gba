@@ -23,16 +23,16 @@ struct item_entity_Data {
     u16 time : 10;
 
     // 64 xx = 1 x
-    // 64 yy = 1 y
-    //  6 zz = 1 z
     i8 xx;
-    i8 yy;
-    i8 zz;
-
-    // velocity
     i8 xv;
+
+    // 64 yy = 1 y
+    i8 yy;
     i8 yv;
-    i8 zv;
+
+    // 6 zz = 1 z
+    i16 zz : 10;
+    i16 zv : 6;
 };
 
 static_assert(
@@ -61,7 +61,7 @@ void entity_add_item(struct Level *level, u16 x, u16 y,
     item_entity_data->xv = rand() % 59 - 29;
     item_entity_data->yv = rand() % 39 - 19;
 
-    item_entity_data->zz = 2;
+    item_entity_data->zz = 12;
     item_entity_data->zv = 6 + rand() % 4;
 
     item_entity_data->item_type = item;
@@ -114,7 +114,6 @@ ETICK(item_tick) {
         }
     }
 
-    // FIXME the behavior is very different compared to the original game
     // movement
     item_entity_data->xx += item_entity_data->xv;
     item_entity_data->yy += item_entity_data->yv;
@@ -156,11 +155,11 @@ EDRAW(item_draw) {
     SPRITE(
         data->x - 4 - level_x_offset,                              // x
         data->y - 4 - (item_entity_data->zz / 6) - level_y_offset, // y
-        sprite,      // sprite
-        palette,     // palette
-        0,           // flip
-        0,           // shape
-        0            // size
+        sprite,  // sprite
+        palette, // palette
+        0,       // flip
+        0,       // shape
+        0        // size
     );
 
     bool should_draw_shadow = (item_entity_data->zz != 0);

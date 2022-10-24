@@ -133,6 +133,7 @@ bool entity_move2(struct Level *level, struct entity_Data *data,
             return false;
     }
 
+    // FIXME this is wrong: items are blocked by solid entities
     // solid entity collision
     if(data->type != ITEM_ENTITY) {
         xt0--;

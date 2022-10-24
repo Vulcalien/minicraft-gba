@@ -22,16 +22,16 @@ struct text_Data {
     u8 number;
 
     // 64 xx = 1 x
-    // 64 yy = 1 y
-    //  6 zz = 1 z
     i8 xx;
-    i8 yy;
-    i8 zz;
-
-    // velocity
     i8 xv;
+
+    // 64 yy = 1 y
+    i8 yy;
     i8 yv;
-    i8 zv;
+
+    // 6 zz = 1 z
+    i16 zz : 10;
+    i16 zv : 6;
 };
 
 static_assert(sizeof(struct text_Data) == 8, "struct text_Data: wrong size");
@@ -51,7 +51,7 @@ void entity_add_text_particle(struct Level *level, u16 x, u16 y,
     text_data->xv = rand() % 59 - 29;
     text_data->yv = rand() % 39 - 19;
 
-    text_data->zz = 2;
+    text_data->zz = 12;
     text_data->zv = 12 + rand() % 4;
 
     text_data->number = number;
