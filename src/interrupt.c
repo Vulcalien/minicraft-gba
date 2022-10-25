@@ -26,8 +26,8 @@
 #define INTERRUPT_HANDLER *((vu32 *) 0x03007ffc)
 
 #define VBLANK  (1 << 0)
-#define TIMER_1 (1 << 4)
 #define TIMER_2 (1 << 5)
+#define TIMER_3 (1 << 6)
 
 IWRAM_SECTION
 static void interrupt_handler(void) {
@@ -36,21 +36,21 @@ static void interrupt_handler(void) {
         IF = VBLANK;
     }
 
-    if(IF & TIMER_1) {
-        sound_interrupt(1);
-        IF = TIMER_1;
-    }
-
     if(IF & TIMER_2) {
         sound_interrupt(2);
         IF = TIMER_2;
+    }
+
+    if(IF & TIMER_3) {
+        sound_interrupt(3);
+        IF = TIMER_3;
     }
 }
 
 void interrupt_enable(void) {
     INTERRUPT_HANDLER = (u32) &interrupt_handler;
 
-    IE = VBLANK | TIMER_1 | TIMER_2;
+    IE = VBLANK | TIMER_2 | TIMER_3;
 
     IME = 1;
 }

@@ -40,14 +40,25 @@
 #define TIMER2_RELOAD  *((vu16 *) 0x04000108)
 #define TIMER2_CONTROL *((vu16 *) 0x0400010a)
 
+#define TIMER3_RELOAD  *((vu16 *) 0x0400010c)
+#define TIMER3_CONTROL *((vu16 *) 0x0400010e)
+
+// --- Channel | Feed DMA | Feed Timer | Stop Timer ---
+// ---    A    |    1     |      0     |      2     ---
+// ---    B    |    2     |      1     |      3     ---
+
 IWRAM_SECTION
 void sound_interrupt(u32 timer) {
-    if(timer == 1) { // Timer 1
-        TIMER1_CONTROL = 0;
-        DMA1_CONTROL = 0;
-    } else if(timer == 2) { // Timer 2
+    if(timer == 2) {
+        // Channel A
+        TIMER0_CONTROL = 0;
         TIMER2_CONTROL = 0;
-        DMA2_CONTROL = 0;
+        DMA1_CONTROL   = 0;
+    } else if(timer == 3) {
+        // Channel B
+        TIMER1_CONTROL = 0;
+        TIMER3_CONTROL = 0;
+        DMA2_CONTROL   = 0;
     }
 }
 
@@ -61,17 +72,8 @@ void sound_init(void) {
                       0 << 10 | // Channel A Timer (0 is Timer 0)
                       1 << 12 | // Enable Channel B RIGHT
                       1 << 13 | // Enable Channel B LEFT
-                      0 << 14;  // Channel B Timer (0 is Timer 0)
-
-    DMA1_DEST = FIFO_A;
-    DMA2_DEST = FIFO_B;
-
-    TIMER0_RELOAD = 65536 - 1;
-    TIMER0_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
-                     1 << 7;  // Timer Start
+                      1 << 14;  // Channel B Timer (1 is Timer 1)
 }
-
-// FIXME fix pop at the end of sounds
 
 IWRAM_SECTION
 void sound_play(const u8 *sound, u16 length) {
@@ -81,26 +83,41 @@ void sound_play(const u8 *sound, u16 length) {
                           3 << 12 | // Start Timing (3 is FIFO)
                           1 << 15;  // DMA Enable
 
+    const u16 timer_value = 3 << 0 | // Prescaler Selection (3 is 1024)
+                            1 << 7;  // Timer Start
+
     static u8 channel_flag = 0;
     channel_flag ^= 1;
 
     if(channel_flag) {
         // Channel A
-        DMA1_SOURCE = (u32) sound;
+        DMA1_SOURCE  = (u32) sound;
+        DMA1_DEST    = FIFO_A;
         DMA1_CONTROL = dma_value;
 
-        TIMER1_RELOAD = 65536 - length;
-        TIMER1_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
-                         1 << 6 | // Timer IRQ Enable
-                         1 << 7;  // Timer Start
-    } else {
-        // Channel B
-        DMA2_SOURCE = (u32) sound;
-        DMA2_CONTROL = dma_value;
-
+        // 'Stop' timer
         TIMER2_RELOAD = 65536 - length;
         TIMER2_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
                          1 << 6 | // Timer IRQ Enable
                          1 << 7;  // Timer Start
+
+        // 'Feed' timer
+        TIMER0_RELOAD  = 65536 - 1;
+        TIMER0_CONTROL = timer_value;
+    } else {
+        // Channel B
+        DMA2_SOURCE  = (u32) sound;
+        DMA2_DEST    = FIFO_B;
+        DMA2_CONTROL = dma_value;
+
+        // 'Stop' timer
+        TIMER3_RELOAD = 65536 - length;
+        TIMER3_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
+                         1 << 6 | // Timer IRQ Enable
+                         1 << 7;  // Timer Start
+
+        // 'Feed' timer
+        TIMER1_RELOAD  = 65536 - 1;
+        TIMER1_CONTROL = timer_value;
     }
 }
