@@ -15,8 +15,9 @@
  */
 #include "mob.h"
 
-#include "level.h"
 #include "entity.h"
+#include "level.h"
+#include "tile.h"
 #include "player.h"
 #include "air-wizard.h"
 #include "item.h"
@@ -46,6 +47,10 @@ static inline void mob_die(struct Level *level, struct entity_Data *data) {
 IWRAM_SECTION
 void mob_tick(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
+
+    if(current_level == 0)
+        if(LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4) == LIQUID_TILE)
+            mob_hurt(level, data, 4, mob_data->dir ^ 2);
 
     if(mob_data->hp <= 0)
         mob_die(level, data);

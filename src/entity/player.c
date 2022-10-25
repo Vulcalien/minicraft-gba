@@ -381,8 +381,6 @@ ETICK(player_tick) {
     struct player_Data *player_data = (struct player_Data *) &mob_data->data;
 
     const u8 on_tile = LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4);
-    if(on_tile == LIQUID_TILE && current_level == 0)
-        mob_hurt(level, data, 4, mob_data->dir ^ 2);
 
     player_tick_time++;
     mob_tick(level, data);
