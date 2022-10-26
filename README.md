@@ -20,6 +20,16 @@ the world.
 | Chest limit    | ∞        | 32         |
 | Inventory size | ∞        | 128        |
 
+### Game Light
+The light system is completely different, both visually and in how it works.
+
+The original Minicraft calculates the light for **each pixel**: that is, for
+various reasons, impractical to do on the GBA.
+
+So I had to find another way, and the best one seemed to use tiles, because the
+GBA is very good at handling them. That gives light a 'blocky' look, but it
+seems acceptable.
+
 ## Running
 Download or build the ROM (`.gba` extension). Then open it with your GBA
 emulator of choice. If you don't have one, I highly recommend mGBA.
