@@ -27,23 +27,17 @@ static bool inventory_should_render_game = false;
 static void inventory_init(u8 flags) {
     inventory_selected = 0;
 
-    if(player_active_item.type < ITEM_TYPES) {
-        // FIXME currently, the active item is deleted even if
-        // inventory_add fails. find a way to either prevent it
-        // or to make it impossible for inventory_add to fail
-
-        // Bug in the original game: when opening the inventory menu, thus
-        // adding the active item to the inventory, the item is always put
-        // in slot 0, regardless of it being a resource item or not.
-        // This means that if the inventory already contains that resource,
-        // there will be two distinct items for the same resource.
-        //
-        // This is not a duplication bug, however it causes annoyances for
-        // crafting. To merge the items, the player can use a chest.
-
-        inventory_add(&player_inventory, &player_active_item, 0);
-        player_active_item.type = -1;
-    }
+    // Bug in the original game: when opening the inventory menu, thus
+    // adding the active item to the inventory, the item is always put
+    // in slot 0, regardless of it being a resource item or not.
+    // This means that if the inventory already contains that resource,
+    // there will be two distinct items for the same resource.
+    //
+    // This is not a duplication bug, however it causes annoyances for
+    // crafting. To merge the items, the player can use a chest.
+    if(player_active_item.type < ITEM_TYPES)
+        if(inventory_add(&player_inventory, &player_active_item, 0))
+            player_active_item.type = -1;
 
     inventory_should_render_game = true;
 }
@@ -68,11 +62,18 @@ static void inventory_tick(void) {
         inventory_selected = 0;
 
     if(INPUT_CLICKED(KEY_A)) {
+        struct item_Data old_active_item = player_active_item;
+
         inventory_remove(
             &player_inventory,
             &player_active_item,
             inventory_selected
         );
+
+        // If there was an active item, put it back into the inventory.
+        // This only happens when the inventory is full.
+        if(old_active_item.type < ITEM_TYPES)
+            inventory_add(&player_inventory, &old_active_item, 0);
 
         set_scene(&scene_game, 1);
     }
