@@ -307,7 +307,6 @@ FDRAW(farmland_draw) {
 }
 
 FDRAW(wheat_draw) {
-    // TODO test if this is accurate
     u8 age = LEVEL_GET_DATA(level, xt, yt) / 10;
 
     tiles[0] = TILE_M(50 + age, 0x0, 3);

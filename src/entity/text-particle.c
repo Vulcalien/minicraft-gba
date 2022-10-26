@@ -73,8 +73,7 @@ ETICK(text_particle_tick) {
     text_data->xx += text_data->xv;
     text_data->yy += text_data->yv;
 
-    // FIXME can go out of bounds: data->x and y are u16
-    // note: is it really a problem if that happens?
+    // this can overflow if xx or yy is negative, but it's not a problem
     data->x += (text_data->xx / 64);
     data->y += (text_data->yy / 64);
 
