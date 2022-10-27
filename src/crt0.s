@@ -49,7 +49,7 @@
 @ then code will be generated to run out of ROM instead of
 @ EXRAM. The value of this variable is not important.
 
- .equ __MultiBootInclude, 1
+@ .equ __MultiBootInclude, 1
 
 @ If you are compiling for multiboot dedicated (will not
 @ run in a cart) code then uncomment the following. Normally
@@ -79,7 +79,7 @@
 @ linked in with your project so do not enable c++ support
 @ unless you plan to use it.
 
-.equ __CPPSupport, 1
+@ .equ __CPPSupport, 1
 
 @ Comment out the following line to disable interrupt support
 @ in your code and to save some space in this file.

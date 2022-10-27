@@ -20,16 +20,23 @@
 #include "generator.h"
 #include "input.h"
 #include "screen.h"
+#include "interrupt.h"
 
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
+#define DISPLAY_STATUS  *((vu16 *) 0x04000004)
 
 #define VRAM ((vu16 *) 0x06000000)
 
 // To use the map viewer, just include this source file in minicraft.c
 
-int main(void) {
+int AgbMain(void) {
     DISPLAY_CONTROL = 3 << 0  | // Video mode
                       1 << 10;  // Enable BG 2
+
+    // enable V-Blank IRQ
+    DISPLAY_STATUS = (1 << 3);
+
+    interrupt_enable();
 
     generate_levels();
 
@@ -113,4 +120,4 @@ int main(void) {
     }
 }
 
-#define main __main__
+#define AgbMain __AgbMain__

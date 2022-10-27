@@ -71,7 +71,7 @@ static inline void draw_performance(void) {
     SCREEN_WRITE_NUMBER(sprite_count, 16, 2, true, 0, 28, 1);
 }
 
-int main(void) {
+int AgbMain(void) {
     screen_init();
     set_scene(&scene_prestart, 0);
 
