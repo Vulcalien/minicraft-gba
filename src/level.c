@@ -165,8 +165,7 @@ static inline void draw_tiles(struct Level *level) {
     }
 }
 
-static inline void draw_lantern_light(struct Level *level,
-                                      struct entity_Data *data) {
+static inline void draw_lantern_light(struct entity_Data *data) {
     i32 xr = ((data->x + 4) >> 3) - ((level_x_offset >> 3) & ~1);
     i32 yr = ((data->y + 4) >> 3) - ((level_y_offset >> 3) & ~1);
 
@@ -263,7 +262,7 @@ static inline void draw_entities(struct Level *level) {
 
         // draw lantern light
         if(level < &levels[3] && data->type == LANTERN_ENTITY)
-            draw_lantern_light(level, data);
+            draw_lantern_light(data);
 
         if(xr < -16 || xr >= SCREEN_W + 16 ||
            yr < -16 || yr >= SCREEN_H)
