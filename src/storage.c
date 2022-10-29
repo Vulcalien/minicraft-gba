@@ -140,8 +140,9 @@ static inline void load_inventory(u16 *addr, struct Inventory *inventory) {
         struct item_Data *item = &inventory->items[i];
         load_item(addr, item);
 
-        if(item->type >= ITEM_TYPES) {
-            inventory->size = i;
+        if(item->type < ITEM_TYPES) {
+            inventory->size++;
+        } else {
             (*addr) += (INVENTORY_SIZE - i - 1) * 3;
             break;
         }
@@ -266,19 +267,20 @@ static inline void store_item(u16 *addr, struct item_Data *data) {
         write_byte((*addr)++, data->chest_id);
         (*addr)++;
     } else {
-        write_byte((*addr)++, data->chest_id);
+        (*addr)++;
         (*addr)++;
     }
 }
 
 static inline void store_inventory(u16 *addr, struct Inventory *inventory) {
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
-        if(i >= inventory->size) {
-            (*addr) += (INVENTORY_SIZE - i) * 3;
-            break;
+        if(i < inventory->size) {
+            store_item(addr, &inventory->items[i]);
+        } else {
+            write_byte((*addr)++, -1);
+            (*addr)++;
+            (*addr)++;
         }
-
-        store_item(addr, &inventory->items[i]);
     }
 }
 
