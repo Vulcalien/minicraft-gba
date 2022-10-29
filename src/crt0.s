@@ -197,6 +197,12 @@ _start:
     @ Unused Data (2Byte) (80000BEh)
         .byte   0x00,0x00
 
+@ The ROM header ends here.
+
+    @ Cart Backup ID
+        .byte 0x46,0x4c,0x41,0x53,0x48,0x31
+        .byte 0x4d,0x5f,0x56,0x6e,0x6e,0x6e
+
     .ALIGN
     .ARM                                @ ..or you can use CODE 32 here
 
