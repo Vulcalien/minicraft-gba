@@ -21,7 +21,7 @@
 #include "item.h"
 #include "player.h"
 
-static i8 inventory_selected;
+static i32 inventory_selected;
 static bool inventory_should_render_game = false;
 
 static void inventory_init(u8 flags) {

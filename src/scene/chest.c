@@ -22,7 +22,7 @@
 #include "player.h"
 #include "furniture.h"
 
-static i8 chest_selected[2] = { 0, 0 };
+static i32 chest_selected[2] = { 0, 0 };
 static u8 chest_window;
 
 static struct Inventory *chest_inventory;

@@ -23,7 +23,7 @@
 #include "player.h"
 #include "sound.h"
 
-static i8 crafting_selected;
+static i32 crafting_selected;
 
 static u8 crafting_sorted_recipes[16];
 static bool crafting_can_craft[16];
