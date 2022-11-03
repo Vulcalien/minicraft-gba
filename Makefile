@@ -1,9 +1,5 @@
-# Vulcalien's Executable Makefile
-# version 0.1.5
+# Vulcalien's GBA Makefile
 #
-# modified to compile GBA ROMs
-#
-# One Makefile for Unix and Windows
 # Made for the 'gcc' compiler
 
 # === DETECT OS ===
@@ -19,6 +15,8 @@ OUT_FILENAME := minicraft
 SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
+
+SRC_SUBDIRS :=
 
 ifeq ($(CURRENT_OS),UNIX)
 	CC      := arm-none-eabi-gcc
@@ -42,8 +40,6 @@ LDFLAGS := -Tlnkscript -nostartfiles
 LDLIBS  :=
 # =============================
 
-OBJ_EXT := .o
-
 ifeq ($(CURRENT_OS),UNIX)
 	MKDIR      := mkdir
 	MKDIRFLAGS := -p
@@ -59,8 +55,11 @@ else ifeq ($(CURRENT_OS),WINDOWS)
 endif
 
 # === OTHER ===
-SRC := $(wildcard $(SRC_DIR)/*.c)
-OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%$(OBJ_EXT))
+SRC := $(wildcard $(SRC_DIR)/*.c)\
+       $(foreach DIR,$(SRC_SUBDIRS),$(wildcard $(SRC_DIR)/$(DIR)/*.c))
+OBJ := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+
+OBJ_DIRECTORIES := $(OBJ_DIR) $(foreach DIR,$(SRC_SUBDIRS),$(OBJ_DIR)/$(DIR))
 
 OUT_ELF := $(BIN_DIR)/$(OUT_FILENAME).elf
 OUT     := $(BIN_DIR)/$(OUT_FILENAME).gba
@@ -81,16 +80,16 @@ clean:
 $(OUT): $(OUT_ELF)
 	$(OBJCOPY) -O binary $^ $@
 
-$(OUT_ELF): $(OBJ_DIR)/crt0$(OBJ_EXT) $(OBJ) | $(BIN_DIR)
+$(OUT_ELF): $(OBJ_DIR)/crt0.o $(OBJ) | $(BIN_DIR)
 	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-$(OBJ_DIR)/crt0$(OBJ_EXT): $(SRC_DIR)/crt0.s | $(OBJ_DIR)
+$(OBJ_DIR)/crt0.o: $(SRC_DIR)/crt0.s | $(OBJ_DIRECTORIES)
 	$(AS) -o $@ $<
 
-$(OBJ_DIR)/%$(OBJ_EXT): $(SRC_DIR)/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIRECTORIES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-$(BIN_DIR) $(OBJ_DIR):
+$(BIN_DIR) $(OBJ_DIRECTORIES):
 	$(MKDIR) $(MKDIRFLAGS) "$@"
 
--include $(OBJ:$(OBJ_EXT)=.d)
+-include $(OBJ:.o=.d)
