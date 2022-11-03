@@ -57,12 +57,12 @@ endif
 # === OTHER ===
 SRC := $(wildcard $(SRC_DIR)/*.c)\
        $(foreach DIR,$(SRC_SUBDIRS),$(wildcard $(SRC_DIR)/$(DIR)/*.c))
-OBJ := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
-
-OBJ_DIRECTORIES := $(OBJ_DIR) $(foreach DIR,$(SRC_SUBDIRS),$(OBJ_DIR)/$(DIR))
+OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 OUT_ELF := $(BIN_DIR)/$(OUT_FILENAME).elf
 OUT     := $(BIN_DIR)/$(OUT_FILENAME).gba
+
+OBJ_DIRECTORIES := $(OBJ_DIR) $(foreach DIR,$(SRC_SUBDIRS),$(OBJ_DIR)/$(DIR))
 
 # === TARGETS ===
 .PHONY: all run build clean
