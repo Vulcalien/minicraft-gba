@@ -15,12 +15,6 @@
  */
 #include "images.h"
 
-#include "images/level.c"
-#include "images/gui.c"
-#include "images/light.c"
-#include "images/sprites.c"
-#include "images/items.c"
-
 const u16 bg_palette[10 * 16] = {
     // --- palette 0 --- (grass, flower, tree, sapling)
     // BG color
