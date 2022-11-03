@@ -172,7 +172,7 @@ void screen_init(void) {
 
 IWRAM_SECTION
 void vsync(void) {
-    asm volatile ("swi 0x05 << 16");
+    __asm__ volatile ("swi 0x05 << 16");
 }
 
 IWRAM_SECTION
