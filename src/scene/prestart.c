@@ -17,20 +17,20 @@
 
 #include "screen.h"
 
-static u16 prestart_counter = 0;
+static u16 counter = 0;
 
 THUMB
 static void prestart_tick(void) {
-    prestart_counter++;
+    counter++;
 
-    if(prestart_counter == 0x20 + 2 * 60)
+    if(counter == 0x20 + 2 * 60)
         set_scene(&scene_start, 1);
 }
 
 THUMB
 static void prestart_draw(void) {
-    if(prestart_counter < 0x20) {
-        u8 val = 0x20 - prestart_counter;
+    if(counter < 0x20) {
+        u8 val = 0x20 - counter;
         u16 color = val << 10 | val << 5 | val;
 
         screen_set_bg_palette_color(9, 0xd, color);

@@ -20,54 +20,52 @@
 #include "storage.h"
 #include "sound.h"
 
-static bool pause_ask_overwrite;
-static u8 pause_answer_selected;
+static bool ask_overwrite;
+static u8 selected_answer;
 
-static bool pause_should_save = false;
+static bool should_save = false;
 
 static void pause_init(u8 flags) {
-    pause_ask_overwrite = false;
+    ask_overwrite = false;
 }
 
 static void pause_tick(void) {
-    if(pause_should_save) {
+    if(should_save) {
         storage_save();
         SOUND_PLAY(sound_start);
 
-        pause_should_save = false;
-        pause_ask_overwrite = false;
+        should_save = false;
+        ask_overwrite = false;
     }
 
     if(INPUT_CLICKED(KEY_START))
         set_scene(&scene_game, 1);
 
     if(INPUT_CLICKED(KEY_A)) {
-        if(pause_ask_overwrite) {
-            if(pause_answer_selected == 1)
-                pause_ask_overwrite = false;
+        if(ask_overwrite) {
+            if(selected_answer == 1)
+                ask_overwrite = false;
             else
-                pause_should_save = true;
+                should_save = true;
         } else if(storage_check()) {
-            pause_ask_overwrite = true;
-            pause_answer_selected = 0;
+            ask_overwrite = true;
+            selected_answer = 0;
         } else {
-            pause_should_save = true;
+            should_save = true;
         }
     }
 
     if(INPUT_CLICKED(KEY_B))
-        pause_ask_overwrite = false;
+        ask_overwrite = false;
 
-    if(pause_ask_overwrite &&
-       (INPUT_CLICKED(KEY_LEFT) || INPUT_CLICKED(KEY_RIGHT))) {
-        pause_answer_selected ^= 1;
-    }
+    if(ask_overwrite && (INPUT_CLICKED(KEY_LEFT) || INPUT_CLICKED(KEY_RIGHT)))
+        selected_answer ^= 1;
 }
 
 #define WRITE_OPTION(text, id, x, y) do {\
-    screen_write((text), 5 - (pause_answer_selected == id), (x), (y));\
+    screen_write((text), 5 - (selected_answer == id), (x), (y));\
 \
-    if(pause_answer_selected == id) {\
+    if(selected_answer == id) {\
         screen_write(">", 4, (x) - 2, (y));\
         screen_write("<", 4, (x) + sizeof(text), (y));\
     }\
@@ -86,9 +84,9 @@ static void pause_draw(void) {
     screen_write("SCORE:", 4, pause_x + 1, pause_y + 2);
     SCREEN_WRITE_NUMBER(score, 10, 10, false, 8, pause_x + 7, pause_y + 2);
 
-    if(pause_should_save) {
+    if(should_save) {
         screen_write("SAVING...", 4, pause_x + 5, pause_y + 5);
-    } else if(pause_ask_overwrite) {
+    } else if(ask_overwrite) {
         screen_write("OVERWRITE FILE?", 4, pause_x + 1, pause_y + 4);
 
         WRITE_OPTION("YES", 0, pause_x + 4,  pause_y + 6);
@@ -97,7 +95,6 @@ static void pause_draw(void) {
         screen_write("> SAVE GAME <", 4, pause_x + 2, pause_y + 5);
     }
 }
-#undef WRITE_OPTION
 
 const struct Scene scene_pause = {
     .init = pause_init,

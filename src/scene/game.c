@@ -20,9 +20,9 @@
 #include "mob.h"
 #include "player.h"
 
-static struct Level *game_level = NULL;
+static struct Level *level = NULL;
 
-static bool game_should_refresh = false;
+static bool should_refresh = false;
 
 static inline void game_move_player(struct Level *old_level,
                                     struct Level *new_level) {
@@ -39,21 +39,21 @@ static inline void game_move_player(struct Level *old_level,
 
 static void game_init(u8 flags) {
     if(flags & 2) {
-        struct Level *old_level = game_level;
-        game_level = &levels[current_level];
+        struct Level *old_level = level;
+        level = &levels[current_level];
 
         // move the player to the new level
         if(old_level && !(flags & 4))
-            game_move_player(old_level, game_level);
+            game_move_player(old_level, level);
 
-        level_load(game_level);
+        level_load(level);
 
         vsync();
         screen_update_level_specific();
     }
 
     if(scene != &scene_transition)
-        game_should_refresh = true;
+        should_refresh = true;
 }
 
 static void game_tick(void) {
@@ -69,12 +69,12 @@ static void game_tick(void) {
             set_scene(&scene_win, 1);
     }
 
-    level_tick(game_level);
+    level_tick(level);
 }
 
 static void game_draw(void) {
-    if(game_should_refresh) {
-        game_should_refresh = false;
+    if(should_refresh) {
+        should_refresh = false;
 
         // clear the screen (fully transparent)
         for(u32 y = 0; y < 18; y++)
@@ -82,10 +82,10 @@ static void game_draw(void) {
                 *((vu32 *) &BG3_TILEMAP[x + y * 32]) = 0;
     }
 
-    level_draw(game_level);
+    level_draw(level);
 
     // draw hp and stamina
-    struct entity_Data *player = &game_level->entities[0];
+    struct entity_Data *player = &level->entities[0];
     if(player->type < ENTITY_TYPES) {
         struct mob_Data *mob_data = (struct mob_Data *) &player->data;
 

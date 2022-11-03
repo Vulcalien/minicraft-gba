@@ -19,11 +19,11 @@
 #include "screen.h"
 
 static u8 transition_time;
-static u8 transition_old_level;
+static u8 old_level;
 
 static void transition_init(u8 flags) {
     transition_time = 0;
-    transition_old_level = current_level;
+    old_level = current_level;
 }
 
 static void transition_tick(void) {
@@ -44,7 +44,7 @@ static void transition_draw(void) {
         for(u32 x = 0; x < 30; x++) {
             i32 dd = (y + x % 2 * 2 + x / 3) - transition_time * 2;
 
-            u16 ydraw = transition_old_level < current_level ? y : 19 - y;
+            u16 ydraw = old_level < current_level ? y : 19 - y;
             if(dd > -33 && dd < 0)
                 BG3_TILEMAP[x + ydraw * 32] = 29;
             else if(ydraw < 18)

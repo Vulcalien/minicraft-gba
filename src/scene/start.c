@@ -22,40 +22,40 @@
 #include "storage.h"
 #include "sound.h"
 
-static i8 start_selected;
-static bool start_can_load;
+static i8 selected;
+static bool can_load;
 
 THUMB
 static void start_init(u8 flags) {
-    start_can_load = storage_check();
+    can_load = storage_check();
 
-    if(start_can_load)
-        start_selected = 0;
+    if(can_load)
+        selected = 0;
     else
-        start_selected = 1;
+        selected = 1;
 }
 
 THUMB
 static void start_tick(void) {
     if(INPUT_CLICKED(KEY_UP))
-        start_selected--;
+        selected--;
     if(INPUT_CLICKED(KEY_DOWN))
-        start_selected++;
+        selected++;
 
-    if(start_selected < (start_can_load == false))
-        start_selected = 3;
-    else if(start_selected >= 4)
-        start_selected = (start_can_load == false);
+    if(selected < (can_load == false))
+        selected = 3;
+    else if(selected >= 4)
+        selected = (can_load == false);
 
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
-        if(start_selected == 0) {
+        if(selected == 0) {
             SOUND_PLAY(sound_start);
 
             srand(tick_count);
             storage_load();
 
             set_scene(&scene_game, 7);
-        } else if(start_selected == 1) {
+        } else if(selected == 1) {
             SOUND_PLAY(sound_start);
 
             srand(tick_count);
@@ -71,9 +71,9 @@ static void start_tick(void) {
                 chest_inventories[i].size = 0;
 
             set_scene(&scene_game, 7);
-        } else if(start_selected == 2) {
+        } else if(selected == 2) {
             set_scene(&scene_instructions, 0);
-        } else if(start_selected == 3) {
+        } else if(selected == 3) {
             set_scene(&scene_about, 0);
         }
     }
@@ -103,14 +103,13 @@ static void start_draw(void) {
         }
     }
 
-    if(start_can_load)
-        START_WRITE("LOAD GAME", start_selected == 0, 10, 9);
-    START_WRITE("NEW  GAME", start_selected == 1, 10, 10);
+    if(can_load)
+        START_WRITE("LOAD GAME", selected == 0, 10, 9);
+    START_WRITE("NEW  GAME", selected == 1, 10, 10);
 
-    START_WRITE("HOW TO PLAY", start_selected == 2, 9, 12);
-    START_WRITE("ABOUT", start_selected == 3, 12, 13);
+    START_WRITE("HOW TO PLAY", selected == 2, 9, 12);
+    START_WRITE("ABOUT", selected == 3, 12, 13);
 }
-#undef START_WRITE
 
 const struct Scene scene_start = {
     .init = start_init,

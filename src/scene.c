@@ -17,23 +17,5 @@
 
 const struct Scene *scene = NULL;
 
-#include "scene/prestart.c"
-
-#include "scene/start.c"
-#include "scene/instructions.c"
-#include "scene/about.c"
-
-#include "scene/game.c"
-#include "scene/transition.c"
-
-#include "scene/inventory.c"
-#include "scene/chest.c"
-#include "scene/crafting.c"
-
-#include "scene/pause.c"
-
-#include "scene/death.c"
-#include "scene/win.c"
-
 u16 scene_death_timer = 0;
 u16 scene_win_timer = 0;

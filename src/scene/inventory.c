@@ -21,11 +21,11 @@
 #include "item.h"
 #include "player.h"
 
-static i32 inventory_selected;
-static bool inventory_should_render_game = false;
+static i32 selected;
+static bool should_render_game = false;
 
 static void inventory_init(u8 flags) {
-    inventory_selected = 0;
+    selected = 0;
 
     // Bug in the original game: when opening the inventory menu, thus
     // adding the active item to the inventory, the item is always put
@@ -39,7 +39,7 @@ static void inventory_init(u8 flags) {
         if(inventory_add(&player_inventory, &player_active_item, 0))
             player_active_item.type = -1;
 
-    inventory_should_render_game = true;
+    should_render_game = true;
 }
 
 static void inventory_tick(void) {
@@ -52,23 +52,19 @@ static void inventory_tick(void) {
         return;
 
     if(INPUT_CLICKED(KEY_UP))
-        inventory_selected--;
+        selected--;
     if(INPUT_CLICKED(KEY_DOWN))
-        inventory_selected++;
+        selected++;
 
-    if(inventory_selected < 0)
-        inventory_selected = player_inventory.size - 1;
-    if(inventory_selected >= player_inventory.size)
-        inventory_selected = 0;
+    if(selected < 0)
+        selected = player_inventory.size - 1;
+    if(selected >= player_inventory.size)
+        selected = 0;
 
     if(INPUT_CLICKED(KEY_A)) {
         struct item_Data old_active_item = player_active_item;
 
-        inventory_remove(
-            &player_inventory,
-            &player_active_item,
-            inventory_selected
-        );
+        inventory_remove(&player_inventory, &player_active_item, selected);
 
         // If there was an active item, put it back into the inventory.
         // This only happens when the inventory is full.
@@ -80,9 +76,9 @@ static void inventory_tick(void) {
 }
 
 static void inventory_draw(void) {
-    if(inventory_should_render_game) {
+    if(should_render_game) {
         scene_game.draw();
-        inventory_should_render_game = false;
+        should_render_game = false;
     }
 
     const u8 inv_x = 9;
@@ -92,7 +88,7 @@ static void inventory_draw(void) {
 
     screen_draw_frame("INVENTORY", inv_x, inv_y, inv_w, inv_h);
 
-    i8 item0 = inventory_selected - (inv_h - 2) / 2;
+    i8 item0 = selected - (inv_h - 2) / 2;
     if(item0 > player_inventory.size - (inv_h - 2))
         item0 = player_inventory.size - (inv_h - 2);
     if(item0 < 0)
@@ -111,10 +107,10 @@ static void inventory_draw(void) {
 
     // draw cursor arrows
     screen_write(
-        ">", 4, inv_x            , inv_y + 1 + (inventory_selected - item0)
+        ">", 4, inv_x            , inv_y + 1 + (selected - item0)
     );
     screen_write(
-        "<", 4, inv_x + inv_w - 1, inv_y + 1 + (inventory_selected - item0)
+        "<", 4, inv_x + inv_w - 1, inv_y + 1 + (selected - item0)
     );
 }
 
