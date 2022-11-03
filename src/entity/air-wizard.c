@@ -201,7 +201,7 @@ ETOUCH_PLAYER(air_wizard_touch_player) {
     mob_hurt(level, player, 3, mob_data->dir);
 }
 
-static const struct Entity air_wizard_entity = {
+const struct Entity air_wizard_entity = {
     .tick = air_wizard_tick,
     .draw = air_wizard_draw,
 

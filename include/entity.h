@@ -70,10 +70,30 @@ struct Entity {
                          struct entity_Data *player);
 };
 
-#define ENTITY_S(data)\
-    (&entity_list[(data)->type])
+extern const struct Entity zombie_entity;
 
-extern const struct Entity entity_list[ENTITY_TYPES];
+extern const struct Entity zombie_entity;
+extern const struct Entity slime_entity;
+extern const struct Entity air_wizard_entity;
+extern const struct Entity player_entity;
+
+extern const struct Entity workbench_entity;
+extern const struct Entity furnace_entity;
+extern const struct Entity oven_entity;
+extern const struct Entity anvil_entity;
+extern const struct Entity chest_entity;
+extern const struct Entity lantern_entity;
+
+extern const struct Entity item_entity;
+extern const struct Entity spark_entity;
+
+extern const struct Entity text_particle_entity;
+extern const struct Entity smash_particle_entity;
+
+#define ENTITY_S(data)\
+    (entity_list[(data)->type])
+
+extern const struct Entity *entity_list[ENTITY_TYPES];
 
 #define SPRITE(x, y, sprite, palette, flip, shape, size)\
     do {\

@@ -113,7 +113,7 @@ EDRAW(text_particle_draw) {
     return 1;
 }
 
-static const struct Entity text_particle_entity = {
+const struct Entity text_particle_entity = {
     .tick = text_particle_tick,
     .draw = text_particle_draw
 };

@@ -123,7 +123,7 @@ ETOUCH_PLAYER(slime_touch_player) {
     mob_hurt(level, player, 1 + slime_data->level, mob_data->dir);
 }
 
-static const struct Entity slime_entity = {
+const struct Entity slime_entity = {
     .tick = slime_tick,
     .draw = slime_draw,
 

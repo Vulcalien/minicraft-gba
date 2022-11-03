@@ -62,7 +62,7 @@ EDRAW(smash_particle_draw) {
     return 1;
 }
 
-static const struct Entity smash_particle_entity = {
+const struct Entity smash_particle_entity = {
     .tick = smash_particle_tick,
     .draw = smash_particle_draw
 };

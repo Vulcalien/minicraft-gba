@@ -19,38 +19,25 @@
 #include "tile.h"
 #include "mob.h"
 
-#include "entity/zombie.c"
-#include "entity/slime.c"
-#include "entity/air-wizard.c"
-#include "entity/player.c"
-
-#include "entity/furniture.c"
-
-#include "entity/item.c"
-#include "entity/spark.c"
-
-#include "entity/text-particle.c"
-#include "entity/smash-particle.c"
-
 IWRAM_RODATA_SECTION
-const struct Entity entity_list[ENTITY_TYPES] = {
-    zombie_entity,
-    slime_entity,
-    air_wizard_entity,
-    player_entity,
+const struct Entity *entity_list[ENTITY_TYPES] = {
+    &zombie_entity,
+    &slime_entity,
+    &air_wizard_entity,
+    &player_entity,
 
-    workbench_entity,
-    furnace_entity,
-    oven_entity,
-    anvil_entity,
-    chest_entity,
-    lantern_entity,
+    &workbench_entity,
+    &furnace_entity,
+    &oven_entity,
+    &anvil_entity,
+    &chest_entity,
+    &lantern_entity,
 
-    item_entity,
-    spark_entity,
+    &item_entity,
+    &spark_entity,
 
-    text_particle_entity,
-    smash_particle_entity
+    &text_particle_entity,
+    &smash_particle_entity
 };
 
 IWRAM_SECTION

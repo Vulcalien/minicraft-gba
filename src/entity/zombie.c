@@ -129,7 +129,7 @@ ETOUCH_PLAYER(zombie_touch_player) {
     mob_hurt(level, player, 2 + zombie_data->level, mob_data->dir);
 }
 
-static const struct Entity zombie_entity = {
+const struct Entity zombie_entity = {
     .tick = zombie_tick,
     .draw = zombie_draw,
 

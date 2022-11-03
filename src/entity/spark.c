@@ -137,7 +137,7 @@ EDRAW(spark_draw) {
     return 1;
 }
 
-static const struct Entity spark_entity = {
+const struct Entity spark_entity = {
     .tick = spark_tick,
     .draw = spark_draw
 };

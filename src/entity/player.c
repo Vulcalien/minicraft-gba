@@ -16,6 +16,8 @@
 #include "entity.h"
 #include "player.h"
 
+#include "level.h"
+#include "tile.h"
 #include "mob.h"
 #include "input.h"
 #include "item.h"
@@ -592,7 +594,7 @@ EDRAW(player_draw) {
     return 1 + should_draw_furniture + should_draw_attack + should_draw_item;
 }
 
-static const struct Entity player_entity = {
+const struct Entity player_entity = {
     .tick = player_tick,
     .draw = player_draw,
 
@@ -601,9 +603,6 @@ static const struct Entity player_entity = {
 
     .is_solid = true
 };
-
-#undef MAX_HP
-#undef MAX_STAMINA
 
 void mob_player_die(struct Level *level, struct entity_Data *data) {
     scene_death_timer = 60;

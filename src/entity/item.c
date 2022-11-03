@@ -15,6 +15,8 @@
  */
 #include "entity.h"
 
+#include "tile.h"
+#include "player.h"
 #include "inventory.h"
 #include "sound.h"
 
@@ -180,7 +182,7 @@ EDRAW(item_draw) {
     return 1 + should_draw_shadow;
 }
 
-static const struct Entity item_entity = {
+const struct Entity item_entity = {
     .tick = item_tick,
     .draw = item_draw,
 

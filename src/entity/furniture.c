@@ -18,6 +18,8 @@
 
 #include "level.h"
 #include "item.h"
+#include "mob.h"
+#include "player.h"
 
 EWRAM_BSS_SECTION
 struct Inventory chest_inventories[CHEST_LIMIT];
@@ -104,7 +106,7 @@ ETOUCH_PLAYER(furniture_touch_player) {
 }
 
 #define GENERATE_STRUCT(name, yr_)\
-    static const struct Entity name = {\
+    const struct Entity name = {\
         .tick = furniture_tick,\
         .draw = furniture_draw,\
 \
@@ -121,8 +123,6 @@ GENERATE_STRUCT(oven_entity,      2);
 GENERATE_STRUCT(anvil_entity,     2);
 GENERATE_STRUCT(chest_entity,     3);
 GENERATE_STRUCT(lantern_entity,   2);
-
-#undef GENERATE_STRUCT
 
 void furniture_take(struct entity_Data *data) {
     struct furniture_Data *furn_data = (struct furniture_Data *) &data->data;
