@@ -162,15 +162,14 @@ _start:
 	.long 0xaf3cf087,0x8be425d6,0x72ac0a38,0x07f8d421
 
     @ Game Title (80000A0h)
-        .byte   0x4d,0x49,0x4e,0x49,0x43,0x52,0x41,0x46
-        .byte   0x54,0x47,0x42,0x41
+        .ascii "MINICRAFTGBA"
 
  .ifdef __MultibootDedicated
     @ Game Code (80000ACh)
         .ascii  "MB  "
  .else
     @ Game Code (80000ACh)
-        .byte   0x5a,0x4d,0x43,0x45
+        .ascii "ZMCE"
  .endif
 
     @ Maker Code (80000B0h)
@@ -200,8 +199,7 @@ _start:
 @ The ROM header ends here.
 
     @ Cart Backup ID
-        .byte 0x46,0x4c,0x41,0x53,0x48,0x31
-        .byte 0x4d,0x5f,0x56,0x6e,0x6e,0x6e
+        .ascii "FLASH1M_Vnnn"
 
     .ALIGN
     .ARM                                @ ..or you can use CODE 32 here
