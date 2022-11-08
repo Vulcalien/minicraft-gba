@@ -122,7 +122,7 @@ static inline void load_item(u16 *addr, struct item_Data *data) {
 
     if(item_is_resource(data->type)) {
         data->count  = read_byte((*addr)++);
-        data->count |= read_byte((*addr)++) >> 8;
+        data->count |= read_byte((*addr)++) << 8;
     } else if(ITEM_S(data)->class == ITEMCLASS_TOOL) {
         data->tool_level = read_byte((*addr)++);
         (*addr)++;
