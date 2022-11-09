@@ -36,6 +36,8 @@ CPPFLAGS := -Iinclude -MMD -MP
 CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
             -Wall -pedantic
 
+ASFLAGS  := -mcpu=arm7tdmi
+
 LDFLAGS := -Tlnkscript -nostartfiles
 LDLIBS  :=
 # =============================
@@ -84,7 +86,7 @@ $(OUT_ELF): $(OBJ_DIR)/crt0.o $(OBJ) | $(BIN_DIR)
 	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 $(OBJ_DIR)/crt0.o: $(SRC_DIR)/crt0.s | $(OBJ_DIRECTORIES)
-	$(AS) -o $@ $<
+	$(AS) $(ASFLAGS) -o $@ $<
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIRECTORIES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
