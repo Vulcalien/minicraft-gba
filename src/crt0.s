@@ -72,7 +72,7 @@ _start:
 @     ROM Header End     @
 @@@@@@@@@@@@@@@@@@@@@@@@@@
 
-@ Cart Backup ID
+    @ Cart Backup ID
         .ascii  "FLASH1M_Vnnn"
 
 .global start_vector
