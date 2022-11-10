@@ -18,9 +18,10 @@
 
 #include "minicraft.h"
 
-bool storage_check(void);
+extern bool storage_check(void);
+extern void storage_srand(void);
 
-void storage_load(void);
-void storage_save(void);
+extern void storage_load(void);
+extern void storage_save(void);
 
 #endif // MINICRAFT_STORAGE

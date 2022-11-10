@@ -29,10 +29,13 @@ THUMB
 static void start_init(u8 flags) {
     can_load = storage_check();
 
-    if(can_load)
+    if(can_load) {
         selected = 0;
-    else
+
+        storage_srand();
+    } else {
         selected = 1;
+    }
 }
 
 THUMB
@@ -51,14 +54,14 @@ static void start_tick(void) {
         if(selected == 0) {
             SOUND_PLAY(sound_start);
 
-            srand(tick_count);
+            srand(tick_count, false);
             storage_load();
 
             set_scene(&scene_game, 7);
         } else if(selected == 1) {
             SOUND_PLAY(sound_start);
 
-            srand(tick_count);
+            srand(tick_count, false);
             generate_levels();
 
             gametime = 0;

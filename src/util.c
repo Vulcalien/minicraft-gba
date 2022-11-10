@@ -39,6 +39,9 @@ u16 rand(void) {
     return seed >> 16;
 }
 
-void srand(u32 new_seed) {
-    seed = new_seed;
+void srand(u32 val, bool reset) {
+    if(reset)
+        seed = val;
+    else
+        seed += val;
 }

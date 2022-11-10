@@ -32,6 +32,7 @@ Storage Layout (128 KB)
 
 1 KB - header:
     4 B - game code (ZMCE)
+    4 B - random seed
 
 114 KB - 5 * level:
      7056 B - tiles
@@ -115,6 +116,18 @@ bool storage_check(void) {
                  read_byte(3) == 'E';
 
     return valid;
+}
+
+void storage_srand(void) {
+    switch_bank(0);
+
+    u32 seed;
+    seed =  read_byte(4);
+    seed |= read_byte(5) << 8;
+    seed |= read_byte(6) << 16;
+    seed |= read_byte(7) << 24;
+
+    srand(seed, true);
 }
 
 static inline void load_item(u16 *addr, struct item_Data *data) {
@@ -298,6 +311,13 @@ void storage_save(void) {
         write_byte(addr++, 'M');
         write_byte(addr++, 'C');
         write_byte(addr++, 'E');
+
+        // random seed
+        u32 seed = rand() << 16 | rand();
+        write_byte(addr++, seed);
+        write_byte(addr++, seed >> 8);
+        write_byte(addr++, seed >> 16);
+        write_byte(addr++, seed >> 24);
     }
 
     // write levels
