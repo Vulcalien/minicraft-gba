@@ -143,9 +143,9 @@ start_vector:
 
 @ r0 = Start Address
 @ r1 = Length
-.thumb
+.thumb_func
 ClearMem:
-        @ Return if length is 0
+        @ Return if Length is 0
         cmp     r1, #0
         beq     2f
 
@@ -153,7 +153,7 @@ ClearMem:
 1: @ loop
         stmia   r0!, {r2}
         sub     r1, #4
-        bne     1b
+        bgt     1b                      @ 'bgt' in case Length % 4 != 0
 
 2: @ exit
         bx      lr
@@ -161,9 +161,9 @@ ClearMem:
 @ r0 = Source Address
 @ r1 = Dest Address
 @ r2 = Length
-.thumb
+.thumb_func
 CopyMem:
-        @ Return if length is 0
+        @ Return if Length is 0
         cmp     r2, #0
         beq     2f
 
@@ -171,7 +171,7 @@ CopyMem:
         ldmia   r0!, {r3}
         stmia   r1!, {r3}
         sub     r2, #4
-        bne     1b
+        bgt     1b                      @ 'bgt' in case Length % 4 != 0
 
 2: @ exit
         bx      lr
