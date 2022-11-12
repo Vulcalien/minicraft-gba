@@ -14,7 +14,7 @@ the world.
 
 ## Differences due to Hardware limitations
 |                | Original | GBA Demake |
-| -------------- | -------- | ---------- |
+| -------------- | :------: | :--------: |
 | World size     | 128x128  | 112x112    |
 | Entity limit   | ∞        | 255        |
 | Chest limit    | ∞        | 32         |
@@ -36,6 +36,15 @@ emulator of choice. If you don't have one, I highly recommend mGBA.
 
 If you have any trouble with the save files, try to manually set the save format
 to `128 KB Flash ROM`.
+
+### Performance Overlay
+By holding the `L` and `R` buttons down and then pressing `Select`, the
+performance overlay is enabled.\
+Four hexadecimal values are written at the top corners:
+```
+FF <--- vcount after 'tick'     entity count ---> FF
+FF <--- vcount after 'draw'     sprite count ---> FF
+```
 
 ## Building
 To build the game, I use the `Makefile` present in the files.
