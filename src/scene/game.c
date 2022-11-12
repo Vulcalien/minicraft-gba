@@ -56,6 +56,7 @@ static void game_init(u8 flags) {
         should_refresh = true;
 }
 
+IWRAM_SECTION
 static void game_tick(void) {
     if(scene_death_timer > 0) {
         scene_death_timer--;
@@ -72,6 +73,7 @@ static void game_tick(void) {
     level_tick(level);
 }
 
+IWRAM_SECTION
 static void game_draw(void) {
     if(should_refresh) {
         should_refresh = false;
