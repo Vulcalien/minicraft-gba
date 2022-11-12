@@ -21,6 +21,9 @@
 
 #define THUMB __attribute__((target("thumb")))
 
+#define NOINLINE __attribute__((noinline))
+#define NOCLONE  __attribute__((noclone))
+
 #define EWRAM_SECTION        __attribute__((section(".ewram")))
 #define EWRAM_BSS_SECTION    __attribute__((section(".bss.ewram")))
 #define IWRAM_SECTION        __attribute__((section(".iwram")))

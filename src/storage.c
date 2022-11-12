@@ -23,8 +23,6 @@
 #include "player.h"
 #include "air-wizard.h"
 
-#define NO_INLINE __attribute__((noinline))
-
 #define FLASH_ROM ((vu8 *) 0x0e000000)
 
 /*
@@ -101,7 +99,7 @@ static inline void switch_bank(u32 bank) {
     FLASH_ROM[0x0000] = bank;
 }
 
-IWRAM_SECTION NO_INLINE
+IWRAM_SECTION NOCLONE NOINLINE
 static u8 read_byte(u16 addr) {
     return FLASH_ROM[addr];
 }
@@ -256,7 +254,7 @@ static inline void erase_chip(void) {
     while(read_byte(0x0000) != 0xff);
 }
 
-IWRAM_SECTION NO_INLINE
+IWRAM_SECTION NOCLONE NOINLINE
 static void write_byte(u16 addr, u8 byte) {
     FLASH_ROM[0x5555] = 0xaa;
     FLASH_ROM[0x2aaa] = 0x55;
