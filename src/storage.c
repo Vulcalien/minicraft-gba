@@ -147,6 +147,8 @@ static inline void load_item(u16 *addr, struct item_Data *data) {
 }
 
 static inline void load_inventory(u16 *addr, struct Inventory *inventory) {
+    inventory->size = 0;
+
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
         struct item_Data *item = &inventory->items[i];
         load_item(addr, item);
