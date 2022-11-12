@@ -21,9 +21,9 @@ static inline void swap(u8 *a, u8 *b) {
     if(*a == *b)
         return;
 
-    *a = *a ^ *b;
-    *b = *a ^ *b;
-    *a = *a ^ *b;
+    u8 temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
 #define VAL(id) (level->entities[entities[(id)]].y)
