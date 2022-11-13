@@ -413,7 +413,7 @@ void level_try_spawn(struct Level *level, u8 level_index) {
             return;
     }
 
-    u32 r = (4 + (level_index == 3) * 4) * 16;
+    u32 r = ((level_index == 3) ? 8 : 4) * 16;
 
     i32 x0 = x - r;
     i32 y0 = y - r;
