@@ -308,11 +308,13 @@ static inline void draw_lava_light(struct Level *level) {
             if(LEVEL_GET_TILE(level, x0 + x, y0 + y) != LIQUID_TILE)
                 continue;
 
-            // skip if surrounded by other lava (8 times out of 9)
-            if(((x0 + x) % 3 != 0 || (y0 + y) % 3 != 0) &&
+            if((x0 + x) & 1 &&
                LEVEL_GET_TILE(level, x0 + x - 1, y0 + y) == LIQUID_TILE &&
+               LEVEL_GET_TILE(level, x0 + x + 1, y0 + y) == LIQUID_TILE)
+                continue;
+
+            if((y0 + y) & 1 &&
                LEVEL_GET_TILE(level, x0 + x, y0 + y - 1) == LIQUID_TILE &&
-               LEVEL_GET_TILE(level, x0 + x + 1, y0 + y) == LIQUID_TILE &&
                LEVEL_GET_TILE(level, x0 + x, y0 + y + 1) == LIQUID_TILE)
                 continue;
 
