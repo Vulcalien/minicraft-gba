@@ -83,8 +83,12 @@ void sound_play(const u8 *sound, u16 length) {
                           3 << 12 | // Start Timing (3 is FIFO)
                           1 << 15;  // DMA Enable
 
-    const u16 timer_value = 3 << 0 | // Prescaler Selection (3 is 1024)
-                            1 << 7;  // Timer Start
+    const u16 stop_timer_value = 3 << 0 | // Prescaler Selection (3 is 1024)
+                                 1 << 6 | // Timer IRQ Enable
+                                 1 << 7;  // Timer Start
+
+    const u16 feed_timer_value = 3 << 0 | // Prescaler Selection (3 is 1024)
+                                 1 << 7;  // Timer Start
 
     static u8 channel_flag = 0;
     channel_flag ^= 1;
@@ -97,13 +101,11 @@ void sound_play(const u8 *sound, u16 length) {
 
         // 'Stop' timer
         TIMER2_RELOAD = 65536 - length;
-        TIMER2_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
-                         1 << 6 | // Timer IRQ Enable
-                         1 << 7;  // Timer Start
+        TIMER2_CONTROL = stop_timer_value;
 
         // 'Feed' timer
         TIMER0_RELOAD  = 65536 - 1;
-        TIMER0_CONTROL = timer_value;
+        TIMER0_CONTROL = feed_timer_value;
     } else {
         // Channel B
         DMA2_SOURCE  = (u32) sound;
@@ -112,12 +114,10 @@ void sound_play(const u8 *sound, u16 length) {
 
         // 'Stop' timer
         TIMER3_RELOAD = 65536 - length;
-        TIMER3_CONTROL = 3 << 0 | // Prescaler Selection (3 is 1024)
-                         1 << 6 | // Timer IRQ Enable
-                         1 << 7;  // Timer Start
+        TIMER3_CONTROL = stop_timer_value;
 
         // 'Feed' timer
         TIMER1_RELOAD  = 65536 - 1;
-        TIMER1_CONTROL = timer_value;
+        TIMER1_CONTROL = feed_timer_value;
     }
 }
