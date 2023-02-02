@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022-2023 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -195,6 +195,13 @@ static inline void draw_lantern_light(struct entity_Data *data) {
     }
 }
 
+static inline void draw_light_sprite(vu16 sprite_attribs[4],
+                                     i32 x, i32 y, u32 sprite, bool is_large) {
+    sprite_attribs[0] = ((y - level_y_offset) & 0xff) | 2 << 10;
+    sprite_attribs[1] = ((x - level_x_offset) & 0x1ff) | (2 + is_large) << 14;
+    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10;
+}
+
 static inline void draw_player_light(struct Level *level, u32 *used_sprites) {
     struct entity_Data *player = &level->entities[0];
 
@@ -205,45 +212,44 @@ static inline void draw_player_light(struct Level *level, u32 *used_sprites) {
         vu16 *sprite_attribs = OAM + *used_sprites * 4;
 
         // top-left
-        sprite_attribs[0] = ((player->y - level_y_offset - 3 - 64) & 0xff) |
-                            (2 << 10);
-        sprite_attribs[1] = ((player->x - level_x_offset - 64) & 0x1ff) |
-                            (3 << 14);
-        sprite_attribs[2] = 336;
+        draw_light_sprite(
+            &sprite_attribs[0],
+            player->x - 64, player->y - 3 - 64,
+            336, true
+        );
 
         // top-right
-        sprite_attribs[4] = ((player->y - level_y_offset - 3 - 64) & 0xff) |
-                            (2 << 10);
-        sprite_attribs[5] = ((player->x - level_x_offset) & 0x1ff) |
-                            (3 << 14);
-        sprite_attribs[6] = 400;
+        draw_light_sprite(
+            &sprite_attribs[4],
+            player->x, player->y - 3 - 64,
+            400, true
+        );
 
         // bottom-left
-        sprite_attribs[8] = ((player->y - level_y_offset - 3) & 0xff) |
-                            (2 << 10);
-        sprite_attribs[9] = ((player->x - level_x_offset - 64) & 0x1ff) |
-                            (3 << 14);
-        sprite_attribs[10] = 464;
+        draw_light_sprite(
+            &sprite_attribs[8],
+            player->x - 64, player->y - 3,
+            464, true
+        );
 
         // bottom-right
-        sprite_attribs[12] = ((player->y - level_y_offset - 3) & 0xff) |
-                             (2 << 10);
-        sprite_attribs[13] = ((player->x - level_x_offset) & 0x1ff) |
-                             (3 << 14);
-        sprite_attribs[14] = 528;
+        draw_light_sprite(
+            &sprite_attribs[12],
+            player->x, player->y - 3,
+            528, true
+        );
 
         *used_sprites += 4;
     } else {
         // overwrite the last sprite if necessary
         if(*used_sprites > 128 - 1)
             *used_sprites = 128 - 1;
-        vu16 *sprite_attribs = OAM + *used_sprites * 4;
 
-        sprite_attribs[0] = ((player->y - level_y_offset - 3 - 16) & 0xff) |
-                            (2 << 10);
-        sprite_attribs[1] = ((player->x - level_x_offset - 16) & 0x1ff) |
-                            (2 << 14);
-        sprite_attribs[2] = 320;
+        draw_light_sprite(
+            OAM + *used_sprites * 4,
+            player->x - 16, player->y - 3 - 16,
+            320, false
+        );
 
         *used_sprites += 1;
     }
