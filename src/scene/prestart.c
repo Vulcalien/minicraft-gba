@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022-2023 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ static void prestart_draw(void) {
         "MADE BY MARKUS PERSSON.\n"
         "\n"
         "\n"
-        "COPYRIGHT 2022 VULCALIEN\n"
+        "COPYRIGHT 2023 VULCALIEN\n"
         "\n"
         "THIS IS FREE SOFTWARE\n"
         "RELEASED UNDER THE\n"

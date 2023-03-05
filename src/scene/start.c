@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022-2023 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,6 +112,8 @@ static void start_draw(void) {
 
     START_WRITE("HOW TO PLAY", selected == 2, 9, 12);
     START_WRITE("ABOUT", selected == 3, 12, 13);
+
+    screen_write("V1.1", 1, 26, 19);
 }
 
 const struct Scene scene_start = {
