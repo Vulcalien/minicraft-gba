@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022-2023 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 static struct Level *level = NULL;
 
-static bool should_refresh = false;
+static bool should_clear = false;
 
 static inline void game_move_player(struct Level *old_level,
                                     struct Level *new_level) {
@@ -52,8 +52,7 @@ static void game_init(u8 flags) {
         screen_update_level_specific();
     }
 
-    if(scene != &scene_transition)
-        should_refresh = true;
+    should_clear = true;
 }
 
 IWRAM_SECTION
@@ -73,50 +72,64 @@ static void game_tick(void) {
     level_tick(level);
 }
 
-IWRAM_SECTION
-static void game_draw(void) {
-    if(should_refresh) {
-        should_refresh = false;
+static inline void clear_screen(void) {
+    if(!should_clear)
+        return;
 
-        // clear the screen (fully transparent)
-        for(u32 y = 0; y < 18; y++)
-            for(u32 x = 0; x < 30; x += 2)
-                *((vu32 *) &BG3_TILEMAP[x + y * 32]) = 0;
-    }
+    // clear level area (fully transparent)
+    for(u32 y = 0; y < 18; y++)
+        for(u32 x = 0; x < 30; x++)
+            BG3_TILEMAP[x + y * 32] = 0;
 
-    level_draw(level);
+    // clear status bar (black)
+    for(u32 y = 18; y < 20; y++)
+        for(u32 x = 0; x < 30; x++)
+            BG3_TILEMAP[x + y * 32] = 29;
+
+    should_clear = false;
+}
+
+static inline void draw_status_bar(void) {
+    struct entity_Data *player = &level->entities[0];
+    if(player->type >= ENTITY_TYPES)
+        return;
+
+    struct mob_Data *mob_data = (struct mob_Data *) &player->data;
 
     // draw hp and stamina
-    struct entity_Data *player = &level->entities[0];
-    if(player->type < ENTITY_TYPES) {
-        struct mob_Data *mob_data = (struct mob_Data *) &player->data;
-
-        for(u32 i = 0; i < 10; i++) {
-            BG3_TILEMAP[i + 18 * 32] = (91 + (mob_data->hp <= i))   | 5 << 12;
-            BG3_TILEMAP[i + 19 * 32] = (93 + (player_stamina <= i)) | 5 << 12;
-        }
-
-        if(player_stamina_recharge_delay != 0 &&
-           (player_stamina_recharge_delay & 4) == 0) {
-            screen_set_bg_palette_color(5, 0xa, 0x7bde);
-        } else {
-            screen_set_bg_palette_color(5, 0xa, 0x0cc6);
-        }
-
-        // clear active item area
-        for(u32 x = 20; x < 30; x += 2)
-            *((vu32 *) &BG3_TILEMAP[x + 18 * 32]) = 29 | 29 << 16;
-
-        // draw active item
-        if(player_active_item.type < ITEM_TYPES) {
-            // copy item palette
-            const struct Item *item = ITEM_S(&player_active_item);
-            screen_load_active_item_palette(item->palette);
-
-            item_draw_icon(&player_active_item, 20, 18, true);
-            item_write(&player_active_item, 0, 21, 18);
-        }
+    for(u32 i = 0; i < 10; i++) {
+        BG3_TILEMAP[i + 18 * 32] = (91 + (mob_data->hp <= i))   | 5 << 12;
+        BG3_TILEMAP[i + 19 * 32] = (93 + (player_stamina <= i)) | 5 << 12;
     }
+
+    // set stamina blinking color
+    if(player_stamina_recharge_delay != 0 &&
+       (player_stamina_recharge_delay & 4) == 0) {
+        screen_set_bg_palette_color(5, 0xa, 0x7bde);
+    } else {
+        screen_set_bg_palette_color(5, 0xa, 0x0cc6);
+    }
+
+    // draw active item
+    if(player_active_item.type < ITEM_TYPES) {
+        // copy item palette
+        const struct Item *item = ITEM_S(&player_active_item);
+        screen_load_active_item_palette(item->palette);
+
+        item_draw_icon(&player_active_item, 20, 18, true);
+        item_write(&player_active_item, 0, 21, 18);
+    } else {
+        // clear active item area
+        for(u32 x = 20; x < 30; x++)
+            BG3_TILEMAP[x + 18 * 32] = 29;
+    }
+}
+
+IWRAM_SECTION
+static void game_draw(void) {
+    clear_screen();
+    level_draw(level);
+    draw_status_bar();
 }
 
 const struct Scene scene_game = {
