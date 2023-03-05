@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022-2023 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ static void about_draw(void) {
     );
 
     screen_write("ABOUT MINICRAFT", 0, 7, 9);
-    screen_write("(NOTCH'S WORDS)", 1, 7, 10);
+    screen_write("(NOTCH'S WORDS)", 2, 7, 10);
 
     screen_write(
         "MINICRAFT WAS MADE BY MARKUS\n"
