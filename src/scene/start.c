@@ -113,7 +113,7 @@ static void start_draw(void) {
     START_WRITE("HOW TO PLAY", selected == 2, 9, 12);
     START_WRITE("ABOUT", selected == 3, 12, 13);
 
-    screen_write("V1.1", 1, 26, 19);
+    screen_write("V1.2", 1, 26, 19);
 }
 
 const struct Scene scene_start = {

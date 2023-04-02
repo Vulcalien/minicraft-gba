@@ -110,6 +110,10 @@ static inline void draw_status_bar(void) {
         screen_set_bg_palette_color(5, 0xa, 0x0cc6);
     }
 
+    // clear active item area
+    for(u32 x = 20; x < 30; x++)
+        BG3_TILEMAP[x + 18 * 32] = 29;
+
     // draw active item
     if(player_active_item.type < ITEM_TYPES) {
         // copy item palette
@@ -118,10 +122,6 @@ static inline void draw_status_bar(void) {
 
         item_draw_icon(&player_active_item, 20, 18, true);
         item_write(&player_active_item, 0, 21, 18);
-    } else {
-        // clear active item area
-        for(u32 x = 20; x < 30; x++)
-            BG3_TILEMAP[x + 18 * 32] = 29;
     }
 }
 
