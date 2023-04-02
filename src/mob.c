@@ -48,12 +48,12 @@ IWRAM_SECTION
 void mob_tick(struct Level *level, struct entity_Data *data) {
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
 
+    if(mob_data->hp == 0)
+        mob_die(level, data);
+
     if(current_level == 0)
         if(LEVEL_GET_TILE(level, data->x >> 4, data->y >> 4) == LIQUID_TILE)
             mob_hurt(level, data, 4, mob_data->dir ^ 2);
-
-    if(mob_data->hp <= 0)
-        mob_die(level, data);
 
     if(mob_data->hurt_time > 0)
         mob_data->hurt_time--;
