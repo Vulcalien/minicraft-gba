@@ -89,16 +89,22 @@ static inline void clear_screen(void) {
     should_clear = false;
 }
 
-static inline void draw_status_bar(void) {
+static inline u16 get_player_hp(void) {
     struct entity_Data *player = &level->entities[0];
-    if(player->type >= ENTITY_TYPES)
-        return;
+    if(player->type < ENTITY_TYPES) {
+        struct mob_Data *mob_data = (struct mob_Data *) &player->data;
 
-    struct mob_Data *mob_data = (struct mob_Data *) &player->data;
+        return mob_data->hp;
+    }
+    return 0;
+}
+
+static inline void draw_status_bar(void) {
+    u16 player_hp = get_player_hp();
 
     // draw hp and stamina
     for(u32 i = 0; i < 10; i++) {
-        BG3_TILEMAP[i + 18 * 32] = (91 + (mob_data->hp <= i))   | 5 << 12;
+        BG3_TILEMAP[i + 18 * 32] = (91 + (player_hp <= i))      | 5 << 12;
         BG3_TILEMAP[i + 19 * 32] = (93 + (player_stamina <= i)) | 5 << 12;
     }
 
