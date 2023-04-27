@@ -44,6 +44,9 @@ Four hexadecimal values are written at the top corners:
 ```
 FF <--- vcount after 'tick'     entity count ---> FF
 FF <--- vcount after 'draw'     sprite count ---> FF
+
+60 <--- tps (ticks per second)
+60 <--- fps (frames per second)
 ```
 
 ## Building

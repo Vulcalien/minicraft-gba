@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022-2023 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,14 +36,15 @@
 #endif
 
 extern u32 tick_count;
+extern u32 expected_tickcount;
 
 extern u32 gametime;
 extern u32 score;
 
 extern u8 current_level;
 
-// The behavior of right shift for negative values is implementation-dependent
-// but Arithmetic Right Shift is required
+// The behavior of right shift for negative values is
+// implementation-dependent, but Arithmetic Right Shift is required
 static_assert((-1) >> 1 == -1, "Arithmetic Right Shift is required");
 
 #endif // MINICRAFT_CORE
