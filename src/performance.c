@@ -27,8 +27,6 @@ static u16 draw_vcount;
 static u16 ticks = 0, frames = 0;
 static u16 tps   = 0, fps    = 0;
 
-static u16 vblanks = 0;
-
 void performance_tick(void) {
     tick_vcount = VCOUNT;
     ticks++;
@@ -68,6 +66,7 @@ void performance_draw(void) {
 
 IWRAM_SECTION
 void performance_vblank(void) {
+    static u32 vblanks = 0;
     vblanks++;
 
     if(vblanks == 60) {
