@@ -266,16 +266,16 @@ SECTIONS
 
   __ewram_overlay_end = . ;
 
-  .bss.ewram ALIGN(4) :
+  .sbss ALIGN(4) :
   {
-   __ewram_bss_start = ABSOLUTE(.);
-   __ewram_bss_start__ = ABSOLUTE(.);
+   __sbss_start = ABSOLUTE(.);
+   __sbss_start__ = ABSOLUTE(.);
    *(.bss.ewram)
    . = ALIGN(4);    /* REQUIRED. LD is flaky without it. */
   }
 
-  __ewram_bss_end = . ;
-  __ewram_bss_end__ = . ;
+  __sbss_end = . ;
+  __sbss_end__ = . ;
 
   __eheap_start = . ;
 

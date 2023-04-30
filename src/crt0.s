@@ -94,16 +94,16 @@ start_vector:
 
         .thumb
 
-        @ Clear EWRAM
-        mov     r1, #0x40
-        lsl     r1, #12                 @ r1 = 0x40000
-        lsl     r0, r1, #7              @ r0 = 0x2000000
+        @ Clear .sbss section
+        ldr     r0, =__sbss_start
+        ldr     r1, =__sbss_end
+        sub     r1, r0
         bl      ClearMem
 
-        @ Clear IWRAM
-        mov     r0, #3
-        lsl     r0, #24                 @ r0 = 0x3000000
-        ldr     r1, =__sp_usr_offset - 16
+        @ Clear .bss section
+        ldr     r0, =__bss_start
+        ldr     r1, =__bss_end
+        sub     r1, r0
         bl      ClearMem
 
         @ Copy .data section
