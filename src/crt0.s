@@ -96,35 +96,30 @@ start_vector:
 
         @ Clear .sbss section
         ldr     r0, =__sbss_start
-        ldr     r1, =__sbss_end
-        sub     r1, r0
+        ldr     r1, =__sbss_size
         bl      ClearMem
 
         @ Clear .bss section
         ldr     r0, =__bss_start
-        ldr     r1, =__bss_end
-        sub     r1, r0
+        ldr     r1, =__bss_size
         bl      ClearMem
 
         @ Copy .data section
         ldr     r0, =__data_lma
         ldr     r1, =__data_start
-        ldr     r2, =__data_end
-        sub     r2, r1
+        ldr     r2, =__data_size
         bl      CopyMem
 
         @ Copy .ewram section
         ldr     r0, =__ewram_lma
         ldr     r1, =__ewram_start
-        ldr     r2, =__ewram_end
-        sub     r2, r1
+        ldr     r2, =__ewram_size
         bl      CopyMem
 
         @ Copy .iwram section
         ldr     r0, =__iwram_lma
         ldr     r1, =__iwram_start
-        ldr     r2, =__iwram_end
-        sub     r2, r1
+        ldr     r2, =__iwram_size
         bl      CopyMem
 
         @ Call AgbMain
