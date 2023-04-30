@@ -25,9 +25,9 @@
 #define NOCLONE  __attribute__((noclone))
 
 #define EWRAM_SECTION        __attribute__((section(".ewram")))
-#define EWRAM_BSS_SECTION    __attribute__((section(".bss.ewram")))
+#define EWRAM_BSS_SECTION    __attribute__((section(".sbss")))
 #define IWRAM_SECTION        __attribute__((section(".iwram")))
-#define IWRAM_RODATA_SECTION __attribute__((section(".rodata_iwram")))
+#define IWRAM_RODATA_SECTION __attribute__((section(".iwram.rodata")))
 
 #define static_assert _Static_assert
 
