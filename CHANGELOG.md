@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2] - Unreleased
+## [1.2]
 ### Added
 - Introduced frameskip, which can lower the fps to 30.
 - Added TPS and FPS counters in the performance overlay.
