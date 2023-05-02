@@ -40,6 +40,10 @@ SECTIONS
         __text_start = ABSOLUTE(.);
 
         *(.text)
+        *(.text.*)
+
+        *(.glue_7)
+        *(.glue_7t)
 
         . = ALIGN(4);
         __text_end = ABSOLUTE(.);
@@ -67,7 +71,7 @@ SECTIONS
         __iwram_start = ABSOLUTE(.);
 
         *(.iwram)
-        *(.iwram.rodata)
+        *(.iwram.*)
 
         . = ALIGN(4);
         __iwram_end = ABSOLUTE(.);
@@ -80,6 +84,8 @@ SECTIONS
         __bss_start = ABSOLUTE(.);
 
         *(.bss)
+        *(.bss.*)
+
         *(COMMON)
 
         . = ALIGN(4);
@@ -92,6 +98,7 @@ SECTIONS
         __data_start = ABSOLUTE(.);
 
         *(.data)
+        *(.data.*)
 
         . = ALIGN(4);
         __data_end = ABSOLUTE(.);
@@ -108,7 +115,7 @@ SECTIONS
         __ewram_start = ABSOLUTE(.);
 
         *(.ewram)
-        *(.ewram.rodata)
+        *(.ewram.*)
 
         . = ALIGN(4);
         __ewram_end = ABSOLUTE(.);
@@ -121,6 +128,7 @@ SECTIONS
         __sbss_start = ABSOLUTE(.);
 
         *(.sbss)
+        *(.sbss.*)
 
         . = ALIGN(4);
         __sbss_end = ABSOLUTE(.);
