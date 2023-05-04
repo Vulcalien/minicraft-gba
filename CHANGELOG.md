@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.1]
+Fixed the linker script: add missing input sections to the output
+sections. The ROM remains unchanged.
+
 ## [1.2]
 ### Added
 - Introduced frameskip, which can lower the fps to 30.
