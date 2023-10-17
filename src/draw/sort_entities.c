@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2023 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,44 +15,47 @@
  */
 #include "level.h"
 
-// reverse quicksort implementation
+#include "screen.h"
 
-static inline void swap(u8 *a, u8 *b) {
-    if(*a == *b)
-        return;
+// Counting Sort implementation
 
-    u8 temp = *a;
-    *a = *b;
-    *b = temp;
-}
+#define VALUE_RANGE (SCREEN_H + 16)
+
+static u8 count_array[VALUE_RANGE];
+static u8 result_array[128];
 
 #define VAL(id) (level->entities[entities[(id)]].y)
-static inline u32 partition(struct Level *level, u8 *entities,
-                            i32 low, i32 high) {
-    const u16 pivot_value = VAL(high);
-
-    u32 j = low;
-    for(u32 i = low; i < high; i++) {
-        const u16 val = VAL(i);
-        if(val >= pivot_value) {
-            swap(&entities[i], &entities[j]);
-            j++;
-        }
-    }
-
-    swap(&entities[j], &entities[high]);
-    return j;
-}
-#undef VAL
 
 IWRAM_SECTION
-static void sort_entities(struct Level *level, u8 *entities,
-                          i32 low, i32 high) {
-    if(low >= high)
-        return;
+static u8 *sort_entities(struct Level *level, u8 *entities, u32 n) {
+    if(n <= 1)
+        return entities;
 
-    u32 pivot_index = partition(level, entities, low, high);
+    // clear count_array
+    for(u32 i = 0; i < VALUE_RANGE; i++)
+        count_array[i] = 0;
 
-    sort_entities(level, entities, low, pivot_index - 1);
-    sort_entities(level, entities, pivot_index + 1, high);
+    // find the minimum value
+    u16 min = VAL(0);
+    for(u32 i = 1; i < n; i++)
+        if(min > VAL(i))
+            min = VAL(i);
+
+    // count the values
+    for(u32 i = 0; i < n; i++)
+        count_array[VAL(i) - min]++;
+
+    // calculate indexes
+    for(u32 i = 1; i < VALUE_RANGE; i++)
+        count_array[i] += count_array[i - 1];
+
+    // set values in result_array
+    for(i32 i = n - 1; i >= 0; i--) {
+        u8 *index = &count_array[VAL(i) - min];
+
+        (*index)--;
+        result_array[*index] = entities[i];
+    }
+
+    return result_array;
 }

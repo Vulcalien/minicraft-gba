@@ -34,8 +34,7 @@ u8 level_solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
 u32 level_x_offset = 0;
 u32 level_y_offset = 0;
 
-EWRAM_BSS_SECTION
-static u8 entities_to_render[128];
+static u8 entities_render_buffer[128];
 
 static inline void remove_solid_entity(u8 xt, u8 yt,
                                        struct entity_Data *entity_data,
@@ -256,6 +255,8 @@ static inline void draw_player_light(struct Level *level, u32 *used_sprites) {
 }
 
 static inline void draw_entities(struct Level *level) {
+    u8 *entities_to_render = entities_render_buffer;
+
     u32 to_render_size = 0;
     for(u32 i = 0; i < ENTITY_LIMIT; i++) {
         struct entity_Data *data = &level->entities[i];
@@ -279,11 +280,15 @@ static inline void draw_entities(struct Level *level) {
             break;
     }
 
-    sort_entities(level, entities_to_render, 0, to_render_size - 1);
+    entities_to_render = sort_entities(
+        level, entities_to_render, to_render_size
+    );
 
     u32 used_sprites = 0;
     for(u32 i = 0; i < to_render_size && used_sprites < 128; i++) {
-        struct entity_Data *data = &level->entities[entities_to_render[i]];
+        struct entity_Data *data = &level->entities[
+            entities_to_render[to_render_size - i - 1]
+        ];
 
         const struct Entity *entity = ENTITY_S(data);
         used_sprites += entity->draw(level, data, used_sprites);
