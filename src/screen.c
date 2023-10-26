@@ -230,10 +230,24 @@ void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h) {
     screen_write(title, 8, x + 1, y);
 }
 
-void screen_write_time(u32 time, u8 palette, u32 x, u32 y) {
-    // NOTE this is different from the original game
+static inline u32 ticks_to_seconds(u32 ticks) {
+    // refresh time:    280_896    cycles = 4389   * 64 cycles
+    // clock frequency: 16_777_216 Hz     = 262144 * 64 Hz
+    //
+    // framerate = (clock frequency) / (refresh time)
+    // time = ticks / framerate
+    //      = (ticks * 4389) / 262144
+    //      = (ticks * 4389) >> 18
 
-    u32 seconds = time    / 60;
+    return (((u64) ticks) * 4389) >> 18;
+}
+
+void screen_write_time(u32 ticks, u8 palette, u32 x, u32 y) {
+    // NOTE this is different from the original game: here, seconds are
+    // displayed even if hours is not 0 and there is a space between the
+    // hours and minutes values.
+
+    u32 seconds = ticks_to_seconds(ticks);
     u32 minutes = seconds / 60;
     u32 hours   = minutes / 60;
 

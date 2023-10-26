@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022-2023 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ extern void vsync(void);
 
 extern void screen_write(const char *text, u8 palette, u32 x, u32 y);
 extern void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h);
-extern void screen_write_time(u32 time, u8 palette, u32 x, u32 y);
+extern void screen_write_time(u32 ticks, u8 palette, u32 x, u32 y);
 
 #define SCREEN_WRITE_NUMBER(number, radix, digits, zero_fill, palette, x, y)\
     do {\

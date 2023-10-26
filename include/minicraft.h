@@ -38,7 +38,7 @@
 extern u32 tick_count;
 extern u32 expected_tickcount;
 
-extern u32 gametime;
+extern u32 gametime; // measured in ticks
 extern u32 score;
 
 extern u8 current_level;
