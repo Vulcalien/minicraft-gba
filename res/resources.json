@@ -1,0 +1,46 @@
+{
+    "files": [
+        {
+            "name": "sound_start",
+
+            "input": "res/sounds/start.raw",
+            "output": "src/res/sounds/start.c"
+        },
+        {
+            "name": "sound_pickup",
+
+            "input": "res/sounds/pickup.raw",
+            "output": "src/res/sounds/pickup.c"
+        },
+        {
+            "name": "sound_craft",
+
+            "input": "res/sounds/craft.raw",
+            "output": "src/res/sounds/craft.c"
+        },
+        {
+            "name": "sound_monster_hurt",
+
+            "input": "res/sounds/monster_hurt.raw",
+            "output": "src/res/sounds/monster_hurt.c"
+        },
+        {
+            "name": "sound_player_hurt",
+
+            "input": "res/sounds/player_hurt.raw",
+            "output": "src/res/sounds/player_hurt.c"
+        },
+        {
+            "name": "sound_player_death",
+
+            "input": "res/sounds/player_death.raw",
+            "output": "src/res/sounds/player_death.c"
+        },
+        {
+            "name": "sound_boss_death",
+
+            "input": "res/sounds/boss_death.raw",
+            "output": "src/res/sounds/boss_death.c"
+        }
+    ]
+}

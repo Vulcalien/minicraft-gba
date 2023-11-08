@@ -2,5 +2,8 @@
 /obj
 /bin
 
+# Converted resources
+/src/res
+
 # vim
 *.swp

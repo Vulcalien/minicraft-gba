@@ -67,7 +67,7 @@ OUT     := $(BIN_DIR)/$(OUT_FILENAME).gba
 OBJ_DIRECTORIES := $(OBJ_DIR) $(foreach DIR,$(SRC_SUBDIRS),$(OBJ_DIR)/$(DIR))
 
 # === TARGETS ===
-.PHONY: all run build clean
+.PHONY: all run build res clean
 
 all: build
 
@@ -77,7 +77,7 @@ run:
 build: $(OUT)
 
 clean:
-	@$(RM) $(RMFLAGS) $(BIN_DIR) $(OBJ_DIR)
+	@$(RM) $(RMFLAGS) $(BIN_DIR) $(OBJ_DIR) src/res
 
 $(OUT): $(OUT_ELF)
 	$(OBJCOPY) -O binary $^ $@
@@ -91,7 +91,10 @@ $(OBJ_DIR)/crt0.o: $(SRC_DIR)/crt0.s | $(OBJ_DIRECTORIES)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIRECTORIES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-$(BIN_DIR) $(OBJ_DIRECTORIES):
+$(BIN_DIR) $(OBJ_DIRECTORIES) src/res src/res/sounds:
 	$(MKDIR) $(MKDIRFLAGS) "$@"
+
+res: src/res src/res/sounds
+	scripts/convert-resources.py res/resources.json
 
 -include $(OBJ:.o=.d)
