@@ -25,20 +25,29 @@
 
 #define FLASH_ROM ((vu8 *) 0x0e000000)
 
+#define BYTES_PER_ITEM (3)
+
 /*
 Storage Layout (128 KB)
 
-1 KB - header:
-    4 B - game code (ZMCE)
-    4 B - random seed
+* 1 KB - header:
+      4 B - game code (ZMCE)
+      4 B - random seed
 
-114 KB - 5 * level:
-     7056 B - tiles
-    12544 B - data
-     3570 B - entities
+   1016 B - padding
 
-12 KB - chest inventories
-1 KB - player and other data:
+* 114 KB - level data:
+    5 times:
+       7056 B - tiles
+      12544 B - data
+       3570 B - entities
+    886 B - padding
+
+* 12 KB - chest inventories:
+    32 times:
+        384 B - chest inventory
+
+* 1 KB - player and other data:
     384 B - inventory
       3 B - active item
 
@@ -54,6 +63,8 @@ Storage Layout (128 KB)
 
       1 B - air wizard attack delay
       1 B - air wizard attack time
+
+    621 B - padding
  */
 
 #define LEVEL_COUNT (sizeof(levels) / sizeof(struct Level))
@@ -87,7 +98,7 @@ static_assert(
 
 // assert chests
 static_assert(
-    CHEST_LIMIT * INVENTORY_SIZE * 3 == 12 * 1024,
+    CHEST_LIMIT * INVENTORY_SIZE * BYTES_PER_ITEM == 12 * 1024,
     "chest storage size should be 12 KB"
 );
 
@@ -102,6 +113,18 @@ static inline void switch_bank(u32 bank) {
 IWRAM_SECTION NOCLONE NOINLINE
 static u8 read_byte(u16 addr) {
     return FLASH_ROM[addr];
+}
+
+static inline u16 read_2_bytes(u16 addr) {
+    return read_byte(addr) |
+           read_byte(addr + 1) << 8;
+}
+
+static inline u32 read_4_bytes(u16 addr) {
+    return read_byte(addr) |
+           read_byte(addr + 1) << 8 |
+           read_byte(addr + 2) << 16 |
+           read_byte(addr + 3) << 24;
 }
 
 bool storage_check(void) {
@@ -119,46 +142,34 @@ bool storage_check(void) {
 void storage_srand(void) {
     switch_bank(0);
 
-    u32 seed;
-    seed =  read_byte(4);
-    seed |= read_byte(5) << 8;
-    seed |= read_byte(6) << 16;
-    seed |= read_byte(7) << 24;
-
-    srand(seed, true);
+    srand(read_4_bytes(4), true);
 }
 
-static inline void load_item(u16 *addr, struct item_Data *data) {
-    data->type = FLASH_ROM[(*addr)++];
+static inline void load_item(u16 addr, struct item_Data *data) {
+    data->type = read_byte(addr);
+    if(data->type >= ITEM_TYPES)
+        return;
 
-    if(item_is_resource(data->type)) {
-        data->count  = read_byte((*addr)++);
-        data->count |= read_byte((*addr)++) << 8;
-    } else if(ITEM_S(data)->class == ITEMCLASS_TOOL) {
-        data->tool_level = read_byte((*addr)++);
-        (*addr)++;
-    } else if(data->type == CHEST_ITEM) {
-        data->chest_id = read_byte((*addr)++);
-        (*addr)++;
-    } else {
-        (*addr)++;
-        (*addr)++;
-    }
+    u16 val = read_2_bytes(addr + 1);
+    if(item_is_resource(data->type))
+        data->count = val;
+    else if(ITEM_S(data)->class == ITEMCLASS_TOOL)
+        data->tool_level = val;
+    else if(data->type == CHEST_ITEM)
+        data->chest_id = val;
 }
 
-static inline void load_inventory(u16 *addr, struct Inventory *inventory) {
+static inline void load_inventory(u16 addr, struct Inventory *inventory) {
     inventory->size = 0;
 
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
         struct item_Data *item = &inventory->items[i];
         load_item(addr, item);
-
-        if(item->type < ITEM_TYPES) {
-            inventory->size++;
-        } else {
-            (*addr) += (INVENTORY_SIZE - i - 1) * 3;
+        if(item->type >= ITEM_TYPES)
             break;
-        }
+
+        addr += BYTES_PER_ITEM;
+        inventory->size++;
     }
 }
 
@@ -211,30 +222,31 @@ void storage_load(void) {
 
     // read chest inventories
     addr = (115 % 64) * 1024;
-    for(u32 i = 0; i < CHEST_LIMIT; i++)
-        load_inventory(&addr, &chest_inventories[i]);
+    for(u32 i = 0; i < CHEST_LIMIT; i++) {
+        load_inventory(addr, &chest_inventories[i]);
+        addr += INVENTORY_SIZE * BYTES_PER_ITEM;
+    }
 
     // read player and other data
     addr = (127 % 64) * 1024;
     {
-        load_inventory(&addr, &player_inventory);
-        load_item(&addr, &player_active_item);
+        load_inventory(addr, &player_inventory);
+        addr += INVENTORY_SIZE * BYTES_PER_ITEM;
+
+        load_item(addr, &player_active_item);
+        addr += BYTES_PER_ITEM;
 
         player_stamina                = read_byte(addr++);
         player_stamina_recharge_delay = read_byte(addr++);
 
-        player_invulnerable_time  = read_byte(addr++);
-        player_invulnerable_time |= read_byte(addr++) << 8;
+        player_invulnerable_time = read_2_bytes(addr);
+        addr += 2;
 
-        score =  read_byte(addr++);
-        score |= read_byte(addr++) << 8;
-        score |= read_byte(addr++) << 16;
-        score |= read_byte(addr++) << 24;
+        score = read_4_bytes(addr);
+        addr += 4;
 
-        gametime =  read_byte(addr++);
-        gametime |= read_byte(addr++) << 8;
-        gametime |= read_byte(addr++) << 16;
-        gametime |= read_byte(addr++) << 24;
+        gametime = read_4_bytes(addr);
+        addr += 4;
 
         current_level = read_byte(addr++);
         chest_count = read_byte(addr++);
@@ -267,33 +279,49 @@ static void write_byte(u16 addr, u8 byte) {
     while(read_byte(addr) != byte);
 }
 
-static inline void store_item(u16 *addr, struct item_Data *data) {
-    write_byte((*addr)++, data->type);
-
-    if(item_is_resource(data->type)) {
-        write_byte((*addr)++, data->count);
-        write_byte((*addr)++, data->count >> 8);
-    } else if(ITEM_S(data)->class == ITEMCLASS_TOOL) {
-        write_byte((*addr)++, data->tool_level);
-        (*addr)++;
-    } else if(data->type == CHEST_ITEM) {
-        write_byte((*addr)++, data->chest_id);
-        (*addr)++;
-    } else {
-        (*addr)++;
-        (*addr)++;
-    }
+static inline void write_2_bytes(u16 addr, u16 bytes) {
+    write_byte(addr, bytes);
+    write_byte(addr + 1, bytes >> 8);
 }
 
-static inline void store_inventory(u16 *addr, struct Inventory *inventory) {
+static inline void write_4_bytes(u16 addr, u32 bytes) {
+    write_byte(addr, bytes);
+    write_byte(addr + 1, bytes >> 8);
+    write_byte(addr + 2, bytes >> 16);
+    write_byte(addr + 3, bytes >> 24);
+}
+
+static inline void write_padding(u16 *addr, u16 dest_address) {
+    while(*addr != dest_address)
+        write_byte((*addr)++, 0);
+}
+
+static inline void store_item(u16 addr, struct item_Data *data) {
+    write_byte(addr, data->type);
+
+    u16 val = 0;
+    if(data->type < ITEM_TYPES) {
+        if(item_is_resource(data->type))
+            val = data->count;
+        else if(ITEM_S(data)->class == ITEMCLASS_TOOL)
+            val = data->tool_level;
+        else if(data->type == CHEST_ITEM)
+            val = data->chest_id;
+    }
+
+    write_2_bytes(addr + 1, val);
+
+}
+
+static inline void store_inventory(u16 addr, struct Inventory *inventory) {
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
         if(i < inventory->size) {
             store_item(addr, &inventory->items[i]);
         } else {
-            write_byte((*addr)++, -1);
-            (*addr)++;
-            (*addr)++;
+            write_byte(addr, -1);
+            write_2_bytes(addr + 1, 0);
         }
+        addr += BYTES_PER_ITEM;
     }
 }
 
@@ -314,14 +342,13 @@ void storage_save(void) {
 
         // random seed
         u32 seed = rand() << 16 | rand();
-        write_byte(addr++, seed);
-        write_byte(addr++, seed >> 8);
-        write_byte(addr++, seed >> 16);
-        write_byte(addr++, seed >> 24);
+        write_4_bytes(addr, seed);
+        addr += 4;
+
+        write_padding(&addr, 1 * 1024);
     }
 
     // write levels
-    addr = 1 * 1024;
     for(u32 l = 0; l < LEVEL_COUNT; l++) {
         struct Level *level = &levels[l];
 
@@ -360,37 +387,40 @@ void storage_save(void) {
         }
     }
 
+    write_padding(&addr, (115 % 64) * 1024);
+
     // write chest inventories
-    addr = (115 % 64) * 1024;
-    for(u32 i = 0; i < CHEST_LIMIT; i++)
-        store_inventory(&addr, &chest_inventories[i]);
+    for(u32 i = 0; i < CHEST_LIMIT; i++) {
+        store_inventory(addr, &chest_inventories[i]);
+        addr += INVENTORY_SIZE * BYTES_PER_ITEM;
+    }
 
     // write player and other data
-    addr = (127 % 64) * 1024;
     {
-        store_inventory(&addr, &player_inventory);
-        store_item(&addr, &player_active_item);
+        store_inventory(addr, &player_inventory);
+        addr += INVENTORY_SIZE * BYTES_PER_ITEM;
+
+        store_item(addr, &player_active_item);
+        addr += BYTES_PER_ITEM;
 
         write_byte(addr++, player_stamina);
         write_byte(addr++, player_stamina_recharge_delay);
 
-        write_byte(addr++, player_invulnerable_time);
-        write_byte(addr++, player_invulnerable_time >> 8);
+        write_2_bytes(addr, player_invulnerable_time);
+        addr += 2;
 
-        write_byte(addr++, score);
-        write_byte(addr++, score >> 8);
-        write_byte(addr++, score >> 16);
-        write_byte(addr++, score >> 24);
+        write_4_bytes(addr, score);
+        addr += 4;
 
-        write_byte(addr++, gametime);
-        write_byte(addr++, gametime >> 8);
-        write_byte(addr++, gametime >> 16);
-        write_byte(addr++, gametime >> 24);
+        write_4_bytes(addr, gametime);
+        addr += 4;
 
         write_byte(addr++, current_level);
         write_byte(addr++, chest_count);
 
         write_byte(addr++, air_wizard_attack_delay);
         write_byte(addr++, air_wizard_attack_time);
+
+        write_padding(&addr, (128 % 64) * 1024);
     }
 }
