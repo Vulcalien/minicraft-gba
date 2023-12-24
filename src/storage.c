@@ -23,10 +23,6 @@
 #include "player.h"
 #include "air-wizard.h"
 
-#define FLASH_ROM ((vu8 *) 0x0e000000)
-
-#define BYTES_PER_ITEM (3)
-
 /*
 Storage Layout (128 KB)
 
@@ -64,10 +60,17 @@ Storage Layout (128 KB)
       1 B - air wizard attack delay
       1 B - air wizard attack time
 
-    621 B - padding
+    617 B - padding
+
+      4 B - checksum
  */
 
+#define FLASH_ROM ((vu8 *) 0x0e000000)
+
 #define LEVEL_COUNT (sizeof(levels) / sizeof(struct Level))
+#define BYTES_PER_ITEM (3)
+
+static u32 checksum;
 
 static_assert(LEVEL_COUNT == 5, "there should be 5 levels");
 
@@ -137,6 +140,21 @@ bool storage_check(void) {
                  read_byte(3) == 'E';
 
     return valid;
+}
+
+bool storage_verify_checksum(void) {
+    u32 val = 0;
+
+    switch_bank(0);
+    for(u32 i = 0; i < 64 * 1024; i++)
+        val += read_byte(i);
+
+    switch_bank(1);
+    for(u32 i = 0; i < 64 * 1024 - 4; i++)
+        val += read_byte(i);
+
+    u32 checksum_in_file = read_4_bytes(64 * 1024 - 4);
+    return (val == checksum_in_file);
 }
 
 void storage_srand(void) {
@@ -270,6 +288,8 @@ static inline void erase_chip(void) {
 
 IWRAM_SECTION NOCLONE NOINLINE
 static void write_byte(u16 addr, u8 byte) {
+    checksum += byte;
+
     FLASH_ROM[0x5555] = 0xaa;
     FLASH_ROM[0x2aaa] = 0x55;
     FLASH_ROM[0x5555] = 0xa0;
@@ -326,13 +346,13 @@ static inline void store_inventory(u16 addr, struct Inventory *inventory) {
 }
 
 void storage_save(void) {
-    u16 addr;
-
+    checksum = 0;
     erase_chip();
+
+    u16 addr = 0;
     switch_bank(0);
 
     // write header
-    addr = 0;
     {
         // game code - ZMCE
         write_byte(addr++, 'Z');
@@ -421,6 +441,8 @@ void storage_save(void) {
         write_byte(addr++, air_wizard_attack_delay);
         write_byte(addr++, air_wizard_attack_time);
 
-        write_padding(&addr, (128 % 64) * 1024);
+        write_padding(&addr, (128 % 64) * 1024 - 4);
+
+        write_4_bytes(addr, checksum);
     }
 }

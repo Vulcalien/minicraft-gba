@@ -24,6 +24,7 @@
 
 static i8 selected;
 static bool can_load;
+static bool checksum_verified;
 
 THUMB
 static void start_init(u8 flags) {
@@ -32,6 +33,7 @@ static void start_init(u8 flags) {
     if(can_load) {
         selected = 0;
 
+        checksum_verified = storage_verify_checksum();
         storage_srand();
     } else {
         selected = 1;
@@ -106,8 +108,12 @@ static void start_draw(void) {
         }
     }
 
-    if(can_load)
-        START_WRITE("LOAD GAME", selected == 0, 10, 9);
+    if(can_load) {
+        if(checksum_verified)
+            START_WRITE("LOAD GAME", selected == 0, 10, 9);
+        else
+            START_WRITE("LOAD GAME (!)", selected == 0, 10, 9);
+    }
     START_WRITE("NEW  GAME", selected == 1, 10, 10);
 
     START_WRITE("HOW TO PLAY", selected == 2, 9, 12);

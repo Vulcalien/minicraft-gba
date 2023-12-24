@@ -19,6 +19,8 @@
 #include "minicraft.h"
 
 extern bool storage_check(void);
+extern bool storage_verify_checksum(void);
+
 extern void storage_srand(void);
 
 extern void storage_load(void);

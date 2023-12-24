@@ -17,13 +17,17 @@
 
 #include "screen.h"
 
+// considering that checksum verification takes around 50 ticks,
+// the text will be fully visible for about two seconds.
+#define ADDITIONAL_DELAY (70)
+
 static u16 counter = 0;
 
 THUMB
 static void prestart_tick(void) {
     counter++;
 
-    if(counter == 0x20 + 2 * 60)
+    if(counter == 0x20 + ADDITIONAL_DELAY)
         set_scene(&scene_start, 1);
 }
 
