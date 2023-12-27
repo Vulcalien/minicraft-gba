@@ -109,10 +109,12 @@ static void start_draw(void) {
     }
 
     if(can_load) {
-        if(checksum_verified)
-            START_WRITE("LOAD GAME", selected == 0, 10, 9);
-        else
-            START_WRITE("LOAD GAME (!)", selected == 0, 10, 9);
+        START_WRITE("LOAD GAME", selected == 0, 10, 9);
+        if(!checksum_verified) {
+            screen_write("(!)", 2, 22, 9);
+
+            screen_write("(!) INVALID CHECKSUM", 2, 1, 17);
+        }
     }
     START_WRITE("NEW  GAME", selected == 1, 10, 10);
 
