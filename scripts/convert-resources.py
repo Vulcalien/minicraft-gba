@@ -1,6 +1,6 @@
 #!/bin/python
 
-# Copyright 2023 Vulcalien
+# Copyright 2023-2024 Vulcalien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -97,8 +97,6 @@
 
 import sys, os, argparse, json
 
-parent_path = os.path.relpath(sys.path[0])
-
 # Setup argparse
 parser = argparse.ArgumentParser(
     description='Convert all resources listed in JSON files'
@@ -111,49 +109,19 @@ parser.add_argument('res_list_files', nargs='+',
 args = parser.parse_args()
 
 # Functions
-def basic_info(element):
-    return (
-        str(element['input']), str(element['output']),
-        str(element['name']),
-        (bool(element['static']) if 'static' in element else False)
-    )
 
-def convert_tileset(element):
-    (input_file, output_file, name, static) = basic_info(element)
-
+def tileset_args(element):
     tile_width  = int(element['tile_width'])
     tile_height = int(element['tile_height'])
 
     palette = str(element['palette'])
     bpp     = int(element['bpp'])
 
-    cmd = "%s/res/tileset-to-array.py -i %s -o %s -n %s %s " +\
-          "--tile-width %d --tile-height %d " +\
-          "--palette %s --bpp %d"
-    cmd %= (
-        parent_path, input_file, output_file, name,
-        ('-s' if static else ''), tile_width, tile_height,
-        palette, bpp
+    return "--tile-width %d --tile-height %d --palette %s --bpp %d" % (
+        tile_width, tile_height, palette, bpp
     )
 
-    print(cmd)
-    os.system(cmd)
-
-def convert_palette(element):
-    (input_file, output_file, name, static) = basic_info(element)
-
-    cmd = "%s/res/palette-to-array.py -i %s -o %s -n %s %s"
-    cmd %= (
-        parent_path, input_file, output_file, name,
-        ('-s' if static else '')
-    )
-
-    print(cmd)
-    os.system(cmd)
-
-def convert_image(element):
-    (input_file, output_file, name, static) = basic_info(element)
-
+def image_args(element):
     bpp = int(element['bpp'])
 
     if bpp in (4, 8):
@@ -161,25 +129,55 @@ def convert_image(element):
     else:
         palette = None
 
-    cmd = "%s/res/image-to-array.py -i %s -o %s -n %s %s" +\
-          "--bpp %d %s"
-    cmd %= (
-        parent_path, input_file, output_file, name,
-        ('-s' if static else ''), bpp,
-        (('--palette %s' % palette) if palette else '')
+    return "--bpp %d %s" % (
+        bpp, (('--palette %s' % palette) if palette else '')
     )
 
-    print(cmd)
-    os.system(cmd)
+FILE_TYPES = {
+    'tilesets': {
+        'script': '%s/res/tileset-to-array.py',
+        'args_function': tileset_args
+    },
 
-def convert_file(element):
-    (input_file, output_file, name, static) = basic_info(element)
+    'palettes': {
+        'script': '%s/res/palette-to-array.py',
+        'args_function': None
+    },
 
-    cmd = "%s/res/file-to-array.py -i %s -o %s -n %s %s"
-    cmd %= (
-        parent_path, input_file, output_file, name,
-        ('-s' if static else '')
-    )
+    'images': {
+        'script': '%s/res/image-to-array.py',
+        'args_function': image_args
+    },
+
+    'files': {
+        'script': '%s/res/file-to-array.py',
+        'args_function': None
+    }
+}
+
+PARENT_PATH = os.path.relpath(sys.path[0])
+
+def convert(element, file_type):
+    input_file  = str(element['input'])
+    output_file = str(element['output'])
+    name        = str(element['name'])
+
+    static = False
+    if 'static' in element and bool(element['static']):
+        static = True
+
+    cmd = ' '.join((
+        file_type['script'] % PARENT_PATH,
+        '-i', input_file,
+        '-o', output_file,
+        '-n', name,
+        '-s' if static else ''
+    ))
+
+    # Add script-specific arguments
+    args_function = file_type['args_function']
+    if args_function is not None:
+        cmd += ' ' + args_function(element)
 
     print(cmd)
     os.system(cmd)
@@ -192,18 +190,7 @@ for f in args.res_list_files:
         print('Error: invalid JSON:', e)
         continue
 
-    if 'tilesets' in content:
-        for element in content['tilesets']:
-            convert_tileset(element)
-
-    if 'palettes' in content:
-        for element in content['palettes']:
-            convert_palette(element)
-
-    if 'images' in content:
-        for element in content['images']:
-            convert_image(element)
-
-    if 'files' in content:
-        for element in content['files']:
-            convert_file(element)
+    for file_type in FILE_TYPES:
+        if file_type in content:
+            for element in content[file_type]:
+                convert(element, FILE_TYPES[file_type])
