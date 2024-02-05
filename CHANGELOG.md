@@ -1,6 +1,10 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Added a checksum verification to validate save files.
+- Added a respawn feature for when the player dies.
+
 ### Changed
 - Optimized entity sorting, reducing the time necessary to update the
   screen.
