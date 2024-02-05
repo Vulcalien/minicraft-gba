@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 
 # Copyright 2023-2024 Vulcalien
 #
@@ -97,14 +97,20 @@
 
 import sys, os, argparse, json
 
+try:
+    import tomllib
+    toml_support = True
+except ImportError:
+    toml_support = False
+
 # Setup argparse
 parser = argparse.ArgumentParser(
-    description='Convert all resources listed in JSON files'
+    description='Convert all resources listed in JSON or TOML files'
 )
 
 parser.add_argument('res_list_files', nargs='+',
-                    type=argparse.FileType('r'),
-                    help='specify the resource list files (JSON files)')
+                    type=argparse.FileType('rb'),
+                    help='specify the resource list files')
 
 args = parser.parse_args()
 
@@ -182,12 +188,35 @@ def convert(element, file_type):
     print(cmd)
     os.system(cmd)
 
+def parse_file(f):
+    content = None
+
+    ext = os.path.splitext(f.name)[1]
+    if ext == '.json':
+        try:
+            content = json.load(f)
+        except json.JSONDecodeError as e:
+            print('Error: invalid JSON:', e)
+    elif ext == '.toml':
+        if toml_support:
+            try:
+                content = tomllib.load(f)
+            except tomllib.TOMLDecodeError as e:
+                print('Error: invalid TOML:', e)
+        else:
+            print('Error: TOML is not supported by this version of ' +
+                  'Python')
+    else:
+        print('Error: unknown extension:', ext)
+
+    return content
+
 # Read resource list files
 for f in args.res_list_files:
-    try:
-        content = json.load(f)
-    except json.JSONDecodeError as e:
-        print('Error: invalid JSON:', e)
+    print('Reading file:', f.name)
+
+    content = parse_file(f)
+    if content is None:
         continue
 
     for file_type in FILE_TYPES:

@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 
 while True:
     col = int(input("input: "), 16)
