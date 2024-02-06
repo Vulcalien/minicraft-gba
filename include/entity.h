@@ -128,7 +128,8 @@ inline bool entity_intersects(struct entity_Data *data,
 extern void entity_add_zombie(struct Level *level, u16 x, u16 y, u8 lvl);
 extern void entity_add_slime(struct Level *level, u16 x, u16 y, u8 lvl);
 extern void entity_add_air_wizard(struct Level *level);
-extern void entity_add_player(struct Level *level, u8 xt, u8 yt);
+extern void entity_add_player(struct Level *level, u8 xt, u8 yt,
+                              bool reset_inventory);
 
 extern bool entity_add_furniture(struct Level *level, u8 xt, u8 yt,
                                  struct item_Data *item_data);

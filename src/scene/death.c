@@ -68,6 +68,7 @@ static inline void get_spawn_location(struct Level *level,
 
 static inline void respawn(void) {
     struct Level *level = &levels[3];
+    current_level = 3;
 
     // remove all hostile entities from the level
     for(u32 i = 1; i < ENTITY_LIMIT; i++) {
@@ -80,11 +81,7 @@ static inline void respawn(void) {
     u32 spawn_x = 0, spawn_y = 0;
     get_spawn_location(level, &spawn_x, &spawn_y);
 
-    entity_add_player(level, spawn_x, spawn_y);
-
-    // TODO keep inventory
-
-    current_level = 3;
+    entity_add_player(level, spawn_x, spawn_y, !keep_inventory);
 }
 
 static void death_tick(void) {

@@ -457,7 +457,11 @@ static inline void generate_entities(void) {
         u32 i = rand() % (LEVEL_W * LEVEL_H);
 
         if(levels[3].tiles[i] == GRASS_TILE) {
-            entity_add_player(&levels[3], i % LEVEL_W, i / LEVEL_W);
+            entity_add_player(
+                &levels[3],
+                i % LEVEL_W, i / LEVEL_W,
+                true
+            );
             break;
         }
     }

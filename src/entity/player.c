@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022, 2024 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,8 @@ u16 player_invulnerable_time;
 
 static u32 player_tick_time = 0;
 
-void entity_add_player(struct Level *level, u8 xt, u8 yt) {
+void entity_add_player(struct Level *level, u8 xt, u8 yt,
+                       bool reset_inventory) {
     struct entity_Data *data  = &level->entities[0];
     struct mob_Data *mob_data = (struct mob_Data *) &data->data;
     struct player_Data *player_data = (struct player_Data *) &mob_data->data;
@@ -82,21 +83,24 @@ void entity_add_player(struct Level *level, u8 xt, u8 yt) {
     player_data->attack_dir = 0;
 
     // initialize global variables
-    player_inventory.size = 0;
-    player_active_item.type = -1;
-
     player_stamina = MAX_STAMINA;
     player_stamina_recharge_delay = 0;
 
     player_invulnerable_time = 0;
 
-    struct item_Data item_to_add;
+    // reset inventory
+    if(reset_inventory) {
+        player_inventory.size = 0;
+        player_active_item.type = -1;
 
-    item_to_add.type = POWERGLOVE_ITEM;
-    inventory_add(&player_inventory, &item_to_add, 0);
+        struct item_Data item_to_add;
 
-    item_to_add.type = WORKBENCH_ITEM;
-    inventory_add(&player_inventory, &item_to_add, 0);
+        item_to_add.type = POWERGLOVE_ITEM;
+        inventory_add(&player_inventory, &item_to_add, 0);
+
+        item_to_add.type = WORKBENCH_ITEM;
+        inventory_add(&player_inventory, &item_to_add, 0);
+    }
 }
 
 static inline void player_hurt_entities(struct Level *level, struct entity_Data *data) {

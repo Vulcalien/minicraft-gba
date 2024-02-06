@@ -30,6 +30,8 @@ u32 score;
 
 u8 current_level;
 
+bool keep_inventory = false;
+
 static inline void tick(void) {
     input_tick();
     scene->tick();
