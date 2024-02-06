@@ -18,7 +18,7 @@
 
 #include "minicraft.h"
 
-extern const u16 bg_palette[10 * 16];
+extern const u16 bg_palette[12 * 16];
 extern const u16 sprite_palette[8 * 16];
 extern const u16 item_palette[4 * 16];
 

@@ -15,7 +15,7 @@
  */
 #include "images.h"
 
-const u16 bg_palette[10 * 16] = {
+const u16 bg_palette[12 * 16] = {
     // --- palette 0 --- (grass, flower, tree, sapling)
     // BG color
     0x7c1f,
@@ -216,7 +216,33 @@ const u16 bg_palette[10 * 16] = {
     0x1144, 0x2168,
 
     // unused
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // --- palette 10 --- (green on black font)
+    // transparent
+    0,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // green font - black bg
+    0x03e0, 0x0421,
+
+    // unused
+    0, 0,
+
+    // --- palette 11 --- (red on black font)
+    // transparent
+    0,
+
+    // unused
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    // red font - black bg
+    0x001f, 0x0421,
+
+    // unused
+    0, 0
 };
 
 const u16 sprite_palette[8 * 16] = {

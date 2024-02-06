@@ -1,4 +1,4 @@
-/* Copyright 2022-2023 Vulcalien
+/* Copyright 2022-2024 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,12 @@
 #include "storage.h"
 #include "sound.h"
 
+#define LOAD_GAME   (0)
+#define NEW_GAME    (1)
+#define OPTIONS     (2)
+#define HOW_TO_PLAY (3)
+#define ABOUT       (4)
+
 static i8 selected;
 static bool can_load;
 static bool checksum_verified;
@@ -31,14 +37,14 @@ static void start_init(u8 flags) {
     can_load = storage_check();
 
     if(can_load) {
-        selected = 0;
+        selected = LOAD_GAME;
 
         checksum_verified = storage_verify_checksum();
         storage_srand();
 
         storage_load_options();
     } else {
-        selected = 1;
+        selected = NEW_GAME;
     }
 }
 
@@ -49,47 +55,58 @@ static void start_tick(void) {
     if(INPUT_CLICKED(KEY_DOWN))
         selected++;
 
-    if(selected < (can_load == false))
-        selected = 3;
-    else if(selected >= 4)
-        selected = (can_load == false);
+    if(selected < (can_load ? LOAD_GAME : NEW_GAME))
+        selected = ABOUT;
+    else if(selected > ABOUT)
+        selected = (can_load ? LOAD_GAME : NEW_GAME);
 
     if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
-        if(selected == 0) {
-            SOUND_PLAY(sound_start);
+        switch(selected) {
+            case LOAD_GAME:
+                SOUND_PLAY(sound_start);
 
-            srand(tick_count, false);
-            storage_load();
+                srand(tick_count, false);
+                storage_load();
 
-            set_scene(&scene_game, 7);
-        } else if(selected == 1) {
-            SOUND_PLAY(sound_start);
+                set_scene(&scene_game, 7);
+                break;
 
-            srand(tick_count, false);
-            generate_levels();
+            case NEW_GAME:
+                SOUND_PLAY(sound_start);
 
-            gametime = 0;
-            score = 0;
+                srand(tick_count, false);
+                generate_levels();
 
-            current_level = 3;
+                gametime = 0;
+                score = 0;
 
-            chest_count = 0;
-            for(u32 i = 0; i < CHEST_LIMIT; i++)
-                chest_inventories[i].size = 0;
+                current_level = 3;
 
-            set_scene(&scene_game, 7);
-        } else if(selected == 2) {
-            set_scene(&scene_instructions, 0);
-        } else if(selected == 3) {
-            set_scene(&scene_about, 0);
+                chest_count = 0;
+                for(u32 i = 0; i < CHEST_LIMIT; i++)
+                    chest_inventories[i].size = 0;
+
+                set_scene(&scene_game, 7);
+                break;
+
+            case OPTIONS:
+                set_scene(&scene_options, 1);
+                break;
+
+            case HOW_TO_PLAY:
+                set_scene(&scene_instructions, 0);
+                break;
+
+            case ABOUT:
+                set_scene(&scene_about, 0);
+                break;
         }
     }
 }
 
-#define START_WRITE(text, highlight, x, y) do {\
-    screen_write((text), 1 - ((highlight) == true), (x), (y));\
-\
-    if(highlight) {\
+#define START_WRITE(text, id, x, y) do {\
+    screen_write((text), selected == (id) ? 0 : 1, (x), (y));\
+    if(selected == (id)) {\
         screen_write(">", 0, (x) - 2, (y));\
         screen_write("<", 0, (x) + sizeof(text), (y));\
     }\
@@ -111,17 +128,19 @@ static void start_draw(void) {
     }
 
     if(can_load) {
-        START_WRITE("LOAD GAME", selected == 0, 10, 9);
+        START_WRITE("LOAD GAME", LOAD_GAME, 10, 9);
         if(!checksum_verified) {
             screen_write("(!)", 2, 22, 9);
 
             screen_write("(!) INVALID CHECKSUM", 2, 1, 17);
         }
     }
-    START_WRITE("NEW  GAME", selected == 1, 10, 10);
+    START_WRITE("NEW  GAME", NEW_GAME, 10, 10);
 
-    START_WRITE("HOW TO PLAY", selected == 2, 9, 12);
-    START_WRITE("ABOUT", selected == 3, 12, 13);
+    START_WRITE("OPTIONS", OPTIONS, 11, 12);
+
+    START_WRITE("HOW TO PLAY", HOW_TO_PLAY, 9, 14);
+    START_WRITE("ABOUT", ABOUT, 12, 15);
 
     screen_write("V1.2+", 1, 25, 19);
 }
