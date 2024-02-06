@@ -15,7 +15,7 @@
  */
 #include "storage.h"
 
-#include "settings.h"
+#include "options.h"
 #include "level.h"
 #include "tile.h"
 #include "furniture.h"
@@ -27,7 +27,7 @@
 /*
 Storage Layout (128 KB)
 
-* 1 KB - header and settings:
+* 1 KB - header and options:
       4 B - game code (ZMCE)
       4 B - random seed
 
@@ -166,8 +166,8 @@ void storage_srand(void) {
     srand(read_4_bytes(4), true);
 }
 
-void storage_load_settings(void) {
-    settings.keep_inventory = read_byte(8);
+void storage_load_options(void) {
+    options.keep_inventory = read_byte(8);
 }
 
 static inline void load_item(u16 addr, struct item_Data *data) {
@@ -359,7 +359,7 @@ void storage_save(void) {
     u16 addr = 0;
     switch_bank(0);
 
-    // write header and settings
+    // write header and options
     {
         // game code - ZMCE
         write_byte(addr++, 'Z');
@@ -372,8 +372,8 @@ void storage_save(void) {
         write_4_bytes(addr, seed);
         addr += 4;
 
-        // settings
-        write_byte(addr++, settings.keep_inventory);
+        // options
+        write_byte(addr++, options.keep_inventory);
 
         write_padding(&addr, 1 * 1024);
     }

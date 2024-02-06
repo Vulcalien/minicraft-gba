@@ -22,7 +22,7 @@ extern bool storage_check(void);
 extern bool storage_verify_checksum(void);
 
 extern void storage_srand(void);
-extern void storage_load_settings(void);
+extern void storage_load_options(void);
 
 extern void storage_load(void);
 extern void storage_save(void);

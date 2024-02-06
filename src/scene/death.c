@@ -17,7 +17,7 @@
 
 #include "input.h"
 #include "screen.h"
-#include "settings.h"
+#include "options.h"
 #include "level.h"
 #include "entity.h"
 #include "tile.h"
@@ -85,7 +85,7 @@ static inline void respawn(void) {
     entity_add_player(
         level,
         spawn_x, spawn_y,
-        !settings.keep_inventory
+        !options.keep_inventory
     );
 }
 

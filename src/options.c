@@ -13,15 +13,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_SETTINGS
-#define MINICRAFT_SETTINGS
+#include "options.h"
 
-#include "minicraft.h"
-
-struct Settings {
-    bool keep_inventory;
-};
-
-extern struct Settings settings;
-
-#endif // MINICRAFT SETTINGS
+struct Options options;
