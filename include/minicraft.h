@@ -43,8 +43,6 @@ extern u32 score;
 
 extern u8 current_level;
 
-extern bool keep_inventory;
-
 // The behavior of right shift for negative values is
 // implementation-dependent, but Arithmetic Right Shift is required
 static_assert((-1) >> 1 == -1, "Arithmetic Right Shift is required");

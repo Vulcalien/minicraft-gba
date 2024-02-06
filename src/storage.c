@@ -1,4 +1,4 @@
-/* Copyright 2022-2023 Vulcalien
+/* Copyright 2022-2024 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
  */
 #include "storage.h"
 
+#include "settings.h"
 #include "level.h"
 #include "tile.h"
 #include "furniture.h"
@@ -26,11 +27,13 @@
 /*
 Storage Layout (128 KB)
 
-* 1 KB - header:
+* 1 KB - header and settings:
       4 B - game code (ZMCE)
       4 B - random seed
 
-   1016 B - padding
+      1 B - keep inventory
+
+   1015 B - padding
 
 * 114 KB - level data:
     5 times:
@@ -63,7 +66,7 @@ Storage Layout (128 KB)
     617 B - padding
 
       4 B - checksum
- */
+*/
 
 #define FLASH_ROM ((vu8 *) 0x0e000000)
 
@@ -161,6 +164,10 @@ void storage_srand(void) {
     switch_bank(0);
 
     srand(read_4_bytes(4), true);
+}
+
+void storage_load_settings(void) {
+    settings.keep_inventory = read_byte(8);
 }
 
 static inline void load_item(u16 addr, struct item_Data *data) {
@@ -352,7 +359,7 @@ void storage_save(void) {
     u16 addr = 0;
     switch_bank(0);
 
-    // write header
+    // write header and settings
     {
         // game code - ZMCE
         write_byte(addr++, 'Z');
@@ -364,6 +371,9 @@ void storage_save(void) {
         u32 seed = rand() << 16 | rand();
         write_4_bytes(addr, seed);
         addr += 4;
+
+        // settings
+        write_byte(addr++, settings.keep_inventory);
 
         write_padding(&addr, 1 * 1024);
     }

@@ -17,6 +17,7 @@
 
 #include "input.h"
 #include "screen.h"
+#include "settings.h"
 #include "level.h"
 #include "entity.h"
 #include "tile.h"
@@ -81,7 +82,11 @@ static inline void respawn(void) {
     u32 spawn_x = 0, spawn_y = 0;
     get_spawn_location(level, &spawn_x, &spawn_y);
 
-    entity_add_player(level, spawn_x, spawn_y, !keep_inventory);
+    entity_add_player(
+        level,
+        spawn_x, spawn_y,
+        !settings.keep_inventory
+    );
 }
 
 static void death_tick(void) {

@@ -35,6 +35,8 @@ static void start_init(u8 flags) {
 
         checksum_verified = storage_verify_checksum();
         storage_srand();
+
+        storage_load_settings();
     } else {
         selected = 1;
     }

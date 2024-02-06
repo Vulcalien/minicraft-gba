@@ -1,4 +1,4 @@
-/* Copyright 2022-2024 Vulcalien
+/* Copyright 2024 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,18 +13,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MINICRAFT_STORAGE
-#define MINICRAFT_STORAGE
+#include "settings.h"
 
-#include "minicraft.h"
-
-extern bool storage_check(void);
-extern bool storage_verify_checksum(void);
-
-extern void storage_srand(void);
-extern void storage_load_settings(void);
-
-extern void storage_load(void);
-extern void storage_save(void);
-
-#endif // MINICRAFT_STORAGE
+struct Settings settings;
