@@ -9,8 +9,10 @@ the game isn't too complex, I could port it without too many problems.
 When the limitations were impossible to overcome, I had to hack a few
 things, change others, put limits and so on.
 
-To improve the experience, I also added a pause menu and a way to save
-and load the world.
+To improve the gameplay experience, I also added these features:
+- a pause menu
+- saving and loading the world
+- a way to respawn, with or without keeping the inventory
 
 ## Differences due to Hardware limitations
 |                | Original | GBA Demake |
