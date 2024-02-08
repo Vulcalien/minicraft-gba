@@ -179,13 +179,11 @@ static void crafting_draw(void) {
     }
 
     // draw cursor arrows
-    screen_write(
-        ">", 4,
-        craft_x                      , craft_y + 1 + (selected - item0)
-    );
-    screen_write(
-        "<", 4, craft_x + craft_w - 1, craft_y + 1 + (selected - item0)
-    );
+    {
+        const u32 cursor_y = craft_y + 1 + (selected - item0);
+        screen_write(">", 4, craft_x, cursor_y);
+        screen_write("<", 4, craft_x + craft_w - 1, cursor_y);
+    }
 
     const struct crafting_Recipe *selected_recipe =
         &crafting_current_recipes[sorted_recipes[selected]];
