@@ -15,4 +15,6 @@
  */
 #include "options.h"
 
-struct Options options;
+struct Options options = {
+    .keep_inventory = true
+};
