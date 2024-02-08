@@ -80,6 +80,7 @@ static void crafting_check_craftable(void) {
     }
 }
 
+THUMB
 static void crafting_init(u8 flags) {
     selected = 0;
 
@@ -95,6 +96,7 @@ static void crafting_init(u8 flags) {
             sorted_recipes[pos++] = i;
 }
 
+THUMB
 static void crafting_tick(void) {
     gametime++;
 
@@ -128,6 +130,7 @@ static void crafting_tick(void) {
     }
 }
 
+THUMB
 static void crafting_draw(void) {
     const u8 craft_x = 5;
     const u8 craft_y = 2;

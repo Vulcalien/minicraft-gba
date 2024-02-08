@@ -286,6 +286,7 @@ const struct Item item_list[ITEM_TYPES] = {
     }
 };
 
+THUMB
 void item_write(struct item_Data *data, u8 palette, u32 x, u32 y) {
     const struct Item *item = ITEM_S(data);
 
@@ -305,6 +306,7 @@ static const char level_names[5][5] = {
     "WOOD", "ROCK", "IRON", "GOLD", "GEM"
 };
 
+THUMB
 void item_write_name(struct item_Data *data, u8 palette, u32 x, u32 y) {
     const struct Item *item = ITEM_S(data);
 
@@ -318,6 +320,7 @@ void item_write_name(struct item_Data *data, u8 palette, u32 x, u32 y) {
     }
 }
 
+THUMB
 void item_draw_icon(struct item_Data *data, u32 x, u32 y, bool black_bg) {
     const struct Item *item = ITEM_S(data);
 
