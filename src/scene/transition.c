@@ -21,11 +21,13 @@
 static u8 transition_time;
 static u8 old_level;
 
+THUMB
 static void transition_init(u8 flags) {
     transition_time = 0;
     old_level = current_level;
 }
 
+THUMB
 static void transition_tick(void) {
     gametime++;
 

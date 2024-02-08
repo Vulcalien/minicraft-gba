@@ -24,6 +24,7 @@
 static i32 selected;
 static bool should_render_game = false;
 
+THUMB
 static void inventory_init(u8 flags) {
     selected = 0;
 
@@ -42,6 +43,7 @@ static void inventory_init(u8 flags) {
     should_render_game = true;
 }
 
+THUMB
 static void inventory_tick(void) {
     gametime++;
 
@@ -75,6 +77,7 @@ static void inventory_tick(void) {
     }
 }
 
+THUMB
 static void inventory_draw(void) {
     if(should_render_game) {
         scene_game.draw();

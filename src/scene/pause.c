@@ -25,10 +25,12 @@ static u8 selected_answer;
 
 static bool should_save = false;
 
+THUMB
 static void pause_init(u8 flags) {
     ask_overwrite = false;
 }
 
+THUMB
 static void pause_tick(void) {
     if(should_save) {
         storage_save();
@@ -70,6 +72,8 @@ static void pause_tick(void) {
         screen_write("<", 4, (x) + sizeof(text), (y));\
     }\
 } while(0)
+
+THUMB
 static void pause_draw(void) {
     const u8 pause_x = 6;
     const u8 pause_y = 5;

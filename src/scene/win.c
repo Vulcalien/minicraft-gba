@@ -20,10 +20,12 @@
 
 static u8 win_time;
 
+THUMB
 static void win_init(u8 flags) {
     win_time = 0;
 }
 
+THUMB
 static void win_tick(void) {
     win_time++;
     if(win_time > 60) {
@@ -32,6 +34,7 @@ static void win_tick(void) {
     }
 }
 
+THUMB
 static void win_draw(void) {
     const u8 win_x = 6;
     const u8 win_y = 5;

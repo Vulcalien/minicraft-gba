@@ -133,6 +133,7 @@ static inline u32 read_4_bytes(u16 addr) {
            read_byte(addr + 3) << 24;
 }
 
+THUMB
 bool storage_check(void) {
     switch_bank(0);
 
@@ -145,6 +146,7 @@ bool storage_check(void) {
     return valid;
 }
 
+THUMB
 bool storage_verify_checksum(void) {
     u32 val = 0;
 
@@ -160,12 +162,14 @@ bool storage_verify_checksum(void) {
     return (val == checksum_in_file);
 }
 
+THUMB
 void storage_srand(void) {
     switch_bank(0);
 
     srand(read_4_bytes(4), true);
 }
 
+THUMB
 void storage_load_options(void) {
     options.keep_inventory = read_byte(8);
 }

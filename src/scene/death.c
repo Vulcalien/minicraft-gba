@@ -25,6 +25,7 @@
 
 static u8 death_time;
 
+THUMB
 static void death_init(u8 flags) {
     death_time = 0;
 }
@@ -89,6 +90,7 @@ static inline void respawn(void) {
     );
 }
 
+THUMB
 static void death_tick(void) {
     death_time++;
     if(death_time > 60) {
@@ -100,6 +102,7 @@ static void death_tick(void) {
     }
 }
 
+THUMB
 static void death_draw(void) {
     const u8 death_x = 5;
     const u8 death_y = 5;

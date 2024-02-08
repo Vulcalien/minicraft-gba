@@ -17,9 +17,9 @@
 
 #include "screen.h"
 
-// considering that checksum verification takes around 50 ticks,
+// considering that checksum verification takes around 40 ticks,
 // the text will be fully visible for about two seconds.
-#define ADDITIONAL_DELAY (70)
+#define ADDITIONAL_DELAY (80)
 
 static u16 counter = 0;
 
