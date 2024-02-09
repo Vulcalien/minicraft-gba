@@ -55,12 +55,10 @@ FF <--- vcount after 'draw'     sprite count ---> FF
 
 ## Building
 To build the game, I use the `Makefile` present in the files.
-You will need the gcc-arm-none-eabi compiler. I've not tested any other
-compiler and, if you want to try, I cannot guarantee that the game will
-work or that the performance will be as good (since it's optimized for
-the GCC compiler).
+You will need the gcc-arm-none-eabi compiler and Python 3.
 
-Run `make`: it should build without any configuration.
+First, run `make res` to convert the necessary resources. Then, run
+`make` to build the ROM.
 
 ## License
 The original game `Minicraft` was made by Markus Persson in 2011.
