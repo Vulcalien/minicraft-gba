@@ -60,10 +60,10 @@ _start:
         .space  7, 0x00
 
     @ Software Version
-        .byte   0x02
+        .byte   0x03
 
     @ Complement Check
-        .byte   0xb9
+        .byte   0xb8
 
     @ Reserved (2 Bytes)
         .space  2, 0x00

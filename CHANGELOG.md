@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.3] - 2024-02-09
 ### Added
 - Checksum verification to validate save files.
 - Options menu.
