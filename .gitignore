@@ -2,6 +2,9 @@
 /obj
 /bin
 
+# Release files
+/release
+
 # Converted resources
 /src/res
 
