@@ -77,7 +77,7 @@ run:
 build: $(OUT)
 
 clean:
-	@$(RM) $(RMFLAGS) $(BIN_DIR) $(OBJ_DIR) src/res release
+	@$(RM) $(RMFLAGS) $(BIN_DIR) $(OBJ_DIR) src/res
 
 $(OUT): $(OUT_ELF)
 	$(OBJCOPY) -O binary $^ $@
@@ -98,16 +98,6 @@ res: src/res src/res/sounds
 	scripts/convert-resources.py res/resources.json
 
 release:
-	make clean && make res && make
-	truncate -s %128K $(OUT) && truncate -s -42 $(OUT)
-	echo -n "Jeanne, Seigneur, est ton oeuvre splendide" >> $(OUT)
-	mkdir release release/checksum
-	cp $(OUT) COPYING README.md release/
-	git clone `git remote get-url origin` release/source
-	git -C release/source gc --aggressive --prune=now
-	cd release && md5sum $(OUT_FILENAME).gba > checksum/$(OUT_FILENAME).gba.md5
-	cd release && md5sum-recursive source > checksum/source.md5
-	cd release && zip -r release.zip\
-        $(OUT_FILENAME).gba COPYING README.md source checksum
+	scripts/release.sh "$(OUT)"
 
 -include $(OBJ:.o=.d)
