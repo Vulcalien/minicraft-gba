@@ -93,7 +93,7 @@ extern const struct Entity smash_particle_entity;
 #define ENTITY_S(data)\
     (entity_list[(data)->type])
 
-extern const struct Entity *entity_list[ENTITY_TYPES];
+extern const struct Entity * const entity_list[ENTITY_TYPES];
 
 #define SPRITE(x, y, sprite, palette, flip, shape, size)\
     do {\

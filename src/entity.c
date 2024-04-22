@@ -20,7 +20,7 @@
 #include "mob.h"
 
 IWRAM_RODATA_SECTION
-const struct Entity *entity_list[ENTITY_TYPES] = {
+const struct Entity * const entity_list[ENTITY_TYPES] = {
     &zombie_entity,
     &slime_entity,
     &air_wizard_entity,
