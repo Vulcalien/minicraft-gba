@@ -1,0 +1,3 @@
+[submodule "lib/libsimplegba"]
+	path = lib/libsimplegba
+	url = git@github.com:Vulcalien/libsimplegba.git
