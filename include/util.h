@@ -18,8 +18,6 @@
 
 #include "minicraft.h"
 
-extern void memcpy16(vu16 *dest, const vu16 *src, u32 n);
-
 extern u16 rand(void);
 extern void srand(u32 val, bool reset);
 

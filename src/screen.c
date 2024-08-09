@@ -15,6 +15,8 @@
  */
 #include "screen.h"
 
+#include <memory.h>
+
 #include "images.h"
 
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
@@ -69,7 +71,7 @@ static void load_tileset(vu16 *dest, const u8 *tileset, u32 size,
     LOAD_TILESET_CONVERT(dest, tileset, 0)
 
 #define LOAD_PALETTE(dest, palette)\
-    memcpy16(dest, palette, sizeof(palette) / sizeof(u16))
+    memcpy16(dest, palette, sizeof(palette))
 
 void screen_init(void) {
     DISPLAY_CONTROL = 0       | // Video mode
@@ -282,7 +284,7 @@ void screen_set_bg_palette_color(u8 palette, u8 index, u16 color) {
 }
 
 void screen_load_active_item_palette(u8 palette) {
-    memcpy16(BG_PALETTE + 11 * 16, item_palette + 16 * palette, 15);
+    memcpy16(BG_PALETTE + 11 * 16, item_palette + 16 * palette, 15 * 2);
     screen_set_bg_palette_color(11, 0xf, 0x0421);
 }
 
