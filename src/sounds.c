@@ -1,5 +1,7 @@
 #include "sound.h"
 
+bool sound_channel_flag = false;
+
 #include "res/sounds/start.c"
 
 #include "res/sounds/pickup.c"

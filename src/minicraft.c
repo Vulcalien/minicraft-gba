@@ -15,11 +15,12 @@
  */
 #include "minicraft.h"
 
+#include <gba/interrupt.h>
+#include <gba/sound.h>
+
 #include "screen.h"
 #include "input.h"
 #include "scene.h"
-#include "sound.h"
-#include "interrupt.h"
 #include "performance.h"
 
 u32 tick_count = 0;
@@ -45,12 +46,21 @@ static inline void draw(void) {
     performance_draw();
 }
 
+IWRAM_SECTION
+static void vblank(void) {
+    expected_tickcount++;
+    performance_vblank();
+}
+
 int AgbMain(void) {
+    interrupt_init();
+    sound_init();
+
+    interrupt_enable(IRQ_VBLANK);
+    interrupt_set_isr(IRQ_VBLANK, vblank);
+
     screen_init();
     set_scene(&scene_prestart, 0);
-
-    interrupt_enable();
-    sound_init();
 
     while(true) {
         tick();
