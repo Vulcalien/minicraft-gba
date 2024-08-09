@@ -21,7 +21,7 @@
 #include "mob.h"
 #include "player.h"
 
-EWRAM_BSS_SECTION
+SBSS_SECTION
 struct Inventory chest_inventories[CHEST_LIMIT];
 u8 chest_count;
 

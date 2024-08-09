@@ -25,10 +25,10 @@
 #include "draw/tiles.c"
 #include "draw/sort_entities.c"
 
-EWRAM_BSS_SECTION
+SBSS_SECTION
 struct Level levels[5];
 
-EWRAM_BSS_SECTION
+SBSS_SECTION
 u8 level_solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
 
 u32 level_x_offset = 0;

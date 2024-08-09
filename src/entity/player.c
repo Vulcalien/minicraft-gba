@@ -42,7 +42,7 @@ static_assert(
     "struct player_Data: wrong size"
 );
 
-EWRAM_BSS_SECTION
+SBSS_SECTION
 struct Inventory player_inventory;
 
 struct item_Data player_active_item;

@@ -16,24 +16,9 @@
 #ifndef MINICRAFT_CORE
 #define MINICRAFT_CORE
 
-#include "types.h"
+#include <base.h>
+
 #include "util.h"
-
-#define THUMB __attribute__((target("thumb")))
-
-#define NOINLINE __attribute__((noinline))
-#define NOCLONE  __attribute__((noclone))
-
-#define EWRAM_SECTION        __attribute__((section(".ewram")))
-#define EWRAM_BSS_SECTION    __attribute__((section(".sbss")))
-#define IWRAM_SECTION        __attribute__((section(".iwram")))
-#define IWRAM_RODATA_SECTION __attribute__((section(".iwram.rodata")))
-
-#define static_assert _Static_assert
-
-#ifndef NULL
-    #define NULL ((void *) 0)
-#endif
 
 extern u32 tick_count;
 extern u32 expected_tickcount;
@@ -46,5 +31,11 @@ extern u8 current_level;
 // The behavior of right shift for negative values is
 // implementation-dependent, but Arithmetic Right Shift is required
 static_assert((-1) >> 1 == -1, "Arithmetic Right Shift is required");
+
+typedef   signed long long i64;
+typedef unsigned long long u64;
+
+static_assert(sizeof(u64) == 8, "size of u64 is incorrect");
+static_assert(sizeof(i64) == 8, "size of i64 is incorrect");
 
 #endif // MINICRAFT_CORE
