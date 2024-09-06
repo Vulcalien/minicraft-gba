@@ -21,8 +21,6 @@
 #define SCREEN_W (240)
 #define SCREEN_H (160)
 
-#define VCOUNT *((vu16 *) 0x04000006)
-
 #define BG0_TILEMAP ((vu16 *) 0x06008000)
 #define BG1_TILEMAP ((vu16 *) 0x06008800)
 #define BG2_TILEMAP ((vu16 *) 0x06009000)
