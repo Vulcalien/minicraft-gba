@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 
 while True:
-    col = int(input("input: "), 16)
+    try:
+        col = int(input("input: "), 16)
+    except ValueError:
+        print('Error: invalid input')
+        continue
+    except KeyboardInterrupt:
+        print()
+        break
 
     r = (col >> 16) & 0xff
     g = (col >> 8) & 0xff

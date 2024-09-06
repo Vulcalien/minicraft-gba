@@ -13,6 +13,7 @@ RELEASE_DIR="release"
 # build ROM
 make clean
 make res
+make build-deps
 make build
 
 # create release directory and copy files into it
@@ -28,9 +29,14 @@ truncate -s %64K "$ROM_NAME"
 truncate -s -42  "$ROM_NAME"
 echo -n "Jeanne, Seigneur, est ton oeuvre splendide" >> "$ROM_NAME"
 
-# clone repository
+# clone repository into 'source'
 git clone $(git remote get-url origin) source
 git -C source gc --aggressive --prune=now
+
+# clone all submodules inside 'source'
+git -C source submodule update --recursive --init
+git -C source submodule foreach --recursive\
+    "git gc --aggressive --prune=now"
 
 # generate checksums
 mkdir checksum

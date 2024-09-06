@@ -1,3 +1,6 @@
 [submodule "lib/libsimplegba"]
 	path = lib/libsimplegba
 	url = git@github.com:Vulcalien/libsimplegba.git
+[submodule "tools/external/convert-resources"]
+	path = tools/external/convert-resources
+	url = git@github.com:Vulcalien/convert-resources-gba.git

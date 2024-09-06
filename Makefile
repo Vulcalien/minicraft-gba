@@ -133,10 +133,10 @@ clean-deps:
 
 .PHONY: res
 res: $(RES_OUT_DIRS)
-	scripts/convert-resources "$(RES_DIR)/resources.json"
+	tools/convert-resources "$(RES_DIR)/resources.json"
 
 .PHONY: release
 release:
-	scripts/release.sh "$(OUT)"
+	tools/release "$(OUT)"
 
 -include $(OBJ:.$(OBJ_EXT)=.d)
