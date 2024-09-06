@@ -16,6 +16,7 @@
 #include "level.h"
 
 #include <gba/background.h>
+#include <gba/sprite.h>
 
 #include "screen.h"
 #include "tile.h"
@@ -314,10 +315,7 @@ static inline void draw_entities(struct Level *level) {
         draw_player_light(level, &used_sprites);
 
     // hide remaining sprites
-    for(u32 i = used_sprites; i < 128; i++) {
-        vu16 *sprite_attribs = OAM + i * 4;
-        sprite_attribs[0] = 1 << 9;
-    }
+    sprite_hide_range(used_sprites, SPRITE_COUNT);
 }
 
 static inline void clear_light(void) {
