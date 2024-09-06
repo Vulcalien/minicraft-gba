@@ -15,6 +15,7 @@
  */
 #include "screen.h"
 
+#include <gba/background.h>
 #include <memory.h>
 
 #include "images.h"
@@ -31,11 +32,6 @@
 #define CHAR_BLOCK_3 ((vu16 *) 0x0600c000)
 
 #define SPR_TILESET ((vu16 *) 0x06010000)
-
-#define BG0_CONTROL *((vu16 *) 0x04000008)
-#define BG1_CONTROL *((vu16 *) 0x0400000a)
-#define BG2_CONTROL *((vu16 *) 0x0400000c)
-#define BG3_CONTROL *((vu16 *) 0x0400000e)
 
 #define BG_PALETTE  ((vu16 *) 0x05000000)
 #define SPR_PALETTE ((vu16 *) 0x05000200)
@@ -88,32 +84,32 @@ void screen_init(void) {
     WINDOW_OUT = ~(1 << 10);
 
     // Sky Background
-    BG0_CONTROL = 3       | // BG Priority (0 is highest, 3 is lowest)
-                  0 << 2  | // Tileset character block
-                  0 << 7  | // Color mode (0 is 4bpp with 16/16 palettes)
-                  16 << 8 | // Tilemap screen block
-                  0 << 14;  // BG size (0 is 256x256)
+    background_config(BG0, &(struct Background) {
+        .priority = 3,
+        .tileset  = 0,
+        .tilemap  = 16
+    });
 
     // Level Tiles
-    BG1_CONTROL = 2       | // BG Priority (0 is highest, 3 is lowest)
-                  0 << 2  | // Tileset character block
-                  0 << 7  | // Color mode (0 is 4bpp with 16/16 palettes)
-                  17 << 8 | // Tilemap screen block
-                  0 << 14;  // BG size (0 is 256x256)
+    background_config(BG1, &(struct Background) {
+        .priority = 2,
+        .tileset  = 0,
+        .tilemap  = 17
+    });
 
     // Light system
-    BG2_CONTROL = 1       | // BG Priority (0 is highest, 3 is lowest)
-                  1 << 2  | // Tileset character block
-                  0 << 7  | // Color mode (0 is 4bpp with 16/16 palettes)
-                  18 << 8 | // Tilemap screen block
-                  0 << 14;  // BG size (0 is 256x256)
+    background_config(BG2, &(struct Background) {
+        .priority = 1,
+        .tileset  = 1,
+        .tilemap  = 18
+    });
 
     // Text and GUI
-    BG3_CONTROL = 0       | // BG Priority (0 is highest, 3 is lowest)
-                  1 << 2  | // Tileset character block
-                  0 << 7  | // Color mode (0 is 4bpp with 16/16 palettes)
-                  19 << 8 | // Tilemap screen block
-                  0 << 14;  // BG size (0 is 256x256)
+    background_config(BG3, &(struct Background) {
+        .priority = 0,
+        .tileset  = 1,
+        .tilemap  = 19
+    });
 
     // load palettes
     LOAD_PALETTE(BG_PALETTE,  bg_palette);
