@@ -15,6 +15,8 @@
  */
 #include "level.h"
 
+#include <gba/background.h>
+
 #include "screen.h"
 #include "tile.h"
 #include "entity.h"
@@ -135,13 +137,26 @@ static inline void update_offset(struct Level *level) {
         level_x_offset = x_offset;
         level_y_offset = y_offset;
 
-        // level tiles and light offset
-        BG1_XOFFSET = BG2_XOFFSET = level_x_offset & 0xf;
-        BG1_YOFFSET = BG2_YOFFSET = level_y_offset & 0xf;
+        // level tiles offset
+        background_set_offset(
+            BG1,
+            level_x_offset & 0xf,
+            level_y_offset & 0xf
+        );
+
+        // light offset
+        background_set_offset(
+            BG2,
+            level_x_offset & 0xf,
+            level_y_offset & 0xf
+        );
 
         // sky background offset
-        BG0_XOFFSET = (level_x_offset >> 2) & 0x7;
-        BG0_YOFFSET = (level_y_offset >> 2) & 0x7;
+        background_set_offset(
+            BG0,
+            (level_x_offset >> 2) & 0x7,
+            (level_y_offset >> 2) & 0x7
+        );
     }
 }
 
