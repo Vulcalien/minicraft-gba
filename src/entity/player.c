@@ -16,6 +16,8 @@
 #include "entity.h"
 #include "player.h"
 
+#include <gba/sprite.h>
+
 #include "level.h"
 #include "tile.h"
 #include "mob.h"
@@ -478,17 +480,19 @@ ETICK(player_tick) {
 }
 
 static inline void draw_furniture(u16 x, u16 y, u32 used_sprites) {
-    const u16 sprite = 148 + 4 * (player_active_item.type - WORKBENCH_ITEM);
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = x - 8  - level_x_offset,
+        .y = y - 20 - level_y_offset,
 
-    SPRITE(
-        x - 8  - level_x_offset, // x
-        y - 20 - level_y_offset, // y
-        sprite, // sprite
-        6,      // palette
-        0,      // flip
-        0,      // shape
-        1       // size
-    );
+        .priority = 2,
+
+        .shape = 0, // square
+        .size  = 1, // 16x16
+        .flip  = 0,
+
+        .tile = 148 + 4 * (player_active_item.type - WORKBENCH_ITEM),
+        .palette = 6
+    });
 }
 
 static inline void draw_attack(u16 x, u16 y, struct player_Data *player_data,
@@ -498,19 +502,19 @@ static inline void draw_attack(u16 x, u16 y, struct player_Data *player_data,
     x += -4 + ((dir == 3) - (dir == 1)) * 8 - ((dir & 1) == 0) * 4;
     y += -4 + ((dir == 2) - (dir == 0)) * 8 - ((dir & 1) == 1) * 4;
 
-    const u16 sprite = 176 + (dir & 1) * 2;
-    const u8 shape = 1 + (dir & 1);
-    const u8 flip = 2 * (dir == 2) + 1 * (dir == 3);
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = x - level_x_offset,
+        .y = y - level_y_offset,
 
-    SPRITE(
-        x - level_x_offset, // x
-        y - level_y_offset, // y
-        sprite,  // sprite
-        5,       // palette
-        flip,    // flip
-        shape,   // shape
-        0        // size
-    );
+        .priority = 2,
+
+        .shape = 1 + (dir & 1), // horizontal or vertical
+        .size  = 0, // 16x8 (horizontal) or 8x16 (vertical)
+        .flip  = 2 * (dir == 2) + 1 * (dir == 3),
+
+        .tile = 176 + (dir & 1) * 2,
+        .palette = 5
+    });
 }
 
 static inline void draw_item(u16 x, u16 y, struct player_Data *player_data,
@@ -524,19 +528,22 @@ static inline void draw_item(u16 x, u16 y, struct player_Data *player_data,
 
     const struct Item *item = &item_list[item_type];
 
-    u16 sprite = 256 + item_type +
+    const u16 tile = 256 + item_type +
         (item->class == ITEMCLASS_TOOL) * (item_tool_level * 5);
-    u8 palette = 12 + item->palette;
 
-    SPRITE(
-        x - level_x_offset, // x
-        y - level_y_offset, // y
-        sprite,  // sprite
-        palette, // palette
-        0,       // flip
-        0,       // shape
-        0        // size
-    );
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = x - level_x_offset,
+        .y = y - level_y_offset,
+
+        .priority = 2,
+
+        .shape = 0, // square
+        .size  = 0, // 8x8
+        .flip  = 0,
+
+        .tile = tile,
+        .palette = 12 + item->palette
+    });
 }
 
 EDRAW(player_draw) {
@@ -550,9 +557,6 @@ EDRAW(player_draw) {
     u16 y = data->y - 3;
 
     u16 sprite = 8 + (dir == 0) * 4 + (dir & 1) * 8;
-    u8 palette = 4 + (mob_data->hurt_time > 0);
-    u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);
-
     if(dir & 1)
         sprite += ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4);
 
@@ -585,15 +589,20 @@ EDRAW(player_draw) {
     if(should_draw_attack && used_sprites < 128 - 1)
         draw_attack(x, y, player_data, used_sprites++);
 
-    SPRITE(
-        x - 8 - level_x_offset, // x
-        y - 8 - level_y_offset, // y
-        sprite,  // sprite
-        palette, // palette
-        flip,    // flip
-        0,       // shape
-        1        // size
-    );
+    // draw player sprite
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = x - 8 - level_x_offset,
+        .y = y - 8 - level_y_offset,
+
+        .priority = 2,
+
+        .shape = 0, // square
+        .size  = 1, // 16x16
+        .flip  = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1),
+
+        .tile = sprite,
+        .palette = 4 + (mob_data->hurt_time > 0)
+    });
 
     return 1 + should_draw_furniture + should_draw_attack + should_draw_item;
 }
