@@ -16,6 +16,8 @@
 #include "entity.h"
 #include "air-wizard.h"
 
+#include <gba/sprite.h>
+
 #include "mob.h"
 #include "player.h"
 #include "scene.h"
@@ -198,17 +200,19 @@ EDRAW(air_wizard_draw) {
             palette = 4;
     }
 
-    u8 flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1);
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = data->x - 8 - level_x_offset,
+        .y = data->y - 11 - level_y_offset,
 
-    SPRITE(
-        data->x - 8 - level_x_offset,  // x
-        data->y - 11 - level_y_offset, // y
-        sprite,  // sprite
-        palette, // palette
-        flip,    // flip
-        0,       // shape
-        1        // size
-    );
+        .priority = 2,
+
+        .shape = 0, // square
+        .size  = 1, // 16x16
+        .flip  = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1),
+
+        .tile = sprite,
+        .palette = palette
+    });
 
     return 1;
 }

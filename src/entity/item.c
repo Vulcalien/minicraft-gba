@@ -15,6 +15,8 @@
  */
 #include "entity.h"
 
+#include <gba/sprite.h>
+
 #include "tile.h"
 #include "player.h"
 #include "inventory.h"
@@ -150,33 +152,41 @@ EDRAW(item_draw) {
             return 0;
 
     const struct Item *item = &item_list[item_entity_data->item_type];
-
     const u16 sprite = 256 + item_entity_data->item_type;
-    const u8 palette = 12 + item->palette;
 
-    SPRITE(
-        data->x - 4 - level_x_offset,                              // x
-        data->y - 4 - (item_entity_data->zz / 6) - level_y_offset, // y
-        sprite,  // sprite
-        palette, // palette
-        0,       // flip
-        0,       // shape
-        0        // size
-    );
+    // draw item sprite
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = data->x - 4 - level_x_offset,
+        .y = data->y - 4 - (item_entity_data->zz / 6) - level_y_offset,
+
+        .priority = 2,
+
+        .shape = 0, // square
+        .size  = 0, // 8x8
+        .flip  = 0,
+
+        .tile = sprite,
+        .palette = 12 + item->palette
+    });
 
     bool should_draw_shadow = (item_entity_data->zz != 0);
     if(should_draw_shadow && used_sprites < 128 - 1) {
         used_sprites++;
 
-        SPRITE(
-            data->x - 4 - level_x_offset, // x
-            data->y - 4 - level_y_offset, // y
-            sprite,      // sprite
-            7,           // palette
-            0,           // flip
-            0,           // shape
-            0            // size
-        );
+        // draw shadow sprite
+        sprite_config(used_sprites, &(struct Sprite) {
+            .x = data->x - 4 - level_x_offset,
+            .y = data->y - 4 - level_y_offset,
+
+            .priority = 2,
+
+            .shape = 0, // square
+            .size  = 0, // 8x8
+            .flip  = 0,
+
+            .tile = sprite,
+            .palette = 7
+        });
     }
 
     return 1 + should_draw_shadow;

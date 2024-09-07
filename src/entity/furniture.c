@@ -16,6 +16,8 @@
 #include "entity.h"
 #include "furniture.h"
 
+#include <gba/sprite.h>
+
 #include "level.h"
 #include "item.h"
 #include "mob.h"
@@ -75,18 +77,19 @@ ETICK(furniture_tick) {
 }
 
 EDRAW(furniture_draw) {
-    const u16 sprite = 148 + 4 * (data->type - WORKBENCH_ENTITY);
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = data->x - 8 - level_x_offset,
+        .y = data->y - 12 - level_y_offset,
 
-    SPRITE(
-        data->x - 8 - level_x_offset,  // x
-        data->y - 12 - level_y_offset, // y
-        sprite, // sprite
-        6,      // palette
-        0,      // flip
-        0,      // shape
-        1       // size
-    );
+        .priority = 2,
 
+        .shape = 0, // square
+        .size  = 1, // 16x16
+        .flip  = 0,
+
+        .tile = 148 + 4 * (data->type - WORKBENCH_ENTITY),
+        .palette = 6
+    });
     return 1;
 }
 

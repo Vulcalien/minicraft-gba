@@ -20,6 +20,7 @@
 #include "input.h"
 #include "level.h"
 #include "entity.h"
+#include "screen.h"
 
 static bool show_performance = false;
 static u16 tick_vcount;

@@ -15,6 +15,8 @@
  */
 #include "entity.h"
 
+#include <gba/sprite.h>
+
 #include "mob.h"
 
 struct spark_Data {
@@ -122,17 +124,19 @@ EDRAW(spark_draw) {
         if(((spark_data->time / 6) & 1) == 0)
             return 0;
 
-    const u16 sprite = 180 + (rand() % 16) * 2;
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = data->x - 4 - level_x_offset,
+        .y = data->y - 8 - level_y_offset,
 
-    SPRITE(
-        data->x - 4 - level_x_offset, // x
-        data->y - 8 - level_y_offset, // y
-        sprite,      // sprite
-        4,           // palette
-        0,           // flip
-        2,           // shape
-        0            // size
-    );
+        .priority = 2,
+
+        .shape = 2, // vertical
+        .size  = 0, // 8x16
+        .flip  = 0,
+
+        .tile = 180 + (rand() % 16) * 2,
+        .palette = 4
+    });
 
     return 1;
 }

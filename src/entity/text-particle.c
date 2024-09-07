@@ -15,6 +15,8 @@
  */
 #include "entity.h"
 
+#include <gba/sprite.h>
+
 struct text_Data {
     u8 time : 6;
     u8 palette : 2;
@@ -97,19 +99,19 @@ EDRAW(text_particle_draw) {
 
     const u8 length = 1 + (text_data->number >= 10);
 
-    const u16 sprite = 640 + text_data->number * 2 + (length == 1);
-    const u8 palette = text_data->palette;
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = data->x - length * 4 - level_x_offset,
+        .y = data->y - (text_data->zz / 6) - level_y_offset,
 
-    SPRITE(
-        data->x - length * 4 - level_x_offset,          // x
-        data->y - (text_data->zz / 6) - level_y_offset, // y
-        sprite,      // sprite
-        palette,     // palette
-        0,           // flip
-        length == 2, // shape
-        0            // size
-    );
+        .priority = 2,
 
+        .shape = (length == 2), // square or horizontal
+        .size  = 0, // 8x8 (square) or 16x8 (horizontal)
+        .flip  = 0,
+
+        .tile = 640 + text_data->number * 2 + (length == 1),
+        .palette = text_data->palette
+    });
     return 1;
 }
 

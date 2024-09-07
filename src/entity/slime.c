@@ -15,6 +15,8 @@
  */
 #include "entity.h"
 
+#include <gba/sprite.h>
+
 #include "mob.h"
 
 struct slime_Data {
@@ -97,21 +99,23 @@ EDRAW(slime_draw) {
     struct mob_Data   *mob_data   = (struct mob_Data *)   &data->data;
     struct slime_Data *slime_data = (struct slime_Data *) &mob_data->data;
 
-    u16 sprite = 0 + (slime_data->jump_time > 0) * 4;
-
     const u8 hurt_time = mob_data->hurt_time;
     u8 palette = (hurt_time > 0)  * 5 +
                  (hurt_time == 0) * slime_data->level;
 
-    SPRITE(
-        data->x - 8  - level_x_offset, // x
-        data->y - 11 - level_y_offset, // y
-        sprite,  // sprite
-        palette, // palette
-        0,       // flip
-        0,       // shape
-        1        // size
-    );
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = data->x - 8  - level_x_offset,
+        .y = data->y - 11 - level_y_offset,
+
+        .priority = 2,
+
+        .shape = 0, // square
+        .size  = 1, // 16x16
+        .flip  = 0,
+
+        .tile = 0 + (slime_data->jump_time > 0) * 4,
+        .palette = palette
+    });
 
     return 1;
 }

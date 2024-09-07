@@ -15,6 +15,8 @@
  */
 #include "entity.h"
 
+#include <gba/sprite.h>
+
 #include "sound.h"
 
 struct smash_Data {
@@ -49,16 +51,19 @@ ETICK(smash_particle_tick) {
 }
 
 EDRAW(smash_particle_draw) {
-    SPRITE(
-        data->x - 8 - level_x_offset, // x
-        data->y - 8 - level_y_offset, // y
-        172, // sprite
-        5,   // palette
-        0,   // flip
-        0,   // shape
-        1    // size
-    );
+    sprite_config(used_sprites, &(struct Sprite) {
+        .x = data->x - 8 - level_x_offset,
+        .y = data->y - 8 - level_y_offset,
 
+        .priority = 2,
+
+        .shape = 0, // square
+        .size  = 1, // 16x16
+        .flip  = 0,
+
+        .tile = 172,
+        .palette = 5
+    });
     return 1;
 }
 

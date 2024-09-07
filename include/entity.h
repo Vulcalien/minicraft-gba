@@ -20,7 +20,6 @@
 
 #include "level.h"
 #include "item.h"
-#include "screen.h"
 
 #define ENTITY_TYPES (14)
 
@@ -94,20 +93,6 @@ extern const struct Entity smash_particle_entity;
     (entity_list[(data)->type])
 
 extern const struct Entity * const entity_list[ENTITY_TYPES];
-
-#define SPRITE(x, y, sprite, palette, flip, shape, size)\
-    do {\
-        OAM[used_sprites * 4 + 0] = ((y)       & 0xff)       |\
-                                    ((shape)   & 0x3)  << 14;\
-\
-        OAM[used_sprites * 4 + 1] = ((x)    & 0x1ff)       |\
-                                    ((flip) & 0x3)   << 12 |\
-                                    ((size) & 0x3)   << 14;\
-\
-        OAM[used_sprites * 4 + 2] = ((sprite)  & 0x3ff)       |\
-                                    ((2)       & 0x3)   << 10 |\
-                                    ((palette) & 0xf)   << 12;\
-    } while(0)
 
 extern bool entity_move(struct Level *level, struct entity_Data *data,
                         i32 xm, i32 ym);
