@@ -15,12 +15,13 @@
  */
 #include "minicraft.h"
 
+#include <gba/interrupt.h>
+
 #include "level.h"
 #include "tile.h"
 #include "generator.h"
 #include "input.h"
 #include "screen.h"
-#include "interrupt.h"
 
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
 #define DISPLAY_STATUS  *((vu16 *) 0x04000004)
@@ -30,29 +31,27 @@
 // To use the map viewer, just include this source file in minicraft.c
 
 int AgbMain(void) {
+    interrupt_init();
+    interrupt_enable(IRQ_VBLANK);
+
     DISPLAY_CONTROL = 3 << 0  | // Video mode
                       1 << 10;  // Enable BG 2
 
-    // enable V-Blank IRQ
-    DISPLAY_STATUS = (1 << 3);
-
-    interrupt_enable();
-
     generate_levels();
 
-    u32 displayed_level = 0;
+    u32 displayed_level = 3;
     while(true) {
         vsync();
         input_tick();
 
-        if(INPUT_CLICKED(KEY_LEFT)) {
+        if(INPUT_CLICKED(KEY_DOWN)) {
             if(displayed_level != 0)
                 displayed_level--;
             else
                 displayed_level = 4;
         }
 
-        if(INPUT_CLICKED(KEY_RIGHT)) {
+        if(INPUT_CLICKED(KEY_UP)) {
             if(displayed_level != 4)
                 displayed_level++;
             else
