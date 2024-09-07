@@ -16,6 +16,7 @@
 #include "entity.h"
 
 #include <gba/sprite.h>
+#include <random.h>
 
 #include "mob.h"
 
@@ -61,9 +62,9 @@ ETICK(slime_tick) {
         slime_data->ym
     );
 
-    if(slime_data->jump_time == -10 && (!move_result || rand() % 40 == 0)) {
-        slime_data->xm = (rand() % 3) - 1;
-        slime_data->ym = (rand() % 3) - 1;
+    if(slime_data->jump_time == -10 && (!move_result || random(40) == 0)) {
+        slime_data->xm = random(3) - 1;
+        slime_data->ym = random(3) - 1;
 
         struct entity_Data *player = &level->entities[0];
         if(player->type < ENTITY_TYPES) {
@@ -139,7 +140,7 @@ const struct Entity slime_entity = {
 };
 
 void mob_slime_die(struct Level *level, struct entity_Data *data) {
-    u8 drop_count = 1 + rand() % 2;
+    u8 drop_count = 1 + random(2);
     for(u32 i = 0; i < drop_count; i++)
         entity_add_item(level, data->x, data->y, SLIME_ITEM, false);
 

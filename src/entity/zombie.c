@@ -16,6 +16,7 @@
 #include "entity.h"
 
 #include <gba/sprite.h>
+#include <random.h>
 
 #include "mob.h"
 
@@ -83,10 +84,10 @@ ETICK(zombie_tick) {
         zombie_data->ym * zombie_data->move_flag
     );
 
-    if(!move_result || rand() % 200 == 0) {
+    if(!move_result || random(200) == 0) {
         zombie_data->random_walk_time = 60;
-        zombie_data->xm = (rand() & 1) * ((rand() % 3) - 1);
-        zombie_data->ym = (rand() & 1) * ((rand() % 3) - 1);
+        zombie_data->xm = random(2) * (random(3) - 1);
+        zombie_data->ym = random(2) * (random(3) - 1);
     }
 
     if(zombie_data->random_walk_time > 0)
@@ -145,7 +146,7 @@ const struct Entity zombie_entity = {
 };
 
 void mob_zombie_die(struct Level *level, struct entity_Data *data) {
-    u8 drop_count = 1 + rand() % 2;
+    u8 drop_count = 1 + random(2);
     for(u32 i = 0; i < drop_count; i++)
         entity_add_item(level, data->x, data->y, CLOTH_ITEM, false);
 

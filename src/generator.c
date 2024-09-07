@@ -15,6 +15,8 @@
  */
 #include "generator.h"
 
+#include <random.h>
+
 #include "level.h"
 #include "tile.h"
 #include "entity.h"
@@ -31,14 +33,14 @@ static inline void set(i8 *values, u32 x, u32 y, i8 val) {
 }
 
 static inline i32 variation(u32 step_size) {
-    return ((rand() & (step_size * 4 - 1)) - step_size * 2);
+    return (random(step_size * 4) - step_size * 2);
 }
 
 IWRAM_SECTION NOCLONE NOINLINE
 static i8 *noise(i8 *values, u32 feature_size) {
     for(u32 y = 0; y < LEVEL_H; y += feature_size)
         for(u32 x = 0; x < LEVEL_W; x += feature_size)
-            set(values, x, y, rand());
+            set(values, x, y, random(256) - 128);
 
     for(u32 step_size = feature_size; step_size > 1; step_size /= 2) {
         u32 half_step = step_size / 2;
@@ -134,12 +136,12 @@ static inline bool generate_underground(u32 lvl) {
     // add ores
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 400; i++) {
         // center of the ores
-        u32 xc = rand() % LEVEL_W;
-        u32 yc = rand() % LEVEL_H;
+        u32 xc = random(LEVEL_W);
+        u32 yc = random(LEVEL_H);
 
         for(u32 j = 0; j < 30; j++) {
-            i32 xt = xc + rand() % 9 - 4;
-            i32 yt = yc + rand() % 9 - 4;
+            i32 xt = xc + random(9) - 4;
+            i32 yt = yc + random(9) - 4;
 
             if(xt >= 2 && xt < LEVEL_W - 2 && yt >= 2 && yt < LEVEL_H - 2) {
                 if(level->tiles[xt + yt * LEVEL_W] == ROCK_TILE) {
@@ -155,8 +157,8 @@ static inline bool generate_underground(u32 lvl) {
     // add stairs down
     if(lvl != 0) {
         for(u32 i = 0; i < LEVEL_W * LEVEL_H / 100; i++) {
-            u32 xt = 10 + rand() % (LEVEL_W - 20);
-            u32 yt = 10 + rand() % (LEVEL_H - 20);
+            u32 xt = 10 + random(LEVEL_W - 20);
+            u32 yt = 10 + random(LEVEL_H - 20);
 
             // check if there is rock all around
             for(u32 y = yt - 1; y <= yt + 1; y++)
@@ -227,16 +229,16 @@ static inline bool generate_top(void) {
     // add deserts
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 2800; i++) {
         // center of the desert
-        u32 xc = rand() % LEVEL_W;
-        u32 yc = rand() % LEVEL_H;
+        u32 xc = random(LEVEL_W);
+        u32 yc = random(LEVEL_H);
 
         for(u32 j = 0; j < 10; j++) {
-            i32 xj = xc + rand() % 21 - 10;
-            i32 yj = yc + rand() % 21 - 10;
+            i32 xj = xc + random(21) - 10;
+            i32 yj = yc + random(21) - 10;
 
             for(u32 k = 0; k < 85; k++) {
-                i32 xk = xj + rand() % 9 - 4;
-                i32 yk = yj + rand() % 9 - 4;
+                i32 xk = xj + random(9) - 4;
+                i32 yk = yj + random(9) - 4;
 
                 for(i32 yt = yk - 1; yt <= yk + 1; yt++) {
                     if(yt < 0 || yt >= LEVEL_H)
@@ -261,12 +263,12 @@ static inline bool generate_top(void) {
     // add forests
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 400; i++) {
         // center of the forest
-        u32 xc = rand() % LEVEL_W;
-        u32 yc = rand() % LEVEL_H;
+        u32 xc = random(LEVEL_W);
+        u32 yc = random(LEVEL_H);
 
         for(u32 j = 0; j < 175; j++) {
-            i32 xt = xc + rand() % 29 - 14;
-            i32 yt = yc + rand() % 29 - 14;
+            i32 xt = xc + random(29) - 14;
+            i32 yt = yc + random(29) - 14;
 
             if(xt >= 0 && xt < LEVEL_W && yt >= 0 && yt < LEVEL_H) {
                 if(level->tiles[xt + yt * LEVEL_W] == GRASS_TILE) {
@@ -282,12 +284,12 @@ static inline bool generate_top(void) {
     // add flowers
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 400; i++) {
         // center of the flowers
-        u32 xc = rand() % LEVEL_W;
-        u32 yc = rand() % LEVEL_H;
+        u32 xc = random(LEVEL_W);
+        u32 yc = random(LEVEL_H);
 
         for(u32 j = 0; j < 30; j++) {
-            i32 xt = xc + rand() % 9 - 4;
-            i32 yt = yc + rand() % 9 - 4;
+            i32 xt = xc + random(9) - 4;
+            i32 yt = yc + random(9) - 4;
 
             if(xt >= 0 && xt < LEVEL_W && yt >= 0 && yt < LEVEL_H) {
                 if(level->tiles[xt + yt * LEVEL_W] == GRASS_TILE) {
@@ -301,8 +303,8 @@ static inline bool generate_top(void) {
 
     // add cactus
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 100; i++) {
-        u32 xt = rand() % LEVEL_W;
-        u32 yt = rand() % LEVEL_H;
+        u32 xt = random(LEVEL_W);
+        u32 yt = random(LEVEL_H);
 
         if(level->tiles[xt + yt * LEVEL_W] == SAND_TILE) {
             level->tiles[xt + yt * LEVEL_W] = CACTUS_TILE;
@@ -313,8 +315,8 @@ static inline bool generate_top(void) {
 
     // add stairs down
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 100; i++) {
-        u32 xt = 1 + rand() % (LEVEL_W - 2);
-        u32 yt = 1 + rand() % (LEVEL_H - 2);
+        u32 xt = 1 + random(LEVEL_W - 2);
+        u32 yt = 1 + random(LEVEL_H - 2);
 
         // check if there is rock all around
         for(u32 y = yt - 1; y <= yt + 1; y++)
@@ -374,8 +376,8 @@ static inline bool generate_sky(void) {
 
     // add cloud cactus
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 50; i++) {
-        u32 xt = 1 + rand() % (LEVEL_W - 2);
-        u32 yt = 1 + rand() % (LEVEL_H - 2);
+        u32 xt = 1 + random(LEVEL_W - 2);
+        u32 yt = 1 + random(LEVEL_H - 2);
 
         // check if there is cloud all around
         for(u32 y = yt - 1; y <= yt + 1; y++)
@@ -391,8 +393,8 @@ static inline bool generate_sky(void) {
 
     // add stairs down
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 100; i++) {
-        u32 xt = 1 + rand() % (LEVEL_W - 2);
-        u32 yt = 1 + rand() % (LEVEL_H - 2);
+        u32 xt = 1 + random(LEVEL_W - 2);
+        u32 yt = 1 + random(LEVEL_H - 2);
 
         // check if there is cloud all around
         for(u32 y = yt - 1; y <= yt + 1; y++)
@@ -442,7 +444,7 @@ static inline void generate_data(void) {
     struct Level *top_level = &levels[3];
     for(u32 i = 0; i < LEVEL_W * LEVEL_H; i++) {
         if(top_level->tiles[i] == FLOWER_TILE)
-            top_level->data[i] = rand() & 1;
+            top_level->data[i] = random(2);
     }
 }
 
@@ -454,7 +456,7 @@ static inline void generate_entities(void) {
 
     // spawn player
     while(true) {
-        u32 i = rand() % (LEVEL_W * LEVEL_H);
+        u32 i = random(LEVEL_W * LEVEL_H);
 
         if(levels[3].tiles[i] == GRASS_TILE) {
             entity_add_player(

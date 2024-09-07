@@ -16,6 +16,7 @@
 #include "entity.h"
 
 #include <gba/sprite.h>
+#include <random.h>
 
 #include "tile.h"
 #include "player.h"
@@ -55,21 +56,21 @@ void entity_add_item(struct Level *level, u16 x, u16 y,
         (struct item_entity_Data *) &data->data;
 
     if(is_tile) {
-        data->x = (x << 4) + 3 + rand() % 10;
-        data->y = (y << 4) + 3 + rand() % 10;
+        data->x = (x << 4) + 3 + random(10);
+        data->y = (y << 4) + 3 + random(10);
     } else {
-        data->x = x - 5 + rand() % 11;
-        data->y = y - 5 + rand() % 11;
+        data->x = x - 5 + random(11);
+        data->y = y - 5 + random(11);
     }
 
-    item_entity_data->xv = rand() % 59 - 29;
-    item_entity_data->yv = rand() % 39 - 19;
+    item_entity_data->xv = random(59) - 29;
+    item_entity_data->yv = random(39) - 19;
 
     item_entity_data->zz = 12;
-    item_entity_data->zv = 6 + rand() % 4;
+    item_entity_data->zv = 6 + random(4);
 
     item_entity_data->item_type = item;
-    item_entity_data->time = 10 * 60 + rand() % 60;
+    item_entity_data->time = 10 * 60 + random(60);
 
     // use solid_id to store the take delay
     data->solid_id = 30;

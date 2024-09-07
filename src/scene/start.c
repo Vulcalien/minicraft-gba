@@ -15,6 +15,8 @@
  */
 #include "scene.h"
 
+#include <random.h>
+
 #include "input.h"
 #include "generator.h"
 #include "furniture.h"
@@ -65,16 +67,19 @@ static void start_tick(void) {
             case LOAD_GAME:
                 SOUND_PLAY(sound_start);
 
-                srand(tick_count, false);
-                storage_load();
+                // add 'tick_count' to current random seed
+                random_seed(tick_count + random_seed(0));
 
+                storage_load();
                 set_scene(&scene_game, 7);
                 break;
 
             case NEW_GAME:
                 SOUND_PLAY(sound_start);
 
-                srand(tick_count, false);
+                // add 'tick_count' to current random seed
+                random_seed(tick_count + random_seed(0));
+
                 generate_levels();
 
                 gametime = 0;

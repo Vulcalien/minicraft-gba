@@ -16,6 +16,7 @@
 #include "entity.h"
 
 #include <gba/sprite.h>
+#include <random.h>
 
 struct text_Data {
     u8 time : 6;
@@ -50,11 +51,11 @@ void entity_add_text_particle(struct Level *level, u16 x, u16 y,
     data->x = x;
     data->y = y;
 
-    text_data->xv = rand() % 59 - 29;
-    text_data->yv = rand() % 39 - 19;
+    text_data->xv = random(59) - 29;
+    text_data->yv = random(39) - 19;
 
     text_data->zz = 12;
-    text_data->zv = 12 + rand() % 4;
+    text_data->zv = 12 + random(4);
 
     text_data->number = number;
     text_data->palette = palette;

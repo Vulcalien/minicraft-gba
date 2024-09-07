@@ -17,6 +17,7 @@
 #include "air-wizard.h"
 
 #include <gba/sprite.h>
+#include <random.h>
 
 #include "mob.h"
 #include "player.h"
@@ -151,10 +152,10 @@ ETICK(air_wizard_tick) {
         wizard_data->ym * (wizard_data->move_flag != 0)
     );
 
-    if(!move_result || rand() % 100 == 0) {
+    if(!move_result || random(100) == 0) {
         wizard_data->random_walk_time = 30;
-        wizard_data->xm = (rand() % 3) - 1;
-        wizard_data->ym = (rand() % 3) - 1;
+        wizard_data->xm = random(3) - 1;
+        wizard_data->ym = random(3) - 1;
     }
 
     if(wizard_data->random_walk_time > 0) {
@@ -167,7 +168,7 @@ ETICK(air_wizard_tick) {
             u32 dist = xd * xd + yd * yd;
 
             if(air_wizard_attack_delay == 0 && air_wizard_attack_time == 0) {
-                if(dist < 50 * 50 && rand() % 4 == 0)
+                if(dist < 50 * 50 && random(4) == 0)
                     air_wizard_attack_delay = 2 * 60;
             }
         }

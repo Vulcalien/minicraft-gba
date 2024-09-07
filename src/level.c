@@ -17,6 +17,7 @@
 
 #include <gba/background.h>
 #include <gba/sprite.h>
+#include <random.h>
 
 #include "screen.h"
 #include "tile.h"
@@ -76,8 +77,8 @@ void level_load(struct Level *level) {
 
 static inline void tick_tiles(struct Level *level) {
     for(u32 i = 0; i < LEVEL_W * LEVEL_H / 50; i++) {
-        u32 xt = rand() % LEVEL_W;
-        u32 yt = rand() % LEVEL_H;
+        u32 xt = random(LEVEL_W);
+        u32 yt = random(LEVEL_H);
 
         tick_tile(level, xt, yt);
     }
@@ -419,8 +420,8 @@ void level_add_entity(struct Level *level, u8 entity_id) {
 
 IWRAM_SECTION
 void level_try_spawn(struct Level *level, u8 level_index) {
-    u8 xt = rand() % LEVEL_W;
-    u8 yt = rand() % LEVEL_H;
+    u8 xt = random(LEVEL_W);
+    u8 yt = random(LEVEL_H);
 
     if(LEVEL_GET_TILE_S(level, xt, yt)->is_solid)
         return;
@@ -461,9 +462,9 @@ void level_try_spawn(struct Level *level, u8 level_index) {
     else if(level_index == 4)
         entity_level = 3;
     else
-        entity_level = rand() % (4 - level_index);
+        entity_level = random(4 - level_index);
 
-    if(rand() & 1)
+    if(random(2))
         entity_add_slime(level, x, y, entity_level);
     else
         entity_add_zombie(level, x, y, entity_level);

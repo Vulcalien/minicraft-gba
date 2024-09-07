@@ -15,6 +15,8 @@
  */
 #include "storage.h"
 
+#include <random.h>
+
 #include "options.h"
 #include "level.h"
 #include "tile.h"
@@ -166,7 +168,7 @@ THUMB
 void storage_srand(void) {
     switch_bank(0);
 
-    srand(read_4_bytes(4), true);
+    random_seed(read_4_bytes(4));
 }
 
 THUMB
@@ -372,7 +374,8 @@ void storage_save(void) {
         write_byte(addr++, 'E');
 
         // random seed
-        u32 seed = rand() << 16 | rand();
+        u32 seed = random(RANDOM_MAX + 1) << 0 |
+                   random(RANDOM_MAX + 1) << 16;
         write_4_bytes(addr, seed);
         addr += 4;
 

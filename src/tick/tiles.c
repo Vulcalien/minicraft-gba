@@ -15,6 +15,8 @@
  */
 #include "tile.h"
 
+#include <random.h>
+
 #include "level.h"
 
 #define FTICK(name)\
@@ -27,16 +29,16 @@ FTICK(damage_recover_tick) {
 }
 
 FTICK(grass_tick) {
-    if(rand() % 40 != 0)
+    if(random(40) != 0)
         return;
 
     i32 xn = xt;
     i32 yn = yt;
 
-    if(rand() & 1)
-        xn += (rand() & 1) * 2 - 1;
+    if(random(2))
+        xn += random(2) * 2 - 1;
     else
-        yn += (rand() & 1) * 2 - 1;
+        yn += random(2) * 2 - 1;
 
     if(LEVEL_GET_TILE(level, xn, yn) == DIRT_TILE)
         LEVEL_SET_TILE(level, xn, yn, GRASS_TILE, 0);
@@ -46,10 +48,10 @@ FTICK(liquid_tick) {
     i32 xn = xt;
     i32 yn = yt;
 
-    if(rand() & 1)
-        xn += (rand() & 1) * 2 - 1;
+    if(random(2))
+        xn += random(2) * 2 - 1;
     else
-        yn += (rand() & 1) * 2 - 1;
+        yn += random(2) * 2 - 1;
 
     if(LEVEL_GET_TILE(level, xn, yn) == HOLE_TILE)
         LEVEL_SET_TILE(level, xn, yn, LIQUID_TILE, 0);
@@ -80,7 +82,7 @@ FTICK(farmland_tick) {
 }
 
 FTICK(wheat_tick) {
-    if(rand() & 1)
+    if(random(2))
         return;
 
     u8 age = LEVEL_GET_DATA(level, xt, yt);

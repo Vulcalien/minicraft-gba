@@ -15,6 +15,8 @@
  */
 #include "scene.h"
 
+#include <random.h>
+
 #include "input.h"
 #include "screen.h"
 #include "options.h"
@@ -34,8 +36,8 @@ static inline void get_spawn_location(struct Level *level,
                                       u32 *spawn_x, u32 *spawn_y) {
     // try to find a grass tile
     for(u32 i = 0; i < 65536; i++) {
-        u32 x = rand() % LEVEL_W;
-        u32 y = rand() % LEVEL_H;
+        u32 x = random(LEVEL_W);
+        u32 y = random(LEVEL_H);
 
         u32 tile = LEVEL_GET_TILE(level, x, y);
 

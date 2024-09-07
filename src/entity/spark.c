@@ -16,6 +16,7 @@
 #include "entity.h"
 
 #include <gba/sprite.h>
+#include <random.h>
 
 #include "mob.h"
 
@@ -49,7 +50,7 @@ void entity_add_spark(struct Level *level, u16 x, u16 y,
     spark_data->xv = xv;
     spark_data->yv = yv;
 
-    spark_data->time = 10 * 60 + (rand() % 30);
+    spark_data->time = 10 * 60 + random(30);
 
     level_add_entity(level, entity_id);
 }
@@ -134,7 +135,7 @@ EDRAW(spark_draw) {
         .size  = 0, // 8x16
         .flip  = 0,
 
-        .tile = 180 + (rand() % 16) * 2,
+        .tile = 180 + random(16) * 2,
         .palette = 4
     });
 

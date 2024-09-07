@@ -18,9 +18,6 @@
 
 #include "minicraft.h"
 
-extern u16 rand(void);
-extern void srand(u32 val, bool reset);
-
 inline void itoa(u32 number, u8 radix, char *array, u8 digits, bool zero_fill) {
     u32 pos = 0;
     for(u32 i = 0; i < digits; i++) {

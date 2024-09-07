@@ -15,6 +15,8 @@
  */
 #include "tile.h"
 
+#include <random.h>
+
 #include "level.h"
 #include "entity.h"
 #include "player.h"
@@ -30,13 +32,13 @@
     static void name(struct Level *level, u32 xt, u32 yt,\
                      struct item_Data *item)
 
-#define GET_PUNCH_DAMAGE() (1 + rand() % 3)
+#define GET_PUNCH_DAMAGE() (1 + random(3))
 
 // Grass
 FINTERACT(grass_interact) {
     if(item->type == SHOVEL_ITEM) {
         if(player_pay_stamina(4 - item->tool_level)) {
-            if(rand() % 5 == 0)
+            if(random(5) == 0)
                 entity_add_item(level, xt, yt, SEEDS_ITEM, true);
 
             LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
@@ -47,7 +49,7 @@ FINTERACT(grass_interact) {
         if(player_pay_stamina(4 - item->tool_level)) {
             LEVEL_SET_TILE(level, xt, yt, FARMLAND_TILE, 0);
 
-            if(rand() % 5 == 0)
+            if(random(5) == 0)
                 entity_add_item(level, xt, yt, SEEDS_ITEM, true);
 
             SOUND_PLAY(sound_monster_hurt);
@@ -59,17 +61,17 @@ FINTERACT(grass_interact) {
 FINTERACT(rock_interact) {
     u8 dmg;
     if(item->type == PICK_ITEM && player_pay_stamina(4 - item->tool_level))
-        dmg = 10 + item->tool_level * 5 + rand() % 10;
+        dmg = 10 + item->tool_level * 5 + random(10);
     else
         dmg = GET_PUNCH_DAMAGE();
 
     u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
     if(damage >= 50) {
-        u8 count = 1 + rand() % 4;
+        u8 count = 1 + random(4);
         for(u32 i = 0; i < count; i++)
             entity_add_item(level, xt, yt, STONE_ITEM, true);
 
-        if(rand() & 1)
+        if(random(2))
             entity_add_item(level, xt, yt, COAL_ITEM, true);
 
         LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
@@ -87,7 +89,7 @@ FINTERACT(flower_interact) {
     if(item->type == SHOVEL_ITEM && player_pay_stamina(4 - item->tool_level))
         count = 2;
     else
-        count = 1 + rand() % 2;
+        count = 1 + random(2);
 
     for(u32 i = 0; i < count; i++)
         entity_add_item(level, xt, yt, FLOWER_ITEM, true);
@@ -99,20 +101,20 @@ FINTERACT(flower_interact) {
 FINTERACT(tree_interact) {
     u8 dmg;
     if(item->type == AXE_ITEM && player_pay_stamina(4 - item->tool_level))
-        dmg = 10 + item->tool_level * 5 + rand() % 10;
+        dmg = 10 + item->tool_level * 5 + random(10);
     else
         dmg = GET_PUNCH_DAMAGE();
 
-    if(rand() % 10 == 0)
+    if(random(10) == 0)
         entity_add_item(level, xt, yt, APPLE_ITEM, true);
 
     u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
     if(damage >= 20) {
-        u8 count = 1 + rand() % 2;
+        u8 count = 1 + random(2);
         for(u32 i = 0; i < count; i++)
             entity_add_item(level, xt, yt, WOOD_ITEM, true);
 
-        count = rand() % 4;
+        count = random(4);
         for(u32 i = 0; i < count; i++)
             entity_add_item(level, xt, yt, ACORN_ITEM, true);
 
@@ -171,7 +173,7 @@ FINTERACT(cactus_interact) {
 
     u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
     if(damage >= 10) {
-        u8 count = 1 + rand() % 2;
+        u8 count = 1 + random(2);
         for(u32 i = 0; i < count; i++)
             entity_add_item(level, xt, yt, CACTUS_ITEM, true);
 
@@ -196,7 +198,7 @@ FINTERACT(cactus_sapling_interact) {
 
 // Farmland
 FSTEPPED_ON(farmland_stepped_on) {
-    if(rand() % 60 != 0)
+    if(random(60) != 0)
         return;
 
     if(LEVEL_GET_DATA(level, xt, yt) >= 5)
@@ -210,16 +212,16 @@ FINTERACT(farmland_interact) {
 
 // Wheat
 static inline void wheat_harvest(struct Level *level, u32 xt, u32 yt) {
-    if(rand() & 1)
+    if(random(2))
         entity_add_item(level, xt, yt, SEEDS_ITEM, true);
 
     u8 age = LEVEL_GET_DATA(level, xt, yt);
     if(age >= 40) {
         u8 count;
         if(age == 50)
-            count = 2 + rand() % 3;
+            count = 2 + random(3);
         else
-            count = 1 + rand() % 2;
+            count = 1 + random(2);
 
         for(u32 i = 0; i < count; i++)
             entity_add_item(level, xt, yt, WHEAT_ITEM, true);
@@ -229,7 +231,7 @@ static inline void wheat_harvest(struct Level *level, u32 xt, u32 yt) {
 }
 
 FSTEPPED_ON(wheat_stepped_on) {
-    if(rand() % 60 != 0)
+    if(random(60) != 0)
         return;
 
     if(LEVEL_GET_DATA(level, xt, yt) >= 2)
@@ -246,7 +248,7 @@ FINTERACT(wheat_interact) {
 // Cloud
 FINTERACT(cloud_interact) {
     if(item->type == SHOVEL_ITEM && player_pay_stamina(5)) {
-        u8 count = 1 + rand() % 2;
+        u8 count = 1 + random(2);
         for(u32 i = 0; i < count; i++)
             entity_add_item(level, xt, yt, CLOUD_ITEM, true);
     }
@@ -256,15 +258,15 @@ FINTERACT(cloud_interact) {
 FINTERACT(hard_rock_interact) {
     u8 dmg = 0;
     if(item->type == PICK_ITEM && item->tool_level == 4) {
-        dmg = 30 + rand() % 10;
+        dmg = 30 + random(10);
 
         u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
         if(damage >= 200) {
-            u8 count = 1 + rand() % 4;
+            u8 count = 1 + random(4);
             for(u32 i = 0; i < count; i++)
                 entity_add_item(level, xt, yt, STONE_ITEM, true);
 
-            if(rand() & 1)
+            if(random(2))
                 entity_add_item(level, xt, yt, COAL_ITEM, true);
 
             LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
@@ -283,14 +285,14 @@ FINTERACT(ore_interact) {
     if(item->type == PICK_ITEM && player_pay_stamina(6 - item->tool_level)) {
         dmg = 1;
 
-        u8 count = rand() % 2;
+        u8 count = random(2);
         u8 tile = LEVEL_GET_TILE(level, xt, yt);
         u8 item_to_drop = ((tile == IRON_ORE_TILE) * IRON_ORE_ITEM) |
                           ((tile == GOLD_ORE_TILE) * GOLD_ORE_ITEM) |
                           ((tile == GEM_ORE_TILE)  * GEM_ITEM);
 
         u8 damage = LEVEL_GET_DATA(level, xt, yt) + dmg;
-        if(damage >= 3 + rand() % 10) {
+        if(damage >= 3 + random(10)) {
             LEVEL_SET_TILE(level, xt, yt, DIRT_TILE, 0);
 
             count += 2;

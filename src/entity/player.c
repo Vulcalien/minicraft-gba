@@ -17,6 +17,7 @@
 #include "player.h"
 
 #include <gba/sprite.h>
+#include <random.h>
 
 #include "level.h"
 #include "tile.h"
@@ -144,16 +145,16 @@ static inline void player_hurt_entities(struct Level *level, struct entity_Data 
                 }
 
                 if(entity_intersects(e_data, x0, y0, x1, y1)) {
-                    u8 damage = 1 + rand() % 3;
+                    u8 damage = 1 + random(3);
 
                     if(player_active_item.type == SWORD_ITEM) {
                         const u8 level = player_active_item.tool_level;
                         damage += (level + 1) * 3 +
-                                  rand() % (2 + level * level * 2);
+                                  random(2 + level * level * 2);
                     } else if(player_active_item.type == AXE_ITEM) {
                         const u8 level = player_active_item.tool_level;
                         damage += (level + 1) * 2 +
-                                  rand() % 4;
+                                  random(4);
                     } else if(player_active_item.type < ITEM_TYPES) {
                         damage += 1;
                     }
