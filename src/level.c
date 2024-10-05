@@ -211,62 +211,54 @@ static inline void draw_lantern_light(struct entity_Data *data) {
     }
 }
 
-static inline void draw_light_sprite(vu16 sprite_attribs[4],
-                                     i32 x, i32 y, u32 sprite, bool is_large) {
-    sprite_attribs[0] = ((y - level_y_offset) & 0xff) | 2 << 10;
-    sprite_attribs[1] = ((x - level_x_offset) & 0x1ff) | (2 + is_large) << 14;
-    sprite_attribs[2] = (sprite & 0x3ff) | 2 << 10;
-}
-
 static inline void draw_player_light(struct Level *level, u32 *used_sprites) {
     struct entity_Data *player = &level->entities[0];
+
+    const u32 x = player->x - level_x_offset;
+    const u32 y = player->y - 3 - level_y_offset;
 
     if(player_active_item.type == LANTERN_ITEM) {
         // overwrite the last 4 sprites if necessary
         if(*used_sprites > 128 - 4)
             *used_sprites = 128 - 4;
-        vu16 *sprite_attribs = OAM + *used_sprites * 4;
 
-        // top-left
-        draw_light_sprite(
-            &sprite_attribs[0],
-            player->x - 64, player->y - 3 - 64,
-            336, true
-        );
+        // draw four 64x64 sprites
+        for(u32 i = 0; i < 4; i++) {
+            const u32 xi = i % 2;
+            const u32 yi = i / 2;
 
-        // top-right
-        draw_light_sprite(
-            &sprite_attribs[4],
-            player->x, player->y - 3 - 64,
-            400, true
-        );
+            sprite_config(*used_sprites + i, &(struct Sprite) {
+                .x = (x - 64) + xi * 64,
+                .y = (y - 64) + yi * 64,
 
-        // bottom-left
-        draw_light_sprite(
-            &sprite_attribs[8],
-            player->x - 64, player->y - 3,
-            464, true
-        );
+                .mode = 2, // window
+                .priority = 2,
 
-        // bottom-right
-        draw_light_sprite(
-            &sprite_attribs[12],
-            player->x, player->y - 3,
-            528, true
-        );
+                .shape = 0, // square
+                .size  = 3, // 64x64
 
+                .tile = 336 + i * 64
+            });
+        }
         *used_sprites += 4;
     } else {
         // overwrite the last sprite if necessary
         if(*used_sprites > 128 - 1)
             *used_sprites = 128 - 1;
 
-        draw_light_sprite(
-            OAM + *used_sprites * 4,
-            player->x - 16, player->y - 3 - 16,
-            320, false
-        );
+        // draw a single 32x32 sprite
+        sprite_config(*used_sprites, &(struct Sprite) {
+            .x = x - 16,
+            .y = y - 16,
 
+            .mode = 2, // window
+            .priority = 2,
+
+            .shape = 0, // square
+            .size  = 2, // 32x32
+
+            .tile = 320
+        });
         *used_sprites += 1;
     }
 }
