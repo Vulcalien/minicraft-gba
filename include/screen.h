@@ -26,8 +26,6 @@
 #define BG2_TILEMAP ((vu16 *) 0x06009000)
 #define BG3_TILEMAP ((vu16 *) 0x06009800)
 
-#define OAM ((vu16 *) 0x07000000)
-
 extern void screen_init(void);
 
 extern void vsync(void);

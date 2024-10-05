@@ -16,6 +16,7 @@
 #include "screen.h"
 
 #include <gba/background.h>
+#include <gba/sprite.h>
 #include <memory.h>
 
 #include "images.h"
@@ -157,9 +158,7 @@ void screen_init(void) {
         for(u32 x = 0; x < 30; x++)
             BG3_TILEMAP[x + y * 32] = 29 | 9 << 12;
 
-    // hide all sprites
-    for(u32 i = 0; i < 128; i++)
-        OAM[i * 4] = 1 << 9;
+    sprite_hide_all();
 
     // enable V-Blank IRQ
     DISPLAY_STATUS = (1 << 3);

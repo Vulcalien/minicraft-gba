@@ -22,6 +22,8 @@
 #include "entity.h"
 #include "screen.h"
 
+#define OAM ((vu16 *) 0x07000000)
+
 static bool show_performance = false;
 static u16 tick_vcount;
 static u16 draw_vcount;
