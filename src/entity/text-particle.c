@@ -106,9 +106,8 @@ EDRAW(text_particle_draw) {
 
         .priority = 2,
 
-        .shape = (length == 2), // square or horizontal
-        .size  = 0, // 8x8 (square) or 16x8 (horizontal)
-        .flip  = 0,
+        .size = (length == 2 ? SPRITE_SIZE_16x8 : SPRITE_SIZE_8x8),
+        .flip = 0,
 
         .tile = 640 + text_data->number * 2 + (length == 1),
         .palette = text_data->palette

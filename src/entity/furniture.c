@@ -83,9 +83,8 @@ EDRAW(furniture_draw) {
 
         .priority = 2,
 
-        .shape = 0, // square
-        .size  = 1, // 16x16
-        .flip  = 0,
+        .size = SPRITE_SIZE_16x16,
+        .flip = 0,
 
         .tile = 148 + 4 * (data->type - WORKBENCH_ENTITY),
         .palette = 6

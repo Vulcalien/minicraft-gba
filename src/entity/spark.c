@@ -131,9 +131,8 @@ EDRAW(spark_draw) {
 
         .priority = 2,
 
-        .shape = 2, // vertical
-        .size  = 0, // 8x16
-        .flip  = 0,
+        .size = SPRITE_SIZE_8x16,
+        .flip = 0,
 
         .tile = 180 + random(16) * 2,
         .palette = 4

@@ -162,9 +162,8 @@ EDRAW(item_draw) {
 
         .priority = 2,
 
-        .shape = 0, // square
-        .size  = 0, // 8x8
-        .flip  = 0,
+        .size = SPRITE_SIZE_8x8,
+        .flip = 0,
 
         .tile = sprite,
         .palette = 12 + item->palette
@@ -181,9 +180,8 @@ EDRAW(item_draw) {
 
             .priority = 2,
 
-            .shape = 0, // square
-            .size  = 0, // 8x8
-            .flip  = 0,
+            .size = SPRITE_SIZE_8x8,
+            .flip = 0,
 
             .tile = sprite,
             .palette = 7

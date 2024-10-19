@@ -116,9 +116,8 @@ EDRAW(zombie_draw) {
 
         .priority = 2,
 
-        .shape = 0, // square
-        .size  = 1, // 16x16
-        .flip  = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1),
+        .size = SPRITE_SIZE_16x16,
+        .flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1),
 
         .tile = sprite,
         .palette = palette

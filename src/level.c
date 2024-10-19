@@ -234,9 +234,7 @@ static inline void draw_player_light(struct Level *level, u32 *used_sprites) {
                 .mode = 2, // window
                 .priority = 2,
 
-                .shape = 0, // square
-                .size  = 3, // 64x64
-
+                .size = SPRITE_SIZE_64x64,
                 .tile = 336 + i * 64
             });
         }
@@ -254,8 +252,8 @@ static inline void draw_player_light(struct Level *level, u32 *used_sprites) {
             .mode = 2, // window
             .priority = 2,
 
-            .shape = 0, // square
-            .size  = 2, // 32x32
+            .size = SPRITE_SIZE_32x32,
+            .flip = 0,
 
             .tile = 320
         });

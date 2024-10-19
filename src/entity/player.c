@@ -487,9 +487,8 @@ static inline void draw_furniture(u16 x, u16 y, u32 used_sprites) {
 
         .priority = 2,
 
-        .shape = 0, // square
-        .size  = 1, // 16x16
-        .flip  = 0,
+        .size = SPRITE_SIZE_16x16,
+        .flip = 0,
 
         .tile = 148 + 4 * (player_active_item.type - WORKBENCH_ITEM),
         .palette = 6
@@ -509,9 +508,8 @@ static inline void draw_attack(u16 x, u16 y, struct player_Data *player_data,
 
         .priority = 2,
 
-        .shape = 1 + (dir & 1), // horizontal or vertical
-        .size  = 0, // 16x8 (horizontal) or 8x16 (vertical)
-        .flip  = 2 * (dir == 2) + 1 * (dir == 3),
+        .size = (dir & 1) ? SPRITE_SIZE_8x16 : SPRITE_SIZE_16x8,
+        .flip = 2 * (dir == 2) + 1 * (dir == 3),
 
         .tile = 176 + (dir & 1) * 2,
         .palette = 5
@@ -538,9 +536,8 @@ static inline void draw_item(u16 x, u16 y, struct player_Data *player_data,
 
         .priority = 2,
 
-        .shape = 0, // square
-        .size  = 0, // 8x8
-        .flip  = 0,
+        .size = SPRITE_SIZE_8x8,
+        .flip = 0,
 
         .tile = tile,
         .palette = 12 + item->palette
@@ -597,9 +594,8 @@ EDRAW(player_draw) {
 
         .priority = 2,
 
-        .shape = 0, // square
-        .size  = 1, // 16x16
-        .flip  = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1),
+        .size = SPRITE_SIZE_16x16,
+        .flip = ((dir & 1) == 0) * ((walk_dist >> 3) & 1) + (dir == 1),
 
         .tile = sprite,
         .palette = 4 + (mob_data->hurt_time > 0)
