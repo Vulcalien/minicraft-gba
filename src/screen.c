@@ -22,7 +22,6 @@
 #include "images.h"
 
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
-#define DISPLAY_STATUS  *((vu16 *) 0x04000004)
 
 #define WINDOW_IN  *((vu16 *) 0x04000048)
 #define WINDOW_OUT *((vu16 *) 0x0400004a)
@@ -159,9 +158,6 @@ void screen_init(void) {
             BG3_TILEMAP[x + y * 32] = 29 | 9 << 12;
 
     sprite_hide_all();
-
-    // enable V-Blank IRQ
-    DISPLAY_STATUS = (1 << 3);
 
     // disable forced blank
     DISPLAY_CONTROL &= ~(1 << 7);
