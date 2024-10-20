@@ -2,6 +2,56 @@
     "input_dir": "res",
     "output_dir": "src/res",
 
+    "tilesets": [
+        {
+            "name": "items_tileset",
+
+            "input": "img/items.png",
+            "output": "img/items.c",
+
+            "tile_width": 1,
+            "tile_height": 1,
+
+            "palette": "res/img/items-palette.png",
+            "bpp": 4,
+
+            "static": true
+        },
+        {
+            "name": "tools_tileset",
+
+            "input": "img/tools.png",
+            "output": "img/tools.c",
+
+            "tile_width": 1,
+            "tile_height": 1,
+
+            "palette": "res/img/tools-palette.png",
+            "bpp": 4,
+
+            "static": true
+        }
+    ],
+
+    "palettes": [
+        {
+            "name": "items_palette",
+
+            "input": "img/items-palette.png",
+            "output": "img/items-palette.c",
+
+            "static": true
+        },
+        {
+            "name": "tools_palette",
+
+            "input": "img/tools-palette.png",
+            "output": "img/tools-palette.c",
+
+            "static": true
+        }
+    ],
+
     "files": [
         {
             "name": "sound_start",
