@@ -17,14 +17,12 @@
 
 #include <gba/background.h>
 #include <gba/sprite.h>
+#include <gba/window.h>
 #include <memory.h>
 
 #include "images.h"
 
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
-
-#define WINDOW_IN  *((vu16 *) 0x04000048)
-#define WINDOW_OUT *((vu16 *) 0x0400004a)
 
 #define CHAR_BLOCK_0 ((vu16 *) 0x06000000)
 #define CHAR_BLOCK_1 ((vu16 *) 0x06004000)
@@ -77,11 +75,22 @@ void screen_init(void) {
                       1 << 9  | // Enable BG 1
                       0 << 10 | // Enable BG 2
                       1 << 11 | // Enable BG 3
-                      1 << 12 | // Enable OBJ
-                      1 << 15;  // Enable OBJ Window
+                      1 << 12;  // Enable OBJ
+
+    window_config(WINDOW_OUT, NULL);
 
     // Filter out the light layer when inside OBJ Window
-    WINDOW_OUT = ~(1 << 10);
+    window_enable(WINDOW_OBJ);
+    window_config(WINDOW_OBJ, &(struct Window) {
+        .bg0 = true,
+        .bg1 = true,
+        .bg2 = false,
+        .bg3 = true,
+
+        .obj = true,
+
+        .effects = true
+    });
 
     // Sky Background
     background_config(BG0, &(struct Background) {
