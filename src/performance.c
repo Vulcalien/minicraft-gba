@@ -32,7 +32,7 @@ static u16 ticks = 0, frames = 0;
 static u16 tps   = 0, fps    = 0;
 
 void performance_tick(void) {
-    tick_vcount = display_get_vcount();
+    tick_vcount = display_vcount();
     ticks++;
 
     if(INPUT_DOWN(KEY_L) && INPUT_DOWN(KEY_R) && INPUT_CLICKED(KEY_SELECT))
@@ -40,7 +40,7 @@ void performance_tick(void) {
 }
 
 void performance_draw(void) {
-    draw_vcount = display_get_vcount();
+    draw_vcount = display_vcount();
     frames++;
 
     if(!show_performance || tick_count % 15 != 0)
