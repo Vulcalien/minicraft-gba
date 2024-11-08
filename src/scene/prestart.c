@@ -15,6 +15,8 @@
  */
 #include "scene.h"
 
+#include <gba/display.h>
+
 #include "screen.h"
 
 // considering that checksum verification takes around 40 ticks,
@@ -33,12 +35,10 @@ static void prestart_tick(void) {
 
 THUMB
 static void prestart_draw(void) {
-    if(counter < 0x20) {
-        u8 val = 0x20 - counter;
-        u16 color = val << 10 | val << 5 | val;
-
-        screen_set_bg_palette_color(9, 0xd, color);
-    }
+    if(counter < 0x20)
+        display_brighten(NULL, (0x20 - counter) / 2);
+    else
+        display_effects_disable();
 
     screen_write(
         "MINICRAFT WAS MADE BY MARKUS\n"
@@ -59,7 +59,7 @@ static void prestart_draw(void) {
         "RELEASED UNDER THE\n"
         "GNU GENERAL PUBLIC LICENSE\n"
         "EITHER VERSION 3 OR LATER.",
-        9, 1, 1
+        0, 1, 1
     );
 }
 

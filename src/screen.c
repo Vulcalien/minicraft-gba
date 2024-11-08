@@ -15,6 +15,7 @@
  */
 #include "screen.h"
 
+#include <gba/display.h>
 #include <gba/background.h>
 #include <gba/sprite.h>
 #include <gba/window.h>
@@ -159,12 +160,11 @@ void screen_init(void) {
         for(u32 x = 0; x <= 30; x++)
             BG0_TILEMAP[x + y * 32] = 0 | 9 << 12;
 
-    // prepare prescreen
-    screen_set_bg_palette_color(9, 0xc, 0x7fff);
-    screen_set_bg_palette_color(9, 0xd, 0x7fff);
+    // prepare prestart screen
+    display_brighten(NULL, 16);
     for(u32 y = 0; y < 20; y++)
         for(u32 x = 0; x < 30; x++)
-            BG3_TILEMAP[x + y * 32] = 29 | 9 << 12;
+            BG3_TILEMAP[x + y * 32] = 29 | 0 << 12;
 
     sprite_hide_all();
 
