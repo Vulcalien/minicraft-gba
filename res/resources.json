@@ -15,19 +15,6 @@
             "bpp": 4,
 
             "static": true
-        },
-        {
-            "name": "tools_tileset",
-
-            "input": "img/tools.png",
-            "output": "img/tools.c",
-
-            "tile_size": 1,
-
-            "palette": "res/palettes/tools.png",
-            "bpp": 4,
-
-            "static": true
         }
     ],
 
@@ -37,14 +24,6 @@
 
             "input": "palettes/items.png",
             "output": "palettes/items.c",
-
-            "static": true
-        },
-        {
-            "name": "tools_palette",
-
-            "input": "palettes/tools.png",
-            "output": "palettes/tools.c",
 
             "static": true
         }
