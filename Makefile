@@ -17,7 +17,7 @@ BIN_DIR := bin
 SRC_SUBDIRS := scene images entity
 
 RES_DIR      := res
-RES_OUT_DIRS := src/res src/res/sounds src/res/img src/res/palettes
+RES_OUT_DIRS := src/res src/res/images src/res/palettes src/res/sounds
 
 # === Compilation ===
 CPPFLAGS := -Iinclude -MMD -MP

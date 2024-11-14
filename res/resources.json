@@ -6,8 +6,8 @@
         {
             "name": "items_tileset",
 
-            "input": "img/items.png",
-            "output": "img/items.c",
+            "input": "images/items.png",
+            "output": "images/items.c",
 
             "tile_size": 1,
 
