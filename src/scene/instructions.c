@@ -29,7 +29,7 @@ static void instructions_draw(void) {
     // clear the screen
     for(u32 y = 0; y < 20; y++)
         for(u32 x = 0; x < 30; x++)
-            BG3_TILEMAP[x + y * 32] = 29 | 1 << 12;
+            BG3_TILEMAP[x + y * 32] = 32;
 
     screen_write("HOW TO PLAY", 0, 9, 1);
 

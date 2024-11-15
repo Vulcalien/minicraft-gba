@@ -30,21 +30,21 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_MATERIAL,
         .name = "STONE",
-        .palette = 2
+        .palette = 1
     },
 
     // Glass
     {
         .class = ITEMCLASS_MATERIAL,
         .name = "GLASS",
-        .palette = 2
+        .palette = 1
     },
 
     // Wheat
     {
         .class = ITEMCLASS_MATERIAL,
         .name = "WHEAT",
-        .palette = 1
+        .palette = 2
     },
 
     // Slime
@@ -65,7 +65,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_MATERIAL,
         .name = "COAL",
-        .palette = 2
+        .palette = 1
     },
 
     // Iron Ore
@@ -79,7 +79,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_MATERIAL,
         .name = "G.ORE",
-        .palette = 1
+        .palette = 2
     },
 
     // Iron Ingot
@@ -93,7 +93,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_MATERIAL,
         .name = "GOLD",
-        .palette = 1
+        .palette = 2
     },
 
     // Gem
@@ -159,7 +159,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_PLACEABLE,
         .name = "SAND",
-        .palette = 1,
+        .palette = 2,
 
         .placed_tile = SAND_TILE,
         .placeable_on = { GRASS_TILE, DIRT_TILE }
@@ -169,7 +169,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_PLACEABLE,
         .name = "CLOUD",
-        .palette = 2,
+        .palette = 1,
 
         .placed_tile = CLOUD_TILE,
         .placeable_on = { INFINITE_FALL_TILE, -1 }
@@ -190,7 +190,7 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_FOOD,
         .name = "BREAD",
-        .palette = 1,
+        .palette = 2,
 
         .hp_gain = 2
     },
@@ -201,42 +201,42 @@ const struct Item item_list[ITEM_TYPES] = {
     {
         .class = ITEMCLASS_FURNITURE,
         .name = "WORKBENCH",
-        .palette = 0
+        .palette = 3
     },
 
     // Furnace
     {
         .class = ITEMCLASS_FURNITURE,
         .name = "FURNACE",
-        .palette = 2
+        .palette = 1
     },
 
     // Oven
     {
         .class = ITEMCLASS_FURNITURE,
         .name = "OVEN",
-        .palette = 2
+        .palette = 1
     },
 
     // Anvil
     {
         .class = ITEMCLASS_FURNITURE,
         .name = "ANVIL",
-        .palette = 2
+        .palette = 1
     },
 
     // Chest
     {
         .class = ITEMCLASS_FURNITURE,
         .name = "CHEST",
-        .palette = 1
+        .palette = 2
     },
 
     // Lantern
     {
         .class = ITEMCLASS_FURNITURE,
         .name = "LANTERN",
-        .palette = 2
+        .palette = 1
     },
 
     // -----
@@ -325,7 +325,7 @@ void item_draw_icon(struct item_Data *data, u32 x, u32 y, bool black_bg) {
     const struct Item *item = ITEM_S(data);
 
     const u16 tile = 128 + data->type +
-                     (item->class == ITEMCLASS_TOOL) * (data->tool_level * 5);
+                     (item->class == ITEMCLASS_TOOL) * (2 + data->tool_level * 5);
     const u8 palette = (black_bg == false) * (12 + item->palette) +
                        (black_bg == true) * 11;
 

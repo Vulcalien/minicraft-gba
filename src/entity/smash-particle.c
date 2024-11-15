@@ -61,7 +61,7 @@ EDRAW(smash_particle_draw) {
         .flip = 0,
 
         .tile = 172,
-        .palette = 5
+        .palette = 0
     });
     return 1;
 }

@@ -182,7 +182,7 @@ EDRAW(air_wizard_draw) {
     const u8 walk_dist = mob_data->walk_dist;
     const u8 hurt_time = mob_data->hurt_time;
 
-    u16 sprite = 128 + (dir == 0) * 4 + (dir & 1) * 8;
+    u16 sprite = 120 + (dir == 0) * 4 + (dir & 1) * 8;
     sprite += (dir & 1) * (
         ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4)
     );
@@ -190,15 +190,15 @@ EDRAW(air_wizard_draw) {
     static u32 damage_animation = 0;
     damage_animation++;
 
-    u8 palette = 3;
+    u8 palette = 0;
     if(hurt_time > 0) {
         palette = 5;
     } else if(mob_data->hp < 200) {
         if((damage_animation / 3) & 1)
-            palette = 4;
+            palette = 1;
     } else if(mob_data->hp < 1000) {
         if((damage_animation / 50) & 1)
-            palette = 4;
+            palette = 1;
     }
 
     sprite_config(used_sprites, &(struct Sprite) {

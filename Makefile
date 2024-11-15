@@ -14,7 +14,7 @@ SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
 
-SRC_SUBDIRS := scene images entity
+SRC_SUBDIRS := scene entity
 
 RES_DIR      := res
 RES_OUT_DIRS := src/res src/res/images src/res/palettes src/res/sounds

@@ -165,9 +165,9 @@ static void crafting_draw(void) {
         u8 recipe_id = sorted_recipes[item0 + i];
         u8 palette;
         if(can_craft[recipe_id])
-            palette = 4;
+            palette = 6;
         else
-            palette = 5;
+            palette = 7;
 
         const struct crafting_Recipe *recipe =
             &crafting_current_recipes[recipe_id];
@@ -184,8 +184,8 @@ static void crafting_draw(void) {
     // draw cursor arrows
     {
         const u32 cursor_y = craft_y + 1 + (selected - item0);
-        screen_write(">", 4, craft_x, cursor_y);
-        screen_write("<", 4, craft_x + craft_w - 1, cursor_y);
+        screen_write(">", 6, craft_x, cursor_y);
+        screen_write("<", 6, craft_x + craft_w - 1, cursor_y);
     }
 
     const struct crafting_Recipe *selected_recipe =
@@ -203,7 +203,7 @@ static void crafting_draw(void) {
             &player_inventory, result.type, result.tool_level
         );
 
-        SCREEN_WRITE_NUMBER(count, 10, 5, false, 4, have_x + 2, have_y + 1);
+        SCREEN_WRITE_NUMBER(count, 10, 5, false, 6, have_x + 2, have_y + 1);
     }
 
     // draw 'COST' items and count
@@ -226,7 +226,7 @@ static void crafting_draw(void) {
         cost_text[1 + (required_count > 9)] = '/';
         itoa(has_count, 10, cost_text + 2 + (required_count > 9), 2, false);
 
-        u8 palette = 4 + (has_count < required_count);
+        u8 palette = 6 + (has_count < required_count);
         screen_write(cost_text, palette, cost_x + 2, cost_y + 1 + i);
     }
 }

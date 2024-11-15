@@ -138,14 +138,14 @@ static void chest_draw(void) {
             struct item_Data *data = &inventory->items[item0 + i];
 
             item_draw_icon(data, frame_x + 1, frame_y + 1 + i, false);
-            item_write(data, 4, frame_x + 2, frame_y + 1 + i);
+            item_write(data, 6, frame_x + 2, frame_y + 1 + i);
         }
 
         // draw cursor arrows
         if(chest_window == frame) {
             u32 cursor_y = frame_y + 1 + (selected[frame] - item0);
-            screen_write(">", 4, frame_x, cursor_y);
-            screen_write("<", 4, frame_x + frame_w - 1, cursor_y);
+            screen_write(">", 6, frame_x, cursor_y);
+            screen_write("<", 6, frame_x + frame_w - 1, cursor_y);
         }
     }
 }

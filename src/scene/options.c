@@ -72,15 +72,15 @@ static void options_draw(void) {
     // clear the screen
     for(u32 y = 0; y < 20; y++)
         for(u32 x = 0; x < 30; x++)
-            BG3_TILEMAP[x + y * 32] = 29 | 1 << 12;
+            BG3_TILEMAP[x + y * 32] = 32;
 
     screen_write("GAME OPTIONS", 0, 9, 1);
 
     WRITE_OPTION("KEEP INVENTORY", KEEP_INVENTORY, 3, 4);
     if(options.keep_inventory)
-        screen_write("YES", 10, 24, 4);
+        screen_write("YES", 4, 24, 4);
     else
-        screen_write("NO", 11, 25, 4);
+        screen_write("NO", 5, 25, 4);
 
     // write 'EXIT'
     WRITE_OPTION("EXIT", EXIT, 13, 18);

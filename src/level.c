@@ -204,7 +204,7 @@ static inline void draw_lantern_light(struct entity_Data *data) {
         for(i32 xl = xl0; xl < xl1; xl++) {
             u32 xd = (xl - xr + (xl >= xr)) * (xl - xr + (xl >= xr));
 
-            u32 val = 256 + (xd + yd <= 66) + (xd + yd <= 46);
+            u32 val = 192 + (xd + yd <= 66) + (xd + yd <= 46);
             if(BG2_TILEMAP[xl + yl * 32] < val)
                 BG2_TILEMAP[xl + yl * 32] = val;
         }
@@ -311,7 +311,7 @@ static inline void draw_entities(struct Level *level) {
 
 static inline void clear_light(void) {
     for(u32 i = 0; i < 32 * 20; i++)
-        BG2_TILEMAP[i] = 256;
+        BG2_TILEMAP[i] = 192;
 }
 
 static inline void draw_lava_light(struct Level *level) {
@@ -352,7 +352,7 @@ static inline void draw_lava_light(struct Level *level) {
                 for(i32 xl = xl0; xl < xl1; xl++) {
                     u32 xd = (xl - xr + (xl >= xr)) * (xl - xr + (xl >= xr));
 
-                    u32 val = 256 + (xd + yd <= 34) + (xd + yd <= 24);
+                    u32 val = 192 + (xd + yd <= 34) + (xd + yd <= 24);
                     if(BG2_TILEMAP[xl + yl * 32] < val)
                         BG2_TILEMAP[xl + yl * 32] = val;
                 }

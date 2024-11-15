@@ -134,8 +134,8 @@ EDRAW(spark_draw) {
         .size = SPRITE_SIZE_8x16,
         .flip = 0,
 
-        .tile = 180 + random(16) * 2,
-        .palette = 4
+        .tile = 192 + random(16) * 2,
+        .palette = 5
     });
 
     return 1;

@@ -48,7 +48,7 @@ static void transition_draw(void) {
 
             u16 ydraw = old_level < current_level ? y : 19 - y;
             if(dd > -33 && dd < 0)
-                BG3_TILEMAP[x + ydraw * 32] = 29;
+                BG3_TILEMAP[x + ydraw * 32] = 32;
             else if(ydraw < 18)
                 BG3_TILEMAP[x + ydraw * 32] = 0;
         }

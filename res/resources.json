@@ -4,27 +4,136 @@
 
     "tilesets": [
         {
-            "name": "items_tileset",
+            "name": "level_tileset",
+            "input": "images/level.png",
+            "output": "images/level.c",
+            "static": true,
 
-            "input": "images/items.png",
-            "output": "images/items.c",
+            "tile_size": 2,
+            "palette": "res/palettes/background.png",
+            "bpp": 4
+        }, {
+            "name": "logo_tileset",
+            "input": "images/logo.png",
+            "output": "images/logo.c",
+            "static": true,
 
             "tile_size": 1,
+            "palette": "res/palettes/background.png",
+            "bpp": 4
+        }, {
+            "name": "font_tileset",
+            "input": "images/font.png",
+            "output": "images/font.c",
+            "static": true,
 
+            "tile_size": 1,
+            "palette": "res/palettes/background.png",
+            "bpp": 4
+        }, {
+            "name": "gui_tileset",
+            "input": "images/gui.png",
+            "output": "images/gui.c",
+            "static": true,
+
+            "tile_size": 2,
+            "palette": "res/palettes/background.png",
+            "bpp": 4
+        }, {
+            "name": "level_light_tileset",
+            "input": "images/level-light.png",
+            "output": "images/level-light.c",
+            "static": true,
+
+            "tile_size": 1,
+            "colors": { "#ffffff": 0, "#000000": 15 },
+            "bpp": 4
+        },
+
+        {
+            "name": "entities_tileset",
+            "input": "images/entities.png",
+            "output": "images/entities.c",
+            "static": true,
+
+            "tile_size": 2,
+            "palette": "res/palettes/sprites.png",
+            "bpp": 4
+        }, {
+            "name": "sparks_tileset",
+            "input": "images/sparks.png",
+            "output": "images/sparks.c",
+            "static": true,
+
+            "tile_size": [ 1, 2 ],
+            "palette": "res/palettes/sprites.png",
+            "bpp": 4
+        }, {
+            "name": "player_light_tileset",
+            "input": "images/player-light.png",
+            "output": "images/player-light.c",
+            "static": true,
+
+            "tile_size": 1,
+            "colors": { "#000000": 0, "#ffffff": 1 },
+            "bpp": 4
+        }, {
+            "name": "player_lantern_light_tileset",
+            "input": "images/player-lantern-light.png",
+            "output": "images/player-lantern-light.c",
+            "static": true,
+
+            "tile_size": 8,
+            "colors": { "#000000": 0, "#ffffff": 1 },
+            "bpp": 4
+        }, {
+            "name": "text_particle_tileset",
+            "input": "images/text-particle.png",
+            "output": "images/text-particle.c",
+            "static": true,
+
+            "tile_size": 1,
+            "palette": "res/palettes/sprites.png",
+            "bpp": 4
+        },
+
+        {
+            "name": "items_bg_tileset",
+            "input": "images/items.png",
+            "output": "images/items_bg.c",
+            "static": true,
+
+            "tile_size": 1,
             "palette": "res/palettes/items.png",
-            "bpp": 4,
+            "colors": { "#ff00ff": 15 },
+            "bpp": 4
+        }, {
+            "name": "items_spr_tileset",
+            "input": "images/items.png",
+            "output": "images/items_spr.c",
+            "static": true,
 
-            "static": true
+            "tile_size": 1,
+            "palette": "res/palettes/items.png",
+            "bpp": 4
         }
     ],
 
     "palettes": [
         {
+            "name": "background_palette",
+            "input": "palettes/background.png",
+            "output": "palettes/background.c",
+            "static": true
+        }, {
+            "name": "sprites_palette",
+            "input": "palettes/sprites.png",
+            "output": "palettes/sprites.c",
+            "static": true
+        }, {
             "name": "items_palette",
-
             "input": "palettes/items.png",
             "output": "palettes/items.c",
-
             "static": true
         }
     ],
@@ -32,43 +141,30 @@
     "files": [
         {
             "name": "sound_start",
-
             "input": "sounds/start.raw",
             "output": "sounds/start.c"
-        },
-        {
+        }, {
             "name": "sound_pickup",
-
             "input": "sounds/pickup.raw",
             "output": "sounds/pickup.c"
-        },
-        {
+        }, {
             "name": "sound_craft",
-
             "input": "sounds/craft.raw",
             "output": "sounds/craft.c"
-        },
-        {
+        }, {
             "name": "sound_monster_hurt",
-
             "input": "sounds/monster_hurt.raw",
             "output": "sounds/monster_hurt.c"
-        },
-        {
+        }, {
             "name": "sound_player_hurt",
-
             "input": "sounds/player_hurt.raw",
             "output": "sounds/player_hurt.c"
-        },
-        {
+        }, {
             "name": "sound_player_death",
-
             "input": "sounds/player_death.raw",
             "output": "sounds/player_death.c"
-        },
-        {
+        }, {
             "name": "sound_boss_death",
-
             "input": "sounds/boss_death.raw",
             "output": "sounds/boss_death.c"
         }

@@ -105,15 +105,15 @@ static void inventory_draw(void) {
         struct item_Data *data = &player_inventory.items[item0 + i];
 
         item_draw_icon(data, inv_x + 1, inv_y + 1 + i, false);
-        item_write(data, 4, inv_x + 2, inv_y + 1 + i);
+        item_write(data, 6, inv_x + 2, inv_y + 1 + i);
     }
 
     // draw cursor arrows
     screen_write(
-        ">", 4, inv_x            , inv_y + 1 + (selected - item0)
+        ">", 6, inv_x            , inv_y + 1 + (selected - item0)
     );
     screen_write(
-        "<", 4, inv_x + inv_w - 1, inv_y + 1 + (selected - item0)
+        "<", 6, inv_x + inv_w - 1, inv_y + 1 + (selected - item0)
     );
 }
 

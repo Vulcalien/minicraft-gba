@@ -84,7 +84,7 @@ static inline void clear_screen(void) {
     // clear status bar (black)
     for(u32 y = 18; y < 20; y++)
         for(u32 x = 0; x < 30; x++)
-            BG3_TILEMAP[x + y * 32] = 29;
+            BG3_TILEMAP[x + y * 32] = 32;
 
     should_clear = false;
 }
@@ -104,21 +104,23 @@ static inline void draw_status_bar(void) {
 
     // draw hp and stamina
     for(u32 i = 0; i < 10; i++) {
-        BG3_TILEMAP[i + 18 * 32] = (91 + (player_hp <= i))      | 5 << 12;
-        BG3_TILEMAP[i + 19 * 32] = (93 + (player_stamina <= i)) | 5 << 12;
+        BG3_TILEMAP[i + 18 * 32] = (100 + (player_hp <= i))      | 10 << 12;
+        BG3_TILEMAP[i + 19 * 32] = (102 + (player_stamina <= i)) | 10 << 12;
     }
 
     // set stamina blinking color
-    if(player_stamina_recharge_delay != 0 &&
-       (player_stamina_recharge_delay & 4) == 0) {
-        screen_set_bg_palette_color(5, 0xa, 0x7bde);
-    } else {
-        screen_set_bg_palette_color(5, 0xa, 0x0cc6);
+    {
+        u16 color = 0x0cc6;
+        if(player_stamina_recharge_delay != 0 &&
+           (player_stamina_recharge_delay & 4) == 0) {
+            color = 0x7bde;
+        }
+        screen_set_bg_palette_color(10, 12, color);
     }
 
     // clear active item area
     for(u32 x = 20; x < 30; x++)
-        BG3_TILEMAP[x + 18 * 32] = 29;
+        BG3_TILEMAP[x + 18 * 32] = 32;
 
     // draw active item
     if(player_active_item.type < ITEM_TYPES) {

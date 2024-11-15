@@ -113,7 +113,7 @@ EDRAW(slime_draw) {
         .size = SPRITE_SIZE_16x16,
         .flip = 0,
 
-        .tile = 0 + (slime_data->jump_time > 0) * 4,
+        .tile = 140 + (slime_data->jump_time > 0) * 4,
         .palette = palette
     });
 

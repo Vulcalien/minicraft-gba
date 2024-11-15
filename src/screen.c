@@ -1,4 +1,4 @@
-/* Copyright 2022-2023 Vulcalien
+/* Copyright 2022-2024 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,23 @@
 #include <gba/window.h>
 #include <memory.h>
 
-#include "images.h"
+#include "res/palettes/background.c"
+#include "res/palettes/sprites.c"
+#include "res/palettes/items.c"
+
+#include "res/images/level.c"
+#include "res/images/logo.c"
+#include "res/images/font.c"
+#include "res/images/gui.c"
+#include "res/images/items_bg.c"
+#include "res/images/level-light.c"
+
+#include "res/images/entities.c"
+#include "res/images/sparks.c"
+#include "res/images/items_spr.c"
+#include "res/images/player-light.c"
+#include "res/images/player-lantern-light.c"
+#include "res/images/text-particle.c"
 
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
 
@@ -35,38 +51,15 @@
 #define BG_PALETTE  ((vu16 *) 0x05000000)
 #define SPR_PALETTE ((vu16 *) 0x05000200)
 
-static void load_tileset(vu16 *dest, const u8 *tileset, u32 size,
-                         u8 zero_conversion) {
-    for(u32 i = 0; i < size; i++) {
-        u8 b0 = tileset[i * 2];
-        u8 b1 = tileset[i * 2 + 1];
+#define LOAD_TILESET(charblock, offset, tileset)      \
+    memcpy32(                                         \
+        display_charblock(charblock) + (offset) * 16, \
+        tileset,                                      \
+        sizeof(tileset)                               \
+    )
 
-        if((b0 & 0x0f) == 0)
-            b0 |= zero_conversion;
-        if((b0 & 0xf0) == 0)
-            b0 |= (zero_conversion << 4);
-
-        if((b1 & 0x0f) == 0)
-            b1 |= zero_conversion;
-        if((b1 & 0xf0) == 0)
-            b1 |= (zero_conversion << 4);
-
-        // in a byte, lower 4 bits are for left, upper 4 bits for right
-        b0 = (b0 << 4) | (b0 >> 4);
-        b1 = (b1 << 4) | (b1 >> 4);
-
-        dest[i] = (b1 << 8) | b0;
-    }
-}
-
-#define LOAD_TILESET_CONVERT(dest, tileset, zero_conversion)\
-    load_tileset(dest, tileset, sizeof(tileset) / sizeof(u16), zero_conversion)
-
-#define LOAD_TILESET(dest, tileset)\
-    LOAD_TILESET_CONVERT(dest, tileset, 0)
-
-#define LOAD_PALETTE(dest, palette)\
-    memcpy16(dest, palette, sizeof(palette))
+#define LOAD_PALETTE(dest, palette)          \
+    memcpy32(dest, palette, sizeof(palette))
 
 void screen_init(void) {
     DISPLAY_CONTROL = 0       | // Video mode
@@ -122,36 +115,41 @@ void screen_init(void) {
     });
 
     // load palettes
-    LOAD_PALETTE(BG_PALETTE,  bg_palette);
-    LOAD_PALETTE(SPR_PALETTE, sprite_palette);
+    LOAD_PALETTE(BG_PALETTE, background_palette);
+    LOAD_PALETTE(SPR_PALETTE, sprites_palette);
 
-    LOAD_PALETTE(BG_PALETTE  + 12 * 16, item_palette);
-    LOAD_PALETTE(SPR_PALETTE + 12 * 16, item_palette);
+    LOAD_PALETTE(BG_PALETTE  + 12 * 16, items_palette);
+    LOAD_PALETTE(SPR_PALETTE + 12 * 16, items_palette);
+
+    // make the first tile of charblock 1 fully transparent
+    memset32(display_charblock(1), 0x00, 32);
 
     // load tilesets
-    LOAD_TILESET(CHAR_BLOCK_0, level_tileset);
-    LOAD_TILESET(CHAR_BLOCK_1, gui_tileset);
-    LOAD_TILESET(CHAR_BLOCK_1 + 256 * 32 / 2, light_tileset);
+    LOAD_TILESET(0, 0, level_tileset);
+    LOAD_TILESET(1, 1, logo_tileset);
+    LOAD_TILESET(1, 32, font_tileset);
+    LOAD_TILESET(1, 96, gui_tileset);
+    LOAD_TILESET(1, 128, items_bg_tileset);
+    LOAD_TILESET(1, 192, level_light_tileset);
 
-    LOAD_TILESET(SPR_TILESET, sprite_tileset);
-
-    LOAD_TILESET_CONVERT(CHAR_BLOCK_1 + 128 * 32 / 2, item_tileset, 0xf);
-    LOAD_TILESET(SPR_TILESET + 256 * 32 / 2, item_tileset);
-
-    LOAD_TILESET(SPR_TILESET + 320 * 32 / 2, light_sprite_tileset);
+    LOAD_TILESET(4, 0, entities_tileset);
+    LOAD_TILESET(4, 192, sparks_tileset);
+    LOAD_TILESET(4, 256, items_spr_tileset);
+    LOAD_TILESET(4, 320, player_light_tileset);
+    LOAD_TILESET(4, 336, player_lantern_light_tileset);
 
     // load font sprites
     for(u32 i = 0; i <= 51; i++) {
-        load_tileset(
-            SPR_TILESET + (640 + i * 2) * 32 / 2,
-            font_sprite_tileset + (i / 10) * 32,
-            32 / 2, 0
+        vu16 *dest = display_charblock(4) + (640 + i * 2) * 16;
+        memcpy32(
+            dest,
+            (u8 *) (text_particle_tileset) + (i / 10) * 32,
+            32
         );
-
-        load_tileset(
-            SPR_TILESET + (640 + i * 2 + 1) * 32 / 2,
-            font_sprite_tileset + (i % 10) * 32,
-            32 / 2, 0
+        memcpy32(
+            dest + 16,
+            (u8 *) (text_particle_tileset) + (i % 10) * 32,
+            32
         );
     }
 
@@ -164,7 +162,7 @@ void screen_init(void) {
     display_brighten(NULL, 16);
     for(u32 y = 0; y < 20; y++)
         for(u32 x = 0; x < 30; x++)
-            BG3_TILEMAP[x + y * 32] = 29 | 0 << 12;
+            BG3_TILEMAP[x + y * 32] = 32;
 
     sprite_hide_all();
 
@@ -194,7 +192,7 @@ void screen_write(const char *text, u8 palette, u32 x, u32 y) {
             if(x >= 30)
                 continue;
 
-            u16 tile = 29 + (c - 32);
+            u16 tile = c; // font tiles match ASCII values
             BG3_TILEMAP[x + y * 32] = tile | palette << 12;
 
             x++;
@@ -208,28 +206,28 @@ void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h) {
     h--;
 
     // draw corners
-    BG3_TILEMAP[(x)     + (y)     * 32] = 88 | 0 << 10 | 6 << 12;
-    BG3_TILEMAP[(x + w) + (y)     * 32] = 88 | 1 << 10 | 6 << 12;
-    BG3_TILEMAP[(x)     + (y + h) * 32] = 88 | 2 << 10 | 6 << 12;
-    BG3_TILEMAP[(x + w) + (y + h) * 32] = 88 | 3 << 10 | 6 << 12;
+    BG3_TILEMAP[(x)     + (y)     * 32] = 96 | 0 << 10 | 6 << 12;
+    BG3_TILEMAP[(x + w) + (y)     * 32] = 96 | 1 << 10 | 6 << 12;
+    BG3_TILEMAP[(x)     + (y + h) * 32] = 96 | 2 << 10 | 6 << 12;
+    BG3_TILEMAP[(x + w) + (y + h) * 32] = 96 | 3 << 10 | 6 << 12;
 
     // draw vertical borders
     for(u32 yi = y + 1; yi <= y + h - 1; yi++) {
-        BG3_TILEMAP[(x)     + yi * 32] = 90 | 0 << 10 | 6 << 12;
-        BG3_TILEMAP[(x + w) + yi * 32] = 90 | 1 << 10 | 6 << 12;
+        BG3_TILEMAP[(x)     + yi * 32] = 98 | 0 << 10 | 6 << 12;
+        BG3_TILEMAP[(x + w) + yi * 32] = 98 | 1 << 10 | 6 << 12;
 
         // draw background
         for(u32 xi = x + 1; xi <= x + w - 1; xi++)
-            BG3_TILEMAP[xi + yi * 32] = 29 | 6 << 12;
+            BG3_TILEMAP[xi + yi * 32] = 99 | 6 << 12;
     }
 
     // draw horizontal borders
     for(u32 xi = x + 1; xi <= x + w - 1; xi++) {
-        BG3_TILEMAP[xi + (y)     * 32] = 89 | 0 << 10 | 6 << 12;
-        BG3_TILEMAP[xi + (y + h) * 32] = 89 | 2 << 10 | 6 << 12;
+        BG3_TILEMAP[xi + (y)     * 32] = 97 | 0 << 10 | 6 << 12;
+        BG3_TILEMAP[xi + (y + h) * 32] = 97 | 2 << 10 | 6 << 12;
     }
 
-    screen_write(title, 8, x + 1, y);
+    screen_write(title, 10, x + 1, y);
 }
 
 static inline u32 ticks_to_seconds(u32 ticks) {
@@ -284,8 +282,8 @@ void screen_set_bg_palette_color(u8 palette, u8 index, u16 color) {
 }
 
 void screen_load_active_item_palette(u8 palette) {
-    memcpy16(BG_PALETTE + 11 * 16, item_palette + 16 * palette, 15 * 2);
-    screen_set_bg_palette_color(11, 0xf, 0x0421);
+    memcpy32(BG_PALETTE + 11 * 16, items_palette + 16 * palette, 32);
+    screen_set_bg_palette_color(11, 15, 0x0421);
 }
 
 void screen_update_level_specific(void) {
@@ -309,14 +307,14 @@ void screen_update_level_specific(void) {
         { 0x1cea, 0x35b0 },
         { -1,     0x6318 }
     };
-    for(u32 i = 0; i <= 5; i++) {
-        if(i == 3)
-            continue;
-
-        screen_set_bg_palette_color(i, 0xe, dirt_colors[current_level][0]);
-        screen_set_bg_palette_color(i, 0xf, dirt_colors[current_level][1]);
+    for(u32 i = 0; i <= 3; i++) {
+        screen_set_bg_palette_color(i, 12, dirt_colors[current_level][0]);
+        screen_set_bg_palette_color(i, 13, dirt_colors[current_level][1]);
     }
     screen_set_bg_palette_color(0, 0, dirt_colors[current_level][1]);
+
+    screen_set_bg_palette_color(8, 2, dirt_colors[current_level][0]);
+    screen_set_bg_palette_color(8, 1, dirt_colors[current_level][1]);
 
     // farmland
     const u16 farmland_colors[5][2] = {
@@ -326,8 +324,8 @@ void screen_update_level_specific(void) {
         { 0x210e, 0x1869 },
         { -1, -1 }
     };
-    screen_set_bg_palette_color(3, 4, farmland_colors[current_level][0]);
-    screen_set_bg_palette_color(3, 5, farmland_colors[current_level][1]);
+    screen_set_bg_palette_color(4, 4, farmland_colors[current_level][0]);
+    screen_set_bg_palette_color(4, 5, farmland_colors[current_level][1]);
 
     // ore/cloud cactus
     const u16 ore_colors[5][3] = {
@@ -337,17 +335,18 @@ void screen_update_level_specific(void) {
         { -1, -1, -1 },
         { 0x7bde, 0x4a52, 0x1ce7 }  // cloud cactus
     };
-    screen_set_bg_palette_color(2, 3, ore_colors[current_level][0]);
-    screen_set_bg_palette_color(2, 4, ore_colors[current_level][1]);
-    screen_set_bg_palette_color(2, 5, ore_colors[current_level][2]);
+    screen_set_bg_palette_color(3, 6, ore_colors[current_level][0]);
+    screen_set_bg_palette_color(3, 5, ore_colors[current_level][1]);
+    screen_set_bg_palette_color(3, 4, ore_colors[current_level][2]);
 
     // liquid
     const u16 liquid_colors[2][2] = {
         { 0x14b3, 0x21d7 },
         { 0x4442, 0x4d08 }
     };
-    for(u32 i = 2; i <= 3; i++) {
+    for(u32 i = 3; i <= 4; i++) {
         screen_set_bg_palette_color(i, 1, liquid_colors[current_level > 0][0]);
         screen_set_bg_palette_color(i, 2, liquid_colors[current_level > 0][1]);
+        screen_set_bg_palette_color(i, 3, liquid_colors[current_level > 0][0]);
     }
 }

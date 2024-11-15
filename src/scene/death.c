@@ -112,15 +112,15 @@ static void death_draw(void) {
     const u8 death_h = 7;
 
     screen_draw_frame("", death_x, death_y, death_w, death_h);
-    screen_write("YOU DIED! AWW!", 4, death_x + 1, death_y + 1);
+    screen_write("YOU DIED! AWW!", 6, death_x + 1, death_y + 1);
 
-    screen_write("TIME:", 4, death_x + 1, death_y + 2);
-    screen_write_time(gametime, 8, death_x + 6, death_y + 2);
+    screen_write("TIME:", 6, death_x + 1, death_y + 2);
+    screen_write_time(gametime, 10, death_x + 6, death_y + 2);
 
-    screen_write("SCORE:", 4, death_x + 1, death_y + 3);
-    SCREEN_WRITE_NUMBER(score, 10, 10, false, 8, death_x + 7, death_y + 3);
+    screen_write("SCORE:", 6, death_x + 1, death_y + 3);
+    SCREEN_WRITE_NUMBER(score, 10, 10, false, 10, death_x + 7, death_y + 3);
 
-    screen_write("PRESS A TO RESPAWN", 6, death_x + 1, death_y + 5);
+    screen_write("PRESS A TO RESPAWN", 8, death_x + 1, death_y + 5);
 }
 
 const struct Scene scene_death = {

@@ -512,7 +512,7 @@ static inline void draw_attack(u16 x, u16 y, struct player_Data *player_data,
         .flip = 2 * (dir == 2) + 1 * (dir == 3),
 
         .tile = 176 + (dir & 1) * 2,
-        .palette = 5
+        .palette = 0
     });
 }
 
@@ -528,7 +528,7 @@ static inline void draw_item(u16 x, u16 y, struct player_Data *player_data,
     const struct Item *item = &item_list[item_type];
 
     const u16 tile = 256 + item_type +
-        (item->class == ITEMCLASS_TOOL) * (item_tool_level * 5);
+        (item->class == ITEMCLASS_TOOL) * (2 + item_tool_level * 5);
 
     sprite_config(used_sprites, &(struct Sprite) {
         .x = x - level_x_offset,
@@ -554,7 +554,7 @@ EDRAW(player_draw) {
     u16 x = data->x;
     u16 y = data->y - 3;
 
-    u16 sprite = 8 + (dir == 0) * 4 + (dir & 1) * 8;
+    u16 sprite = 0 + (dir == 0) * 4 + (dir & 1) * 8;
     if(dir & 1)
         sprite += ((walk_dist >> 3) & 1) * (4 + ((walk_dist >> 4) & 1) * 4);
 

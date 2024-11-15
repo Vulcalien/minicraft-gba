@@ -110,7 +110,7 @@ EDRAW(text_particle_draw) {
         .flip = 0,
 
         .tile = 640 + text_data->number * 2 + (length == 1),
-        .palette = text_data->palette
+        .palette = 4 + text_data->palette
     });
     return 1;
 }

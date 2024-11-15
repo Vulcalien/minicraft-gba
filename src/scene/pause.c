@@ -65,11 +65,11 @@ static void pause_tick(void) {
 }
 
 #define WRITE_OPTION(text, id, x, y) do {\
-    screen_write((text), 5 - (selected_answer == id), (x), (y));\
+    screen_write((text), 7 - (selected_answer == id), (x), (y));\
 \
     if(selected_answer == id) {\
-        screen_write(">", 4, (x) - 2, (y));\
-        screen_write("<", 4, (x) + sizeof(text), (y));\
+        screen_write(">", 6, (x) - 2, (y));\
+        screen_write("<", 6, (x) + sizeof(text), (y));\
     }\
 } while(0)
 
@@ -82,21 +82,21 @@ static void pause_draw(void) {
 
     screen_draw_frame("PAUSE", pause_x, pause_y, pause_w, pause_h);
 
-    screen_write("TIME:", 4, pause_x + 1, pause_y + 1);
-    screen_write_time(gametime, 8, pause_x + 6, pause_y + 1);
+    screen_write("TIME:", 6, pause_x + 1, pause_y + 1);
+    screen_write_time(gametime, 10, pause_x + 6, pause_y + 1);
 
-    screen_write("SCORE:", 4, pause_x + 1, pause_y + 2);
-    SCREEN_WRITE_NUMBER(score, 10, 10, false, 8, pause_x + 7, pause_y + 2);
+    screen_write("SCORE:", 6, pause_x + 1, pause_y + 2);
+    SCREEN_WRITE_NUMBER(score, 10, 10, false, 10, pause_x + 7, pause_y + 2);
 
     if(should_save) {
-        screen_write("SAVING...", 4, pause_x + 5, pause_y + 5);
+        screen_write("SAVING...", 6, pause_x + 5, pause_y + 5);
     } else if(ask_overwrite) {
-        screen_write("OVERWRITE FILE?", 4, pause_x + 1, pause_y + 4);
+        screen_write("OVERWRITE FILE?", 6, pause_x + 1, pause_y + 4);
 
         WRITE_OPTION("YES", 0, pause_x + 4,  pause_y + 6);
         WRITE_OPTION("NO",  1, pause_x + 12, pause_y + 6);
     } else {
-        screen_write("> SAVE GAME <", 4, pause_x + 2, pause_y + 5);
+        screen_write("> SAVE GAME <", 6, pause_x + 2, pause_y + 5);
     }
 }
 

@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022, 2024 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,24 +72,24 @@ FDRAW(rock_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == ROCK_TILE;
 
     if(u && l)
-        tiles[0] = TILE(0 + !ul * 20, 1);
+        tiles[0] = TILE(0 + !ul * 20, 2);
     else
-        tiles[0] = TILE(12 + u * 7 + l * 4, 1);
+        tiles[0] = TILE(12 + u * 7 + l * 4, 2);
 
     if(u && r)
-        tiles[1] = TILE(1 + !ur * 20, 1);
+        tiles[1] = TILE(1 + !ur * 20, 2);
     else
-        tiles[1] = TILE(13 + u * 4 + r * 3, 1);
+        tiles[1] = TILE(13 + u * 4 + r * 3, 2);
 
     if(d && l)
-        tiles[2] = TILE(2 + !dl * 20, 1);
+        tiles[2] = TILE(2 + !dl * 20, 2);
     else
-        tiles[2] = TILE(14 + d * 5 + l * 4, 1);
+        tiles[2] = TILE(14 + d * 5 + l * 4, 2);
 
     if(d && r)
-        tiles[3] = TILE(3 + !dr * 20, 1);
+        tiles[3] = TILE(3 + !dr * 20, 2);
     else
-        tiles[3] = TILE(15 + d * 2 + r * 3, 1);
+        tiles[3] = TILE(15 + d * 2 + r * 3, 2);
 }
 
 FDRAW(liquid_draw) {
@@ -107,24 +107,24 @@ FDRAW(liquid_draw) {
     bool sr = !r & CONNECTS_TO_SAND(level, xt + 1, yt    );
 
     if(u && l)
-        tiles[0] = TILE_M((liquid_rand >> 0) & 3, (liquid_rand >> 2) & 3, 2);
+        tiles[0] = TILE_M((liquid_rand >> 0) & 3, (liquid_rand >> 2) & 3, 3);
     else
-        tiles[0] = TILE(24 + u * 7 + l * 4, 2 + (su || sl) * 1);
+        tiles[0] = TILE(24 + u * 7 + l * 4, 3 + (su || sl));
 
     if(u && r)
-        tiles[1] = TILE_M((liquid_rand >> 4) & 3, (liquid_rand >> 6) & 3, 2);
+        tiles[1] = TILE_M((liquid_rand >> 4) & 3, (liquid_rand >> 6) & 3, 3);
     else
-        tiles[1] = TILE(25 + u * 4 + r * 3, 2 + (su || sr) * 1);
+        tiles[1] = TILE(25 + u * 4 + r * 3, 3 + (su || sr));
 
     if(d && l)
-        tiles[2] = TILE_M((liquid_rand >> 8) & 3, (liquid_rand >> 10) & 3, 2);
+        tiles[2] = TILE_M((liquid_rand >> 8) & 3, (liquid_rand >> 10) & 3, 3);
     else
-        tiles[2] = TILE(26 + d * 5 + l * 4, 2 + (sd || sl) * 1);
+        tiles[2] = TILE(26 + d * 5 + l * 4, 3 + (sd || sl));
 
     if(d && r)
-        tiles[3] = TILE_M((liquid_rand >> 12) & 3, (liquid_rand >> 14) & 3, 2);
+        tiles[3] = TILE_M((liquid_rand >> 12) & 3, (liquid_rand >> 14) & 3, 3);
     else
-        tiles[3] = TILE(27 + d * 2 + r * 3, 2 + (sd || sr) * 1);
+        tiles[3] = TILE(27 + d * 2 + r * 3, 3 + (sd || sr));
 }
 
 FDRAW(flower_draw) {
@@ -177,32 +177,17 @@ FDRAW(tree_draw) {
     bool ur = LEVEL_GET_TILE(level, xt + 1, yt - 1) == TREE_TILE;
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == TREE_TILE;
 
-    if(u && l && ul)
-        tiles[0] = TILE(38, 0);
-    else
-        tiles[0] = TILE(34, 0);
-
-    if(u && r && ur)
-        tiles[1] = TILE(39, 0);
-    else
-        tiles[1] = TILE(35, 0);
-
-    if(d && l && dl)
-        tiles[2] = TILE(39, 0);
-    else
-        tiles[2] = TILE(36, 0);
-
-    if(d && r && dr)
-        tiles[3] = TILE(38, 0);
-    else
-        tiles[3] = TILE(37, 0);
+    tiles[0] = TILE(36 - (u && l && ul) * 2, 0);
+    tiles[1] = TILE(37 - (u && r && ur) * 2, 0);
+    tiles[2] = TILE(38 - (d && l && dl) * 3, 0);
+    tiles[3] = TILE(39 - (d && r && dr) * 5, 0);
 }
 
 FDRAW(dirt_draw) {
-    tiles[0] = TILE(40, 2);
-    tiles[1] = TILE(41, 2);
-    tiles[2] = TILE(42, 2);
-    tiles[3] = TILE(43, 2);
+    tiles[0] = TILE(0, 8);
+    tiles[1] = TILE(1, 8);
+    tiles[2] = TILE(2, 8);
+    tiles[3] = TILE(3, 8);
 }
 
 FDRAW(sand_draw) {
@@ -214,31 +199,31 @@ FDRAW(sand_draw) {
     bool stepped_on = LEVEL_GET_DATA(level, xt, yt) != 0;
 
     if(u && l)
-        tiles[0] = TILE(0 + stepped_on * 44, 4);
+        tiles[0] = TILE(0 + stepped_on * 84, 1);
     else
-        tiles[0] = TILE(4 + u * 7 + l * 4, 4);
+        tiles[0] = TILE(4 + u * 7 + l * 4, 1);
 
     if(u && r)
-        tiles[1] = TILE(1, 4);
+        tiles[1] = TILE(1, 1);
     else
-        tiles[1] = TILE(5 + u * 4 + r * 3, 4);
+        tiles[1] = TILE(5 + u * 4 + r * 3, 1);
 
     if(d && l)
-        tiles[2] = TILE(2, 4);
+        tiles[2] = TILE(2, 1);
     else
-        tiles[2] = TILE(6 + d * 5 + l * 4, 4);
+        tiles[2] = TILE(6 + d * 5 + l * 4, 1);
 
     if(d && r)
-        tiles[3] = TILE(3 + stepped_on * 41, 4);
+        tiles[3] = TILE(3 + stepped_on * 81, 1);
     else
-        tiles[3] = TILE(7 + d * 2 + r * 3, 4);
+        tiles[3] = TILE(7 + d * 2 + r * 3, 1);
 }
 
 FDRAW(cactus_draw) {
-    tiles[0] = TILE(45, 4);
-    tiles[1] = TILE(46, 4);
-    tiles[2] = TILE(47, 4);
-    tiles[3] = TILE(48, 4);
+    tiles[0] = TILE(40, 1);
+    tiles[1] = TILE(41, 1);
+    tiles[2] = TILE(42, 1);
+    tiles[3] = TILE(43, 1);
 }
 
 FDRAW(hole_draw) {
@@ -255,22 +240,22 @@ FDRAW(hole_draw) {
     if(u && l)
         tiles[0] = TILE(0, 5);
     else
-        tiles[0] = TILE(24 + u * 7 + l * 4, 5 + (su || sl) * 1);
+        tiles[0] = TILE(24 + u * 7 + l * 4, 2 + (su || sl) * 3);
 
     if(u && r)
         tiles[1] = TILE(1, 5);
     else
-        tiles[1] = TILE(25 + u * 4 + r * 3, 5 + (su || sr) * 1);
+        tiles[1] = TILE(25 + u * 4 + r * 3, 2 + (su || sr) * 3);
 
     if(d && l)
         tiles[2] = TILE(2, 5);
     else
-        tiles[2] = TILE(26 + d * 5 + l * 4, 5 + (sd || sl) * 1);
+        tiles[2] = TILE(26 + d * 5 + l * 4, 2 + (sd || sl) * 3);
 
     if(d && r)
         tiles[3] = TILE(3, 5);
     else
-        tiles[3] = TILE(27 + d * 2 + r * 3, 5 + (sd || sr) * 1);
+        tiles[3] = TILE(27 + d * 2 + r * 3, 2 + (sd || sr) * 3);
 }
 
 FDRAW(tree_sapling_draw) {
@@ -279,10 +264,10 @@ FDRAW(tree_sapling_draw) {
     bool l = CONNECTS_TO_GRASS(level, xt - 1, yt    );
     bool r = CONNECTS_TO_GRASS(level, xt + 1, yt    );
 
-    tiles[0] = TILE(71 + !u + !l * 2, 0);
-    tiles[1] = TILE(75 + !u + !r * 2, 0);
-    tiles[2] = TILE(79 + !d + !l * 2, 0);
-    tiles[3] = TILE(83 + !d + !r * 2, 0);
+    tiles[0] = TILE(56 + !u * 4 + !l * 8, 0);
+    tiles[1] = TILE(57 + !u * 4 + !r * 8, 0);
+    tiles[2] = TILE(58 + !d * 4 + !l * 8, 0);
+    tiles[3] = TILE(59 + !d * 4 + !r * 8, 0);
 }
 
 FDRAW(cactus_sapling_draw) {
@@ -293,40 +278,40 @@ FDRAW(cactus_sapling_draw) {
 
     bool stepped_on = LEVEL_GET_DATA(level, xt, yt) != 0;
 
-    tiles[0] = TILE(71 + !u + !l * 2 + (u && l && stepped_on) * 16, 4);
-    tiles[1] = TILE(75 + !u + !r * 2, 4);
-    tiles[2] = TILE(79 + !d + !l * 2, 4);
-    tiles[3] = TILE(83 + !d + !r * 2 + (d && r && stepped_on) * 5, 4);
+    tiles[0] = TILE(56 + !u * 4 + !l * 8 + (u && l && stepped_on) * 29, 1);
+    tiles[1] = TILE(57 + !u * 4 + !r * 8, 1);
+    tiles[2] = TILE(58 + !d * 4 + !l * 8, 1);
+    tiles[3] = TILE(59 + !d * 4 + !r * 8 + (d && r && stepped_on) * 27, 1);
 }
 
 FDRAW(farmland_draw) {
-    tiles[0] = TILE_M(49, 0x1, 3);
-    tiles[1] = TILE_M(49, 0x0, 3);
-    tiles[2] = TILE_M(49, 0x0, 3);
-    tiles[3] = TILE_M(49, 0x1, 3);
+    tiles[0] = TILE_M(72, 1, 4);
+    tiles[1] = TILE_M(72, 0, 4);
+    tiles[2] = TILE_M(72, 0, 4);
+    tiles[3] = TILE_M(72, 1, 4);
 }
 
 FDRAW(wheat_draw) {
     u8 age = LEVEL_GET_DATA(level, xt, yt) / 10;
 
-    tiles[0] = TILE_M(50 + age, 0x0, 3);
-    tiles[1] = TILE_M(50 + age, 0x0, 3);
-    tiles[2] = TILE_M(50 + age, 0x1, 3);
-    tiles[3] = TILE_M(50 + age, 0x1, 3);
+    tiles[0] = TILE_M(73 + age, 0, 4);
+    tiles[1] = TILE_M(73 + age, 0, 4);
+    tiles[2] = TILE_M(73 + age, 1, 4);
+    tiles[3] = TILE_M(73 + age, 1, 4);
 }
 
 FDRAW(stairs_down_draw) {
-    tiles[0] = TILE(56, 1);
-    tiles[1] = TILE(57, 1);
-    tiles[2] = TILE(58, 1);
-    tiles[3] = TILE(59, 1);
+    tiles[0] = TILE(44, 2);
+    tiles[1] = TILE(45, 2);
+    tiles[2] = TILE(46, 2);
+    tiles[3] = TILE(47, 2);
 }
 
 FDRAW(stairs_up_draw) {
-    tiles[0] = TILE(60, 1);
-    tiles[1] = TILE(61, 1);
-    tiles[2] = TILE(62, 1);
-    tiles[3] = TILE(63, 1);
+    tiles[0] = TILE(48, 2);
+    tiles[1] = TILE(49, 2);
+    tiles[2] = TILE(50, 2);
+    tiles[3] = TILE(51, 2);
 }
 
 FDRAW(infinite_fall_draw) {
@@ -348,22 +333,22 @@ FDRAW(cloud_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) != INFINITE_FALL_TILE;
 
     if(u && l)
-        tiles[0] = TILE(65 - !ul * 45, 7);
+        tiles[0] = TILE(81 - !ul * 61, 7);
     else
         tiles[0] = TILE(12 + u * 7 + l * 4, 7);
 
     if(u && r)
-        tiles[1] = TILE(64 - !ur * 43, 7);
+        tiles[1] = TILE(80 - !ur * 59, 7);
     else
         tiles[1] = TILE(13 + u * 4 + r * 3, 7);
 
     if(d && l)
-        tiles[2] = TILE(64 - !dl * 42, 7);
+        tiles[2] = TILE(80 - !dl * 58, 7);
     else
         tiles[2] = TILE(14 + d * 5 + l * 4, 7);
 
     if(d && r)
-        tiles[3] = TILE(66 - !dr * 43, 7);
+        tiles[3] = TILE(82 - !dr * 59, 7);
     else
         tiles[3] = TILE(15 + d * 2 + r * 3, 7);
 }
@@ -380,31 +365,31 @@ FDRAW(hard_rock_draw) {
     bool dr = LEVEL_GET_TILE(level, xt + 1, yt + 1) == HARD_ROCK_TILE;
 
     if(u && l)
-        tiles[0] = TILE(0 + !ul * 20, 8);
+        tiles[0] = TILE(0 + !ul * 20, 6);
     else
-        tiles[0] = TILE(12 + u * 7 + l * 4, 8);
+        tiles[0] = TILE(12 + u * 7 + l * 4, 6);
 
     if(u && r)
-        tiles[1] = TILE(1 + !ur * 20, 8);
+        tiles[1] = TILE(1 + !ur * 20, 6);
     else
-        tiles[1] = TILE(13 + u * 4 + r * 3, 8);
+        tiles[1] = TILE(13 + u * 4 + r * 3, 6);
 
     if(d && l)
-        tiles[2] = TILE(2 + !dl * 20, 8);
+        tiles[2] = TILE(2 + !dl * 20, 6);
     else
-        tiles[2] = TILE(14 + d * 5 + l * 4, 8);
+        tiles[2] = TILE(14 + d * 5 + l * 4, 6);
 
     if(d && r)
-        tiles[3] = TILE(3 + !dr * 20, 8);
+        tiles[3] = TILE(3 + !dr * 20, 6);
     else
-        tiles[3] = TILE(15 + d * 2 + r * 3, 8);
+        tiles[3] = TILE(15 + d * 2 + r * 3, 6);
 }
 
 FDRAW(ore_draw) {
-    tiles[0] = TILE(67, 2);
-    tiles[1] = TILE(68, 2);
-    tiles[2] = TILE(69, 2);
-    tiles[3] = TILE(70, 2);
+    tiles[0] = TILE(52, 3);
+    tiles[1] = TILE(53, 3);
+    tiles[2] = TILE(54, 3);
+    tiles[3] = TILE(55, 3);
 }
 
 #define CALL(function)\
