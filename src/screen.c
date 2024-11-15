@@ -81,14 +81,14 @@ void screen_init(void) {
     window_config(WINDOW_OUT, NULL);
 
     // Filter out the light layer when inside OBJ Window
-    window_enable(WINDOW_OBJ);
-    window_config(WINDOW_OBJ, &(struct Window) {
+    window_enable(WINDOW_SPR);
+    window_config(WINDOW_SPR, &(struct Window) {
         .bg0 = true,
         .bg1 = true,
         .bg2 = false,
         .bg3 = true,
 
-        .obj = true,
+        .sprites = true,
 
         .effects = true
     });
