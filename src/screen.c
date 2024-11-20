@@ -41,13 +41,6 @@
 
 #define DISPLAY_CONTROL *((vu16 *) 0x04000000)
 
-#define CHAR_BLOCK_0 ((vu16 *) 0x06000000)
-#define CHAR_BLOCK_1 ((vu16 *) 0x06004000)
-#define CHAR_BLOCK_2 ((vu16 *) 0x06008000)
-#define CHAR_BLOCK_3 ((vu16 *) 0x0600c000)
-
-#define SPR_TILESET ((vu16 *) 0x06010000)
-
 #define BG_PALETTE  ((vu16 *) 0x05000000)
 #define SPR_PALETTE ((vu16 *) 0x05000200)
 
