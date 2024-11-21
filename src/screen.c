@@ -39,8 +39,6 @@
 #include "res/images/player-lantern-light.c"
 #include "res/images/text-particle.c"
 
-#define DISPLAY_CONTROL *((vu16 *) 0x04000000)
-
 #define BG_PALETTE  ((vu16 *) 0x05000000)
 #define SPR_PALETTE ((vu16 *) 0x05000200)
 
@@ -55,14 +53,7 @@
     memcpy32(dest, palette, sizeof(palette))
 
 void screen_init(void) {
-    DISPLAY_CONTROL = 0       | // Video mode
-                      1 << 6  | // OBJ Character mapping (1 is linear)
-                      1 << 7  | // Forced Blank
-                      0 << 8  | // Enable BG 0
-                      1 << 9  | // Enable BG 1
-                      0 << 10 | // Enable BG 2
-                      1 << 11 | // Enable BG 3
-                      1 << 12;  // Enable OBJ
+    display_config(0);
 
     window_config(WINDOW_OUT, NULL);
 
@@ -106,6 +97,10 @@ void screen_init(void) {
         .tileset  = 1,
         .tilemap  = 19
     });
+
+    // enable backgrounds
+    background_toggle(BG1, true); // level tiles
+    background_toggle(BG3, true); // text and GUI
 
     // load palettes
     LOAD_PALETTE(BG_PALETTE, background_palette);
@@ -160,7 +155,7 @@ void screen_init(void) {
     sprite_hide_all();
 
     // disable forced blank
-    DISPLAY_CONTROL &= ~(1 << 7);
+    display_force_blank(false);
 }
 
 IWRAM_SECTION
@@ -280,17 +275,8 @@ void screen_load_active_item_palette(u8 palette) {
 }
 
 void screen_update_level_specific(void) {
-    // sky background
-    if(current_level == 4)
-        DISPLAY_CONTROL |= 1 << 8;
-    else
-        DISPLAY_CONTROL &= ~(1 << 8);
-
-    // light layer
-    if(current_level < 3)
-        DISPLAY_CONTROL |= 1 << 10;
-    else
-        DISPLAY_CONTROL &= ~(1 << 10);
+    background_toggle(BG0, current_level == 4); // sky background
+    background_toggle(BG2, current_level < 3);  // light layer
 
     // dirt color
     const u16 dirt_colors[5][2] = {
