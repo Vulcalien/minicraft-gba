@@ -67,7 +67,6 @@ void screen_init(void) {
     window_config(WINDOW_OUT, NULL);
 
     // Filter out the light layer when inside OBJ Window
-    window_enable(WINDOW_SPR);
     window_config(WINDOW_SPR, &(struct Window) {
         .bg0 = true,
         .bg1 = true,
@@ -78,6 +77,7 @@ void screen_init(void) {
 
         .effects = true
     });
+    window_toggle(WINDOW_SPR, true);
 
     // Sky Background
     background_config(BG0, &(struct Background) {
