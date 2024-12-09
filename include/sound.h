@@ -18,18 +18,14 @@
 
 #include "minicraft.h"
 
-#include <gba/sound.h>
+#include <gba/audio.h>
 
-extern bool sound_channel_flag;
+extern u8 _sound_channel;
 
-#define SOUND_PLAY(sound) sound_play(sound, sizeof(sound))
-INLINE void sound_play(const u8 *sound, u16 length) {
-    sound_dma_play(
-        sound, length, false,
-        sound_channel_flag ? SOUND_DMA_A  : SOUND_DMA_B
-    );
-    sound_channel_flag = !sound_channel_flag;
-}
+#define SOUND_PLAY(sound) audio_play( \
+    _sound_channel ^= 1,              \
+    (sound), sizeof(sound)            \
+)
 
 // Sound effects
 extern const u8 sound_start[1804];

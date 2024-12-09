@@ -1,6 +1,6 @@
 #include "sound.h"
 
-bool sound_channel_flag = false;
+u8 _sound_channel;
 
 #include "res/sounds/start.c"
 

@@ -16,7 +16,7 @@
 #include "minicraft.h"
 
 #include <gba/interrupt.h>
-#include <gba/sound.h>
+#include <gba/audio.h>
 
 #include "screen.h"
 #include "input.h"
@@ -54,7 +54,7 @@ static void vblank(void) {
 
 int AgbMain(void) {
     interrupt_init();
-    sound_init();
+    audio_init();
 
     // enable VBlank interrupt
     interrupt_toggle(IRQ_VBLANK, true);
