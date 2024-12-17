@@ -48,7 +48,7 @@ extern const struct Scene scene_win;
 extern u16 scene_death_timer;
 extern u16 scene_win_timer;
 
-inline void set_scene(const struct Scene *new_scene, u8 init_flags) {
+INLINE void set_scene(const struct Scene *new_scene, u8 init_flags) {
     scene = new_scene;
 
     if((init_flags & 1) && scene->init)

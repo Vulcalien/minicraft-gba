@@ -29,7 +29,7 @@ extern u8 player_stamina_recharge_delay;
 
 extern u16 player_invulnerable_time;
 
-inline bool player_pay_stamina(u8 amount) {
+INLINE bool player_pay_stamina(u8 amount) {
     if(player_stamina >= amount) {
         player_stamina -= amount;
         return true;

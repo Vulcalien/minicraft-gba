@@ -109,7 +109,7 @@ extern void item_write(struct item_Data *data, u8 palette, u32 x, u32 y);
 extern void item_write_name(struct item_Data *data, u8 palette, u32 x, u32 y);
 extern void item_draw_icon(struct item_Data *data, u32 x, u32 y, bool black_bg);
 
-inline bool item_is_resource(u8 type) {
+INLINE bool item_is_resource(u8 type) {
     const struct Item *item = &item_list[type];
 
     return item->class == ITEMCLASS_MATERIAL  ||

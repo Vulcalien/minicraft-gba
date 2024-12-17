@@ -18,7 +18,7 @@
 
 #include "minicraft.h"
 
-inline void itoa(u32 number, u8 radix, char *array, u8 digits, bool zero_fill) {
+INLINE void itoa(u32 number, u8 radix, char *array, u8 digits, bool zero_fill) {
     u32 pos = 0;
     for(u32 i = 0; i < digits; i++) {
         u32 digit = number;

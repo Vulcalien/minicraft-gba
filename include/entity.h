@@ -100,7 +100,7 @@ extern bool entity_move(struct Level *level, struct entity_Data *data,
 extern bool entity_move2(struct Level *level, struct entity_Data *data,
                          i32 xm, i32 ym);
 
-inline bool entity_intersects(struct entity_Data *data,
+INLINE bool entity_intersects(struct entity_Data *data,
                               i32 x0, i32 y0, i32 x1, i32 y1) {
     const struct Entity *entity = ENTITY_S(data);
 
