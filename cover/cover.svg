@@ -1,0 +1,8 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <image href="img/background.png" image-rendering="optimizeSpeed"
+         x="-4" y="-4" width="516" height="516" />
+  <image href="img/logo.png" image-rendering="optimizeSpeed"
+         x="118" y="42" width="388" height="104" />
+  <image href="img/gba-label.png"
+         x="0" y="0" width="144" height="512" />
+</svg>
