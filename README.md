@@ -24,10 +24,8 @@ To improve the gameplay experience, I also added these features:
 
 ### Game Light
 The light system is completely different, both visually and in how it
-works.
-
-The original Minicraft calculates the light for **each pixel**: that is,
-for various reasons, impractical to do on the GBA.
+works. The original Minicraft calculates the light for **each pixel**:
+that is, for various reasons, impractical to do on the GBA.
 
 So I had to find another way, and the best one seemed to use tiles,
 because the GBA is very good at handling them. That gives light a
