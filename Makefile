@@ -133,7 +133,7 @@ clean-deps:
 
 .PHONY: res
 res: $(RES_OUT_DIRS)
-	tools/convert-resources "$(RES_DIR)/resources.json"
+	tools/res2gba "$(RES_DIR)/resources.json"
 
 .PHONY: release
 release:
