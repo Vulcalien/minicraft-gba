@@ -22,9 +22,9 @@
 
 extern u8 _sound_channel;
 
-#define SOUND_PLAY(sound) audio_play( \
-    _sound_channel ^= 1,              \
-    (sound), sizeof(sound)            \
+#define SOUND_PLAY(sound) audio_play(   \
+    _sound_channel ^= 1,                \
+    (const i8 *) (sound), sizeof(sound) \
 )
 
 // Sound effects
