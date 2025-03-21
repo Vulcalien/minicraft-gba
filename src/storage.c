@@ -118,8 +118,8 @@ static inline void switch_bank(u32 bank) {
     FLASH_ROM[0x0000] = bank;
 }
 
-IWRAM_SECTION NOCLONE NOINLINE
-static u8 read_byte(u16 addr) {
+IWRAM_SECTION
+static NO_INLINE u8 read_byte(u16 addr) {
     return FLASH_ROM[addr];
 }
 
@@ -299,8 +299,8 @@ static inline void erase_chip(void) {
     while(read_byte(0x0000) != 0xff);
 }
 
-IWRAM_SECTION NOCLONE NOINLINE
-static void write_byte(u16 addr, u8 byte) {
+IWRAM_SECTION
+static NO_INLINE void write_byte(u16 addr, u8 byte) {
     checksum += byte;
 
     FLASH_ROM[0x5555] = 0xaa;

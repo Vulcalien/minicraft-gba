@@ -43,14 +43,14 @@
 #define SPR_PALETTE ((vu16 *) 0x05000200)
 
 #define LOAD_TILESET(charblock, offset, tileset)      \
-    memcpy32(                                         \
+    memory_copy_32(                                   \
         display_charblock(charblock) + (offset) * 16, \
         tileset,                                      \
         sizeof(tileset)                               \
     )
 
 #define LOAD_PALETTE(dest, palette)          \
-    memcpy32(dest, palette, sizeof(palette))
+    memory_copy_32(dest, palette, sizeof(palette))
 
 void screen_init(void) {
     display_config(0);
@@ -110,7 +110,7 @@ void screen_init(void) {
     LOAD_PALETTE(SPR_PALETTE + 12 * 16, items_palette);
 
     // make the first tile of charblock 1 fully transparent
-    memset32(display_charblock(1), 0x00, 32);
+    memory_set_32(display_charblock(1), 0x00, 32);
 
     // load tilesets
     LOAD_TILESET(0, 0, level_tileset);
@@ -129,12 +129,12 @@ void screen_init(void) {
     // load font sprites
     for(u32 i = 0; i <= 51; i++) {
         vu16 *dest = display_charblock(4) + (640 + i * 2) * 16;
-        memcpy32(
+        memory_copy_32(
             dest,
             (u8 *) (text_particle_tileset) + (i / 10) * 32,
             32
         );
-        memcpy32(
+        memory_copy_32(
             dest + 16,
             (u8 *) (text_particle_tileset) + (i % 10) * 32,
             32
@@ -270,7 +270,7 @@ void screen_set_bg_palette_color(u8 palette, u8 index, u16 color) {
 }
 
 void screen_load_active_item_palette(u8 palette) {
-    memcpy32(BG_PALETTE + 11 * 16, items_palette + 16 * palette, 32);
+    memory_copy_32(BG_PALETTE + 11 * 16, items_palette + 16 * palette, 32);
     screen_set_bg_palette_color(11, 15, 0x0421);
 }
 

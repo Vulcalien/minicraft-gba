@@ -53,14 +53,13 @@ static void vblank(void) {
 }
 
 int AgbMain(void) {
-    interrupt_init();
-    audio_init();
-
     // enable VBlank interrupt
     interrupt_toggle(IRQ_VBLANK, true);
     interrupt_set_isr(IRQ_VBLANK, vblank);
 
+    audio_init();
     screen_init();
+
     set_scene(&scene_prestart, 0);
 
     while(true) {

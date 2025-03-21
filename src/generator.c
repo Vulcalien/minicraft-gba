@@ -36,8 +36,8 @@ static inline i32 variation(u32 step_size) {
     return (random(step_size * 4) - step_size * 2);
 }
 
-IWRAM_SECTION NOCLONE NOINLINE
-static i8 *noise(i8 *values, u32 feature_size) {
+IWRAM_SECTION
+static NO_INLINE i8 *noise(i8 *values, u32 feature_size) {
     for(u32 y = 0; y < LEVEL_H; y += feature_size)
         for(u32 x = 0; x < LEVEL_W; x += feature_size)
             set(values, x, y, random(256) - 128);
