@@ -18,6 +18,7 @@
 
 #include <gba/sprite.h>
 #include <random.h>
+#include <math.h>
 
 #include "mob.h"
 #include "player.h"
@@ -85,45 +86,21 @@ ETICK(air_wizard_tick) {
     if(air_wizard_attack_time > 0) {
         air_wizard_attack_time--;
 
-        /* Approximate 'sin' and 'cos' functions
-         *
-         *  sin: N ---> [-64 ... +64]
-         *  cos: N ---> [-64 ... +64]
-         *
-         *            x % PI    (       x % PI  )
-         *  sin(x) = -------- * ( 16 - -------- ) * sin_sign(x)
-         *              64      (         64    )
-         *
-         *  cos(x) = sin(x + PI / 2)
-         *
-         *
-         *  with:
-         *      PI = 1024
-         *                    { -1      if x % (2 * PI) > PI
-         *      sin_sign(x) = {
-         *                    { +1      if x % (2 * PI) <= PI
-         */
+        // angle = attack_time * 0.25 radians
+        //       = attack_time * 0.25 * math_brad(180) / PI
+        //      ~= attack_time * 2608 brad
+        i32 angle = air_wizard_attack_time * 2608;
+        if(air_wizard_attack_time % 2)
+            angle *= -1;
 
-        u32 angle = air_wizard_attack_time * 81; // 81 = 1024 / (3.14... / 0.25)
-        if(air_wizard_attack_time & 1)
-            angle = 2048 - (angle % 2048);
+        // speed = 0.7 + attack_type * 0.2, scaled by 256
+        i32 speed = 179 + wizard_data->attack_type * 51;
 
-        i32 sin = ((angle % 1024) / 64) * (16 - (angle % 1024) / 64);
-        if((angle % 2048) > 1024)
-            sin *= -1;
-
-        angle += 512; // add half PI
-        i32 cos = ((angle % 1024) / 64) * (16 - (angle % 1024) / 64);
-        if((angle % 2048) > 1024)
-            cos *= -1;
-
-        // speed: 256 = 100%
-        u32 speed = 179 + wizard_data->attack_type * 51;
         entity_add_spark(
             level, data->x, data->y,
-            cos * speed / 256, sin * speed / 256
+            speed * math_cos(angle) / 0x10000, // fixed-point, 1 = 64
+            speed * math_sin(angle) / 0x10000  // fixed-point, 1 = 64
         );
-
         return;
     }
 
