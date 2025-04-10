@@ -32,6 +32,7 @@ u32 score;
 u8 current_level;
 
 static inline void tick(void) {
+    audio_update();
     input_tick();
     scene->tick();
 
@@ -57,7 +58,7 @@ int AgbMain(void) {
     interrupt_toggle(IRQ_VBLANK, true);
     interrupt_set_isr(IRQ_VBLANK, vblank);
 
-    audio_init();
+    audio_init(AUDIO_BASIC);
     screen_init();
 
     set_scene(&scene_prestart, 0);
