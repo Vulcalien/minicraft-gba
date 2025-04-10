@@ -57,6 +57,7 @@ u16 player_invulnerable_time;
 
 static u32 player_tick_time = 0;
 
+THUMB
 void entity_add_player(struct Level *level, u8 xt, u8 yt,
                        bool reset_inventory) {
     struct entity_Data *data  = &level->entities[0];
@@ -614,6 +615,7 @@ const struct Entity player_entity = {
     .is_solid = true
 };
 
+THUMB
 void mob_player_die(struct Level *level, struct entity_Data *data) {
     scene_death_timer = 60;
     SOUND_PLAY(sound_player_death);

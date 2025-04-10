@@ -43,6 +43,7 @@ static_assert(
 u8 air_wizard_attack_delay;
 u8 air_wizard_attack_time;
 
+THUMB
 void entity_add_air_wizard(struct Level *level) {
     u8 entity_id = level_new_entity(level, AIR_WIZARD_ENTITY);
     if(entity_id >= ENTITY_LIMIT)
@@ -210,6 +211,7 @@ const struct Entity air_wizard_entity = {
     .touch_player = air_wizard_touch_player
 };
 
+THUMB
 void mob_air_wizard_die(struct Level *level, struct entity_Data *data) {
     struct entity_Data *player = &level->entities[0];
     if(player->type < ENTITY_TYPES) {

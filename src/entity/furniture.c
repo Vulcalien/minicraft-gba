@@ -45,6 +45,7 @@ static_assert(
     "struct furniture_Data: wrong size"
 );
 
+THUMB
 bool entity_add_furniture(struct Level *level, u8 xt, u8 yt,
                           struct item_Data *item_data) {
     u8 entity_id = level_new_entity(
@@ -126,6 +127,7 @@ GENERATE_STRUCT(anvil_entity,     2);
 GENERATE_STRUCT(chest_entity,     3);
 GENERATE_STRUCT(lantern_entity,   2);
 
+THUMB
 void furniture_take(struct entity_Data *data) {
     struct furniture_Data *furn_data = (struct furniture_Data *) &data->data;
 
@@ -136,12 +138,14 @@ void furniture_take(struct entity_Data *data) {
     data->should_remove = true;
 }
 
+THUMB
 void furniture_set_opened_chest(struct entity_Data *data) {
     struct furniture_Data *furn_data = (struct furniture_Data *) &data->data;
 
     chest_opened_id = furn_data->chest_id;
 }
 
+THUMB
 u8 furniture_new_chest_id(void) {
     if(chest_count >= CHEST_LIMIT)
         return -1;

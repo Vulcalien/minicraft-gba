@@ -27,6 +27,7 @@ struct smash_Data {
 
 static_assert(sizeof(struct smash_Data) == 8, "struct smash_Data: wrong size");
 
+THUMB
 void entity_add_smash_particle(struct Level *level, u8 xt, u8 yt) {
     SOUND_PLAY(sound_monster_hurt);
 

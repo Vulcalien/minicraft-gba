@@ -31,6 +31,7 @@ struct slime_Data {
 
 static_assert(sizeof(struct slime_Data) == 2, "struct slime_Data: wrong size");
 
+THUMB
 void entity_add_slime(struct Level *level, u16 x, u16 y, u8 lvl) {
     u8 entity_id = level_new_entity(level, SLIME_ENTITY);
     if(entity_id >= ENTITY_LIMIT)
@@ -138,6 +139,7 @@ const struct Entity slime_entity = {
     .touch_player = slime_touch_player
 };
 
+THUMB
 void mob_slime_die(struct Level *level, struct entity_Data *data) {
     u8 drop_count = 1 + random(2);
     for(u32 i = 0; i < drop_count; i++)
