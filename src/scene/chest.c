@@ -41,7 +41,7 @@ THUMB
 static void chest_tick(void) {
     gametime++;
 
-    if(input_pressed(KEY_B))
+    if(input_pressed(KEY_B) || input_pressed(KEY_START))
         set_scene(&scene_game, 1);
 
     if(input_clicked(KEY_LEFT))
