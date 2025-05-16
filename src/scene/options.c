@@ -31,9 +31,9 @@ static void options_init(u8 flags) {
 
 THUMB
 static void options_tick(void) {
-    if(INPUT_CLICKED(KEY_UP))
+    if(input_clicked(KEY_UP))
         selected--;
-    if(INPUT_CLICKED(KEY_DOWN))
+    if(input_clicked(KEY_DOWN))
         selected++;
 
     if(selected < 0)
@@ -41,7 +41,7 @@ static void options_tick(void) {
     else if(selected > EXIT)
         selected = 0;
 
-    if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
+    if(input_clicked(KEY_A) || input_clicked(KEY_B)) {
         switch(selected) {
             case KEEP_INVENTORY:
                 options.keep_inventory = !options.keep_inventory;

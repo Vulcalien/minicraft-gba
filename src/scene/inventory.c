@@ -47,15 +47,15 @@ THUMB
 static void inventory_tick(void) {
     gametime++;
 
-    if(INPUT_CLICKED(KEY_B))
+    if(input_clicked(KEY_B))
         set_scene(&scene_game, 1);
 
     if(player_inventory.size == 0)
         return;
 
-    if(INPUT_CLICKED(KEY_UP))
+    if(input_clicked(KEY_UP))
         selected--;
-    if(INPUT_CLICKED(KEY_DOWN))
+    if(input_clicked(KEY_DOWN))
         selected++;
 
     if(selected < 0)
@@ -63,7 +63,7 @@ static void inventory_tick(void) {
     if(selected >= player_inventory.size)
         selected = 0;
 
-    if(INPUT_CLICKED(KEY_A)) {
+    if(input_clicked(KEY_A)) {
         struct item_Data old_active_item = player_active_item;
 
         inventory_remove(&player_inventory, &player_active_item, selected);

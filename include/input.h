@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022, 2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,28 +18,14 @@
 
 #include "minicraft.h"
 
-#define KEY_A      (1 << 0)
-#define KEY_B      (1 << 1)
-#define KEY_SELECT (1 << 2)
-#define KEY_START  (1 << 3)
+#include <gba/input.h>
 
-#define KEY_RIGHT  (1 << 4)
-#define KEY_LEFT   (1 << 5)
-#define KEY_UP     (1 << 6)
-#define KEY_DOWN   (1 << 7)
-
-#define KEY_R      (1 << 8)
-#define KEY_L      (1 << 9)
-
-#define INPUT_DOWN(key)\
-    (!(input_keys_down & (key)))
-
-#define INPUT_CLICKED(key)\
-    (!(input_keys_clicked & (key)))
-
-extern u16 input_keys_down;
-extern u16 input_keys_clicked;
+extern u16 _input_clicked;
 
 extern void input_tick(void);
+
+INLINE bool input_clicked(u32 key) {
+    return (_input_clicked & key);
+}
 
 #endif // MINICRAFT_INPUT

@@ -453,8 +453,8 @@ ETICK(player_tick) {
     }
 
     // movement
-    i32 xm = (INPUT_DOWN(KEY_RIGHT) != 0) - (INPUT_DOWN(KEY_LEFT) != 0);
-    i32 ym = (INPUT_DOWN(KEY_DOWN)  != 0) - (INPUT_DOWN(KEY_UP)   != 0);
+    i32 xm = (input_down(KEY_RIGHT) != 0) - (input_down(KEY_LEFT) != 0);
+    i32 ym = (input_down(KEY_DOWN)  != 0) - (input_down(KEY_UP)   != 0);
 
     if((player_stamina_recharge_delay & 1) == 0) {
         static u8 swim_move_flag = 0;
@@ -465,19 +465,19 @@ ETICK(player_tick) {
             mob_move(level, data, xm, ym);
     }
 
-    if(player_stamina > 0 && INPUT_CLICKED(KEY_A)) {
+    if(player_stamina > 0 && input_clicked(KEY_A)) {
         player_stamina--;
         stamina_recharge = 0;
 
         player_attack(level, data);
     }
 
-    if(INPUT_CLICKED(KEY_B)) {
+    if(input_clicked(KEY_B)) {
         if(!player_use(level, data))
             set_scene(&scene_inventory, 1);
     }
 
-    if(INPUT_CLICKED(KEY_START))
+    if(input_clicked(KEY_START))
         set_scene(&scene_pause, 1);
 }
 

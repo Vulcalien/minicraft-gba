@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2022, 2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,36 +15,31 @@
  */
 #include "input.h"
 
-#define KEY_INPUT *((vu16 *) 0x04000130)
-
-u16 input_keys_down    = 0;
-u16 input_keys_clicked = 0;
+u16 _input_clicked = 0;
 
 THUMB
 void input_tick(void) {
-    input_keys_down = KEY_INPUT;
+    input_update();
 
-    // Set clicked
+    // set clicked
     //
-    // Repeat delay:    500ms (30 ticks)
-    // Repeat interval: ~33ms (2 ticks)
+    // repeat delay:    500ms (30 ticks)
+    // repeat interval: ~33ms (2 ticks)
     for(u32 i = 0; i < 10; i++) {
         static u8 press_time[10] = { 0 };
 
-        u16 key_state = input_keys_down & (1 << i);
-        if(!key_state) {
-            if(press_time[i] < 2 || press_time[i] >= 30) {
-                // invert i-th bit
-                input_keys_clicked ^= (1 << i);
-            }
+        const u32 key = BIT(i);
+        if(input_down(key)) {
+            if(press_time[i] < 2 || press_time[i] >= 30)
+                _input_clicked ^= key;
 
             if(press_time[i] < 30)
                 press_time[i]++;
         } else {
             press_time[i] = 0;
 
-            // set i-th bit to 1
-            input_keys_clicked |= (1 << i);
+            // set i-th bit to 0
+            _input_clicked &= ~key;
         }
     }
 }

@@ -96,7 +96,7 @@ THUMB
 static void death_tick(void) {
     death_time++;
     if(death_time > 60) {
-        if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B)) {
+        if(input_clicked(KEY_A) || input_clicked(KEY_B)) {
             SOUND_PLAY(sound_start);
             respawn();
             set_scene(&scene_game, 7);

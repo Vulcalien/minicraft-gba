@@ -35,8 +35,10 @@ void performance_tick(void) {
     tick_vcount = display_vcount();
     ticks++;
 
-    if(INPUT_DOWN(KEY_L) && INPUT_DOWN(KEY_R) && INPUT_CLICKED(KEY_SELECT))
+    if(input_down(KEY_L) && input_down(KEY_R) &&
+       input_pressed(KEY_SELECT)) {
         show_performance = !show_performance;
+    }
 }
 
 void performance_draw(void) {

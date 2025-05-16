@@ -100,12 +100,12 @@ THUMB
 static void crafting_tick(void) {
     gametime++;
 
-    if(INPUT_CLICKED(KEY_B))
+    if(input_clicked(KEY_B))
         set_scene(&scene_game, 1);
 
-    if(INPUT_CLICKED(KEY_UP))
+    if(input_clicked(KEY_UP))
         selected--;
-    if(INPUT_CLICKED(KEY_DOWN))
+    if(input_clicked(KEY_DOWN))
         selected++;
 
     if(selected < 0)
@@ -113,7 +113,7 @@ static void crafting_tick(void) {
     if(selected >= crafting_current_recipes_size)
         selected = 0;
 
-    if(INPUT_CLICKED(KEY_A)) {
+    if(input_clicked(KEY_A)) {
         u8 recipe_id = sorted_recipes[selected];
 
         if(can_craft[recipe_id]) {

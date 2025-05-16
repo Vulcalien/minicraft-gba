@@ -44,21 +44,21 @@ int AgbMain(void) {
         vsync();
         input_tick();
 
-        if(INPUT_CLICKED(KEY_DOWN)) {
+        if(input_clicked(KEY_DOWN)) {
             if(displayed_level != 0)
                 displayed_level--;
             else
                 displayed_level = 4;
         }
 
-        if(INPUT_CLICKED(KEY_UP)) {
+        if(input_clicked(KEY_UP)) {
             if(displayed_level != 4)
                 displayed_level++;
             else
                 displayed_level = 0;
         }
 
-        if(INPUT_CLICKED(KEY_START)) {
+        if(input_clicked(KEY_START)) {
             generate_levels();
         }
 

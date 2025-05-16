@@ -20,7 +20,7 @@
 
 THUMB
 static void about_tick(void) {
-    if(INPUT_CLICKED(KEY_A) || INPUT_CLICKED(KEY_B))
+    if(input_clicked(KEY_A) || input_clicked(KEY_B))
         set_scene(&scene_start, 0);
 }
 

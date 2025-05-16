@@ -40,10 +40,10 @@ static void pause_tick(void) {
         ask_overwrite = false;
     }
 
-    if(INPUT_CLICKED(KEY_START))
+    if(input_clicked(KEY_START))
         set_scene(&scene_game, 1);
 
-    if(INPUT_CLICKED(KEY_A)) {
+    if(input_clicked(KEY_A)) {
         if(ask_overwrite) {
             if(selected_answer == 1)
                 ask_overwrite = false;
@@ -57,10 +57,10 @@ static void pause_tick(void) {
         }
     }
 
-    if(INPUT_CLICKED(KEY_B))
+    if(input_clicked(KEY_B))
         ask_overwrite = false;
 
-    if(ask_overwrite && (INPUT_CLICKED(KEY_LEFT) || INPUT_CLICKED(KEY_RIGHT)))
+    if(ask_overwrite && (input_clicked(KEY_LEFT) || input_clicked(KEY_RIGHT)))
         selected_answer ^= 1;
 }
 

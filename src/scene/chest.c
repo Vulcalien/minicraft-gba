@@ -41,12 +41,12 @@ THUMB
 static void chest_tick(void) {
     gametime++;
 
-    if(INPUT_CLICKED(KEY_B))
+    if(input_clicked(KEY_B))
         set_scene(&scene_game, 1);
 
-    if(INPUT_CLICKED(KEY_LEFT))
+    if(input_clicked(KEY_LEFT))
         chest_window = 0;
-    if(INPUT_CLICKED(KEY_RIGHT))
+    if(input_clicked(KEY_RIGHT))
         chest_window = 1;
 
     struct Inventory *inv[2];
@@ -56,9 +56,9 @@ static void chest_tick(void) {
     if(inv[0]->size == 0)
         return;
 
-    if(INPUT_CLICKED(KEY_UP))
+    if(input_clicked(KEY_UP))
         selected[chest_window]--;
-    if(INPUT_CLICKED(KEY_DOWN))
+    if(input_clicked(KEY_DOWN))
         selected[chest_window]++;
 
     if(selected[chest_window] < 0)
@@ -66,7 +66,7 @@ static void chest_tick(void) {
     if(selected[chest_window] >= inv[0]->size)
         selected[chest_window] = 0;
 
-    if(INPUT_CLICKED(KEY_A)) {
+    if(input_clicked(KEY_A)) {
         struct item_Data removed;
         inventory_remove(inv[0], &removed, selected[chest_window]);
 
