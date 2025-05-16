@@ -62,7 +62,7 @@ static void start_tick(void) {
     else if(selected > ABOUT)
         selected = (can_load ? LOAD_GAME : NEW_GAME);
 
-    if(input_clicked(KEY_A) || input_clicked(KEY_B)) {
+    if(input_pressed(KEY_A) || input_pressed(KEY_B)) {
         switch(selected) {
             case LOAD_GAME:
                 SOUND_PLAY(sound_start);

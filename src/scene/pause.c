@@ -40,7 +40,7 @@ static void pause_tick(void) {
         ask_overwrite = false;
     }
 
-    if(input_clicked(KEY_START))
+    if(input_pressed(KEY_START))
         set_scene(&scene_game, 1);
 
     if(input_clicked(KEY_A)) {

@@ -100,7 +100,7 @@ THUMB
 static void crafting_tick(void) {
     gametime++;
 
-    if(input_clicked(KEY_B))
+    if(input_pressed(KEY_B))
         set_scene(&scene_game, 1);
 
     if(input_clicked(KEY_UP))

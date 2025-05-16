@@ -41,7 +41,7 @@ static void options_tick(void) {
     else if(selected > EXIT)
         selected = 0;
 
-    if(input_clicked(KEY_A) || input_clicked(KEY_B)) {
+    if(input_pressed(KEY_A) || input_pressed(KEY_B)) {
         switch(selected) {
             case KEEP_INVENTORY:
                 options.keep_inventory = !options.keep_inventory;

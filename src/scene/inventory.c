@@ -47,7 +47,7 @@ THUMB
 static void inventory_tick(void) {
     gametime++;
 
-    if(input_clicked(KEY_B))
+    if(input_pressed(KEY_B))
         set_scene(&scene_game, 1);
 
     if(player_inventory.size == 0)
