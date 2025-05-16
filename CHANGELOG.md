@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+### Changed
+- Accept both *B* and *START* buttons to exit menus.
+- Store game images as PNG files instead of hex-code, so that they can
+  be viewed and modified without special tools.
+- Use the *libsimplegba* library to handle many low-level and basic
+  things.
+- Use more accurate sine and cosine functions when the Air Wizard shoots
+  sparks.
+
+### Fixed
+- Menus flickering when holding the menu's toggle buttons.
+
 ## [1.3] - 2024-02-09
 ### Added
 - Checksum verification to validate save files.
@@ -7,31 +20,32 @@
 - Respawn feature, with an option to keep the inventory.
 
 ### Changed
-- Optimize entity sorting, reducing the time necessary to update the
-  screen.
+- Use a faster algorithm to sort entities, reducing the time needed to
+  update the screen.
 
 ### Fixed
-- Fix the time displayed in pause, death and win menus, which was
-  slightly lower than it should have been.
+- Time displayed in pause, death and win menus, which was slightly lower
+  than it should be.
 
 ## [1.2.1] - 2023-05-04
-Fix the linker script: add missing input sections to the output
-sections. The ROM remains unchanged.
+### Fixed
+- The linker script, which was ignoring some input sections.
 
 ## [1.2] - 2023-05-01
 ### Added
-- Introduce frameskip, which can lower the fps to 30.
+- Frameskip to lower the fps when necessary.
 - TPS and FPS counters in the performance overlay.
 
 ### Fixed
-- Fix a visual bug that caused trailing zeros to appear after the item
-  count after losing a decimal digit. (Introduced in 1.1)
-- Fix a visual bug that caused some hearts to be drawn even after the
-  player dies in lava.
+- Visual bug that caused trailing zeros to appear after the item count
+  after losing a decimal digit. (Introduced in 1.1)
+- Visual bug that caused some hearts to be drawn even after the player
+  dies in lava.
 
 ## [1.1] - 2023-03-10
-Fix a bug that caused entities to be drawn incorrectly when close to a
-player holding a lantern.
+### Fixed
+- Entities being drawn on top of the darkness layer when close to a
+  player holding a lantern.
 
 ## [1.0] - 2022-11-19
 First release of the game.
