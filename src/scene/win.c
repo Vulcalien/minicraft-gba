@@ -29,7 +29,7 @@ THUMB
 static void win_tick(void) {
     win_time++;
     if(win_time > 60) {
-        if(input_pressed(KEY_A) || input_pressed(KEY_B))
+        if(input_press(KEY_A) || input_press(KEY_B))
             set_scene(&scene_game, 1);
     }
 }

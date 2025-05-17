@@ -477,7 +477,7 @@ ETICK(player_tick) {
             set_scene(&scene_inventory, 1);
     }
 
-    if(input_pressed(KEY_START))
+    if(input_press(KEY_START))
         set_scene(&scene_pause, 1);
 }
 

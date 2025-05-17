@@ -36,7 +36,7 @@ void performance_tick(void) {
     ticks++;
 
     if(input_down(KEY_L) && input_down(KEY_R) &&
-       input_pressed(KEY_SELECT)) {
+       input_press(KEY_SELECT)) {
         show_performance = !show_performance;
     }
 }
