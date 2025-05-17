@@ -15,7 +15,8 @@
  */
 #include "scene.h"
 
-#include "input.h"
+#include <gba/input.h>
+
 #include "screen.h"
 #include "inventory.h"
 #include "item.h"
@@ -44,9 +45,9 @@ static void chest_tick(void) {
     if(input_press(KEY_B) || input_press(KEY_START))
         set_scene(&scene_game, 1);
 
-    if(input_clicked(KEY_LEFT))
+    if(input_repeat(KEY_LEFT))
         chest_window = 0;
-    if(input_clicked(KEY_RIGHT))
+    if(input_repeat(KEY_RIGHT))
         chest_window = 1;
 
     struct Inventory *inv[2];
@@ -56,9 +57,9 @@ static void chest_tick(void) {
     if(inv[0]->size == 0)
         return;
 
-    if(input_clicked(KEY_UP))
+    if(input_repeat(KEY_UP))
         selected[chest_window]--;
-    if(input_clicked(KEY_DOWN))
+    if(input_repeat(KEY_DOWN))
         selected[chest_window]++;
 
     if(selected[chest_window] < 0)
@@ -66,7 +67,7 @@ static void chest_tick(void) {
     if(selected[chest_window] >= inv[0]->size)
         selected[chest_window] = 0;
 
-    if(input_clicked(KEY_A)) {
+    if(input_repeat(KEY_A)) {
         struct item_Data removed;
         inventory_remove(inv[0], &removed, selected[chest_window]);
 

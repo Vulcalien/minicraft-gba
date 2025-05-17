@@ -17,12 +17,12 @@
 #include "player.h"
 
 #include <gba/sprite.h>
+#include <gba/input.h>
 #include <random.h>
 
 #include "level.h"
 #include "tile.h"
 #include "mob.h"
-#include "input.h"
 #include "item.h"
 #include "furniture.h"
 #include "scene.h"
@@ -465,14 +465,14 @@ ETICK(player_tick) {
             mob_move(level, data, xm, ym);
     }
 
-    if(player_stamina > 0 && input_clicked(KEY_A)) {
+    if(player_stamina > 0 && input_repeat(KEY_A)) {
         player_stamina--;
         stamina_recharge = 0;
 
         player_attack(level, data);
     }
 
-    if(input_clicked(KEY_B)) {
+    if(input_repeat(KEY_B)) {
         if(!player_use(level, data))
             set_scene(&scene_inventory, 1);
     }

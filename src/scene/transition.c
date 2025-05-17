@@ -15,7 +15,8 @@
  */
 #include "scene.h"
 
-#include "input.h"
+#include <gba/input.h>
+
 #include "screen.h"
 
 static u8 transition_time;

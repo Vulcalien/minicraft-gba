@@ -15,7 +15,8 @@
  */
 #include "scene.h"
 
-#include "input.h"
+#include <gba/input.h>
+
 #include "screen.h"
 #include "storage.h"
 #include "sound.h"
@@ -43,7 +44,7 @@ static void pause_tick(void) {
     if(input_press(KEY_START))
         set_scene(&scene_game, 1);
 
-    if(input_clicked(KEY_A)) {
+    if(input_repeat(KEY_A)) {
         if(ask_overwrite) {
             if(selected_answer == 1)
                 ask_overwrite = false;
@@ -57,10 +58,10 @@ static void pause_tick(void) {
         }
     }
 
-    if(input_clicked(KEY_B))
+    if(input_repeat(KEY_B))
         ask_overwrite = false;
 
-    if(ask_overwrite && (input_clicked(KEY_LEFT) || input_clicked(KEY_RIGHT)))
+    if(ask_overwrite && (input_repeat(KEY_LEFT) || input_repeat(KEY_RIGHT)))
         selected_answer ^= 1;
 }
 

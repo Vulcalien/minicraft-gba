@@ -15,8 +15,9 @@
  */
 #include "scene.h"
 
+#include <gba/input.h>
+
 #include "options.h"
-#include "input.h"
 #include "screen.h"
 
 #define KEEP_INVENTORY (0)
@@ -31,9 +32,9 @@ static void options_init(u8 flags) {
 
 THUMB
 static void options_tick(void) {
-    if(input_clicked(KEY_UP))
+    if(input_repeat(KEY_UP))
         selected--;
-    if(input_clicked(KEY_DOWN))
+    if(input_repeat(KEY_DOWN))
         selected++;
 
     if(selected < 0)

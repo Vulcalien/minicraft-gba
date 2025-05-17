@@ -17,9 +17,9 @@
 
 #include <gba/interrupt.h>
 #include <gba/audio.h>
+#include <gba/input.h>
 
 #include "screen.h"
-#include "input.h"
 #include "scene.h"
 #include "performance.h"
 
@@ -33,7 +33,7 @@ u8 current_level;
 
 static inline void tick(void) {
     audio_update();
-    input_tick();
+    input_update();
     scene->tick();
 
     performance_tick();
@@ -59,6 +59,7 @@ int AgbMain(void) {
     interrupt_set_isr(IRQ_VBLANK, vblank);
 
     audio_init(AUDIO_BASIC);
+    input_init(30, 2);
     screen_init();
 
     set_scene(&scene_prestart, 0);

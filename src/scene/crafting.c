@@ -15,7 +15,8 @@
  */
 #include "scene.h"
 
-#include "input.h"
+#include <gba/input.h>
+
 #include "screen.h"
 #include "inventory.h"
 #include "item.h"
@@ -103,9 +104,9 @@ static void crafting_tick(void) {
     if(input_press(KEY_B) || input_press(KEY_START))
         set_scene(&scene_game, 1);
 
-    if(input_clicked(KEY_UP))
+    if(input_repeat(KEY_UP))
         selected--;
-    if(input_clicked(KEY_DOWN))
+    if(input_repeat(KEY_DOWN))
         selected++;
 
     if(selected < 0)
@@ -113,7 +114,7 @@ static void crafting_tick(void) {
     if(selected >= crafting_current_recipes_size)
         selected = 0;
 
-    if(input_clicked(KEY_A)) {
+    if(input_repeat(KEY_A)) {
         u8 recipe_id = sorted_recipes[selected];
 
         if(can_craft[recipe_id]) {

@@ -15,9 +15,9 @@
  */
 #include "scene.h"
 
+#include <gba/input.h>
 #include <random.h>
 
-#include "input.h"
 #include "generator.h"
 #include "furniture.h"
 #include "screen.h"
@@ -52,9 +52,9 @@ static void start_init(u8 flags) {
 
 THUMB
 static void start_tick(void) {
-    if(input_clicked(KEY_UP))
+    if(input_repeat(KEY_UP))
         selected--;
-    if(input_clicked(KEY_DOWN))
+    if(input_repeat(KEY_DOWN))
         selected++;
 
     if(selected < (can_load ? LOAD_GAME : NEW_GAME))

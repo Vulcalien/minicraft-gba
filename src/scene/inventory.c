@@ -15,8 +15,9 @@
  */
 #include "scene.h"
 
+#include <gba/input.h>
+
 #include "inventory.h"
-#include "input.h"
 #include "screen.h"
 #include "item.h"
 #include "player.h"
@@ -53,9 +54,9 @@ static void inventory_tick(void) {
     if(player_inventory.size == 0)
         return;
 
-    if(input_clicked(KEY_UP))
+    if(input_repeat(KEY_UP))
         selected--;
-    if(input_clicked(KEY_DOWN))
+    if(input_repeat(KEY_DOWN))
         selected++;
 
     if(selected < 0)
@@ -63,7 +64,7 @@ static void inventory_tick(void) {
     if(selected >= player_inventory.size)
         selected = 0;
 
-    if(input_clicked(KEY_A)) {
+    if(input_repeat(KEY_A)) {
         struct item_Data old_active_item = player_active_item;
 
         inventory_remove(&player_inventory, &player_active_item, selected);
