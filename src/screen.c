@@ -152,7 +152,7 @@ void screen_init(void) {
         for(u32 x = 0; x < 30; x++)
             BG3_TILEMAP[x + y * 32] = 32;
 
-    sprite_hide_all();
+    sprite_hide(-1);
 
     // disable forced blank
     display_force_blank(false);
