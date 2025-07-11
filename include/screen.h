@@ -18,10 +18,10 @@
 
 #include "minicraft.h"
 
-#define BG0_TILEMAP ((vu16 *) 0x06008000)
-#define BG1_TILEMAP ((vu16 *) 0x06008800)
-#define BG2_TILEMAP ((vu16 *) 0x06009000)
-#define BG3_TILEMAP ((vu16 *) 0x06009800)
+#define BG0_TILEMAP display_screenblock(16)
+#define BG1_TILEMAP display_screenblock(17)
+#define BG2_TILEMAP display_screenblock(18)
+#define BG3_TILEMAP display_screenblock(19)
 
 extern void screen_init(void);
 
