@@ -15,11 +15,9 @@
  */
 #include "level.h"
 
-#include "screen.h"
-
 // Counting Sort implementation
 
-#define VALUE_RANGE (SCREEN_H + 16)
+#define VALUE_RANGE (DISPLAY_HEIGHT + 16)
 
 static u8 count_array[VALUE_RANGE];
 static u8 result_array[128];

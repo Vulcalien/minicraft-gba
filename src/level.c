@@ -120,17 +120,17 @@ void level_tick(struct Level *level) {
 static inline void update_offset(struct Level *level) {
     struct entity_Data *player = &level->entities[0];
     if(player->type < ENTITY_TYPES) {
-        i32 x_offset = player->x - SCREEN_W / 2;
-        i32 y_offset = player->y - SCREEN_H / 2 + 4;
+        i32 x_offset = player->x - DISPLAY_WIDTH / 2;
+        i32 y_offset = player->y - DISPLAY_HEIGHT / 2 + 4;
 
         if(x_offset < 16) x_offset = 16;
         if(y_offset < 16) y_offset = 16;
 
-        if(x_offset > LEVEL_W * 16 - SCREEN_W - 16)
-            x_offset = LEVEL_W * 16 - SCREEN_W - 16;
+        if(x_offset > LEVEL_W * 16 - DISPLAY_WIDTH - 16)
+            x_offset = LEVEL_W * 16 - DISPLAY_WIDTH - 16;
 
-        if(y_offset > LEVEL_H * 16 - SCREEN_H - 16)
-            y_offset = LEVEL_H * 16 - SCREEN_H - 16;
+        if(y_offset > LEVEL_H * 16 - DISPLAY_HEIGHT - 16)
+            y_offset = LEVEL_H * 16 - DISPLAY_HEIGHT - 16;
 
         level_x_offset = x_offset;
         level_y_offset = y_offset;
@@ -274,8 +274,8 @@ static inline void draw_entities(struct Level *level) {
         if(level < &levels[3] && data->type == LANTERN_ENTITY)
             draw_lantern_light(data);
 
-        if(xr < -16 || xr >= SCREEN_W + 16 ||
-           yr < -16 || yr >= SCREEN_H)
+        if(xr < -16 || xr >= DISPLAY_WIDTH + 16 ||
+           yr < -16 || yr >= DISPLAY_HEIGHT)
             continue;
 
         entities_to_render[to_render_size++] = i;
