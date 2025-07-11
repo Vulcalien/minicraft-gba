@@ -15,10 +15,6 @@
  */
 #include "level.h"
 
-#include <gba/background.h>
-#include <gba/sprite.h>
-#include <random.h>
-
 #include "screen.h"
 #include "tile.h"
 #include "entity.h"

@@ -15,9 +15,6 @@
  */
 #include "scene.h"
 
-#include <gba/input.h>
-#include <random.h>
-
 #include "screen.h"
 #include "options.h"
 #include "level.h"

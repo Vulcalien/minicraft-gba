@@ -15,9 +15,6 @@
  */
 #include "entity.h"
 
-#include <gba/sprite.h>
-#include <random.h>
-
 struct text_Data {
     u8 time : 6;
     u8 palette : 2;

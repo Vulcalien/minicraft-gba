@@ -15,9 +15,6 @@
  */
 #include "entity.h"
 
-#include <gba/sprite.h>
-#include <random.h>
-
 #include "tile.h"
 #include "player.h"
 #include "inventory.h"

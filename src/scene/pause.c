@@ -15,8 +15,6 @@
  */
 #include "scene.h"
 
-#include <gba/input.h>
-
 #include "screen.h"
 #include "storage.h"
 #include "sound.h"

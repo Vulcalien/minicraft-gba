@@ -15,8 +15,6 @@
  */
 #include "storage.h"
 
-#include <random.h>
-
 #include "options.h"
 #include "level.h"
 #include "tile.h"

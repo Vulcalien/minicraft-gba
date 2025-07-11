@@ -28,8 +28,6 @@
 
 extern void screen_init(void);
 
-extern void vsync(void);
-
 extern void screen_write(const char *text, u8 palette, u32 x, u32 y);
 extern void screen_draw_frame(const char *title, u32 x, u32 y, u32 w, u32 h);
 extern void screen_write_time(u32 ticks, u8 palette, u32 x, u32 y);

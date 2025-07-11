@@ -15,12 +15,6 @@
  */
 #include "screen.h"
 
-#include <gba/display.h>
-#include <gba/background.h>
-#include <gba/sprite.h>
-#include <gba/window.h>
-#include <memory.h>
-
 #include "res/palettes/background.c"
 #include "res/palettes/sprites.c"
 #include "res/palettes/items.c"
@@ -156,11 +150,6 @@ void screen_init(void) {
 
     // disable forced blank
     display_force_blank(false);
-}
-
-IWRAM_SECTION
-void vsync(void) {
-    __asm__ volatile ("swi 0x05 << 16");
 }
 
 IWRAM_SECTION

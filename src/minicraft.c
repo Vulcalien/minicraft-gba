@@ -15,10 +15,6 @@
  */
 #include "minicraft.h"
 
-#include <gba/interrupt.h>
-#include <gba/audio.h>
-#include <gba/input.h>
-
 #include "screen.h"
 #include "scene.h"
 #include "performance.h"
@@ -73,7 +69,7 @@ int AgbMain(void) {
             expected_tickcount = tick_count; // drop any remaining ticks
         }
 
-        vsync();
+        interrupt_wait(IRQ_VBLANK);
         draw();
     }
     return 0;

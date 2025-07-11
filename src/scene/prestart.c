@@ -15,8 +15,6 @@
  */
 #include "scene.h"
 
-#include <gba/display.h>
-
 #include "screen.h"
 
 // considering that checksum verification takes around 40 ticks,

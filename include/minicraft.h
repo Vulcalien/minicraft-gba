@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_CORE
 #define MINICRAFT_CORE
 
-#include <base.h>
+#include <libsimplegba.h>
 
 #include "util.h"
 

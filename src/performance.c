@@ -15,9 +15,6 @@
  */
 #include "performance.h"
 
-#include <gba/display.h>
-#include <gba/input.h>
-
 #include "level.h"
 #include "entity.h"
 #include "screen.h"

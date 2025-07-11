@@ -48,7 +48,7 @@ static void game_init(u8 flags) {
 
         level_load(level);
 
-        vsync();
+        interrupt_wait(IRQ_VBLANK);
         screen_update_level_specific();
     }
 

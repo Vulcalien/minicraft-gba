@@ -16,10 +16,6 @@
 #include "entity.h"
 #include "air-wizard.h"
 
-#include <gba/sprite.h>
-#include <random.h>
-#include <math.h>
-
 #include "mob.h"
 #include "player.h"
 #include "scene.h"

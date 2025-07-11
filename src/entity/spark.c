@@ -15,9 +15,6 @@
  */
 #include "entity.h"
 
-#include <gba/sprite.h>
-#include <random.h>
-
 #include "mob.h"
 
 struct spark_Data {

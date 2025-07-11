@@ -15,8 +15,6 @@
  */
 #include "entity.h"
 
-#include <gba/sprite.h>
-
 #include "sound.h"
 
 struct smash_Data {

@@ -16,10 +16,6 @@
 #include "entity.h"
 #include "player.h"
 
-#include <gba/sprite.h>
-#include <gba/input.h>
-#include <random.h>
-
 #include "level.h"
 #include "tile.h"
 #include "mob.h"

@@ -18,8 +18,6 @@
 
 #include "minicraft.h"
 
-#include <gba/audio.h>
-
 extern u8 _sound_channel;
 
 #define SOUND_PLAY(sound) audio_play(   \

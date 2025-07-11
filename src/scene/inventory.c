@@ -15,8 +15,6 @@
  */
 #include "scene.h"
 
-#include <gba/input.h>
-
 #include "inventory.h"
 #include "screen.h"
 #include "item.h"

@@ -15,8 +15,6 @@
  */
 #include "generator.h"
 
-#include <random.h>
-
 #include "level.h"
 #include "tile.h"
 #include "entity.h"

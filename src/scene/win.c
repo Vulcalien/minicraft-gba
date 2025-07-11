@@ -15,8 +15,6 @@
  */
 #include "scene.h"
 
-#include <gba/input.h>
-
 #include "screen.h"
 
 static u8 win_time;

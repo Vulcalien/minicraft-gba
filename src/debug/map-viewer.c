@@ -15,9 +15,6 @@
  */
 #include "minicraft.h"
 
-#include <gba/interrupt.h>
-#include <gba/input.h>
-
 #include "level.h"
 #include "tile.h"
 #include "generator.h"
@@ -41,7 +38,7 @@ int AgbMain(void) {
 
     u32 displayed_level = 3;
     while(true) {
-        vsync();
+        interrupt_wait(IRQ_VBLANK);
         input_update();
 
         if(input_repeat(KEY_DOWN)) {

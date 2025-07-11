@@ -15,8 +15,6 @@
  */
 #include "tile.h"
 
-#include <random.h>
-
 #include "level.h"
 #include "entity.h"
 #include "player.h"
