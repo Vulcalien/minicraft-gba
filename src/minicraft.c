@@ -49,7 +49,7 @@ static void vblank(void) {
     performance_vblank();
 }
 
-int AgbMain(void) {
+void AgbMain(void) {
     // enable VBlank interrupt
     interrupt_toggle(IRQ_VBLANK, true);
     interrupt_set_isr(IRQ_VBLANK, vblank);
@@ -72,5 +72,4 @@ int AgbMain(void) {
         interrupt_wait(IRQ_VBLANK);
         draw();
     }
-    return 0;
 }
