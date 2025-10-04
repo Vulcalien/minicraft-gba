@@ -1,4 +1,4 @@
-/* Copyright 2022-2024 Vulcalien
+/* Copyright 2022-2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,37 +25,47 @@
 #include "air-wizard.h"
 
 /*
-Storage Layout (128 KB)
+         Storage Layout
 
-* 1 KB - header and options:
+    +----------------------+ 0 0000
+    |        Header  .5 KB |
+    |----------------------| 0 0200
+    |                      |
+    |        Chests        |
+    |                12 KB |
+    |----------------------| 0 3200
+    |                      |
+    |     Entity Data      |
+    |              17.5 KB |
+    |----------------------| 0 7800
+    |                      |
+    |                      |
+    |                      |
+    |      Tile Data       |
+    |                      |
+    |                      |
+    |             61.25 KB |
+    |----------------------| 1 6d00
+    |                      |
+    |                      |
+    |       Tile IDs       |
+    |                      |
+    |             36.75 KB |
+    +----------------------+ 2 0000
+
+* Header:
       4 B - game code (ZMCE)
+      4 B - checksum
       4 B - random seed
-
-      1 B - keep inventory
-
-   1015 B - padding
-
-* 114 KB - level data:
-    5 times:
-       7056 B - tiles
-      12544 B - data
-       3570 B - entities
-    886 B - padding
-
-* 12 KB - chest inventories:
-    32 times:
-        384 B - chest inventory
-
-* 1 KB - player and other data:
-    384 B - inventory
-      3 B - active item
-
-      1 B - stamina
-      1 B - stamina recharge delay
-      2 B - invulnerable time
 
       4 B - score
       4 B - gametime
+
+    384 B - inventory
+      3 B - active item
+      1 B - stamina
+      1 B - stamina recharge delay
+      2 B - invulnerable time
 
       1 B - current level
       1 B - chest count
@@ -63,94 +73,42 @@ Storage Layout (128 KB)
       1 B - air wizard attack delay
       1 B - air wizard attack time
 
-    617 B - padding
+      1 B - keep inventory option
 
-      4 B - checksum
+     96 B - padding
 */
 
 #define FLASH_ROM ((vu8 *) 0x0e000000)
 
 #define LEVEL_COUNT (sizeof(levels) / sizeof(struct Level))
-#define BYTES_PER_ITEM (3)
-
-static u32 checksum;
-
-static_assert(LEVEL_COUNT == 5, "there should be 5 levels");
-
-static_assert(
-    (LEVEL_W * LEVEL_H) % 16 == 0,
-    "level size should be a multiple of 16"
-);
-
-static_assert(
-    TILE_TYPES * TILE_TYPES < (1 << 9), "two tiles should fit in 9 bits"
-);
-
-// assert level
-static_assert(
-    LEVEL_W * LEVEL_H * 9 / 16 == 7056,
-    "tile storage size per level should be 7056 B"
-);
-
-static_assert(
-    LEVEL_W * LEVEL_H == 12544,
-    "data storage size per level should be 12544 B"
-);
-
-static_assert(
-    sizeof(struct entity_Data) * ENTITY_LIMIT == 3570,
-    "entity storage size per level should be 3570 B"
-);
-
-// assert chests
-static_assert(
-    CHEST_LIMIT * INVENTORY_SIZE * BYTES_PER_ITEM == 12 * 1024,
-    "chest storage size should be 12 KB"
-);
-
-IWRAM_SECTION
-static NO_INLINE u8 read_byte(u16 addr) {
-    return FLASH_ROM[addr];
-}
-
-static inline u16 read_2_bytes(u16 addr) {
-    return read_byte(addr) |
-           read_byte(addr + 1) << 8;
-}
-
-static inline u32 read_4_bytes(u16 addr) {
-    return read_byte(addr) |
-           read_byte(addr + 1) << 8 |
-           read_byte(addr + 2) << 16 |
-           read_byte(addr + 3) << 24;
-}
+#define BYTES_PER_ITEM 3
 
 THUMB
 bool storage_check(void) {
     backup_set_bank(0);
 
     // check if game code (ZMCE) is present
-    bool valid = read_byte(0) == 'Z' &&
-                 read_byte(1) == 'M' &&
-                 read_byte(2) == 'C' &&
-                 read_byte(3) == 'E';
-
-    return valid;
+    return backup_read_byte(0) == 'Z' &&
+           backup_read_byte(1) == 'M' &&
+           backup_read_byte(2) == 'C' &&
+           backup_read_byte(3) == 'E';
 }
 
 THUMB
 bool storage_verify_checksum(void) {
     u32 val = 0;
-
     backup_set_bank(0);
-    for(u32 i = 0; i < 64 * 1024; i++)
-        val += read_byte(i);
+
+    u32 checksum_in_file;
+    backup_read(0x0004, &checksum_in_file, 4);
+
+    for(u32 i = 0x0008; i < 0x10000; i++)
+        val += backup_read_byte(i);
 
     backup_set_bank(1);
-    for(u32 i = 0; i < 64 * 1024 - 4; i++)
-        val += read_byte(i);
+    for(u32 i = 0x0000; i < 0x10000; i++)
+        val += backup_read_byte(i);
 
-    u32 checksum_in_file = read_4_bytes(64 * 1024 - 4);
     return (val == checksum_in_file);
 }
 
@@ -158,286 +116,334 @@ THUMB
 void storage_srand(void) {
     backup_set_bank(0);
 
-    random_seed(read_4_bytes(4));
+    u32 seed;
+    backup_read(0x0008, &seed, 4);
+    random_seed(seed);
 }
 
 THUMB
 void storage_load_options(void) {
-    options.keep_inventory = read_byte(8);
+    backup_set_bank(0);
+    options.keep_inventory = backup_read_byte(0x01a0);
 }
 
-static inline void load_item(u16 addr, struct item_Data *data) {
-    data->type = read_byte(addr);
-    if(data->type >= ITEM_TYPES)
-        return;
+/* ================================================================== */
+/*                            storage_load                            */
+/* ================================================================== */
 
-    u16 val = read_2_bytes(addr + 1);
-    if(item_is_resource(data->type))
-        data->count = val;
-    else if(ITEM_S(data)->class == ITEMCLASS_TOOL)
-        data->tool_level = val;
-    else if(data->type == CHEST_ITEM)
-        data->chest_id = val;
+static INLINE void load_item(u16 offset, struct item_Data *data) {
+    data->type = backup_read_byte(offset);
+    backup_read(offset + 1, &data->count, 2);
 }
 
-static inline void load_inventory(u16 addr, struct Inventory *inventory) {
+THUMB
+static NO_INLINE void load_inventory(u16 offset, struct Inventory *inventory) {
     inventory->size = 0;
 
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
         struct item_Data *item = &inventory->items[i];
-        load_item(addr, item);
+        load_item(offset, item);
         if(item->type >= ITEM_TYPES)
             break;
 
-        addr += BYTES_PER_ITEM;
         inventory->size++;
+        offset += BYTES_PER_ITEM;
     }
 }
 
-void storage_load(void) {
-    u16 addr;
+static INLINE void load_header(void) {
+    u16 offset = 0x000c; // skip game code, checksum and seed
 
-    backup_set_bank(0);
+    backup_read(offset, &score, 4);
+    offset += 4;
 
-    // read levels
-    addr = 1 * 1024;
-    for(u32 l = 0; l < LEVEL_COUNT; l++) {
-        struct Level *level = &levels[l];
+    backup_read(offset, &gametime, 4);
+    offset += 4;
 
-        // read tiles
-        for(u32 t = 0; t < LEVEL_W * LEVEL_H; t += 16) {
-            u8 bytes[9];
+    load_inventory(offset, &player_inventory);
+    offset += INVENTORY_SIZE * BYTES_PER_ITEM;
 
-            for(u32 i = 0; i < sizeof(bytes); i++)
-                bytes[i] = read_byte(addr++);
+    load_item(offset, &player_active_item);
+    offset += BYTES_PER_ITEM;
 
-            for(u32 i = 0; i < 8; i++) {
-                u16 two_tiles = bytes[i]     << (i + 1) |
-                                bytes[i + 1] >> (7 - i);
+    backup_read(offset, &player_stamina, 1);
+    offset += 1;
 
-                two_tiles &= 0x1ff;
+    backup_read(offset, &player_stamina_recharge_delay, 1);
+    offset += 1;
 
-                level->tiles[t + i * 2]     = two_tiles / TILE_TYPES;
-                level->tiles[t + i * 2 + 1] = two_tiles % TILE_TYPES;
+    backup_read(offset, &player_invulnerable_time, 2);
+    offset += 2;
+
+    backup_read(offset, &current_level, 1);
+    offset += 1;
+
+    backup_read(offset, &chest_count, 1);
+    offset += 1;
+
+    backup_read(offset, &air_wizard_attack_delay, 1);
+    offset += 1;
+
+    backup_read(offset, &air_wizard_attack_time, 1);
+    offset += 1;
+
+    // stop here: do not load options again
+}
+
+static INLINE void load_chests(void) {
+    u16 offset = 0x0200;
+    for(u32 i = 0; i < CHEST_LIMIT; i++) {
+        load_inventory(offset, &chest_inventories[i]);
+        offset += INVENTORY_SIZE * BYTES_PER_ITEM;
+    }
+}
+
+static INLINE void load_entities(void) {
+    u16 offset = 0x3200;
+    for(u32 i = 0; i < LEVEL_COUNT; i++) {
+        struct Level *level = &levels[i];
+
+        backup_read(offset, level->entities, sizeof(level->entities));
+        offset += sizeof(level->entities);
+    }
+}
+
+static INLINE void load_tile_data(void) {
+    u16 offset = 0x7800;
+    for(u32 i = 0; i < LEVEL_COUNT; i++) {
+        struct Level *level = &levels[i];
+
+        if(i != 2) {
+            backup_read(offset, level->data, sizeof(level->data));
+        } else {
+            // while reading data for level 2, bank 0 ends
+            backup_read(offset, level->data, 9728);
+            backup_set_bank(1);
+            backup_read(0, level->data + 9728, sizeof(level->data) - 9728);
+        }
+        offset += sizeof(level->data);
+    }
+}
+
+static INLINE void load_tile_ids(void) {
+    u16 offset = 0x6d00;
+    for(u32 i = 0; i < LEVEL_COUNT; i++) {
+        struct Level *level = &levels[i];
+
+        // keep reading (tile, run-length) tuples until all tiles of the
+        // level are filled
+        u32 tile_index = 0;
+        while(tile_index < LEVEL_W * LEVEL_H) {
+            i32 tile = backup_read_byte(offset);
+            i32 run_length = 1 + backup_read_byte(offset + 1);
+            offset += 2;
+
+            while(run_length > 0) {
+                level->tiles[tile_index] = tile;
+                tile_index++;
+                run_length--;
             }
         }
-
-        // read data
-        for(u32 t = 0; t < LEVEL_W * LEVEL_H; t++) {
-            level->data[t] = read_byte(addr++);
-
-            // 64 KB is hit when writing tile data for the third level
-            // causing an overflow: switch bank
-            if(addr == 0)
-                backup_set_bank(1);
-        }
-
-        // read entities
-        for(u32 i = 0; i < ENTITY_LIMIT; i++) {
-            u8 *data = (u8 *) &level->entities[i];
-
-            for(u32 b = 0; b < sizeof(struct entity_Data); b++)
-                data[b] = read_byte(addr++);
-        }
-    }
-
-    // read chest inventories
-    addr = (115 % 64) * 1024;
-    for(u32 i = 0; i < CHEST_LIMIT; i++) {
-        load_inventory(addr, &chest_inventories[i]);
-        addr += INVENTORY_SIZE * BYTES_PER_ITEM;
-    }
-
-    // read player and other data
-    addr = (127 % 64) * 1024;
-    {
-        load_inventory(addr, &player_inventory);
-        addr += INVENTORY_SIZE * BYTES_PER_ITEM;
-
-        load_item(addr, &player_active_item);
-        addr += BYTES_PER_ITEM;
-
-        player_stamina                = read_byte(addr++);
-        player_stamina_recharge_delay = read_byte(addr++);
-
-        player_invulnerable_time = read_2_bytes(addr);
-        addr += 2;
-
-        score = read_4_bytes(addr);
-        addr += 4;
-
-        gametime = read_4_bytes(addr);
-        addr += 4;
-
-        current_level = read_byte(addr++);
-        chest_count = read_byte(addr++);
-
-        air_wizard_attack_delay = read_byte(addr++);
-        air_wizard_attack_time = read_byte(addr++);
     }
 }
 
-IWRAM_SECTION
-static NO_INLINE void write_byte(u16 addr, u8 byte) {
-    checksum += byte;
+THUMB
+void storage_load(void) {
+    backup_set_bank(0);
 
-    FLASH_ROM[0x5555] = 0xaa;
-    FLASH_ROM[0x2aaa] = 0x55;
-    FLASH_ROM[0x5555] = 0xa0;
-
-    FLASH_ROM[addr] = byte;
-
-    while(read_byte(addr) != byte);
+    load_header();
+    load_chests();
+    load_entities();
+    load_tile_data();
+    load_tile_ids();
 }
 
-static inline void write_2_bytes(u16 addr, u16 bytes) {
-    write_byte(addr, bytes);
-    write_byte(addr + 1, bytes >> 8);
+/* ================================================================== */
+/*                            storage_save                            */
+/* ================================================================== */
+
+static u32 checksum;
+
+static INLINE void write_8(u16 offset, u8 val) {
+    checksum += val;
+    backup_write_byte(offset, val);
 }
 
-static inline void write_4_bytes(u16 addr, u32 bytes) {
-    write_byte(addr, bytes);
-    write_byte(addr + 1, bytes >> 8);
-    write_byte(addr + 2, bytes >> 16);
-    write_byte(addr + 3, bytes >> 24);
+static INLINE void write_16(u16 offset, u16 val) {
+    checksum += val & 0xff;
+    checksum += (val >> 8) & 0xff;
+    backup_write(offset, &val, 2);
 }
 
-static inline void write_padding(u16 *addr, u16 dest_address) {
-    while(*addr != dest_address)
-        write_byte((*addr)++, 0);
+static INLINE void write_32(u16 offset, u32 val) {
+    checksum += val & 0xff;
+    checksum += (val >> 8)  & 0xff;
+    checksum += (val >> 16) & 0xff;
+    checksum += (val >> 24) & 0xff;
+    backup_write(offset, &val, 4);
 }
 
-static inline void store_item(u16 addr, struct item_Data *data) {
-    write_byte(addr, data->type);
-
-    u16 val = 0;
-    if(data->type < ITEM_TYPES) {
-        if(item_is_resource(data->type))
-            val = data->count;
-        else if(ITEM_S(data)->class == ITEMCLASS_TOOL)
-            val = data->tool_level;
-        else if(data->type == CHEST_ITEM)
-            val = data->chest_id;
-    }
-
-    write_2_bytes(addr + 1, val);
-
+static INLINE void store_item(u16 offset, struct item_Data *data) {
+    write_8(offset, data->type);
+    write_16(offset + 1, data->count);
 }
 
-static inline void store_inventory(u16 addr, struct Inventory *inventory) {
+THUMB
+static NO_INLINE void store_inventory(u16 offset, struct Inventory *inventory) {
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
         if(i < inventory->size) {
-            store_item(addr, &inventory->items[i]);
+            store_item(offset, &inventory->items[i]);
         } else {
-            write_byte(addr, -1);
-            write_2_bytes(addr + 1, 0);
+            write_8(offset, -1);
+            write_16(offset + 1, 0);
         }
-        addr += BYTES_PER_ITEM;
+        offset += BYTES_PER_ITEM;
     }
 }
 
-void storage_save(void) {
-    checksum = 0;
-    backup_erase_chip();
+static INLINE void store_header(void) {
+    u16 offset = 0x0000;
 
-    u16 addr = 0;
-    backup_set_bank(0);
+    // write game code (without updating checksum)
+    backup_write(offset, "ZMCE", 4);
+    offset += 4;
 
-    // write header and options
-    {
-        // game code - ZMCE
-        write_byte(addr++, 'Z');
-        write_byte(addr++, 'M');
-        write_byte(addr++, 'C');
-        write_byte(addr++, 'E');
+    // skip checksum
+    offset += 4;
 
-        // random seed
-        u32 seed = random(RANDOM_MAX + 1) << 0 |
-                   random(RANDOM_MAX + 1) << 16;
-        write_4_bytes(addr, seed);
-        addr += 4;
+    u32 seed = random(RANDOM_MAX + 1) | random(RANDOM_MAX + 1) << 16;
+    write_32(offset, seed);
+    offset += 4;
 
-        // options
-        write_byte(addr++, options.keep_inventory);
+    write_32(offset, score);
+    offset += 4;
 
-        write_padding(&addr, 1 * 1024);
-    }
+    write_32(offset, gametime);
+    offset += 4;
 
-    // write levels
-    for(u32 l = 0; l < LEVEL_COUNT; l++) {
-        struct Level *level = &levels[l];
+    store_inventory(offset, &player_inventory);
+    offset += INVENTORY_SIZE * BYTES_PER_ITEM;
 
-        // write tiles
-        for(u32 t = 0; t < LEVEL_W * LEVEL_H; t += 16) {
-            u8 bytes[9] = { 0 };
+    store_item(offset, &player_active_item);
+    offset += BYTES_PER_ITEM;
 
-            for(u32 i = 0; i < 8; i++) {
-                u16 two_tiles = level->tiles[t + i * 2] * TILE_TYPES +
-                                level->tiles[t + i * 2 + 1];
+    write_8(offset, player_stamina);
+    offset += 1;
 
-                bytes[i]     |= two_tiles >> (i + 1);
-                bytes[i + 1] |= two_tiles << (7 - i);
-            }
+    write_8(offset, player_stamina_recharge_delay);
+    offset += 1;
 
-            for(u32 i = 0; i < sizeof(bytes); i++)
-                write_byte(addr++, bytes[i]);
-        }
+    write_16(offset, player_invulnerable_time);
+    offset += 2;
 
-        // write data
-        for(u32 t = 0; t < LEVEL_W * LEVEL_H; t++) {
-            write_byte(addr++, level->data[t]);
+    write_8(offset, current_level);
+    offset += 1;
 
-            // 64 KB is hit when writing tile data for the third level
-            // causing an overflow: switch bank
-            if(addr == 0)
-                backup_set_bank(1);
-        }
+    write_8(offset, chest_count);
+    offset += 1;
 
-        // write entities
-        for(u32 i = 0; i < ENTITY_LIMIT; i++) {
-            u8 *data = (u8 *) &level->entities[i];
+    write_8(offset, air_wizard_attack_delay);
+    offset += 1;
 
-            for(u32 b = 0; b < sizeof(struct entity_Data); b++)
-                write_byte(addr++, data[b]);
-        }
-    }
+    write_8(offset, air_wizard_attack_time);
+    offset += 1;
 
-    write_padding(&addr, (115 % 64) * 1024);
+    write_8(offset, options.keep_inventory);
+    offset += 1;
 
-    // write chest inventories
+    // write padding
+    while(offset < 0x0200)
+        write_8(offset++, 0);
+}
+
+static INLINE void store_chests(void) {
+    u16 offset = 0x0200;
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
-        store_inventory(addr, &chest_inventories[i]);
-        addr += INVENTORY_SIZE * BYTES_PER_ITEM;
+        store_inventory(offset, &chest_inventories[i]);
+        offset += INVENTORY_SIZE * BYTES_PER_ITEM;
+    }
+}
+
+static INLINE void store_entities(void) {
+    u16 offset = 0x3200;
+    for(u32 i = 0; i < LEVEL_COUNT; i++) {
+        struct Level *level = &levels[i];
+        u8 *data = (u8 *) level->entities;
+
+        // add all bytes to checksum
+        for(u32 b = 0; b < sizeof(level->entities); b++)
+            checksum += data[b];
+
+        backup_write(offset, data, sizeof(level->entities));
+        offset += sizeof(level->entities);
     }
 
-    // write player and other data
-    {
-        store_inventory(addr, &player_inventory);
-        addr += INVENTORY_SIZE * BYTES_PER_ITEM;
+    // write padding
+    while(offset < 0x7800)
+        write_8(offset++, 0);
+}
 
-        store_item(addr, &player_active_item);
-        addr += BYTES_PER_ITEM;
+static INLINE void store_tile_data(void) {
+    u16 offset = 0x7800;
+    for(u32 i = 0; i < LEVEL_COUNT; i++) {
+        struct Level *level = &levels[i];
 
-        write_byte(addr++, player_stamina);
-        write_byte(addr++, player_stamina_recharge_delay);
+        // add all bytes to checksum
+        for(u32 b = 0; b < sizeof(level->data); b++)
+            checksum += level->data[b];
 
-        write_2_bytes(addr, player_invulnerable_time);
-        addr += 2;
-
-        write_4_bytes(addr, score);
-        addr += 4;
-
-        write_4_bytes(addr, gametime);
-        addr += 4;
-
-        write_byte(addr++, current_level);
-        write_byte(addr++, chest_count);
-
-        write_byte(addr++, air_wizard_attack_delay);
-        write_byte(addr++, air_wizard_attack_time);
-
-        write_padding(&addr, (128 % 64) * 1024 - 4);
-
-        write_4_bytes(addr, checksum);
+        if(i != 2) {
+            backup_write(offset, level->data, sizeof(level->data));
+        } else {
+            // while writing data for level 2, bank 0 ends
+            backup_write(offset, level->data, 9728);
+            backup_set_bank(1);
+            backup_write(0, level->data + 9728, sizeof(level->data) - 9728);
+        }
+        offset += sizeof(level->data);
     }
+}
+
+static INLINE void store_tile_ids(void) {
+    u16 offset = 0x6d00;
+    for(u32 i = 0; i < LEVEL_COUNT; i++) {
+        struct Level *level = &levels[i];
+
+        i32 run_length = 1;
+        for(u32 t = 1; t < LEVEL_W * LEVEL_H + 1; t++) {
+            const i32 previous_tile = level->tiles[t - 1];
+            const i32 current_tile = (
+                t < LEVEL_W * LEVEL_H ? level->tiles[t] : -1
+            );
+
+            if(current_tile != previous_tile || run_length == 256) {
+                write_8(offset++, previous_tile);
+                write_8(offset++, run_length - 1);
+
+                run_length = 1;
+            } else {
+                run_length++;
+            }
+        }
+    }
+
+    // write padding
+    while(offset != 0x0000)
+        write_8(offset++, 0);
+}
+
+THUMB
+void storage_save(void) {
+    backup_set_bank(0);
+    backup_erase_chip();
+    checksum = 0;
+
+    store_header();
+    store_chests();
+    store_entities();
+    store_tile_data();
+    store_tile_ids();
+
+    backup_set_bank(0);
+    backup_write(0x0004, &checksum, 4);
 }
