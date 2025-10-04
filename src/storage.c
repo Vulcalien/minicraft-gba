@@ -108,14 +108,6 @@ static_assert(
     "chest storage size should be 12 KB"
 );
 
-static inline void switch_bank(u32 bank) {
-    FLASH_ROM[0x5555] = 0xaa;
-    FLASH_ROM[0x2aaa] = 0x55;
-    FLASH_ROM[0x5555] = 0xb0;
-
-    FLASH_ROM[0x0000] = bank;
-}
-
 IWRAM_SECTION
 static NO_INLINE u8 read_byte(u16 addr) {
     return FLASH_ROM[addr];
@@ -135,7 +127,7 @@ static inline u32 read_4_bytes(u16 addr) {
 
 THUMB
 bool storage_check(void) {
-    switch_bank(0);
+    backup_set_bank(0);
 
     // check if game code (ZMCE) is present
     bool valid = read_byte(0) == 'Z' &&
@@ -150,11 +142,11 @@ THUMB
 bool storage_verify_checksum(void) {
     u32 val = 0;
 
-    switch_bank(0);
+    backup_set_bank(0);
     for(u32 i = 0; i < 64 * 1024; i++)
         val += read_byte(i);
 
-    switch_bank(1);
+    backup_set_bank(1);
     for(u32 i = 0; i < 64 * 1024 - 4; i++)
         val += read_byte(i);
 
@@ -164,7 +156,7 @@ bool storage_verify_checksum(void) {
 
 THUMB
 void storage_srand(void) {
-    switch_bank(0);
+    backup_set_bank(0);
 
     random_seed(read_4_bytes(4));
 }
@@ -205,7 +197,7 @@ static inline void load_inventory(u16 addr, struct Inventory *inventory) {
 void storage_load(void) {
     u16 addr;
 
-    switch_bank(0);
+    backup_set_bank(0);
 
     // read levels
     addr = 1 * 1024;
@@ -237,7 +229,7 @@ void storage_load(void) {
             // 64 KB is hit when writing tile data for the third level
             // causing an overflow: switch bank
             if(addr == 0)
-                switch_bank(1);
+                backup_set_bank(1);
         }
 
         // read entities
@@ -283,18 +275,6 @@ void storage_load(void) {
         air_wizard_attack_delay = read_byte(addr++);
         air_wizard_attack_time = read_byte(addr++);
     }
-}
-
-static inline void erase_chip(void) {
-    FLASH_ROM[0x5555] = 0xaa;
-    FLASH_ROM[0x2aaa] = 0x55;
-    FLASH_ROM[0x5555] = 0x80;
-
-    FLASH_ROM[0x5555] = 0xaa;
-    FLASH_ROM[0x2aaa] = 0x55;
-    FLASH_ROM[0x5555] = 0x10;
-
-    while(read_byte(0x0000) != 0xff);
 }
 
 IWRAM_SECTION
@@ -358,10 +338,10 @@ static inline void store_inventory(u16 addr, struct Inventory *inventory) {
 
 void storage_save(void) {
     checksum = 0;
-    erase_chip();
+    backup_erase_chip();
 
     u16 addr = 0;
-    switch_bank(0);
+    backup_set_bank(0);
 
     // write header and options
     {
@@ -410,7 +390,7 @@ void storage_save(void) {
             // 64 KB is hit when writing tile data for the third level
             // causing an overflow: switch bank
             if(addr == 0)
-                switch_bank(1);
+                backup_set_bank(1);
         }
 
         // write entities
