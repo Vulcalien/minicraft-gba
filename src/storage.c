@@ -131,13 +131,13 @@ void storage_load_options(void) {
 /*                            storage_load                            */
 /* ================================================================== */
 
-static INLINE void load_item(u16 offset, struct item_Data *data) {
+static INLINE void load_item(u32 offset, struct item_Data *data) {
     data->type = backup_read_byte(offset);
     backup_read(offset + 1, &data->count, 2);
 }
 
 THUMB
-static NO_INLINE void load_inventory(u16 offset, struct Inventory *inventory) {
+static NO_INLINE void load_inventory(u32 offset, struct Inventory *inventory) {
     inventory->size = 0;
 
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
@@ -152,7 +152,7 @@ static NO_INLINE void load_inventory(u16 offset, struct Inventory *inventory) {
 }
 
 static INLINE void load_header(void) {
-    u16 offset = 0x000c; // skip game code, checksum and seed
+    u32 offset = 0x000c; // skip game code, checksum and seed
 
     backup_read(offset, &score, 4);
     offset += 4;
@@ -191,7 +191,7 @@ static INLINE void load_header(void) {
 }
 
 static INLINE void load_chests(void) {
-    u16 offset = 0x0200;
+    u32 offset = 0x0200;
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
         load_inventory(offset, &chest_inventories[i]);
         offset += INVENTORY_SIZE * BYTES_PER_ITEM;
@@ -199,7 +199,7 @@ static INLINE void load_chests(void) {
 }
 
 static INLINE void load_entities(void) {
-    u16 offset = 0x3200;
+    u32 offset = 0x3200;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
@@ -209,7 +209,7 @@ static INLINE void load_entities(void) {
 }
 
 static INLINE void load_tile_data(void) {
-    u16 offset = 0x7800;
+    u32 offset = 0x7800;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
@@ -226,7 +226,7 @@ static INLINE void load_tile_data(void) {
 }
 
 static INLINE void load_tile_ids(void) {
-    u16 offset = 0x6d00;
+    u32 offset = 0x6d00;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
@@ -264,18 +264,18 @@ void storage_load(void) {
 
 static u32 checksum;
 
-static INLINE void write_8(u16 offset, u8 val) {
+static INLINE void write_8(u32 offset, u8 val) {
     checksum += val;
     backup_write_byte(offset, val);
 }
 
-static INLINE void write_16(u16 offset, u16 val) {
+static INLINE void write_16(u32 offset, u16 val) {
     checksum += val & 0xff;
     checksum += (val >> 8) & 0xff;
     backup_write(offset, &val, 2);
 }
 
-static INLINE void write_32(u16 offset, u32 val) {
+static INLINE void write_32(u32 offset, u32 val) {
     checksum += val & 0xff;
     checksum += (val >> 8)  & 0xff;
     checksum += (val >> 16) & 0xff;
@@ -283,13 +283,13 @@ static INLINE void write_32(u16 offset, u32 val) {
     backup_write(offset, &val, 4);
 }
 
-static INLINE void store_item(u16 offset, struct item_Data *data) {
+static INLINE void store_item(u32 offset, struct item_Data *data) {
     write_8(offset, data->type);
     write_16(offset + 1, data->count);
 }
 
 THUMB
-static NO_INLINE void store_inventory(u16 offset, struct Inventory *inventory) {
+static NO_INLINE void store_inventory(u32 offset, struct Inventory *inventory) {
     for(u32 i = 0; i < INVENTORY_SIZE; i++) {
         if(i < inventory->size) {
             store_item(offset, &inventory->items[i]);
@@ -302,7 +302,7 @@ static NO_INLINE void store_inventory(u16 offset, struct Inventory *inventory) {
 }
 
 static INLINE void store_header(void) {
-    u16 offset = 0x0000;
+    u32 offset = 0x0000;
 
     // write game code (without updating checksum)
     backup_write(offset, "ZMCE", 4);
@@ -357,7 +357,7 @@ static INLINE void store_header(void) {
 }
 
 static INLINE void store_chests(void) {
-    u16 offset = 0x0200;
+    u32 offset = 0x0200;
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
         store_inventory(offset, &chest_inventories[i]);
         offset += INVENTORY_SIZE * BYTES_PER_ITEM;
@@ -365,7 +365,7 @@ static INLINE void store_chests(void) {
 }
 
 static INLINE void store_entities(void) {
-    u16 offset = 0x3200;
+    u32 offset = 0x3200;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
         u8 *data = (u8 *) level->entities;
@@ -384,7 +384,7 @@ static INLINE void store_entities(void) {
 }
 
 static INLINE void store_tile_data(void) {
-    u16 offset = 0x7800;
+    u32 offset = 0x7800;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
@@ -405,7 +405,7 @@ static INLINE void store_tile_data(void) {
 }
 
 static INLINE void store_tile_ids(void) {
-    u16 offset = 0x6d00;
+    u32 offset = 0x6d00;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
@@ -428,7 +428,7 @@ static INLINE void store_tile_ids(void) {
     }
 
     // write padding
-    while(offset != 0x0000)
+    while(offset < 0x10000)
         write_8(offset++, 0);
 }
 
