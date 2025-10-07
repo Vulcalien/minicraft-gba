@@ -230,16 +230,23 @@ static INLINE void load_tile_ids(void) {
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
-        // keep reading (tile, run-length) tuples until all tiles of the
-        // level are filled
+        // read tiles as (tile, run-length) tuples
         u32 tile_index = 0;
         while(tile_index < LEVEL_SIZE) {
             i32 tile = backup_read_byte(offset);
             i32 run_length = 1 + backup_read_byte(offset + 1);
             offset += 2;
 
-            while(run_length > 0) {
-                level->tiles[tile_index] = tile;
+            // if out of memory, don't try to read any more data
+            if(offset == 0x10000)
+                return;
+
+            // set (run-length) tiles, unless index goes out of bounds
+            while(run_length > 0 && tile_index < LEVEL_SIZE) {
+                // if tile type is valid, set level tile
+                if(tile < TILE_TYPES)
+                    level->tiles[tile_index] = tile;
+
                 tile_index++;
                 run_length--;
             }
@@ -409,6 +416,7 @@ static INLINE void store_tile_ids(void) {
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
+        // store tiles as (type, run-length) tuples
         i32 run_length = 1;
         for(u32 t = 1; t < LEVEL_SIZE + 1; t++) {
             const i32 previous_tile = level->tiles[t - 1];
@@ -416,9 +424,15 @@ static INLINE void store_tile_ids(void) {
                 t < LEVEL_SIZE ? level->tiles[t] : -1
             );
 
+            // if tile type has changed, or maximum run-length has been
+            // reached, write a (type, run-length) tuple
             if(current_tile != previous_tile || run_length == 256) {
                 write_8(offset++, previous_tile);
                 write_8(offset++, run_length - 1);
+
+                // if out of memory, don't try to write any more data
+                if(offset == 0x10000)
+                    return;
 
                 run_length = 1;
             } else {
