@@ -29,7 +29,7 @@ SBSS_SECTION
 struct Level levels[5];
 
 SBSS_SECTION
-u8 level_solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
+u8 level_solid_entities[LEVEL_SIZE][SOLID_ENTITIES_IN_TILE];
 
 u32 level_x_offset = 0;
 u32 level_y_offset = 0;
@@ -59,7 +59,7 @@ static inline void insert_solid_entity(u8 xt, u8 yt,
 }
 
 void level_load(struct Level *level) {
-    for(u32 t = 0; t < LEVEL_W * LEVEL_H; t++)
+    for(u32 t = 0; t < LEVEL_SIZE; t++)
         for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++)
             level_solid_entities[t][i] = -1;
 
@@ -72,7 +72,7 @@ void level_load(struct Level *level) {
 }
 
 static inline void tick_tiles(struct Level *level) {
-    for(u32 i = 0; i < LEVEL_W * LEVEL_H / 50; i++) {
+    for(u32 i = 0; i < LEVEL_SIZE / 50; i++) {
         u32 xt = random(LEVEL_W);
         u32 yt = random(LEVEL_H);
 

@@ -18,8 +18,9 @@
 
 #include "minicraft.h"
 
-#define LEVEL_W (112)
-#define LEVEL_H (112)
+#define LEVEL_W 112
+#define LEVEL_H 112
+#define LEVEL_SIZE (LEVEL_W * LEVEL_H)
 
 #define DESPAWN_DISTANCE ((32 * 16) * (32 * 16))
 
@@ -40,8 +41,8 @@ struct entity_Data {
 static_assert(sizeof(struct entity_Data) == 14, "struct entity_Data: wrong size");
 
 struct Level {
-    u8 tiles[LEVEL_W * LEVEL_H];
-    u8  data[LEVEL_W * LEVEL_H];
+    u8 tiles[LEVEL_SIZE];
+    u8  data[LEVEL_SIZE];
 
     struct entity_Data entities[ENTITY_LIMIT];
 };
@@ -49,7 +50,7 @@ struct Level {
 extern struct Level levels[5];
 
 #define SOLID_ENTITIES_IN_TILE (8)
-extern u8 level_solid_entities[LEVEL_W * LEVEL_H][SOLID_ENTITIES_IN_TILE];
+extern u8 level_solid_entities[LEVEL_SIZE][SOLID_ENTITIES_IN_TILE];
 
 extern u32 level_x_offset;
 extern u32 level_y_offset;

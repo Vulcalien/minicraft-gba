@@ -233,7 +233,7 @@ static INLINE void load_tile_ids(void) {
         // keep reading (tile, run-length) tuples until all tiles of the
         // level are filled
         u32 tile_index = 0;
-        while(tile_index < LEVEL_W * LEVEL_H) {
+        while(tile_index < LEVEL_SIZE) {
             i32 tile = backup_read_byte(offset);
             i32 run_length = 1 + backup_read_byte(offset + 1);
             offset += 2;
@@ -410,10 +410,10 @@ static INLINE void store_tile_ids(void) {
         struct Level *level = &levels[i];
 
         i32 run_length = 1;
-        for(u32 t = 1; t < LEVEL_W * LEVEL_H + 1; t++) {
+        for(u32 t = 1; t < LEVEL_SIZE + 1; t++) {
             const i32 previous_tile = level->tiles[t - 1];
             const i32 current_tile = (
-                t < LEVEL_W * LEVEL_H ? level->tiles[t] : -1
+                t < LEVEL_SIZE ? level->tiles[t] : -1
             );
 
             if(current_tile != previous_tile || run_length == 256) {
