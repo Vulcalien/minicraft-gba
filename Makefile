@@ -26,12 +26,12 @@ CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
 
 ASFLAGS := -mcpu=arm7tdmi
 
-LDFLAGS := -nostartfiles -Tlib/libsimplegba/lnkscript
+LDFLAGS := -nostartfiles -Wl,--print-memory-usage
 LDLIBS  :=
 
 # libsimplegba
 CPPFLAGS += -Ilib/libsimplegba/include
-LDFLAGS  += -Llib/libsimplegba/bin
+LDFLAGS  += -Llib/libsimplegba/bin -Tlib/libsimplegba/lnkscript
 LDLIBS   += -lsimplegba
 
 ifeq ($(CURRENT_OS),UNIX)
