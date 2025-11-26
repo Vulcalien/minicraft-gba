@@ -133,6 +133,7 @@ const struct Entity slime_entity = {
     .yr = 3,
 
     .is_solid = true,
+    .hurt_by_tiles = true,
     .touch_player = slime_touch_player
 };
 

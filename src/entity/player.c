@@ -608,7 +608,8 @@ const struct Entity player_entity = {
     .xr = 4,
     .yr = 3,
 
-    .is_solid = true
+    .is_solid = true,
+    .hurt_by_tiles = true
 };
 
 THUMB

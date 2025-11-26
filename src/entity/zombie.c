@@ -139,6 +139,7 @@ const struct Entity zombie_entity = {
     .yr = 3,
 
     .is_solid = true,
+    .hurt_by_tiles = true,
     .touch_player = zombie_touch_player
 };
 

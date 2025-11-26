@@ -65,6 +65,7 @@ struct Entity {
     u8 yr;
 
     bool is_solid;
+    bool hurt_by_tiles;
     void (*touch_player)(struct Level *level, struct entity_Data *data,
                          struct entity_Data *player);
 };
