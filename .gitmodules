@@ -2,5 +2,5 @@
 	path = lib/libsimplegba
 	url = https://github.com/Vulcalien/libsimplegba.git
 [submodule "res2gba"]
-	path = tools/external/res2gba
+	path = tools/res2gba
 	url = https://github.com/Vulcalien/res2gba.git
