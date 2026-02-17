@@ -81,7 +81,7 @@
 
 THUMB
 bool storage_check(void) {
-    backup_set_bank(0);
+    backup_bank(0);
 
     // check if game code (ZMCE) is present
     return backup_read_byte(0) == 'Z' &&
@@ -93,7 +93,7 @@ bool storage_check(void) {
 THUMB
 bool storage_verify_checksum(void) {
     u32 val = 0;
-    backup_set_bank(0);
+    backup_bank(0);
 
     u32 checksum_in_file;
     backup_read(0x00004, &checksum_in_file, 4);
@@ -101,7 +101,7 @@ bool storage_verify_checksum(void) {
     for(u32 i = 0x00008; i < 0x10000; i++)
         val += backup_read_byte(i);
 
-    backup_set_bank(1);
+    backup_bank(1);
     for(u32 i = 0x00000; i < 0x10000; i++)
         val += backup_read_byte(i);
 
@@ -110,7 +110,7 @@ bool storage_verify_checksum(void) {
 
 THUMB
 void storage_srand(void) {
-    backup_set_bank(0);
+    backup_bank(0);
 
     u32 seed;
     backup_read(0x00008, &seed, 4);
@@ -119,7 +119,7 @@ void storage_srand(void) {
 
 THUMB
 void storage_load_options(void) {
-    backup_set_bank(0);
+    backup_bank(0);
     options.keep_inventory = backup_read_byte(0x001a0);
 }
 
@@ -210,7 +210,7 @@ static INLINE u32 read_RLE_tuple(u32 offset, i32 *val, i32 *run_length) {
 
     // if offset is 64KB, switch to memory bank 1
     if(offset == 0x10000)
-        backup_set_bank(1);
+        backup_bank(1);
 
     return offset;
 }
@@ -256,7 +256,7 @@ static INLINE void load_tiles(void) {
 
 THUMB
 void storage_load(void) {
-    backup_set_bank(0);
+    backup_bank(0);
 
     load_header();
     load_chests();
@@ -394,7 +394,7 @@ static INLINE u32 write_RLE_tuple(u32 offset, i32 val, i32 run_length) {
 
     // if offset is 64KB, switch to memory bank 1
     if(offset == 0x10000)
-        backup_set_bank(1);
+        backup_bank(1);
 
     return offset;
 }
@@ -449,7 +449,7 @@ static INLINE void store_tiles(void) {
 
 THUMB
 void storage_save(void) {
-    backup_set_bank(0);
+    backup_bank(0);
     backup_erase_chip();
     checksum = 0;
 
@@ -458,6 +458,6 @@ void storage_save(void) {
     store_entities();
     store_tiles();
 
-    backup_set_bank(0);
+    backup_bank(0);
     backup_write(0x00004, &checksum, 4);
 }
