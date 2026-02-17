@@ -20,7 +20,7 @@
 
 #include "item.h"
 
-#define INVENTORY_SIZE (128)
+#define INVENTORY_SIZE 96
 
 struct Inventory {
     u8 size;

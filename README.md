@@ -20,7 +20,7 @@ To improve the gameplay experience, I also added these features:
 | World size     | 128x128  | 112x112    |
 | Entity limit   | ∞        | 255        |
 | Chest limit    | ∞        | 32         |
-| Inventory size | ∞        | 128        |
+| Inventory size | ∞        | 96         |
 
 ### Game Light
 The light system is completely different, both visually and in how it

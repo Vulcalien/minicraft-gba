@@ -1,4 +1,4 @@
-/* Copyright 2022-2025 Vulcalien
+/* Copyright 2022-2026 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,12 +32,12 @@
     |----------------------| 0 0200
     |                      |
     |        Chests        |
-    |                12 KB |
-    |----------------------| 0 3200
+    |                 9 KB |
+    |----------------------| 0 2600
     |                      |
     |     Entity Data      |
     |              17.5 KB |
-    |----------------------| 0 7800
+    |----------------------| 0 6c00
     |                      |
     |                      |
     |      Tile Types      |
@@ -48,7 +48,7 @@
     |                      |
     |      Tile Data       |
     |                      |
-    |                98 KB |
+    |               101 KB |
     +----------------------+ 2 0000
 
 * Header:
@@ -59,7 +59,7 @@
       4 B - score
       4 B - gametime
 
-    384 B - inventory
+    288 B - inventory
       3 B - active item
       1 B - stamina
       1 B - stamina recharge delay
@@ -73,7 +73,7 @@
 
       1 B - keep inventory option
 
-     96 B - padding
+    192 B - padding
 */
 
 #define LEVEL_COUNT (sizeof(levels) / sizeof(struct Level))
@@ -195,7 +195,7 @@ static INLINE void load_chests(void) {
 }
 
 static INLINE void load_entities(void) {
-    u32 offset = 0x03200;
+    u32 offset = 0x02600;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
@@ -239,7 +239,7 @@ static NO_INLINE u32 read_array_RLE(u8 *array, u32 size, u32 offset) {
 }
 
 static INLINE void load_tiles(void) {
-    u32 offset = 0x07800;
+    u32 offset = 0x06c00;
 
     // load tile types
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
@@ -370,7 +370,7 @@ static INLINE void store_chests(void) {
 }
 
 static INLINE void store_entities(void) {
-    u32 offset = 0x03200;
+    u32 offset = 0x02600;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
         u8 *data = (u8 *) level->entities;
@@ -384,7 +384,7 @@ static INLINE void store_entities(void) {
     }
 
     // adjust checksum to consider padding
-    checksum += 0xff * (0x07800 - offset);
+    checksum += 0xff * (0x06c00 - offset);
 }
 
 static INLINE u32 write_RLE_tuple(u32 offset, i32 val, i32 run_length) {
@@ -429,7 +429,7 @@ static NO_INLINE u32 write_array_RLE(u8 *array, u32 size, u32 offset) {
 }
 
 static INLINE void store_tiles(void) {
-    u32 offset = 0x07800;
+    u32 offset = 0x06c00;
 
     // store tile types
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
