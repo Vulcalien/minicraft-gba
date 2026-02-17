@@ -51,7 +51,7 @@ static void prestart_draw(void) {
         "MADE BY MARKUS PERSSON.\n"
         "\n"
         "\n"
-        "COPYRIGHT 2025 VULCALIEN\n"
+        "COPYRIGHT 2026 VULCALIEN\n"
         "\n"
         "THIS IS FREE SOFTWARE\n"
         "RELEASED UNDER THE\n"
