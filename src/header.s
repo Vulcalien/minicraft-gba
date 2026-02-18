@@ -60,6 +60,6 @@ _start:
     @@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @ Cart Backup ID
-        .ascii  "FLASH1M_Vnnn"
+        .ascii  "FLASH512_Vnnn"
 
 .end

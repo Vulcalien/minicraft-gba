@@ -35,9 +35,6 @@ because the GBA is very good at handling them. That gives light a
 Download or build the ROM (`.gba` extension). Then open it with your GBA
 emulator of choice. If you don't have one, I highly recommend mGBA.
 
-If you have any trouble with the save files, try to manually set the
-save format to `128 KB Flash ROM`.
-
 ### Performance Overlay
 By holding the `L` and `R` buttons down and then pressing `Select`, the
 performance overlay is enabled.\

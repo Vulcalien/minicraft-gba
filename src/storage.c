@@ -27,17 +27,17 @@
 /*
          Storage Layout
 
-    +----------------------+ 0 0000
+    +----------------------+ 0000
     |        Header  .5 KB |
-    |----------------------| 0 0200
+    |----------------------| 0200
     |                      |
     |        Chests        |
     |                 9 KB |
-    |----------------------| 0 2600
+    |----------------------| 2600
     |                      |
     |     Entity Data      |
     |              17.5 KB |
-    |----------------------| 0 6c00
+    |----------------------| 6c00
     |                      |
     |                      |
     |      Tile Types      |
@@ -48,8 +48,8 @@
     |                      |
     |      Tile Data       |
     |                      |
-    |               101 KB |
-    +----------------------+ 2 0000
+    |                37 KB |
+    +----------------------+ 1 0000
 
 * Header:
       4 B - game code (ZMCE)
@@ -81,7 +81,8 @@
 
 THUMB
 bool storage_check(void) {
-    backup_bank(0);
+    if(backup_identify() == 0)
+        return false;
 
     // check if game code (ZMCE) is present
     return backup_read_byte(0) == 'Z' &&
@@ -93,16 +94,11 @@ bool storage_check(void) {
 THUMB
 bool storage_verify_checksum(void) {
     u32 val = 0;
-    backup_bank(0);
 
     u32 checksum_in_file;
-    backup_read(0x00004, &checksum_in_file, 4);
+    backup_read(0x0004, &checksum_in_file, 4);
 
-    for(u32 i = 0x00008; i < 0x10000; i++)
-        val += backup_read_byte(i);
-
-    backup_bank(1);
-    for(u32 i = 0x00000; i < 0x10000; i++)
+    for(u32 i = 0x0008; i < 0x10000; i++)
         val += backup_read_byte(i);
 
     return (val == checksum_in_file);
@@ -110,16 +106,13 @@ bool storage_verify_checksum(void) {
 
 THUMB
 void storage_srand(void) {
-    backup_bank(0);
-
     u32 seed;
-    backup_read(0x00008, &seed, 4);
+    backup_read(0x0008, &seed, 4);
     random_seed(seed);
 }
 
 THUMB
 void storage_load_options(void) {
-    backup_bank(0);
     options.keep_inventory = backup_read_byte(0x001a0);
 }
 
@@ -187,7 +180,7 @@ static INLINE void load_header(void) {
 }
 
 static INLINE void load_chests(void) {
-    u32 offset = 0x00200;
+    u32 offset = 0x0200;
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
         load_inventory(offset, &chest_inventories[i]);
         offset += INVENTORY_SIZE * BYTES_PER_ITEM;
@@ -195,7 +188,7 @@ static INLINE void load_chests(void) {
 }
 
 static INLINE void load_entities(void) {
-    u32 offset = 0x02600;
+    u32 offset = 0x2600;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
@@ -207,18 +200,13 @@ static INLINE void load_entities(void) {
 static INLINE u32 read_RLE_tuple(u32 offset, i32 *val, i32 *run_length) {
     *val = backup_read_byte(offset++);
     *run_length = 1 + backup_read_byte(offset++);
-
-    // if offset is 64KB, switch to memory bank 1
-    if(offset == 0x10000)
-        backup_bank(1);
-
     return offset;
 }
 
 THUMB
 static NO_INLINE u32 read_array_RLE(u8 *array, u32 size, u32 offset) {
     // if out of memory, do nothing
-    if(offset >= 0x20000)
+    if(offset >= 0x10000)
         return offset;
 
     u32 index = 0;
@@ -232,7 +220,7 @@ static NO_INLINE u32 read_array_RLE(u8 *array, u32 size, u32 offset) {
         }
 
         // if out of memory, stop reading tuples
-        if(offset >= 0x20000)
+        if(offset >= 0x10000)
             return offset;
     }
     return offset;
@@ -256,8 +244,6 @@ static INLINE void load_tiles(void) {
 
 THUMB
 void storage_load(void) {
-    backup_bank(0);
-
     load_header();
     load_chests();
     load_entities();
@@ -308,7 +294,7 @@ static NO_INLINE void store_inventory(u32 offset, struct Inventory *inventory) {
 }
 
 static INLINE void store_header(void) {
-    u32 offset = 0x00000;
+    u32 offset = 0x0000;
 
     // write game code (without updating checksum)
     backup_write(offset, "ZMCE", 4);
@@ -358,11 +344,11 @@ static INLINE void store_header(void) {
     offset += 1;
 
     // adjust checksum to consider padding
-    checksum += 0xff * (0x00200 - offset);
+    checksum += 0xff * (0x0200 - offset);
 }
 
 static INLINE void store_chests(void) {
-    u32 offset = 0x00200;
+    u32 offset = 0x0200;
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
         store_inventory(offset, &chest_inventories[i]);
         offset += INVENTORY_SIZE * BYTES_PER_ITEM;
@@ -370,7 +356,7 @@ static INLINE void store_chests(void) {
 }
 
 static INLINE void store_entities(void) {
-    u32 offset = 0x02600;
+    u32 offset = 0x2600;
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
         u8 *data = (u8 *) level->entities;
@@ -390,19 +376,13 @@ static INLINE void store_entities(void) {
 static INLINE u32 write_RLE_tuple(u32 offset, i32 val, i32 run_length) {
     const u16 tuple = val | (run_length - 1) << 8;
     write_16(offset, tuple);
-    offset += 2;
-
-    // if offset is 64KB, switch to memory bank 1
-    if(offset == 0x10000)
-        backup_bank(1);
-
-    return offset;
+    return offset + 2;
 }
 
 THUMB
 static NO_INLINE u32 write_array_RLE(u8 *array, u32 size, u32 offset) {
     // if out of memory, do nothing
-    if(offset >= 0x20000)
+    if(offset >= 0x10000)
         return offset;
 
     i32 run_length = 1;
@@ -415,7 +395,7 @@ static NO_INLINE u32 write_array_RLE(u8 *array, u32 size, u32 offset) {
             offset = write_RLE_tuple(offset, previous, run_length);
 
             // if out of memory, stop writing tuples
-            if(offset >= 0x20000)
+            if(offset >= 0x10000)
                 return offset;
 
             run_length = 1;
@@ -444,12 +424,11 @@ static INLINE void store_tiles(void) {
     }
 
     // adjust checksum to consider padding
-    checksum += 0xff * (0x20000 - offset);
+    checksum += 0xff * (0x10000 - offset);
 }
 
 THUMB
 void storage_save(void) {
-    backup_bank(0);
     backup_erase_chip();
     checksum = 0;
 
@@ -458,6 +437,5 @@ void storage_save(void) {
     store_entities();
     store_tiles();
 
-    backup_bank(0);
-    backup_write(0x00004, &checksum, 4);
+    backup_write(0x0004, &checksum, 4);
 }
