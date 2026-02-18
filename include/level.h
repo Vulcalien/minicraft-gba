@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_LEVEL
 #define MINICRAFT_LEVEL
 
-#include "minicraft.h"
+#include "main.h"
 
 #define LEVEL_W 112
 #define LEVEL_H 112

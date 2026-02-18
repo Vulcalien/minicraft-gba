@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_UTIL
 #define MINICRAFT_UTIL
 
-#include "minicraft.h"
+#include "main.h"
 
 INLINE void itoa(u32 number, u8 radix, char *array, u8 digits, bool zero_fill) {
     u32 pos = 0;

@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_PLAYER
 #define MINICRAFT_PLAYER
 
-#include "minicraft.h"
+#include "main.h"
 
 #include "inventory.h"
 #include "item.h"

@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_MOB
 #define MINICRAFT_MOB
 
-#include "minicraft.h"
+#include "main.h"
 
 #include "level.h"
 #include "entity.h"

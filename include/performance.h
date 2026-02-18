@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_PERFORMANCE
 #define MINICRAFT_PERFORMANCE
 
-#include "minicraft.h"
+#include "main.h"
 
 extern void performance_tick(void);
 extern void performance_draw(void);

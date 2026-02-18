@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_OPTIONS
 #define MINICRAFT_OPTIONS
 
-#include "minicraft.h"
+#include "main.h"
 
 struct Options {
     bool keep_inventory;

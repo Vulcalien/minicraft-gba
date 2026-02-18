@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_STORAGE
 #define MINICRAFT_STORAGE
 
-#include "minicraft.h"
+#include "main.h"
 
 extern bool storage_check(void);
 extern bool storage_verify_checksum(void);

@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_ENTITIES
 #define MINICRAFT_ENTITIES
 
-#include "minicraft.h"
+#include "main.h"
 
 #include "level.h"
 #include "item.h"

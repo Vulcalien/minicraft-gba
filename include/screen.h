@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_SCREEN
 #define MINICRAFT_SCREEN
 
-#include "minicraft.h"
+#include "main.h"
 
 #define BG0_TILEMAP display_screenblock(16)
 #define BG1_TILEMAP display_screenblock(17)

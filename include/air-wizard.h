@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_AIR_WIZARD
 #define MINICRAFT_AIR_WIZARD
 
-#include "minicraft.h"
+#include "main.h"
 
 extern u8 air_wizard_attack_delay;
 extern u8 air_wizard_attack_time;

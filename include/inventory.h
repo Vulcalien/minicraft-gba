@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_INVENTORY
 #define MINICRAFT_INVENTORY
 
-#include "minicraft.h"
+#include "main.h"
 
 #include "item.h"
 

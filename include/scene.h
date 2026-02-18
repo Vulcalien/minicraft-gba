@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_SCENE
 #define MINICRAFT_SCENE
 
-#include "minicraft.h"
+#include "main.h"
 
 struct Scene {
     void (*init)(u8 flags);

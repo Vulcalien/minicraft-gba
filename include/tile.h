@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_TILE
 #define MINICRAFT_TILE
 
-#include "minicraft.h"
+#include "main.h"
 
 #include "level.h"
 #include "item.h"

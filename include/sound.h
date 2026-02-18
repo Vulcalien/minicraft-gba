@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_SOUND
 #define MINICRAFT_SOUND
 
-#include "minicraft.h"
+#include "main.h"
 
 extern u8 _sound_channel;
 

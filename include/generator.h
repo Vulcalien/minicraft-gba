@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_GENERATOR
 #define MINICRAFT_GENERATOR
 
-#include "minicraft.h"
+#include "main.h"
 
 extern void generate_levels(void);
 

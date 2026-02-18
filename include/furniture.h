@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_FURNITURE
 #define MINICRAFT_FURNITURE
 
-#include "minicraft.h"
+#include "main.h"
 
 #include "level.h"
 #include "inventory.h"

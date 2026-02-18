@@ -16,7 +16,7 @@
 #ifndef MINICRAFT_ITEM
 #define MINICRAFT_ITEM
 
-#include "minicraft.h"
+#include "main.h"
 
 #define ITEM_TYPES (33)
 
