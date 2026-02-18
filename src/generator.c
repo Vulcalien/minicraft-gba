@@ -75,10 +75,7 @@ static NO_INLINE i8 *noise(i8 *values, u32 feature_size) {
     return values;
 }
 
-static inline u32 abs(i32 val) {
-    u32 mask = val >> 31;
-    return (val ^ mask) + (mask & 1);
-}
+#define abs math_abs
 
 static inline bool generate_underground(u32 lvl) {
     struct Level *level = &levels[lvl];
