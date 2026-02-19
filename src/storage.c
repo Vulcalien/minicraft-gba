@@ -85,8 +85,7 @@
 
 THUMB
 bool storage_check(void) {
-    if(backup_identify() == 0)
-        return false;
+    backup_identify();
 
     // check if game code (ZMCE) is present
     return backup_read_byte(0) == 'Z' &&
