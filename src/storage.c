@@ -18,6 +18,7 @@
 #include "options.h"
 #include "level.h"
 #include "tile.h"
+#include "entity.h"
 #include "furniture.h"
 #include "inventory.h"
 #include "item.h"
@@ -78,6 +79,7 @@
 
 #define LEVEL_COUNT (sizeof(levels) / sizeof(struct Level))
 #define BYTES_PER_ITEM 3
+#define BYTES_PER_ENTITY (sizeof(struct entity_Data))
 
 THUMB
 bool storage_check(void) {
@@ -187,13 +189,31 @@ static INLINE void load_chests(void) {
     }
 }
 
+static INLINE void load_entity(u32 offset, struct entity_Data *data) {
+    backup_read(offset, data, BYTES_PER_ENTITY);
+}
+
 static INLINE void load_entities(void) {
     u32 offset = 0x2600;
+
+    // load player
+    load_entity(offset, &levels[current_level].entities[0]);
+    offset += BYTES_PER_ENTITY;
+
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
 
-        backup_read(offset, level->entities, sizeof(level->entities));
-        offset += sizeof(level->entities);
+        // read entity count and load that many entities
+        u32 count = backup_read_byte(offset++);
+        for(u32 e = 1; e < 1 + count; e++) {
+            struct entity_Data *data = &level->entities[e];
+            load_entity(offset, data);
+            offset += BYTES_PER_ENTITY;
+        }
+
+        // invalidate remaining entity slots
+        for(u32 e = 1 + count; e < ENTITY_LIMIT; e++)
+            level->entities[e].type = -1;
     }
 }
 
@@ -355,18 +375,40 @@ static INLINE void store_chests(void) {
     }
 }
 
+static INLINE void store_entity(u32 offset, struct entity_Data *data) {
+    // add all bytes to checksum
+    for(u32 i = 0; i < BYTES_PER_ENTITY; i++)
+        checksum += ((u8 *) data)[i];
+
+    backup_write(offset, data, BYTES_PER_ENTITY);
+}
+
 static INLINE void store_entities(void) {
     u32 offset = 0x2600;
+
+    // store player
+    store_entity(offset, &levels[current_level].entities[0]);
+    offset += BYTES_PER_ENTITY;
+
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
-        u8 *data = (u8 *) level->entities;
 
-        // add all bytes to checksum
-        for(u32 b = 0; b < sizeof(level->entities); b++)
-            checksum += data[b];
+        // reserve one byte for entity count
+        offset++;
 
-        backup_write(offset, data, sizeof(level->entities));
-        offset += sizeof(level->entities);
+        u32 count = 0;
+        for(u32 e = 1; e < ENTITY_LIMIT; e++) {
+            struct entity_Data *data = &level->entities[e];
+            if(data->type >= ENTITY_TYPES)
+                continue;
+
+            store_entity(offset, data);
+            offset += BYTES_PER_ENTITY;
+            count++;
+        }
+
+        // store entity count
+        write_8(offset - count * BYTES_PER_ENTITY - 1, count);
     }
 
     // adjust checksum to consider padding
