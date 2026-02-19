@@ -29,8 +29,12 @@
          Storage Layout
 
     +----------------------+ 0000
-    |        Header  .5 KB |
-    |----------------------| 0200
+    |        Header        |
+    |----------------------| 0040
+    |                      |
+    |  Player's inventory  |
+    |                      |
+    | -  -  -  -  -  -  -  |
     |                      |
     |        Chests        |
     |                      |
@@ -45,7 +49,7 @@
     | -  -  -  -  -  -  -  |
     |                      |
     |      Tile Data       |
-    |              63.5 KB |
+    |                      |
     +----------------------+ 1 0000
 
 * Header:
@@ -56,8 +60,6 @@
       4 B - score
       4 B - gametime
 
-    288 B - inventory TODO update this
-      3 B - active item
       1 B - stamina
       1 B - stamina recharge delay
       2 B - invulnerable time
@@ -68,10 +70,14 @@
       1 B - air wizard attack delay
       1 B - air wizard attack time
 
+      4 B - padding
+
       1 B - keep inventory option
 
-    192 B - padding
+     31 B - padding
 */
+
+#define HEADER_SIZE 64
 
 #define LEVEL_COUNT (sizeof(levels) / sizeof(struct Level))
 #define BYTES_PER_ITEM 3
@@ -111,7 +117,7 @@ void storage_srand(void) {
 
 THUMB
 void storage_load_options(void) {
-    options.keep_inventory = backup_read_byte(0x001a0);
+    options.keep_inventory = backup_read_byte(0x0020);
 }
 
 /* ================================================================== */
@@ -143,10 +149,6 @@ static INLINE u32 load_header(u32 offset) {
     backup_read(offset, &gametime, 4);
     offset += 4;
 
-    // FIXME this is variable size, not good
-    offset = load_inventory(offset, &player_inventory);
-    offset = load_item(offset, &player_active_item);
-
     backup_read(offset, &player_stamina, 1);
     offset += 1;
 
@@ -169,12 +171,10 @@ static INLINE u32 load_header(u32 offset) {
     offset += 1;
 
     // stop here: do not load options again
-
-    return 0; // TODO
+    return HEADER_SIZE;
 }
 
 static INLINE u32 load_chests(u32 offset) {
-    offset = 0x0200; // TODO
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
         struct Inventory *inventory = &chest_inventories[i];
         offset = load_inventory(offset, inventory);
@@ -254,8 +254,11 @@ static INLINE u32 load_tiles(u32 offset) {
 
 THUMB
 void storage_load(void) {
-    u32 offset = 0;
-    offset = load_header(offset);
+    u32 offset = load_header(0);
+
+    offset = load_item(offset, &player_active_item);
+    offset = load_inventory(offset, &player_inventory);
+
     offset = load_chests(offset);
     offset = load_entities(offset);
     offset = load_tiles(offset);
@@ -284,6 +287,11 @@ static INLINE void write_32(u32 offset, u32 val) {
     checksum += (val >> 16) & 0xff;
     checksum += (val >> 24) & 0xff;
     backup_write(offset, &val, 4);
+}
+
+static INLINE u32 padding(u32 offset, u32 dest) {
+    checksum += 0xff * (dest - offset);
+    return dest;
 }
 
 static INLINE u32 store_item(u32 offset, struct item_Data *data) {
@@ -320,10 +328,6 @@ static INLINE u32 store_header(u32 offset) {
     write_32(offset, gametime);
     offset += 4;
 
-    // FIXME this is variable size, not good
-    offset = store_inventory(offset, &player_inventory);
-    offset = store_item(offset, &player_active_item);
-
     write_8(offset, player_stamina);
     offset += 1;
 
@@ -345,17 +349,14 @@ static INLINE u32 store_header(u32 offset) {
     write_8(offset, air_wizard_attack_time);
     offset += 1;
 
+    offset = padding(offset, 0x0020);
     write_8(offset, options.keep_inventory);
     offset += 1;
 
-    // adjust checksum to consider padding
-    checksum += 0xff * (0x0200 - offset);
-
-    return 0; // TODO
+    return padding(offset, HEADER_SIZE);
 }
 
 static INLINE u32 store_chests(u32 offset) {
-    offset = 0x0200; // TODO
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
         struct Inventory *inventory = &chest_inventories[i];
         offset = store_inventory(offset, inventory);
@@ -453,14 +454,15 @@ void storage_save(void) {
     backup_erase_chip();
     checksum = 0;
 
-    u32 offset = 0;
-    offset = store_header(offset);
+    u32 offset = store_header(0);
+
+    offset = store_item(offset, &player_active_item);
+    offset = store_inventory(offset, &player_inventory);
+
     offset = store_chests(offset);
     offset = store_entities(offset);
     offset = store_tiles(offset);
 
-    // adjust checksum to consider padding
-    checksum += 0xff * (0x10000 - offset);
-
+    padding(offset, 0x10000);
     backup_write(0x0004, &checksum, 4);
 }
