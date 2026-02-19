@@ -1,7 +1,10 @@
 # Changelog
 
-## [Unreleased]
+## [2.0] - 2026-02-19
 ### Changed
+- Rework the save file layout and switch to 64 KB Flash ROM.
+  **(!) Save files from previous versions are incompatible. (!)**
+- Reduce inventory capacity from 128 to 96 items.
 - Accept both *B* and *START* buttons to exit menus.
 - Store game images as PNG files instead of hex-code, so that they can
   be viewed and modified without special tools.
