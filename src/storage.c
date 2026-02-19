@@ -77,6 +77,8 @@
      31 B - padding
 */
 
+#define STORAGE_SIZE (64 * 1024)
+
 #define HEADER_SIZE 64
 
 #define LEVEL_COUNT (sizeof(levels) / sizeof(struct Level))
@@ -101,7 +103,7 @@ bool storage_verify_checksum(void) {
     u32 checksum_in_file;
     backup_read(0x0004, &checksum_in_file, 4);
 
-    for(u32 i = 0x0008; i < 0x10000; i++)
+    for(u32 i = 0x0008; i < STORAGE_SIZE; i++)
         val += backup_read_byte(i);
 
     return (val == checksum_in_file);
@@ -216,7 +218,7 @@ static INLINE u32 read_RLE_tuple(u32 offset, i32 *val, i32 *run_length) {
 THUMB
 static NO_INLINE u32 read_array_RLE(u8 *array, u32 size, u32 offset) {
     // if out of memory, do nothing
-    if(offset >= 0x10000)
+    if(offset >= STORAGE_SIZE)
         return offset;
 
     u32 index = 0;
@@ -230,7 +232,7 @@ static NO_INLINE u32 read_array_RLE(u8 *array, u32 size, u32 offset) {
         }
 
         // if out of memory, stop reading tuples
-        if(offset >= 0x10000)
+        if(offset >= STORAGE_SIZE)
             return offset;
     }
     return offset;
@@ -407,7 +409,7 @@ static INLINE u32 write_RLE_tuple(u32 offset, i32 val, i32 run_length) {
 THUMB
 static NO_INLINE u32 write_array_RLE(u8 *array, u32 size, u32 offset) {
     // if out of memory, do nothing
-    if(offset >= 0x10000)
+    if(offset >= STORAGE_SIZE)
         return offset;
 
     i32 run_length = 1;
@@ -420,7 +422,7 @@ static NO_INLINE u32 write_array_RLE(u8 *array, u32 size, u32 offset) {
             offset = write_RLE_tuple(offset, previous, run_length);
 
             // if out of memory, stop writing tuples
-            if(offset >= 0x10000)
+            if(offset >= STORAGE_SIZE)
                 return offset;
 
             run_length = 1;
@@ -462,6 +464,6 @@ void storage_save(void) {
     offset = store_entities(offset);
     offset = store_tiles(offset);
 
-    padding(offset, 0x10000);
+    padding(offset, STORAGE_SIZE);
     backup_write(0x0004, &checksum, 4);
 }
