@@ -33,21 +33,19 @@
     |----------------------| 0200
     |                      |
     |        Chests        |
-    |                 9 KB |
-    |----------------------| 2600
+    |                      |
+    | -  -  -  -  -  -  -  |
     |                      |
     |     Entity Data      |
     |                      |
     | -  -  -  -  -  -  -  |
     |                      |
-    |                      |
     |      Tile Types      |
-    |                      |
     |                      |
     | -  -  -  -  -  -  -  |
     |                      |
     |      Tile Data       |
-    |              54.5 KB |
+    |              63.5 KB |
     +----------------------+ 1 0000
 
 * Header:
@@ -58,7 +56,7 @@
       4 B - score
       4 B - gametime
 
-    288 B - inventory
+    288 B - inventory TODO update this
       3 B - active item
       1 B - stamina
       1 B - stamina recharge delay
@@ -120,24 +118,20 @@ void storage_load_options(void) {
 /*                            storage_load                            */
 /* ================================================================== */
 
-static INLINE void load_item(u32 offset, struct item_Data *data) {
+static INLINE u32 load_item(u32 offset, struct item_Data *data) {
     data->type = backup_read_byte(offset);
     backup_read(offset + 1, &data->count, 2);
+    return offset + BYTES_PER_ITEM;
 }
 
 THUMB
-static NO_INLINE void load_inventory(u32 offset, struct Inventory *inventory) {
-    inventory->size = 0;
-
-    for(u32 i = 0; i < INVENTORY_SIZE; i++) {
+static NO_INLINE u32 load_inventory(u32 offset, struct Inventory *inventory) {
+    inventory->size = backup_read_byte(offset++);
+    for(u32 i = 0; i < inventory->size; i++) {
         struct item_Data *item = &inventory->items[i];
-        load_item(offset, item);
-        if(item->type >= ITEM_TYPES)
-            break;
-
-        inventory->size++;
-        offset += BYTES_PER_ITEM;
+        offset = load_item(offset, item);
     }
+    return offset;
 }
 
 static INLINE u32 load_header(u32 offset) {
@@ -149,11 +143,9 @@ static INLINE u32 load_header(u32 offset) {
     backup_read(offset, &gametime, 4);
     offset += 4;
 
-    load_inventory(offset, &player_inventory);
-    offset += INVENTORY_SIZE * BYTES_PER_ITEM;
-
-    load_item(offset, &player_active_item);
-    offset += BYTES_PER_ITEM;
+    // FIXME this is variable size, not good
+    offset = load_inventory(offset, &player_inventory);
+    offset = load_item(offset, &player_active_item);
 
     backup_read(offset, &player_stamina, 1);
     offset += 1;
@@ -184,8 +176,8 @@ static INLINE u32 load_header(u32 offset) {
 static INLINE u32 load_chests(u32 offset) {
     offset = 0x0200; // TODO
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
-        load_inventory(offset, &chest_inventories[i]);
-        offset += INVENTORY_SIZE * BYTES_PER_ITEM;
+        struct Inventory *inventory = &chest_inventories[i];
+        offset = load_inventory(offset, inventory);
     }
     return offset;
 }
@@ -294,22 +286,20 @@ static INLINE void write_32(u32 offset, u32 val) {
     backup_write(offset, &val, 4);
 }
 
-static INLINE void store_item(u32 offset, struct item_Data *data) {
+static INLINE u32 store_item(u32 offset, struct item_Data *data) {
     write_8(offset, data->type);
     write_16(offset + 1, data->count);
+    return offset + BYTES_PER_ITEM;
 }
 
 THUMB
-static NO_INLINE void store_inventory(u32 offset, struct Inventory *inventory) {
-    for(u32 i = 0; i < INVENTORY_SIZE; i++) {
-        if(i < inventory->size) {
-            store_item(offset, &inventory->items[i]);
-        } else {
-            write_8(offset, -1);
-            write_16(offset + 1, 0);
-        }
-        offset += BYTES_PER_ITEM;
+static NO_INLINE u32 store_inventory(u32 offset, struct Inventory *inventory) {
+    write_8(offset++, inventory->size);
+    for(u32 i = 0; i < inventory->size; i++) {
+        struct item_Data *item = &inventory->items[i];
+        offset = store_item(offset, item);
     }
+    return offset;
 }
 
 static INLINE u32 store_header(u32 offset) {
@@ -330,11 +320,9 @@ static INLINE u32 store_header(u32 offset) {
     write_32(offset, gametime);
     offset += 4;
 
-    store_inventory(offset, &player_inventory);
-    offset += INVENTORY_SIZE * BYTES_PER_ITEM;
-
-    store_item(offset, &player_active_item);
-    offset += BYTES_PER_ITEM;
+    // FIXME this is variable size, not good
+    offset = store_inventory(offset, &player_inventory);
+    offset = store_item(offset, &player_active_item);
 
     write_8(offset, player_stamina);
     offset += 1;
@@ -369,8 +357,8 @@ static INLINE u32 store_header(u32 offset) {
 static INLINE u32 store_chests(u32 offset) {
     offset = 0x0200; // TODO
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
-        store_inventory(offset, &chest_inventories[i]);
-        offset += INVENTORY_SIZE * BYTES_PER_ITEM;
+        struct Inventory *inventory = &chest_inventories[i];
+        offset = store_inventory(offset, inventory);
     }
     return offset;
 }
