@@ -37,19 +37,17 @@
     |----------------------| 2600
     |                      |
     |     Entity Data      |
-    |              17.5 KB |
-    |----------------------| 6c00
+    |                      |
+    | -  -  -  -  -  -  -  |
     |                      |
     |                      |
     |      Tile Types      |
     |                      |
     |                      |
-    | -  -  -  -  -  -  -  | <-- this boundary is not at a fixed address
-    |                      |
+    | -  -  -  -  -  -  -  |
     |                      |
     |      Tile Data       |
-    |                      |
-    |                37 KB |
+    |              54.5 KB |
     +----------------------+ 1 0000
 
 * Header:
@@ -142,8 +140,8 @@ static NO_INLINE void load_inventory(u32 offset, struct Inventory *inventory) {
     }
 }
 
-static INLINE void load_header(void) {
-    u32 offset = 0x0000c; // skip game code, checksum and seed
+static INLINE u32 load_header(u32 offset) {
+    offset += 12; // skip game code, checksum and seed
 
     backup_read(offset, &score, 4);
     offset += 4;
@@ -179,26 +177,27 @@ static INLINE void load_header(void) {
     offset += 1;
 
     // stop here: do not load options again
+
+    return 0; // TODO
 }
 
-static INLINE void load_chests(void) {
-    u32 offset = 0x0200;
+static INLINE u32 load_chests(u32 offset) {
+    offset = 0x0200; // TODO
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
         load_inventory(offset, &chest_inventories[i]);
         offset += INVENTORY_SIZE * BYTES_PER_ITEM;
     }
+    return offset;
 }
 
-static INLINE void load_entity(u32 offset, struct entity_Data *data) {
+static INLINE u32 load_entity(u32 offset, struct entity_Data *data) {
     backup_read(offset, data, BYTES_PER_ENTITY);
+    return offset + BYTES_PER_ENTITY;
 }
 
-static INLINE void load_entities(void) {
-    u32 offset = 0x2600;
-
+static INLINE u32 load_entities(u32 offset) {
     // load player
-    load_entity(offset, &levels[current_level].entities[0]);
-    offset += BYTES_PER_ENTITY;
+    offset = load_entity(offset, &levels[current_level].entities[0]);
 
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
@@ -207,14 +206,14 @@ static INLINE void load_entities(void) {
         u32 count = backup_read_byte(offset++);
         for(u32 e = 1; e < 1 + count; e++) {
             struct entity_Data *data = &level->entities[e];
-            load_entity(offset, data);
-            offset += BYTES_PER_ENTITY;
+            offset = load_entity(offset, data);
         }
 
         // invalidate remaining entity slots
         for(u32 e = 1 + count; e < ENTITY_LIMIT; e++)
             level->entities[e].type = -1;
     }
+    return offset;
 }
 
 static INLINE u32 read_RLE_tuple(u32 offset, i32 *val, i32 *run_length) {
@@ -246,9 +245,7 @@ static NO_INLINE u32 read_array_RLE(u8 *array, u32 size, u32 offset) {
     return offset;
 }
 
-static INLINE void load_tiles(void) {
-    u32 offset = 0x06c00;
-
+static INLINE u32 load_tiles(u32 offset) {
     // load tile types
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
@@ -260,14 +257,16 @@ static INLINE void load_tiles(void) {
         struct Level *level = &levels[i];
         offset = read_array_RLE(level->data, LEVEL_SIZE, offset);
     }
+    return offset;
 }
 
 THUMB
 void storage_load(void) {
-    load_header();
-    load_chests();
-    load_entities();
-    load_tiles();
+    u32 offset = 0;
+    offset = load_header(offset);
+    offset = load_chests(offset);
+    offset = load_entities(offset);
+    offset = load_tiles(offset);
 }
 
 /* ================================================================== */
@@ -313,9 +312,7 @@ static NO_INLINE void store_inventory(u32 offset, struct Inventory *inventory) {
     }
 }
 
-static INLINE void store_header(void) {
-    u32 offset = 0x0000;
-
+static INLINE u32 store_header(u32 offset) {
     // write game code (without updating checksum)
     backup_write(offset, "ZMCE", 4);
     offset += 4;
@@ -365,30 +362,31 @@ static INLINE void store_header(void) {
 
     // adjust checksum to consider padding
     checksum += 0xff * (0x0200 - offset);
+
+    return 0; // TODO
 }
 
-static INLINE void store_chests(void) {
-    u32 offset = 0x0200;
+static INLINE u32 store_chests(u32 offset) {
+    offset = 0x0200; // TODO
     for(u32 i = 0; i < CHEST_LIMIT; i++) {
         store_inventory(offset, &chest_inventories[i]);
         offset += INVENTORY_SIZE * BYTES_PER_ITEM;
     }
+    return offset;
 }
 
-static INLINE void store_entity(u32 offset, struct entity_Data *data) {
+static INLINE u32 store_entity(u32 offset, struct entity_Data *data) {
     // add all bytes to checksum
     for(u32 i = 0; i < BYTES_PER_ENTITY; i++)
         checksum += ((u8 *) data)[i];
 
     backup_write(offset, data, BYTES_PER_ENTITY);
+    return offset + BYTES_PER_ENTITY;
 }
 
-static INLINE void store_entities(void) {
-    u32 offset = 0x2600;
-
+static INLINE u32 store_entities(u32 offset) {
     // store player
-    store_entity(offset, &levels[current_level].entities[0]);
-    offset += BYTES_PER_ENTITY;
+    offset = store_entity(offset, &levels[current_level].entities[0]);
 
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
@@ -402,17 +400,14 @@ static INLINE void store_entities(void) {
             if(data->type >= ENTITY_TYPES)
                 continue;
 
-            store_entity(offset, data);
-            offset += BYTES_PER_ENTITY;
+            offset = store_entity(offset, data);
             count++;
         }
 
         // store entity count
         write_8(offset - count * BYTES_PER_ENTITY - 1, count);
     }
-
-    // adjust checksum to consider padding
-    checksum += 0xff * (0x06c00 - offset);
+    return offset;
 }
 
 static INLINE u32 write_RLE_tuple(u32 offset, i32 val, i32 run_length) {
@@ -450,9 +445,7 @@ static NO_INLINE u32 write_array_RLE(u8 *array, u32 size, u32 offset) {
     return write_RLE_tuple(offset, array[size], run_length);
 }
 
-static INLINE void store_tiles(void) {
-    u32 offset = 0x06c00;
-
+static INLINE u32 store_tiles(u32 offset) {
     // store tile types
     for(u32 i = 0; i < LEVEL_COUNT; i++) {
         struct Level *level = &levels[i];
@@ -464,9 +457,7 @@ static INLINE void store_tiles(void) {
         struct Level *level = &levels[i];
         offset = write_array_RLE(level->data, LEVEL_SIZE, offset);
     }
-
-    // adjust checksum to consider padding
-    checksum += 0xff * (0x10000 - offset);
+    return offset;
 }
 
 THUMB
@@ -474,10 +465,14 @@ void storage_save(void) {
     backup_erase_chip();
     checksum = 0;
 
-    store_header();
-    store_chests();
-    store_entities();
-    store_tiles();
+    u32 offset = 0;
+    offset = store_header(offset);
+    offset = store_chests(offset);
+    offset = store_entities(offset);
+    offset = store_tiles(offset);
+
+    // adjust checksum to consider padding
+    checksum += 0xff * (0x10000 - offset);
 
     backup_write(0x0004, &checksum, 4);
 }
