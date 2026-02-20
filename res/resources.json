@@ -18,7 +18,7 @@
             "output": "images/logo.c",
             "static": true,
 
-            "tile_size": 1,
+            "tile_size": [ 14, 2 ],
             "palette": "res/palettes/background.png",
             "bpp": 4
         }, {
