@@ -34,9 +34,9 @@ static void prestart_tick(void) {
 THUMB
 static void prestart_draw(void) {
     if(counter < 0x20)
-        display_brighten(NULL, (0x20 - counter) / 2);
+        effects_brighten(NULL, (0x20 - counter) / 2);
     else
-        display_disable_effects();
+        effects_disable();
 
     screen_write(
         "MINICRAFT WAS MADE BY MARKUS\n"

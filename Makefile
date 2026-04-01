@@ -31,7 +31,7 @@ LDLIBS  :=
 
 # libsimplegba
 CPPFLAGS += -Ilib/libsimplegba/include
-LDFLAGS  += -Llib/libsimplegba/bin -Tlib/libsimplegba/lnkscript
+LDFLAGS  += -Llib/libsimplegba/bin -Tlib/libsimplegba/files/gba.ld
 LDLIBS   += -lsimplegba
 
 ifeq ($(CURRENT_OS),UNIX)
