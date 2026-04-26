@@ -90,10 +90,12 @@ bool storage_check(void) {
     backup_identify();
 
     // check if game code (ZMCE) is present
-    return backup_read_byte(0) == 'Z' &&
-           backup_read_byte(1) == 'M' &&
-           backup_read_byte(2) == 'C' &&
-           backup_read_byte(3) == 'E';
+    u8 code[4];
+    backup_read(0x0000, &code, 4);
+    return code[0] == 'Z' &&
+           code[1] == 'M' &&
+           code[2] == 'C' &&
+           code[3] == 'E';
 }
 
 THUMB
@@ -103,8 +105,12 @@ bool storage_verify_checksum(void) {
     u32 checksum_in_file;
     backup_read(0x0004, &checksum_in_file, 4);
 
-    for(u32 i = 0x0008; i < STORAGE_SIZE; i++)
-        val += backup_read_byte(i);
+    u8 buffer[8];
+    for(u32 i = 0x0008; i < STORAGE_SIZE; i += sizeof(buffer)) {
+        backup_read(i, buffer, sizeof(buffer));
+        for(u32 b = 0; b < sizeof(buffer); b++)
+            val += buffer[b];
+    }
 
     return (val == checksum_in_file);
 }
@@ -118,7 +124,7 @@ void storage_srand(void) {
 
 THUMB
 void storage_load_options(void) {
-    options.keep_inventory = backup_read_byte(0x0020);
+    backup_read(0x0020, &options, sizeof(struct Options));
 }
 
 /* ================================================================== */
@@ -126,14 +132,14 @@ void storage_load_options(void) {
 /* ================================================================== */
 
 static INLINE u32 load_item(u32 offset, struct item_Data *data) {
-    data->type = backup_read_byte(offset);
+    backup_read(offset, &data->type, 1);
     backup_read(offset + 1, &data->count, 2);
     return offset + BYTES_PER_ITEM;
 }
 
 THUMB
 static NO_INLINE u32 load_inventory(u32 offset, struct Inventory *inventory) {
-    inventory->size = backup_read_byte(offset++);
+    backup_read(offset++, &inventory->size, 1);
     for(u32 i = 0; i < inventory->size; i++) {
         struct item_Data *item = &inventory->items[i];
         offset = load_item(offset, item);
@@ -196,7 +202,8 @@ static INLINE u32 load_entities(u32 offset) {
         struct Level *level = &levels[i];
 
         // read entity count and load that many entities
-        u32 count = backup_read_byte(offset++);
+        u8 count;
+        backup_read(offset++, &count, 1);
         for(u32 e = 1; e < 1 + count; e++) {
             struct entity_Data *data = &level->entities[e];
             offset = load_entity(offset, data);
@@ -210,9 +217,12 @@ static INLINE u32 load_entities(u32 offset) {
 }
 
 static INLINE u32 read_RLE_tuple(u32 offset, i32 *val, i32 *run_length) {
-    *val = backup_read_byte(offset++);
-    *run_length = 1 + backup_read_byte(offset++);
-    return offset;
+    u8 buffer[2];
+    backup_read(offset, buffer, sizeof(buffer));
+
+    *val = buffer[0];
+    *run_length = 1 + buffer[1];
+    return offset + sizeof(buffer);
 }
 
 THUMB
@@ -273,7 +283,7 @@ static u32 checksum;
 
 static INLINE void write_8(u32 offset, u8 val) {
     checksum += val;
-    backup_write_byte(offset, val);
+    backup_write(offset, &val, 1);
 }
 
 static INLINE void write_16(u32 offset, u16 val) {
