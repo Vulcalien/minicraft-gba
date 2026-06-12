@@ -6,10 +6,6 @@
 .arm
 _start:
 
-    @@@@@@@@@@@@@@@@@@@@@@
-    @     ROM Header     @
-    @@@@@@@@@@@@@@@@@@@@@@
-
     @ ROM Entry Point
         b start_vector
 
@@ -54,12 +50,5 @@ _start:
 
     @ Reserved (2 Bytes)
         .space  2, 0x00
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@
-    @     ROM Header End     @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@
-
-    @ Cart Backup ID
-        .ascii  "FLASH512_Vnnn"
 
 .end
