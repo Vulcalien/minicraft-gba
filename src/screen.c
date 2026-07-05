@@ -47,6 +47,8 @@
     memory_copy_32(dest, palette, sizeof(palette))
 
 void screen_init(void) {
+    display_config(0);
+
     window_config(WINDOW_OUT, NULL);
 
     // Filter out the light layer when inside OBJ Window
@@ -59,6 +61,7 @@ void screen_init(void) {
         .sprites = true,
         .effects = true
     });
+    window_toggle(WINDOW_SPR, true);
 
     // Sky Background
     background_config(BG0, &(struct Background) {
@@ -87,6 +90,10 @@ void screen_init(void) {
         .tileset  = 1,
         .tilemap  = 19
     });
+
+    // enable backgrounds
+    background_toggle(BG1, true); // level tiles
+    background_toggle(BG3, true); // text and GUI
 
     // load palettes
     LOAD_PALETTE(BG_PALETTE, background_palette);
@@ -139,11 +146,7 @@ void screen_init(void) {
             BG3_TILEMAP[x + y * 32] = 32;
 
     sprite_hide(-1);
-    display_config(0);
-
-    background_toggle(BG1, true); // level tiles
-    background_toggle(BG3, true); // text and GUI
-    window_toggle(WINDOW_SPR, true); // light-emitting sprites
+    display_blank(false);
 }
 
 IWRAM_SECTION
