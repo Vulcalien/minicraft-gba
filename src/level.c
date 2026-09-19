@@ -58,6 +58,7 @@ static inline void insert_solid_entity(u8 xt, u8 yt,
     }
 }
 
+THUMB
 void level_load(struct Level *level) {
     for(u32 t = 0; t < LEVEL_SIZE; t++)
         for(u32 i = 0; i < SOLID_ENTITIES_IN_TILE; i++)
@@ -389,7 +390,7 @@ u8 level_new_entity(struct Level *level, u8 type) {
     return -1;
 }
 
-IWRAM_SECTION
+THUMB
 void level_add_entity(struct Level *level, u8 entity_id) {
     struct entity_Data *data = &level->entities[entity_id];
     const struct Entity *entity = ENTITY_S(data);

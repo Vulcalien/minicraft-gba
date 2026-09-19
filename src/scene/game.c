@@ -37,6 +37,7 @@ static inline void game_move_player(struct Level *old_level,
     new_player->y = (old_player_y & 0xfff0) + 8;
 }
 
+THUMB
 static void game_init(u8 flags) {
     if(flags & 2) {
         struct Level *old_level = level;
