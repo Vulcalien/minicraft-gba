@@ -22,84 +22,84 @@ const struct Item item_list[ITEM_TYPES] = {
     // Wood
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "WOOD",
+        .name = TEXT_ITEM_WOOD,
         .palette = 0
     },
 
     // Stone
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "STONE",
+        .name = TEXT_ITEM_STONE,
         .palette = 1
     },
 
     // Glass
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "GLASS",
+        .name = TEXT_ITEM_GLASS,
         .palette = 1
     },
 
     // Wheat
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "WHEAT",
+        .name = TEXT_ITEM_WHEAT,
         .palette = 2
     },
 
     // Slime
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "SLIME",
+        .name = TEXT_ITEM_SLIME,
         .palette = 1
     },
 
     // Cloth
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "CLOTH",
+        .name = TEXT_ITEM_CLOTH,
         .palette = 2
     },
 
     // Coal
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "COAL",
+        .name = TEXT_ITEM_COAL,
         .palette = 1
     },
 
     // Iron Ore
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "I.ORE",
+        .name = TEXT_ITEM_IRON_ORE,
         .palette = 0
     },
 
     // Gold Ore
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "G.ORE",
+        .name = TEXT_ITEM_GOLD_ORE,
         .palette = 2
     },
 
     // Iron Ingot
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "IRON",
+        .name = TEXT_ITEM_IRON,
         .palette = 0
     },
 
     // Gold Ingot
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "GOLD",
+        .name = TEXT_ITEM_GOLD,
         .palette = 2
     },
 
     // Gem
     {
         .class = ITEMCLASS_MATERIAL,
-        .name = "GEM",
+        .name = TEXT_ITEM_GEM,
         .palette = 2
     },
 
@@ -108,7 +108,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Flower
     {
         .class = ITEMCLASS_PLACEABLE,
-        .name = "FLOWER",
+        .name = TEXT_ITEM_FLOWER,
         .palette = 1,
 
         .placed_tile = FLOWER_TILE,
@@ -118,7 +118,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Seeds
     {
         .class = ITEMCLASS_PLACEABLE,
-        .name = "SEEDS",
+        .name = TEXT_ITEM_SEEDS,
         .palette = 1,
 
         .placed_tile = WHEAT_TILE,
@@ -128,7 +128,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Acorn
     {
         .class = ITEMCLASS_PLACEABLE,
-        .name = "ACORN",
+        .name = TEXT_ITEM_ACORN,
         .palette = 0,
 
         .placed_tile = TREE_SAPLING_TILE,
@@ -138,7 +138,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Cactus
     {
         .class = ITEMCLASS_PLACEABLE,
-        .name = "CACTUS",
+        .name = TEXT_ITEM_CACTUS,
         .palette = 1,
 
         .placed_tile = CACTUS_SAPLING_TILE,
@@ -148,7 +148,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Dirt
     {
         .class = ITEMCLASS_PLACEABLE,
-        .name = "DIRT",
+        .name = TEXT_ITEM_DIRT,
         .palette = 0,
 
         .placed_tile = DIRT_TILE,
@@ -158,7 +158,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Sand
     {
         .class = ITEMCLASS_PLACEABLE,
-        .name = "SAND",
+        .name = TEXT_ITEM_SAND,
         .palette = 2,
 
         .placed_tile = SAND_TILE,
@@ -168,7 +168,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Cloud
     {
         .class = ITEMCLASS_PLACEABLE,
-        .name = "CLOUD",
+        .name = TEXT_ITEM_CLOUD,
         .palette = 1,
 
         .placed_tile = CLOUD_TILE,
@@ -180,7 +180,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Apple
     {
         .class = ITEMCLASS_FOOD,
-        .name = "APPLE",
+        .name = TEXT_ITEM_APPLE,
         .palette = 0,
 
         .hp_gain = 1
@@ -189,7 +189,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Bread
     {
         .class = ITEMCLASS_FOOD,
-        .name = "BREAD",
+        .name = TEXT_ITEM_BREAD,
         .palette = 2,
 
         .hp_gain = 2
@@ -200,42 +200,42 @@ const struct Item item_list[ITEM_TYPES] = {
     // Workbench
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "WORKBENCH",
+        .name = TEXT_ITEM_WORKBENCH,
         .palette = 3
     },
 
     // Furnace
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "FURNACE",
+        .name = TEXT_ITEM_FURNACE,
         .palette = 1
     },
 
     // Oven
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "OVEN",
+        .name = TEXT_ITEM_OVEN,
         .palette = 1
     },
 
     // Anvil
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "ANVIL",
+        .name = TEXT_ITEM_ANVIL,
         .palette = 1
     },
 
     // Chest
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "CHEST",
+        .name = TEXT_ITEM_CHEST,
         .palette = 2
     },
 
     // Lantern
     {
         .class = ITEMCLASS_FURNITURE,
-        .name = "LANTERN",
+        .name = TEXT_ITEM_LANTERN,
         .palette = 1
     },
 
@@ -244,7 +244,7 @@ const struct Item item_list[ITEM_TYPES] = {
     // Power Glove
     {
         .class = ITEMCLASS_POWERGLOVE,
-        .name = "POW GLOVE",
+        .name = TEXT_ITEM_POWER_GLOVE,
         .palette = 0
     },
 
@@ -253,35 +253,35 @@ const struct Item item_list[ITEM_TYPES] = {
     // Sword
     {
         .class = ITEMCLASS_TOOL,
-        .name = "SWRD",
+        .name = TEXT_ITEM_SWORD,
         .palette = 3
     },
 
     // Axe
     {
         .class = ITEMCLASS_TOOL,
-        .name = "AXE",
+        .name = TEXT_ITEM_AXE,
         .palette = 3
     },
 
     // Pick
     {
         .class = ITEMCLASS_TOOL,
-        .name = "PICK",
+        .name = TEXT_ITEM_PICK,
         .palette = 3
     },
 
     // Shovel
     {
         .class = ITEMCLASS_TOOL,
-        .name = "SHVL",
+        .name = TEXT_ITEM_SHOVEL,
         .palette = 3
     },
 
     // Hoe
     {
         .class = ITEMCLASS_TOOL,
-        .name = "HOE",
+        .name = TEXT_ITEM_HOE,
         .palette = 3
     }
 };
@@ -296,14 +296,15 @@ void item_write(struct item_Data *data, u8 palette, u32 x, u32 y) {
             count = 999;
 
         SCREEN_WRITE_NUMBER(count, 10, 3, false, palette + 3, x, y);
-        screen_write(item->name, palette, x + 3, y);
+        screen_write(text(item->name), palette, x + 3, y);
     } else {
         item_write_name(data, palette, x, y);
     }
 }
 
-static const char level_names[5][5] = {
-    "WOOD", "ROCK", "IRON", "GOLD", "GEM"
+static const enum TextID level_names[5] = {
+    TEXT_TOOL_WOOD, TEXT_TOOL_ROCK, TEXT_TOOL_IRON, TEXT_TOOL_GOLD,
+    TEXT_TOOL_GEM
 };
 
 THUMB
@@ -313,10 +314,10 @@ void item_write_name(struct item_Data *data, u8 palette, u32 x, u32 y) {
     if(item->class == ITEMCLASS_TOOL) {
         const u8 level = data->tool_level;
 
-        screen_write(level_names[level], palette, x, y);
-        screen_write(item->name, palette, x + 4 + (level != 4), y);
+        screen_write(text(level_names[level]), palette, x, y);
+        screen_write(text(item->name), palette, x + 4 + (level != 4), y);
     } else {
-        screen_write(item->name, palette, x, y);
+        screen_write(text(item->name), palette, x, y);
     }
 }
 

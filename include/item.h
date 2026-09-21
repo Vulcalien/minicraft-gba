@@ -17,6 +17,7 @@
 #define MINICRAFT_ITEM
 
 #include "main.h"
+#include "i18n.h"
 
 #define ITEM_TYPES (33)
 
@@ -68,7 +69,7 @@
 
 struct Item {
     u8 class;
-    char *name;
+    enum TextID name;
     u8 palette;
 
     union {

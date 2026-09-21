@@ -16,6 +16,7 @@
 #include "scene.h"
 
 #include "screen.h"
+#include "i18n.h"
 
 THUMB
 static void about_tick(void) {
@@ -30,30 +31,14 @@ static void about_draw(void) {
         for(u32 x = 0; x < 30; x++)
             BG3_TILEMAP[x + y * 32] = 32;
 
-    screen_write("ABOUT MINICRAFT FOR GBA", 0, 3, 1);
+    screen_write(text(TEXT_ABOUT_GBA), 0, 3, 1);
 
-    screen_write(
-        "THIS GBA DEMAKE OF MINICRAFT\n"
-        "WAS MADE BY VULCALIEN.\n"
-        "\n"
-        "I'VE ALWAYS LOVED MINICRAFT.\n"
-        "IT HELPED ME LEARN TO CODE.",
-        2, 1, 3
-    );
+    screen_write(text(TEXT_ABOUT_GBA_BODY), 2, 1, 3);
 
-    screen_write("ABOUT MINICRAFT", 0, 7, 9);
-    screen_write("(NOTCH'S WORDS)", 2, 7, 10);
+    screen_write(text(TEXT_ABOUT_MINICRAFT), 0, 5, 9);
+    screen_write(text(TEXT_ABOUT_MINICRAFT_SUBTITLE), 2, 7, 10);
 
-    screen_write(
-        "MINICRAFT WAS MADE BY MARKUS\n"
-        "PERSSON FOR THE 22'ND LUDUM\n"
-        "DARE COMPETITION IN DECEMBER\n"
-        "2011.\n"
-        "\n"
-        "IT IS DEDICATED TO MY FATHER.\n"
-        "<3",
-        2, 1, 12
-    );
+    screen_write(text(TEXT_ABOUT_MINICRAFT_BODY), 2, 1, 12);
 }
 
 const struct Scene scene_about = {

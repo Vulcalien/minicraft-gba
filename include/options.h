@@ -17,9 +17,11 @@
 #define MINICRAFT_OPTIONS
 
 #include "main.h"
+#include "i18n.h"
 
 struct Options {
     bool keep_inventory;
+    u8 language;
 };
 
 extern struct Options options;

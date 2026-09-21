@@ -18,6 +18,7 @@
 #include "screen.h"
 #include "inventory.h"
 #include "item.h"
+#include "i18n.h"
 #include "player.h"
 #include "furniture.h"
 
@@ -119,7 +120,7 @@ static void chest_draw(void) {
 
         // draw frame
         screen_draw_frame(
-            (frame == 0 ? "CHEST" : "INVENTORY"),
+            text(frame == 0 ? TEXT_CHEST : TEXT_INVENTORY),
             frame_x, frame_y, frame_w, frame_h
         );
 

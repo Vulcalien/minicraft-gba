@@ -16,5 +16,6 @@
 #include "options.h"
 
 struct Options options = {
-    .keep_inventory = true
+    .keep_inventory = true,
+    .language = LANGUAGE_ENGLISH
 };

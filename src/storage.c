@@ -74,7 +74,9 @@
 
       1 B - keep inventory option
 
-     31 B - padding
+      1 B - language option
+
+     30 B - padding
 */
 
 #define STORAGE_SIZE (64 * 1024)
@@ -125,6 +127,8 @@ void storage_srand(void) {
 THUMB
 void storage_load_options(void) {
     backup_read(0x0020, &options, sizeof(struct Options));
+    if(options.language >= LANGUAGE_COUNT)
+        options.language = LANGUAGE_ENGLISH;
 }
 
 /* ================================================================== */
@@ -362,6 +366,9 @@ static INLINE u32 store_header(u32 offset) {
 
     offset = padding(offset, 0x0020);
     write_8(offset, options.keep_inventory);
+    offset += 1;
+
+    write_8(offset, options.language);
     offset += 1;
 
     return padding(offset, HEADER_SIZE);

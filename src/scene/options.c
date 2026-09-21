@@ -17,9 +17,11 @@
 
 #include "options.h"
 #include "screen.h"
+#include "i18n.h"
 
 #define KEEP_INVENTORY (0)
-#define EXIT           (1)
+#define LANGUAGE       (1)
+#define EXIT           (2)
 
 static i8 selected;
 
@@ -49,6 +51,10 @@ static void options_tick(void) {
                 options.keep_inventory = !options.keep_inventory;
                 break;
 
+            case LANGUAGE:
+                options.language ^= 1;
+                break;
+
             case EXIT:
                 set_scene(&scene_start, 0);
                 break;
@@ -56,8 +62,8 @@ static void options_tick(void) {
     }
 }
 
-#define WRITE_OPTION(text, id, x, y) do {\
-    screen_write((text), selected == (id) ? 0 : 2, (x), (y));\
+#define WRITE_OPTION(text_id, id, x, y) do {\
+    screen_write(text(text_id), selected == (id) ? 0 : 2, (x), (y));\
     if(selected == (id)) {\
         if((id) != EXIT) {\
             screen_write(">", 0, 1,  (y));\
@@ -76,16 +82,22 @@ static void options_draw(void) {
         for(u32 x = 0; x < 30; x++)
             BG3_TILEMAP[x + y * 32] = 32;
 
-    screen_write("GAME OPTIONS", 0, 9, 1);
+    screen_write(text(TEXT_GAME_OPTIONS), 0, 9, 1);
 
-    WRITE_OPTION("KEEP INVENTORY", KEEP_INVENTORY, 3, 4);
+    WRITE_OPTION(TEXT_KEEP_INVENTORY, KEEP_INVENTORY, 3, 4);
     if(options.keep_inventory)
-        screen_write("YES", 4, 24, 4);
+        screen_write(text(TEXT_YES), 4, 24, 4);
     else
-        screen_write("NO", 5, 25, 4);
+        screen_write(text(TEXT_NO), 5, 24, 4);
+
+    WRITE_OPTION(TEXT_LANGUAGE, LANGUAGE, 3, 6);
+    screen_write(
+        text(options.language == LANGUAGE_ENGLISH ? TEXT_ENGLISH : TEXT_FRENCH),
+        4, 18, 6
+    );
 
     // write 'EXIT'
-    WRITE_OPTION("EXIT", EXIT, 13, 18);
+    WRITE_OPTION(TEXT_EXIT, EXIT, 13, 18);
 }
 
 const struct Scene scene_options = {

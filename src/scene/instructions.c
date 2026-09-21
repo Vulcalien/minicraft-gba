@@ -16,6 +16,7 @@
 #include "scene.h"
 
 #include "screen.h"
+#include "i18n.h"
 
 THUMB
 static void instructions_tick(void) {
@@ -30,27 +31,9 @@ static void instructions_draw(void) {
         for(u32 x = 0; x < 30; x++)
             BG3_TILEMAP[x + y * 32] = 32;
 
-    screen_write("HOW TO PLAY", 0, 9, 1);
+    screen_write(text(TEXT_INSTRUCTIONS), 0, 8, 1);
 
-    screen_write(
-        "MOVE YOUR CHARACTER USING\n"
-        "THE DPAD.\n"
-        "\n"
-        "PRESS A TO ATTACK AND TO USE\n"
-        "ITEMS AND B TO OPEN THE\n"
-        "INVENTORY.\n"
-        "\n"
-        "SELECT AN ITEM IN THE\n"
-        "INVENTORY TO EQUIP IT.\n"
-        "\n"
-        "KILL THE AIR WIZARD TO WIN\n"
-        "THE GAME!\n"
-        "\n"
-        "\n"
-        "PRESS START TO PAUSE AND TO\n"
-        "SAVE THE GAME.",
-        2, 1, 3
-    );
+    screen_write(text(TEXT_INSTRUCTIONS_BODY), 2, 1, 3);
 }
 
 const struct Scene scene_instructions = {
