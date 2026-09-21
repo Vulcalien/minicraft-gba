@@ -73,10 +73,8 @@ static void game_tick(void) {
     level_tick(level);
 }
 
-static inline void clear_screen(void) {
-    if(!should_clear)
-        return;
-
+THUMB
+static NO_INLINE void clear_screen(void) {
     // clear level area (fully transparent)
     for(u32 y = 0; y < 18; y++)
         for(u32 x = 0; x < 30; x++)
@@ -86,8 +84,6 @@ static inline void clear_screen(void) {
     for(u32 y = 18; y < 20; y++)
         for(u32 x = 0; x < 30; x++)
             BG3_TILEMAP[x + y * 32] = 32;
-
-    should_clear = false;
 }
 
 static inline u16 get_player_hp(void) {
@@ -136,7 +132,11 @@ static inline void draw_status_bar(void) {
 
 IWRAM_SECTION
 static void game_draw(void) {
-    clear_screen();
+    if(should_clear) {
+        clear_screen();
+        should_clear = false;
+    }
+
     level_draw(level);
     draw_status_bar();
 }
