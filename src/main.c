@@ -52,10 +52,10 @@ static void vblank(void) {
 void AgbMain(void) {
     // enable VBlank interrupt
     interrupt_toggle(IRQ_VBLANK, true);
-    interrupt_isr(IRQ_VBLANK, vblank);
+    interrupt_handler(IRQ_VBLANK, vblank);
 
     backup_init(BACKUP_FLASH_64KB);
-    audio_init(AUDIO_BASIC);
+    audio_init(AUDIO_DIRECT);
     input_init(30, 2);
     screen_init();
 
