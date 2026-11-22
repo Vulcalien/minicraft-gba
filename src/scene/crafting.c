@@ -21,6 +21,7 @@
 #include "crafting.h"
 #include "player.h"
 #include "sound.h"
+#include "i18n.h"
 
 static i32 selected;
 
@@ -146,9 +147,9 @@ static void crafting_draw(void) {
     const u8 cost_w = have_w;
     const u8 cost_h = craft_h - have_h;
 
-    screen_draw_frame("CRAFTING", craft_x, craft_y, craft_w, craft_h);
-    screen_draw_frame("HAVE", have_x, have_y, have_w, have_h);
-    screen_draw_frame("COST", cost_x, cost_y, cost_w, cost_h);
+    screen_draw_frame(text(TEXT_CRAFTING), craft_x, craft_y, craft_w, craft_h);
+    screen_draw_frame(text(TEXT_HAVE), have_x, have_y, have_w, have_h);
+    screen_draw_frame(text(TEXT_COST), cost_x, cost_y, cost_w, cost_h);
 
     i8 item0 = selected - (craft_h - 2) / 2;
     if(item0 > crafting_current_recipes_size - (craft_h - 2))

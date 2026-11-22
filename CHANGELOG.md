@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.1] - 2026-08-21
+
+### Added
+
+- Full French localization for menus, gameplay messages, help screens, credits,
+  and item names.
+- A persistent language setting in the options menu; the selected language is
+  saved with the game.
+
+### Fixed
+
+- Prevented IWRAM stack exhaustion while generating a new world, which could
+  freeze the game after selecting **New Game**.
+- Improved the layout, spacing, and statistics alignment of French menus.
+
 ## [2.0] - 2026-02-19
 ### Changed
 - Rework the save file layout and switch to 64 KB Flash ROM.

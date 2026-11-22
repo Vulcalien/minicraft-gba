@@ -21,6 +21,7 @@
 #include "entity.h"
 #include "tile.h"
 #include "sound.h"
+#include "i18n.h"
 
 static u8 death_time;
 
@@ -107,17 +108,18 @@ static void death_draw(void) {
     const u8 death_y = 5;
     const u8 death_w = 20;
     const u8 death_h = 7;
+    const u8 stats_value_x = death_x + 7;
 
     screen_draw_frame("", death_x, death_y, death_w, death_h);
-    screen_write("YOU DIED! AWW!", 6, death_x + 1, death_y + 1);
+    screen_write(text(TEXT_DEATH), 6, death_x + 1, death_y + 1);
 
-    screen_write("TIME:", 6, death_x + 1, death_y + 2);
-    screen_write_time(gametime, 10, death_x + 6, death_y + 2);
+    screen_write(text(TEXT_TIME), 6, death_x + 1, death_y + 2);
+    screen_write_time(gametime, 10, stats_value_x, death_y + 2);
 
-    screen_write("SCORE:", 6, death_x + 1, death_y + 3);
-    SCREEN_WRITE_NUMBER(score, 10, 10, false, 10, death_x + 7, death_y + 3);
+    screen_write(text(TEXT_SCORE), 6, death_x + 1, death_y + 3);
+    SCREEN_WRITE_NUMBER(score, 10, 10, false, 10, stats_value_x, death_y + 3);
 
-    screen_write("PRESS A TO RESPAWN", 8, death_x + 1, death_y + 5);
+    screen_write(text(TEXT_PRESS_A_TO_RESPAWN), 8, death_x + 1, death_y + 5);
 }
 
 const struct Scene scene_death = {

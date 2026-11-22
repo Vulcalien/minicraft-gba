@@ -43,10 +43,10 @@ _start:
         .space  7, 0x00
 
     @ Software Version
-        .byte   0x04
+        .byte   0x05
 
     @ Header Checksum
-        .byte   0xb7
+        .byte   0xb6
 
     @ Reserved (2 Bytes)
         .space  2, 0x00

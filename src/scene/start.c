@@ -18,6 +18,7 @@
 #include "generator.h"
 #include "furniture.h"
 #include "screen.h"
+#include "i18n.h"
 #include "storage.h"
 #include "sound.h"
 
@@ -106,11 +107,13 @@ static void start_tick(void) {
     }
 }
 
-#define START_WRITE(text, id, x, y) do {\
-    screen_write((text), selected == (id) ? 0 : 1, (x), (y));\
-    if(selected == (id)) {\
+#define START_WRITE(text_id, selection, y) do {\
+    const char *value = text(text_id);\
+    const u32 x = (30 - text_length(value)) / 2;\
+    screen_write(value, selected == (selection) ? 0 : 1, x, (y));\
+    if(selected == (selection)) {\
         screen_write(">", 0, (x) - 2, (y));\
-        screen_write("<", 0, (x) + sizeof(text), (y));\
+        screen_write("<", 0, (x) + text_length(value) + 1, (y));\
     }\
 } while(0)
 
@@ -130,21 +133,22 @@ static void start_draw(void) {
     }
 
     if(can_load) {
-        START_WRITE("LOAD GAME", LOAD_GAME, 10, 9);
+        START_WRITE(TEXT_LOAD_GAME, LOAD_GAME, 8);
         if(!checksum_verified) {
             screen_write("(!)", 2, 22, 9);
 
-            screen_write("(!) INVALID CHECKSUM", 2, 1, 17);
+            screen_write(text(TEXT_INVALID_CHECKSUM), 2, 1, 17);
         }
     }
-    START_WRITE("NEW  GAME", NEW_GAME, 10, 10);
+    const u8 first_option_y = can_load ? 10 : 9;
 
-    START_WRITE("OPTIONS", OPTIONS, 11, 12);
+    START_WRITE(TEXT_NEW_GAME, NEW_GAME, first_option_y);
+    START_WRITE(TEXT_OPTIONS, OPTIONS, first_option_y + 2);
 
-    START_WRITE("HOW TO PLAY", HOW_TO_PLAY, 9, 14);
-    START_WRITE("ABOUT", ABOUT, 12, 15);
+    START_WRITE(TEXT_HOW_TO_PLAY, HOW_TO_PLAY, first_option_y + 4);
+    START_WRITE(TEXT_ABOUT, ABOUT, first_option_y + 6);
 
-    screen_write("V2.0", 1, 26, 19);
+    screen_write("V2.1", 1, 26, 19);
 }
 
 const struct Scene scene_start = {

@@ -16,6 +16,7 @@
 #include "scene.h"
 
 #include "screen.h"
+#include "i18n.h"
 
 // considering that checksum verification takes around 40 ticks,
 // the text will be fully visible for about two seconds.
@@ -38,27 +39,7 @@ static void prestart_draw(void) {
     else
         effects_disable();
 
-    screen_write(
-        "MINICRAFT WAS MADE BY MARKUS\n"
-        "PERSSON FOR THE 22'ND LUDUM\n"
-        "DARE COMPETITION IN DECEMBER\n"
-        "2011.\n"
-        "\n"
-        "THIS GBA DEMAKE OF THE GAME\n"
-        "WAS MADE BY VULCALIEN.\n"
-        "\n"
-        "THE ARTWORK AND SOUNDS WERE\n"
-        "MADE BY MARKUS PERSSON.\n"
-        "\n"
-        "\n"
-        "COPYRIGHT 2026 VULCALIEN\n"
-        "\n"
-        "THIS IS FREE SOFTWARE\n"
-        "RELEASED UNDER THE\n"
-        "GNU GENERAL PUBLIC LICENSE\n"
-        "EITHER VERSION 3 OR LATER.",
-        0, 1, 1
-    );
+    screen_write(text(TEXT_PRESTART), 0, 1, 1);
 }
 
 const struct Scene scene_prestart = {
